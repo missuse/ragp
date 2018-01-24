@@ -38,9 +38,19 @@ file_list <- split_fasta(path_in = "at_nsp.fasta", #path to the FASTA formated f
 signalp_pred_1 <- get_signalp_file(file = file_list[1])
 ```
 
-First at\_nsp.fasta file was generated from the protein sequences using the library seqinr. Then this file was split to fasta files each containing a 1000 sequences using the ragp function split\_fasta. This is for illustration purposes, generally big fasta files should be split to smaller containing 10 - 20 thousand sequences. And finally SignalP predictions were obtained using the function get\_signalp\_file.
+First at\_nsp.fasta file was generated from the protein sequences using the library seqinr. Then this file was split to fasta files each containing a 1000 sequences using the ragp function split\_fasta. This is for illustration purposes, generally big fasta files should be split to smaller containing 10 - 20 thousand sequences. And finally SignalP predictions were obtained using the function get\_signalp\_file. Similarly [Phobius](http://phobius.sbc.su.se/) and [TargetP](http://www.cbs.dtu.dk/services/TargetP/) can be accessed by the functions get\_phobius\_file and get\_targetp\_file .
 
-Similary, domains can be identified by [hmmscan](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) using get\_hmm function:
+To fetch the GPI modification site predictions [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) the function get\_big\_pi cane be used:
+
+``` r
+ind <- c(129, 145, 147, 160, 170,
+         180, 189, 203, 205, 214, 217, 224) #some indexes
+big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
+                          short.out = F, #data frame output
+                          verbose = F) 
+```
+
+Similarly, domains can be identified by [hmmscan](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) using get\_hmm function:
 
 ``` r
 pfam_pred <- get_hmm(sequence = at_nsp$sequence[1:20], #a vector of protein sequences as strings
