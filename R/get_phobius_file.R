@@ -19,7 +19,7 @@
 #' @source \url{http://phobius.sbc.su.se/}
 #'
 #' @references Kall O. Krogh A. Sonnhammer E. L. L. (2004) A Combined Transmembrane Topology and Signal Peptide Prediction Method. Journal of Molecular Biology 338(5): 1027-1036
-#' @seealso \code{\link[ragp]{get_phobius}, \link[ragp]{get_signalp_file}}
+#' @seealso \code{\link[ragp]{get_signalp_file}}
 #'
 #' @examples
 #'

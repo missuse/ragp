@@ -62,5 +62,5 @@ targetp_pred <- get_tergetp_file("at_nsp.fasta")
 Emanuelsson O, Nielsen H, Brunak S,von Heijne G. (2000) Predicting subcellular localization of proteins based on their N-terminal amino acid sequence. J. Mol. Biol.300: 1005-1016
 }
 \seealso{
-\code{\link[ragp]{get_signalp_file}}\code{\link[ragp]{get_chlorop_file}}
+\code{\link[ragp]{get_signalp_file}}
 }
