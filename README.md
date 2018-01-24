@@ -18,7 +18,7 @@ devtools::install_github("missuse/ragp")
 Examples
 --------
 
-This is a basic example which shows you how to fetch SignalP predictions:
+This is a basic example which shows you how to fetch [SignalP](http://www.cbs.dtu.dk/services/SignalP/) predictions:
 
 ``` r
 library(seqinr) #to create a fasta file with protein sequences
@@ -30,8 +30,6 @@ data(at_nsp) #a data frame of 2700 Arabidopsis protein sequences
 seqinr::write.fasta(sequence = strsplit(at_nsp$sequence, ""),
                     name = at_nsp$Transcript.id, file = "at_nsp.fasta")
 
-
-
 file_list <- split_fasta(path_in = "at_nsp.fasta", #path to the FASTA formated file`
                          path_out = "splited_at_nsp", #path to the splited files on which integers and file type will be apended automatically
                          num_seq = 1000) #number of sequences in destination files, usually this will be 10 - 20k
@@ -40,7 +38,9 @@ file_list <- split_fasta(path_in = "at_nsp.fasta", #path to the FASTA formated f
 signalp_pred_1 <- get_signalp_file(file = file_list[1])
 ```
 
-Similary, domains can be identified:
+First at\_nsp.fasta file was generated from the protein sequences using the library seqinr. Then this file was split to fasta files each containing a 1000 sequences using the ragp function split\_fasta. This is for illustration purposes, generally big fasta files should be split to smaller containing 10 - 20 thousand sequences. And finally SignalP predictions were obtained using the function get\_signalp\_file.
+
+Similary, domains can be identified by [hmmscan](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) using get\_hmm function:
 
 ``` r
 pfam_pred <- get_hmm(sequence = at_nsp$sequence[1:20], #a vector of protein sequences as strings
@@ -93,7 +93,7 @@ SPPP_bias <- calculate_bias(sequence = at_nsp$sequence,
                             simplify = TRUE)
 ```
 
-Predict hydroxyproline sites in squences:
+Predict hydroxyproline sites in sequences:
 
 ``` r
 ind <- c(129, 145, 147, 160, 170,
@@ -117,12 +117,12 @@ Output is a data frame. First 10 rows of the prediction:
 | AT2G13820.1 | SGLKTVVRTGPECLCEAFKNS |      66|  0.0412103| No  |
 | AT2G13820.1 | TLDLSKAASLPSVCKVAAPPS |      92|  0.0615301| No  |
 
-Chymeric AGPs contain aditional domains apart the arabinogalactan sequence spans, and are usually much harder to find. They are characterised by the presance of so called AGII glycomodules - amino acid dimmers: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other. Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. scan\_ag function attempts to find the mentioned dimmers according to user specified rules. Example:
+Chimeric AGPs contain additional domains apart the arabinogalactan sequence spans, and are usually much harder to find. They are characterized by the presence of so called AGII glycomodules - amino acid dimers: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other. Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. scan\_ag function attempts to find the mentioned dimers according to user specified rules. Example:
 
 ``` r
 at_nsp_ag <- scan_ag(sequence = at_nsp$sequence,
                      id = at_nsp$Transcript.id,
-                     dim = 3, #at least 3 dimmers must be present
+                     dim = 3, #at least 3 dimers must be present
                      div = 10, #no more than 10 amino acids apart
                      type = "conservative") #dimers will be defined as: PA, PS, PT, AP, SP, TP
 ```
