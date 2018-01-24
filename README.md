@@ -38,9 +38,9 @@ file_list <- split_fasta(path_in = "at_nsp.fasta", #path to the FASTA formated f
 signalp_pred_1 <- get_signalp_file(file = file_list[1])
 ```
 
-First at\_nsp.fasta file was generated from the protein sequences using the library seqinr. Then this file was split to fasta files each containing a 1000 sequences using the ragp function split\_fasta. This is for illustration purposes, generally big fasta files should be split to smaller containing 10 - 20 thousand sequences. And finally SignalP predictions were obtained using the function get\_signalp\_file. Similarly [Phobius](http://phobius.sbc.su.se/) and [TargetP](http://www.cbs.dtu.dk/services/TargetP/) can be accessed by the functions get\_phobius\_file and get\_targetp\_file .
+First at\_nsp.fasta file was generated from the protein sequences using the library seqinr. This file was then split into smaller fasta files each containing a 1000 sequences using the ragp function split\_fasta. This is for illustration purposes - generally big fasta files should be split to smaller ones containing 10 - 20 thousand sequences. And finally SignalP predictions were obtained using the function get\_signalp\_file. Similarly [Phobius](http://phobius.sbc.su.se/) and [TargetP](http://www.cbs.dtu.dk/services/TargetP/) can be accessed by the functions get\_phobius\_file and get\_targetp\_file .
 
-To fetch the GPI modification site predictions [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) the function get\_big\_pi can be used:
+To fetch the GPI modification site predictions from [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) the function get\_big\_pi can be used:
 
 ``` r
 ind <- c(129, 145, 147, 160, 170,
@@ -127,7 +127,7 @@ Output is a data frame. First 10 rows of the prediction:
 | AT2G13820.1 | SGLKTVVRTGPECLCEAFKNS |      66|  0.0412103| No  |
 | AT2G13820.1 | TLDLSKAASLPSVCKVAAPPS |      92|  0.0615301| No  |
 
-Chimeric AGPs contain additional domains apart the arabinogalactan sequence spans, and are usually much harder to find. They are characterized by the presence of so called AGII glycomodules - amino acid dimers: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other. Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. scan\_ag function attempts to find the mentioned dimers according to user specified rules. Example:
+AGPs are characterized by the presence of so called AGII glycomodules - amino acid dimers: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other. Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. scan\_ag function attempts to find the mentioned dimers according to user specified rules. Example:
 
 ``` r
 at_nsp_ag <- scan_ag(sequence = at_nsp$sequence,
