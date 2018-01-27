@@ -13,6 +13,7 @@ You can install ragp from github with:
 ``` r
 # install.packages("devtools")
 devtools::install_github("missuse/ragp")
+library(ragp)
 ```
 
 Example
@@ -22,7 +23,6 @@ This is a basic example which shows you how to fetch [SignalP](http://www.cbs.dt
 
 ``` r
 library(seqinr) #to create a fasta file with protein sequences
-library(ragp)
 
 data(at_nsp) #a data frame of 2700 Arabidopsis protein sequences 
 
@@ -205,16 +205,12 @@ at_nsp_ag <- scan_ag(sequence = hyp_pred$sequence,
 #> sequence vector contains O, O will be considered instead of P
 
 at_nsp_ag$sequence[ind]
-#>  [1] "meispycllsllpifllsgfslsydefdghaatsrallqtrttckedfanknytiitsrckgpnypanvccsafkdfacpfaevlndekndcastmfsyinlygryppgifanmckegkegldctdvtqsasatsdsiprasttaslavlstflvlcllflss"                                                                                                                                                                                                             
-#>  [2] "mayatilmifsvvalmsgerahaavdcsslilnmadclsfvtsgstvvkpegtccsglktvvrtgpeclceafknsgslgltldlskaaslpsvckvaappsarcglsvsgdoOAtAOglSOTagagAOAlssganaaTOvsSOrssdasllsvsfafvifmalissfy"                                                                                                                                                                                                       
-#>  [3] "mgyrrsyaitfvalvaalwsvtkaqpssscvstlttlspclsyitgnsttpsqpccsrldsviksspqcicsavnspipniglninrtqalqlpnacniqtppltqcnaatgOTaqoOAOSOTekTOdvtlTOTslogarsgvgggsktvosvgtgsssrnvdplplhflmfavlvvctssfl"                                                                                                                                                                                         
-#>  [4] "mrlllsllfllalttyssatyclcrdgvgekdlqtsidyacgvlkdcnpihekgpcyqpntikshcdwavntyfqrfgqisgscnfsgtattsqnlpstvvtgclypsSOgsagtTOTtgTOSgtqtfogoOAfgOAgdfdOSgnngapslfisialslgfsvviafl"                                                                                                                                                                                                        
-#>  [5] "mhhhhhpcnrkpfttifsffllylnlhnqqiiearnpsqfttnpsodvsipeikrhlqqygylpqnkesddvsfeqalvryqknlglpitgkpdsdtlsqillprcgfpddvepktapfhtgkkyvyfpgrprwtrdvplkltyafsqenltpylaptdirrvfrrafgkwasvipvsfietedyviadikigffngdhgdgepfdgvlgvlahtfspengrlhldkaetwavdfdeekssvavdlesvavheighvlglghssvkdaamyptlkprskkvnlnmddvvgvqslygtnpnftlnsllasetstnladgsrirsqgmiystlstvialcflnw"                          
-#>  [6] "mnlqavscsfgflssplgvtprtsfrrfviraktepseksveimrkfseqyarrsgtyfcvdkgvtsvvikglaehkdsygaplcpcrhyddkaaevgqgfwncpcvpmrerkechcmlfltpdndfagkdqtitsdeikettanm"                                                                                                                                                                                                                              
-#>  [7] "makmqlsifiavvalivcsasaktaSOOAOvloOTOAOAOAOenvnltellsvagpfhtfldyllstgvietfqnqannteegitifvpkddafkaqknpplsnltkdqlkqlvlfhalphyyslsefknlsqsgpvstfaggqyslkftdvsgtvridslwtrtkvsssvfstdpvavyqvnrvllpeaifgtdvpompAOAOAOivsAOSdSOSvadsegasspksshknsgqklllapismvisglvalfl"                                                                                                                  
-#>  [8] "mmrgaaptgvvsvmvlmilvllkqiesasangsslglpprkfcniyqgswvydksyplydskncpfierqfncksngrpdseylkyrwqpsgcnlprfngldflgrimkgkklmfvgdslslnqwqsltcllhnaapkanststrsosglsvfsfpaynssimfsrnaflvdivgappkrvmkldsissgslwktadvlvfnswhwwlhtdrkqpwdaimsgnvtvkdmdrlvayekammtwakwidqnidpsktkvffqgispdhgrarewskqggkgscigetkpimgssylagphaaemvvakviktmknqarlmdvtlmsqlrkdghpsvygfgghrmadcshwclsgvpdswnqllyselfhs"
-#>  [9] "meiqmrsimfhlflsllihtqiqavgsldqasvssidvkrhhltvetmpfsgdfvrrqlaggggssggggggggsrggssgggssgggsrgsggggksgggssnrggsggsggnkagkgggsrggddgdgggdgggdsgssgntrgggqqvovvpggrfpsdgvrieyslvlfifmtclvmgscfl"                                                                                                                                                                                      
-#> [10] "maliknnifftsllifvtlfgvavggtvhkvgntkgwtmiggdyeawassrvfqvgdtlvfaynkdyhdvtevthndfemcesskplrryktgsdsisltkpglqhficgvpghckkgqklqihvlpaslghvavovogovrsqssssSOSOSOlvdpovnnapqyqmgotoashsaasadfiftfsfdltlidlctffilffilv"                                                                                                                                                                  
-#> [11] "mktknvkllffffsvsllliavvnaaeghshggpkcecsheddhenkagarkykiaaiptvliagiigvlfpllgkvfpslrpetcfffvtkafaagvilatgfmhvlpeayemlnspcltseawefpftgfiamiaailtlsvdtfatssfykshckaskrvsdgetgessvdsekvqilrtrviaqvlelgiivhsvvigislgasqspdaakalfialmfhqcfeglglggciaqgkfkclsvtimstffaittpigivvgmgiansydessptalivqgvlnaasagiliymslvdllaadfthpkmqsntglqimahialllgaglmsllakwa"                             
-#> [12] "marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTtoooaatooovsaooovttsooovttaoooanoooovssoooasoooatooovasoooovasoooatooovatoooAOlaSOOAqvOAOAOTtkodSOSOSOSsSOolOSsdAOgOStdsiSOAOSOTdvndqngaskmvsslvfgsvlvwfmi"
+#> [1] "mayatilmifsvvalmsgerahaavdcsslilnmadclsfvtsgstvvkpegtccsglktvvrtgpeclceafknsgslgltldlskaaslpsvckvaappsarcglsvsgdoOAtAOglSOTagagAOAlssganaaTOvsSOrssdasllsvsfafvifmalissfy"                                                                                                                                                                                                       
+#> [2] "mgyrrsyaitfvalvaalwsvtkaqpssscvstlttlspclsyitgnsttpsqpccsrldsviksspqcicsavnspipniglninrtqalqlpnacniqtppltqcnaatgOTaqoOAOSOTekTOdvtlTOTslogarsgvgggsktvosvgtgsssrnvdplplhflmfavlvvctssfl"                                                                                                                                                                                         
+#> [3] "mrlllsllfllalttyssatyclcrdgvgekdlqtsidyacgvlkdcnpihekgpcyqpntikshcdwavntyfqrfgqisgscnfsgtattsqnlpstvvtgclypsSOgsagtTOTtgTOSgtqtfogoOAfgOAgdfdOSgnngapslfisialslgfsvviafl"                                                                                                                                                                                                        
+#> [4] "mhhhhhpcnrkpfttifsffllylnlhnqqiiearnpsqfttnpsodvsipeikrhlqqygylpqnkesddvsfeqalvryqknlglpitgkpdsdtlsqillprcgfpddvepktapfhtgkkyvyfpgrprwtrdvplkltyafsqenltpylaptdirrvfrrafgkwasvipvsfietedyviadikigffngdhgdgepfdgvlgvlahtfspengrlhldkaetwavdfdeekssvavdlesvavheighvlglghssvkdaamyptlkprskkvnlnmddvvgvqslygtnpnftlnsllasetstnladgsrirsqgmiystlstvialcflnw"                          
+#> [5] "makmqlsifiavvalivcsasaktaSOOAOvloOTOAOAOAOenvnltellsvagpfhtfldyllstgvietfqnqannteegitifvpkddafkaqknpplsnltkdqlkqlvlfhalphyyslsefknlsqsgpvstfaggqyslkftdvsgtvridslwtrtkvsssvfstdpvavyqvnrvllpeaifgtdvpompAOAOAOivsAOSdSOSvadsegasspksshknsgqklllapismvisglvalfl"                                                                                                                  
+#> [6] "mmrgaaptgvvsvmvlmilvllkqiesasangsslglpprkfcniyqgswvydksyplydskncpfierqfncksngrpdseylkyrwqpsgcnlprfngldflgrimkgkklmfvgdslslnqwqsltcllhnaapkanststrsosglsvfsfpaynssimfsrnaflvdivgappkrvmkldsissgslwktadvlvfnswhwwlhtdrkqpwdaimsgnvtvkdmdrlvayekammtwakwidqnidpsktkvffqgispdhgrarewskqggkgscigetkpimgssylagphaaemvvakviktmknqarlmdvtlmsqlrkdghpsvygfgghrmadcshwclsgvpdswnqllyselfhs"
+#> [7] "maliknnifftsllifvtlfgvavggtvhkvgntkgwtmiggdyeawassrvfqvgdtlvfaynkdyhdvtevthndfemcesskplrryktgsdsisltkpglqhficgvpghckkgqklqihvlpaslghvavovogovrsqssssSOSOSOlvdpovnnapqyqmgotoashsaasadfiftfsfdltlidlctffilffilv"                                                                                                                                                                  
+#> [8] "marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTtoooaatooovsaooovttsooovttaoooanoooovssoooasoooatooovasoooovasoooatooovatoooAOlaSOOAqvOAOAOTtkodSOSOSOSsSOolOSsdAOgOStdsiSOAOSOTdvndqngaskmvsslvfgsvlvwfmi"
 ```
