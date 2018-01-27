@@ -5,7 +5,7 @@
 \title{Find AGII glycomodules in protein sequences}
 \usage{
 scan_ag(sequence, id = NULL, dim = NULL, div = NULL,
-  type = c("conservative", "extended"), exclude_ext = NULL)
+  type = c("conservative", "extended"), exclude_ext = c("no", "yes", "all"))
 }
 \arguments{
 \item{sequence}{A vector of strings representing protein amino acid sequences.}
@@ -18,7 +18,7 @@ scan_ag(sequence, id = NULL, dim = NULL, div = NULL,
 
 \item{type}{One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P partners in dimmers, if extended dimmers involving P with A, S, T, G and V will be consdered. At default set to "extended".}
 
-\item{exclude_ext}{Logical, should extensin (SPPP+) regions be excluded from the search. At default set to FALSE.}
+\item{exclude_ext}{One of c("no", "yes", "all"), should extensin (SPPP+) regions be excluded from the search: "no" - do not exclude SPPP+; "yes" - exclude all SPPP+; "all" - exclude all PPP+}
 }
 \value{
 A named list with components:
@@ -37,7 +37,10 @@ A named list with components:
 }
 \description{
 AGII glycomodules are amino acid dimmers: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other (Tan et al., 2003).
-Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. This function attempts to find the mentioned dimmers according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead.
+Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. This function attempts to find the mentioned dimmers according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead. If any sequence from the supplied contains "O" the function will consider only true AGII glycomodules.
+}
+\details{
+The function can be supplied with the sequences resulting from predict_hyp in which case only AGII glycomodules containing O instead of P will be considered.
 }
 \examples{
 data(at_nsp)
@@ -70,7 +73,7 @@ at_sp_ag_ext <- scan_ag(sequence = at_nsp$sequence,
                      id = at_nsp$Transcript.id,
                      dim = 3,
                      div = 6,
-                     type = "extended", exclude_ext = T)
+                     type = "extended", exclude_ext = "yes")
 
 at_sp_ag_ext$sequence[at_sp_ag_ext$sequence! = at_sp_agt$sequence]
 
@@ -80,5 +83,5 @@ at_sp_ag_ext$sequence[at_sp_ag_ext$sequence! = at_sp_agt$sequence]
 Tan L, Leykam JF, Kieliszewski MJ. (2003) Glycosylation motifs that direct arabinogalactan addition to arabinogalactan proteins. Plant Physiol 132: 1362-136
 }
 \seealso{
-\code{\link[ragp]{calculate_bias}}
+\code{\link[ragp]{calculate_bias} \link[ragp]{predict_hyp}}
 }
