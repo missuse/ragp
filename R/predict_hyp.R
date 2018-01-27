@@ -7,13 +7,15 @@
 #' @param id A vector of strings representing protein id's
 #' @param tprob A numeric value indicating the treshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.33 which corresponds to 0.9674 sensitivity and 0.9568 specificity in 5-fold crossvalidation.
 #' @param split A numeric value determining the ratio of vectorized and parallelized computation. Should be left at default, lower to 0 - 1 range if low memory errors occur. Increase at your own risk.
-#' @return  A data frame with columns:
+#' @return  A list with two elements:
 #' \describe{
-#'   \item{id}{Character, indicating the inputed protein id's}
-#'   \item{substr}{Character, indicating the sequence substring which was used for predictions}
-#'   \item{P_pos}{Integer, position of proline in the sequence}
-#'   \item{prob}{Numeric, predicted probability of beeing hydroxyproline}
-#'   }
+#'   \item{prediction}{data frame with columns:
+#'   id - character, indicating the inputed protein id's;
+#'   substr - character, indicating the sequence substring which was used for predictions;
+#'   P_pos - integer, position of proline in the sequence;
+#'   prob - numeric, predicted probability of beeing hydroxyproline}
+#'   \item{sequence}{sequences with prolines - P substituted with hydroxyprolines - O according to the prediction}
+#' }
 #'
 #' @examples
 #' library(ragp)
@@ -183,6 +185,20 @@ predict_hyp <- function(sequence, id, tprob = 0.33, split = 1){
     return(P_mer)
   }
   
+  sub_hyp <- function(sequence, id, hyp){
+    sequence <- unlist(lapply(id, function(x){
+      hyp <- hyp[hyp$id == x,]
+      p_pos <- as.numeric(as.character(hyp$P_pos[hyp$HYP == "Yes"]))
+      sequencei <- as.character(sequence[id == x])
+      for(i in p_pos){
+        substr(sequencei, start = i, stop = i) <- "O"
+      }
+      sequencei
+    }
+    )
+    )
+  }
+  
   k <- length(sequence)/splt
   
   pam <- ((seq(length(sequence))-1) %/% splt) + 1
@@ -231,7 +247,10 @@ predict_hyp <- function(sequence, id, tprob = 0.33, split = 1){
     return(prediction)
   }
   )
-  result <- as.data.frame(do.call(rbind, result))
+  prediction <- as.data.frame(do.call(rbind, result))
+  seq <- sub_hyp(sequence, id, prediction)
+  result <- list(prediction = prediction,
+                 sequence = seq)
   return(result)
 }
 
