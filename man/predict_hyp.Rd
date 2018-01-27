@@ -16,13 +16,15 @@ predict_hyp(sequence, id, tprob = 0.33, split = 1)
 \item{split}{A numeric value determining the ratio of vectorized and parallelized computation. Should be left at default, lower to 0 - 1 range if low memory errors occur. Increase at your own risk.}
 }
 \value{
-A data frame with columns:
+A list with two elements:
 \describe{
-  \item{id}{Character, indicating the inputed protein id's}
-  \item{substr}{Character, indicating the sequence substring which was used for predictions}
-  \item{P_pos}{Integer, position of proline in the sequence}
-  \item{prob}{Numeric, predicted probability of beeing hydroxyproline}
-  }
+  \item{prediction}{data frame with columns:
+  id - character, indicating the inputed protein id's;
+  substr - character, indicating the sequence substring which was used for predictions;
+  P_pos - integer, position of proline in the sequence;
+  prob - numeric, predicted probability of beeing hydroxyproline}
+  \item{sequence}{sequences with prolines - P substituted with hydroxyprolines - O according to the prediction}
+}
 }
 \description{
 predict_hyp is a hydroxyproline site prediction algorithm for plant proteins, based on the xgboost distributed gradient boosting library.
