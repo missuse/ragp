@@ -14,9 +14,9 @@ scan_ag(sequence, id = NULL, dim = NULL, div = NULL,
 
 \item{dim}{An integer defining the minimum number of close dimmers to be considered, at default set to 3.}
 
-\item{div}{An integer defining the maximum number of amino acids that can separate the dimmers for them to be considered, at default to 7}
+\item{div}{An integer defining the maximum number of amino acids that can separate the dimmers for them to be considered, at default to 10}
 
-\item{type}{One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P partners in dimmers, if extended dimmers involving P with A, S, T, G and V will be consdered. At default set to "extended".}
+\item{type}{One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P|O partners in dimmers, if extended dimmers involving P|O with A, S, T, G and V will be consdered. At default set to "extended".}
 
 \item{exclude_ext}{One of c("no", "yes", "all"), should extensin (SPPP+) regions be excluded from the search: "no" - do not exclude SPPP+; "yes" - exclude all SPPP+; "all" - exclude all PPP+}
 }
@@ -31,7 +31,7 @@ A named list with components:
   \item{$longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids betwean dimers in a match) in each sequence}
   \item{$locations}{List of matrices, each element describing the start and end locations of the found stretches of dimmers (including the amino acids betwean dimers in a match)}
   \item{$dim}{Integer, as from input, default dim = 3}
-  \item{$div}{Integer, as from input, default div = 7}
+  \item{$div}{Integer, as from input, default div = 10}
   \item{$type}{Character, as from input, one of c("conservative", "extended")}
 }
 }
