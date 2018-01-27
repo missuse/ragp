@@ -15,8 +15,8 @@ You can install ragp from github with:
 devtools::install_github("missuse/ragp")
 ```
 
-Examples
---------
+Example
+-------
 
 This is a basic example which shows you how to fetch [SignalP](http://www.cbs.dtu.dk/services/SignalP/) predictions:
 
@@ -38,7 +38,7 @@ file_list <- split_fasta(path_in = "at_nsp.fasta", #path to the FASTA formated f
 signalp_pred_1 <- get_signalp_file(file = file_list[1])
 ```
 
-First at\_nsp.fasta file was generated from the protein sequences using the library seqinr. This file was then split into smaller fasta files each containing a 1000 sequences using the ragp function split\_fasta. This is for illustration purposes - generally big fasta files should be split to smaller ones containing 10 - 20 thousand sequences. And finally SignalP predictions were obtained using the function get\_signalp\_file. Similarly [Phobius](http://phobius.sbc.su.se/) and [TargetP](http://www.cbs.dtu.dk/services/TargetP/) can be accessed by the functions get\_phobius\_file and get\_targetp\_file .
+First at\_nsp.fasta file was generated from the protein sequences using the library seqinr. This file was then split into smaller fasta files each containing a 1000 sequences using the ragp function split\_fasta. This is for illustration purposes - generally big fasta files should be split to smaller ones containing 10 - 20 thousand sequences. And finally SignalP predictions were obtained using the function get\_signalp\_file. Similarly [Phobius](http://phobius.sbc.su.se/) and [TargetP](http://www.cbs.dtu.dk/services/TargetP/) can be accessed by the functions get\_phobius\_file and get\_targetp\_file.
 
 To fetch the GPI modification site predictions from [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) the function get\_big\_pi can be used:
 
@@ -66,25 +66,25 @@ pfam_pred_go <- pfam2go(pfam_pred)
 
 first 10 rows of the GO result with selected columns:
 
-| id          | name             | Pfam\_name       | GO\_name                                       | GO\_acc      |
-|:------------|:-----------------|:-----------------|:-----------------------------------------------|:-------------|
-| ATCG00660.1 | Ribosomal\_L20   | Ribosomal\_L20   | <GO:translation>                               | <GO:0006412> |
-| ATCG00660.1 | Ribosomal\_L20   | Ribosomal\_L20   | <GO:intracellular>                             | <GO:0005622> |
-| ATCG00660.1 | Ribosomal\_L20   | Ribosomal\_L20   | <GO:rRNA> binding                              | <GO:0019843> |
-| ATCG00660.1 | Ribosomal\_L20   | Ribosomal\_L20   | <GO:structural> constituent of ribosome        | <GO:0003735> |
-| ATCG00660.1 | Ribosomal\_L20   | Ribosomal\_L20   | <GO:ribosome>                                  | <GO:0005840> |
-| AT2G43600.1 | Glyco\_hydro\_19 | Glyco\_hydro\_19 | <GO:chitinase> activity                        | <GO:0004568> |
-| AT2G43600.1 | Glyco\_hydro\_19 | Glyco\_hydro\_19 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
-| AT2G43600.1 | Glyco\_hydro\_19 | Glyco\_hydro\_19 | <GO:chitin> catabolic process                  | <GO:0006032> |
-| AT2G43600.1 | Glyco\_hydro\_19 | Glyco\_hydro\_19 | <GO:chitinase> activity                        | <GO:0004568> |
-| AT2G43600.1 | Glyco\_hydro\_19 | Glyco\_hydro\_19 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
+| id          | name             | acc        | GO\_name                                       | GO\_acc      |
+|:------------|:-----------------|:-----------|:-----------------------------------------------|:-------------|
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:translation>                               | <GO:0006412> |
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:intracellular>                             | <GO:0005622> |
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:rRNA> binding                              | <GO:0019843> |
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:structural> constituent of ribosome        | <GO:0003735> |
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:ribosome>                                  | <GO:0005840> |
+| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitinase> activity                        | <GO:0004568> |
+| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
+| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitin> catabolic process                  | <GO:0006032> |
+| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitinase> activity                        | <GO:0004568> |
+| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
 
 Count specific amino acids or amino acid motifs:
 
 ``` r
 PAST_bias <- calculate_bias(sequence = at_nsp$sequence, #a vector of protein sequences as strings
                             id = at_nsp$Transcript.id, #a vector of protein identifiers as strings
-                            user = c("P", "A", "S", "T"), #amino acids that should be counted
+                            user = c("P", "A", "S", "T"), #amino acids that should be counted - this is the default so it can be omitted in this case
                             simplify = TRUE) #output as data frame instead of a list
 ```
 
@@ -106,26 +106,23 @@ SPPP_bias <- calculate_bias(sequence = at_nsp$sequence,
 Predict hydroxyproline sites in sequences:
 
 ``` r
-ind <- c(129, 145, 147, 160, 170,
-         180, 189, 203, 205, 214, 217, 224)
-
-hyp_pred <- predict_hyp(sequence = at_nsp$sequence[ind], id = at_nsp$Transcript.id[ind])
+hyp_pred <- predict_hyp(sequence = at_nsp$sequence, id = at_nsp$Transcript.id)
 ```
 
-Output is a data frame. First 10 rows of the prediction:
+Output is a list of two elements. The first element "prediction"" is a data frame. First 10 rows:
 
-| id          | substr                |  P\_pos|       prob| HYP |
-|:------------|:----------------------|-------:|----------:|:----|
-| AT2G20700.1 | ISPYCLLSLLPIFLLSGFSLS |      13|  0.0694811| No  |
-| AT2G20700.1 | YTIITSRCKGPNYPANVCCSA |      63|  0.0469144| No  |
-| AT2G20700.1 | ITSRCKGPNYPANVCCSAFKD |      66|  0.0416294| No  |
-| AT2G20700.1 | CCSAFKDFACPFAEVLNDEKN |      80|  0.0376600| No  |
-| AT2G20700.1 | FSYINLYGRYPPGIFANMCKE |     107|  0.0599186| No  |
-| AT2G20700.1 | SYINLYGRYPPGIFANMCKEG |     108|  0.0571255| No  |
-| AT2G20700.1 | QSASATSDSIPRASTTASLAV |     139|  0.0643806| No  |
-| AT2G13820.1 | FVTSGSTVVKPEGTCCSGLKT |      50|  0.0379427| No  |
-| AT2G13820.1 | SGLKTVVRTGPECLCEAFKNS |      66|  0.0412103| No  |
-| AT2G13820.1 | TLDLSKAASLPSVCKVAAPPS |      92|  0.0615301| No  |
+| id          | substr                | P\_pos | prob               | HYP |
+|:------------|:----------------------|:-------|:-------------------|:----|
+| AT2G43600.1 | FSQNCMDTSCPGLKECCSRWG | 31     | 0.0376294292509556 | No  |
+| AT2G43600.1 | EYCGFFCFSGPCNIKGKSYGY | 58     | 0.0523086786270142 | No  |
+| AT2G43600.1 | YGYDYNVDAGPRGKIETVITS | 76     | 0.110943540930748  | No  |
+| AT2G43600.1 | ERYCSKSKKYPCEPGKNYYGR | 163    | 0.075996607542038  | No  |
+| AT2G43600.1 | CSKSKKYPCEPGKNYYGRGLL | 166    | 0.0564411692321301 | No  |
+| AT2G43600.1 | YYGAGKHLGLPLLKDPDLVSR | 194    | 0.0403638146817684 | No  |
+| AT2G43600.1 | KHLGLPLLKDPDLVSRSPEVA | 199    | 0.0384472720324993 | No  |
+| AT2G43600.1 | LKDPDLVSRSPEVAFKFAMWF | 206    | 0.0404469892382622 | No  |
+| AT2G43600.1 | AMWFWNRNVRPALYLGFGEIT | 223    | 0.0404815301299095 | No  |
+| AT2G28410.1 | TNFALAQDRAPHGLAYETPVA | 27     | 0.0615824684500694 | No  |
 
 AGPs are characterized by the presence of so called AGII glycomodules - amino acid dimers: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other. Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. scan\_ag function attempts to find the mentioned dimers according to user specified rules. Example:
 
@@ -137,38 +134,47 @@ at_nsp_ag <- scan_ag(sequence = at_nsp$sequence,
                      type = "conservative") #dimers will be defined as: PA, PS, PT, AP, SP, TP
 ```
 
-Output is a list. Which sequences contain more than 10 amino acids in dimers:
+List several sequences. possible AGII glycomodules are in caps:
 
 ``` r
-index_10 <- which(at_nsp_ag$AG_aa >= 10)
+ind <- c(129, 145, 147, 160, 170,
+         180, 189, 203, 205, 214, 217, 224)
+at_nsp_ag$sequence[ind]
+#>  [1] "meispycllsllpifllsgfslsydefdghaatsrallqtrttckedfanknytiitsrckgpnypanvccsafkdfacpfaevlndekndcastmfsyinlygryppgifanmckegkegldctdvtqsasatsdsiprasttaslavlstflvlcllflss"                                                                                                                                                                                                             
+#>  [2] "mayatilmifsvvalmsgerahaavdcsslilnmadclsfvtsgstvvkpegtccsglktvvrtgpeclceafknsgslgltldlskaaslPSvckvaAPPSarcglsvsgdpPAtAPglSPTagagAPAlssganaaTPvsSPrssdasllsvsfafvifmalissfy"                                                                                                                                                                                                       
+#>  [3] "mgyrrsyaitfvalvaalwsvtkaqPSsscvstlttlSPclsyitgnstTPSqpccsrldsviksspqcicsavnspipniglninrtqalqlpnacniqTPpltqcnaatgPTaqpPAPSPTekTPdvtlTPTslpgarsgvgggsktvpsvgtgsssrnvdplplhflmfavlvvctssfl"                                                                                                                                                                                         
+#>  [4] "mrlllsllfllalttyssatyclcrdgvgekdlqtsidyacgvlkdcnpihekgpcyqpntikshcdwavntyfqrfgqisgscnfsgtattsqnlPStvvtgclyPSSPgsagtTPTtgTPSgtqtfpgpPAfgPAgdfdPSgnngAPSlfisialslgfsvviafl"                                                                                                                                                                                                        
+#>  [5] "mhhhhhpcnrkpfttifsffllylnlhnqqiiearnpsqfttnpspdvsipeikrhlqqygylpqnkesddvsfeqalvryqknlglpitgkpdsdtlsqillprcgfpddvepktapfhtgkkyvyfpgrprwtrdvplkltyafsqenltpylaptdirrvfrrafgkwasvipvsfietedyviadikigffngdhgdgepfdgvlgvlahtfspengrlhldkaetwavdfdeekssvavdlesvavheighvlglghssvkdaamyptlkprskkvnlnmddvvgvqslygtnpnftlnsllasetstnladgsrirsqgmiystlstvialcflnw"                          
+#>  [6] "mnlqavscsfgflssplgvtprtsfrrfviraktepseksveimrkfseqyarrsgtyfcvdkgvtsvvikglaehkdsygaplcpcrhyddkaaevgqgfwncpcvpmrerkechcmlfltpdndfagkdqtitsdeikettanm"                                                                                                                                                                                                                              
+#>  [7] "makmqlsifiavvalivcsasaktaSPPAPvlpPTPAPAPAPenvnltellsvagpfhtfldyllstgvietfqnqannteegitifvpkddafkaqknpplsnltkdqlkqlvlfhalphyyslsefknlsqsgpvstfaggqyslkftdvsgtvridslwtrtkvsssvfstdpvavyqvnrvllpeaifgtdvppmPAPAPAPivsAPSdSPSvadsegasSPksshknsgqklllapismvisglvalfl"                                                                                                                  
+#>  [8] "mmrgaaptgvvsvmvlmilvllkqiesasangsslglpprkfcniyqgswvydksyplydskncpfierqfncksngrpdseylkyrwqpsgcnlprfngldflgrimkgkklmfvgdslslnqwqsltcllhnaAPkanststrSPSglsvfsfPAynssimfsrnaflvdivgappkrvmkldsissgslwktadvlvfnswhwwlhtdrkqpwdaimsgnvtvkdmdrlvayekammtwakwidqnidpsktkvffqgispdhgrarewskqggkgscigetkpimgssylagphaaemvvakviktmknqarlmdvtlmsqlrkdghpsvygfgghrmadcshwclsgvpdswnqllyselfhs"
+#>  [9] "meiqmrsimfhlflsllihtqiqavgsldqasvssidvkrhhltvetmpfsgdfvrrqlaggggssggggggggsrggssgggssgggsrgsggggksgggssnrggsggsggnkagkgggsrggddgdgggdgggdsgssgntrgggqqvpvvpggrfpsdgvrieyslvlfifmtclvmgscfl"                                                                                                                                                                                      
+#> [10] "maliknnifftsllifvtlfgvavggtvhkvgntkgwtmiggdyeawassrvfqvgdtlvfaynkdyhdvtevthndfemcesskplrryktgsdsisltkpglqhficgvpghckkgqklqihvlpaslghvavpvpgpvrsqssssSPSPSPlvdppvnnAPqyqmgPTPAshsaasadfiftfsfdltlidlctffilffilv"                                                                                                                                                                  
+#> [11] "mktknvkllffffsvsllliavvnaaeghshggpkcecsheddhenkagarkykiaaiptvliagiigvlfpllgkvfpslrpetcfffvtkafaagvilatgfmhvlpeayemlnspcltseawefpftgfiamiaailtlsvdtfatssfykshckaskrvsdgetgessvdsekvqilrtrviaqvlelgiivhsvvigislgasqspdaakalfialmfhqcfeglglggciaqgkfkclsvtimstffaittpigivvgmgiansydessptalivqgvlnaasagiliymslvdllaadfthpkmqsntglqimahialllgaglmsllakwa"                             
+#> [12] "marsfaiavicivliagvtgqAPTSPPTaTPAPPTPTTPpPAaTPppvsAPppvttSPppvttAPpPAnppppvsSPpPASPpPATPppvaSPpppvaSPpPATPppvaTPpPAPlaSPPAqvPAPAPTtkpdSPSPSPSsSPplPSsdAPgPStdsiSPAPSPTdvndqngaskmvsslvfgsvlvwfmi"
 ```
 
-List several sequences. Dimers are in caps:
+Before I wrote OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) are AGII glycomodules but the above output considers P instead of O. If the sequence argument to scan\_ag contains Os at some positions, scan\_ag will consider only hydroxyprolines. To do this the sequence output of predict\_hyp function can be used. Example:
 
-<table>
-<colgroup>
-<col width="100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">sequence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">mlsstsptlssvssfykipissndfsplslslslslfllsspssfslsplpeiftqaffcgsevkkmnhcnlqqnafmsreemmgfdrkdlvvcpkprrvgllannvirplrlhmsqaaadlcdskagaelleiirrkedngtigqllssSPpyfpgSPPSraanplaqdarfrdeklnpiSPnSPflqpysatgfPSPSssssssssrgcvrmkfglnspavrvegfdclnrdrqnssipama</td>
-</tr>
-<tr class="even">
-<td align="left">mkslcfistAPlirSPpfldlSPTslnrftlkiPAslyvshPTrcsisnPSsseellnsnggmsrasisvfggtslnnlkmqvgspislhsinplaklslsdqaflllafivcttsvaftslvitaiptlvamgraatsfakladtarkelpstlaavrlsgmeisdltlelsdlsqditdginksakavqaaeagikqigtlaqqqtlsmieeranlpeislqpvvagaaektshaigsatkrlmniitggnkded</td>
-</tr>
-<tr class="odd">
-<td align="left">marsfaiavicivliagvtgqAPTSPPTaTPAPPTPTTPpPAaTPppvsAPppvttSPppvttAPpPAnppppvsSPpPASPpPATPppvaSPpppvaSPpPATPppvaTPpPAPlaSPPAqvPAPAPTtkpdSPSPSPSsSPplPSsdAPgPStdsiSPAPSPTdvndqvsnlff</td>
-</tr>
-<tr class="even">
-<td align="left">msvslftaftvlslclhtstsefqlstisaAPSflpeAPSsfsasTPAmSPdtSPlfPTPgssemSPSPSessimPTiPSslSPpnpdavTPdpllevSPvgSPlPAsssvclvssqlsslllvllmlllafcsff</td>
-</tr>
-<tr class="odd">
-<td align="left">mgqsqvslflllilvfiygvssttftivnqcsytvwpgllsgagtSPlPTtgfslnPTetrvipiPAawsgriwgrtlctqdattgrftcitgdcgsstvecsgsgaappatlaeftlngangldfydvslvdgynipmtivpqgggdaggvagnctttgcvaelngpcpaqlkvattgaegvacksaceafgTPeyccsgafgTPdtckPSeysqffknacpraysyayddgtstftcggadyvitfcpspnpsvksatkgvqpvavsyskaspnasptlsavfsigvlavaswvmqrvl</td>
-</tr>
-</tbody>
-</table>
+``` r
+at_nsp_ag <- scan_ag(sequence = hyp_pred$sequence,
+                     id = at_nsp$Transcript.id,
+                     dim = 3, #at least 3 dimers must be present
+                     div = 10, #no more than 10 amino acids apart
+                     type = "conservative")
+#> sequence vector contains O, O will be considered instead of P
+
+at_nsp_ag$sequence[ind]
+#>  [1] "meispycllsllpifllsgfslsydefdghaatsrallqtrttckedfanknytiitsrckgpnypanvccsafkdfacpfaevlndekndcastmfsyinlygryppgifanmckegkegldctdvtqsasatsdsiprasttaslavlstflvlcllflss"                                                                                                                                                                                                             
+#>  [2] "mayatilmifsvvalmsgerahaavdcsslilnmadclsfvtsgstvvkpegtccsglktvvrtgpeclceafknsgslgltldlskaaslpsvckvaappsarcglsvsgdoOAtAOglSOTagagAOAlssganaaTOvsSOrssdasllsvsfafvifmalissfy"                                                                                                                                                                                                       
+#>  [3] "mgyrrsyaitfvalvaalwsvtkaqpssscvstlttlspclsyitgnsttpsqpccsrldsviksspqcicsavnspipniglninrtqalqlpnacniqtppltqcnaatgOTaqoOAOSOTekTOdvtlTOTslogarsgvgggsktvosvgtgsssrnvdplplhflmfavlvvctssfl"                                                                                                                                                                                         
+#>  [4] "mrlllsllfllalttyssatyclcrdgvgekdlqtsidyacgvlkdcnpihekgpcyqpntikshcdwavntyfqrfgqisgscnfsgtattsqnlpstvvtgclypsSOgsagtTOTtgTOSgtqtfogoOAfgOAgdfdOSgnngapslfisialslgfsvviafl"                                                                                                                                                                                                        
+#>  [5] "mhhhhhpcnrkpfttifsffllylnlhnqqiiearnpsqfttnpsodvsipeikrhlqqygylpqnkesddvsfeqalvryqknlglpitgkpdsdtlsqillprcgfpddvepktapfhtgkkyvyfpgrprwtrdvplkltyafsqenltpylaptdirrvfrrafgkwasvipvsfietedyviadikigffngdhgdgepfdgvlgvlahtfspengrlhldkaetwavdfdeekssvavdlesvavheighvlglghssvkdaamyptlkprskkvnlnmddvvgvqslygtnpnftlnsllasetstnladgsrirsqgmiystlstvialcflnw"                          
+#>  [6] "mnlqavscsfgflssplgvtprtsfrrfviraktepseksveimrkfseqyarrsgtyfcvdkgvtsvvikglaehkdsygaplcpcrhyddkaaevgqgfwncpcvpmrerkechcmlfltpdndfagkdqtitsdeikettanm"                                                                                                                                                                                                                              
+#>  [7] "makmqlsifiavvalivcsasaktaSOOAOvloOTOAOAOAOenvnltellsvagpfhtfldyllstgvietfqnqannteegitifvpkddafkaqknpplsnltkdqlkqlvlfhalphyyslsefknlsqsgpvstfaggqyslkftdvsgtvridslwtrtkvsssvfstdpvavyqvnrvllpeaifgtdvpompAOAOAOivsAOSdSOSvadsegasspksshknsgqklllapismvisglvalfl"                                                                                                                  
+#>  [8] "mmrgaaptgvvsvmvlmilvllkqiesasangsslglpprkfcniyqgswvydksyplydskncpfierqfncksngrpdseylkyrwqpsgcnlprfngldflgrimkgkklmfvgdslslnqwqsltcllhnaapkanststrsosglsvfsfpaynssimfsrnaflvdivgappkrvmkldsissgslwktadvlvfnswhwwlhtdrkqpwdaimsgnvtvkdmdrlvayekammtwakwidqnidpsktkvffqgispdhgrarewskqggkgscigetkpimgssylagphaaemvvakviktmknqarlmdvtlmsqlrkdghpsvygfgghrmadcshwclsgvpdswnqllyselfhs"
+#>  [9] "meiqmrsimfhlflsllihtqiqavgsldqasvssidvkrhhltvetmpfsgdfvrrqlaggggssggggggggsrggssgggssgggsrgsggggksgggssnrggsggsggnkagkgggsrggddgdgggdgggdsgssgntrgggqqvovvpggrfpsdgvrieyslvlfifmtclvmgscfl"                                                                                                                                                                                      
+#> [10] "maliknnifftsllifvtlfgvavggtvhkvgntkgwtmiggdyeawassrvfqvgdtlvfaynkdyhdvtevthndfemcesskplrryktgsdsisltkpglqhficgvpghckkgqklqihvlpaslghvavovogovrsqssssSOSOSOlvdpovnnapqyqmgotoashsaasadfiftfsfdltlidlctffilffilv"                                                                                                                                                                  
+#> [11] "mktknvkllffffsvsllliavvnaaeghshggpkcecsheddhenkagarkykiaaiptvliagiigvlfpllgkvfpslrpetcfffvtkafaagvilatgfmhvlpeayemlnspcltseawefpftgfiamiaailtlsvdtfatssfykshckaskrvsdgetgessvdsekvqilrtrviaqvlelgiivhsvvigislgasqspdaakalfialmfhqcfeglglggciaqgkfkclsvtimstffaittpigivvgmgiansydessptalivqgvlnaasagiliymslvdllaadfthpkmqsntglqimahialllgaglmsllakwa"                             
+#> [12] "marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTTOoOAaTOoovsAOoovttSOoovttAOoOAnoooovsSOoOASOoOATOoovaSOooovaSOoOATOoovaTOoOAOlaSOOAqvOAOAOTtkodSOSOSOSsSOolOSsdAOgOStdsiSOAOSOTdvndqngaskmvsslvfgsvlvwfmi"
+```
