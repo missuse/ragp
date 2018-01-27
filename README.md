@@ -178,3 +178,55 @@ at_nsp_ag$sequence[ind]
 #> [11] "mktknvkllffffsvsllliavvnaaeghshggpkcecsheddhenkagarkykiaaiptvliagiigvlfpllgkvfpslrpetcfffvtkafaagvilatgfmhvlpeayemlnspcltseawefpftgfiamiaailtlsvdtfatssfykshckaskrvsdgetgessvdsekvqilrtrviaqvlelgiivhsvvigislgasqspdaakalfialmfhqcfeglglggciaqgkfkclsvtimstffaittpigivvgmgiansydessptalivqgvlnaasagiliymslvdllaadfthpkmqsntglqimahialllgaglmsllakwa"                             
 #> [12] "marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTTOoOAaTOoovsAOoovttSOoovttAOoOAnoooovsSOoOASOoOATOoovaSOooovaSOoOATOoovaTOoOAOlaSOOAqvOAOAOTtkodSOSOSOSsSOolOSsdAOgOStdsiSOAOSOTdvndqngaskmvsslvfgsvlvwfmi"
 ```
+
+Extensin motifs in the form of SPPP+ are also detected by scan\_ag if in correct context, to avoid this add exclude\_ext = "yes" as an argument:
+
+``` r
+at_nsp_ag <- scan_ag(sequence = hyp_pred$sequence,
+                     id = at_nsp$Transcript.id,
+                     dim = 3, #at least 3 dimers must be present
+                     div = 10, #no more than 10 amino acids apart
+                     type = "conservative",
+                     exclude_ext = "yes")
+#> sequence vector contains O, O will be considered instead of P
+
+at_nsp_ag$sequence[ind]
+#>  [1] "meispycllsllpifllsgfslsydefdghaatsrallqtrttckedfanknytiitsrckgpnypanvccsafkdfacpfaevlndekndcastmfsyinlygryppgifanmckegkegldctdvtqsasatsdsiprasttaslavlstflvlcllflss"                                                                                                                                                                                                             
+#>  [2] "mayatilmifsvvalmsgerahaavdcsslilnmadclsfvtsgstvvkpegtccsglktvvrtgpeclceafknsgslgltldlskaaslpsvckvaappsarcglsvsgdoOAtAOglSOTagagAOAlssganaaTOvsSOrssdasllsvsfafvifmalissfy"                                                                                                                                                                                                       
+#>  [3] "mgyrrsyaitfvalvaalwsvtkaqpssscvstlttlspclsyitgnsttpsqpccsrldsviksspqcicsavnspipniglninrtqalqlpnacniqtppltqcnaatgOTaqoOAOSOTekTOdvtlTOTslogarsgvgggsktvosvgtgsssrnvdplplhflmfavlvvctssfl"                                                                                                                                                                                         
+#>  [4] "mrlllsllfllalttyssatyclcrdgvgekdlqtsidyacgvlkdcnpihekgpcyqpntikshcdwavntyfqrfgqisgscnfsgtattsqnlpstvvtgclypsSOgsagtTOTtgTOSgtqtfogoOAfgOAgdfdOSgnngapslfisialslgfsvviafl"                                                                                                                                                                                                        
+#>  [5] "mhhhhhpcnrkpfttifsffllylnlhnqqiiearnpsqfttnpsodvsipeikrhlqqygylpqnkesddvsfeqalvryqknlglpitgkpdsdtlsqillprcgfpddvepktapfhtgkkyvyfpgrprwtrdvplkltyafsqenltpylaptdirrvfrrafgkwasvipvsfietedyviadikigffngdhgdgepfdgvlgvlahtfspengrlhldkaetwavdfdeekssvavdlesvavheighvlglghssvkdaamyptlkprskkvnlnmddvvgvqslygtnpnftlnsllasetstnladgsrirsqgmiystlstvialcflnw"                          
+#>  [6] "mnlqavscsfgflssplgvtprtsfrrfviraktepseksveimrkfseqyarrsgtyfcvdkgvtsvvikglaehkdsygaplcpcrhyddkaaevgqgfwncpcvpmrerkechcmlfltpdndfagkdqtitsdeikettanm"                                                                                                                                                                                                                              
+#>  [7] "makmqlsifiavvalivcsasaktaSOOAOvloOTOAOAOAOenvnltellsvagpfhtfldyllstgvietfqnqannteegitifvpkddafkaqknpplsnltkdqlkqlvlfhalphyyslsefknlsqsgpvstfaggqyslkftdvsgtvridslwtrtkvsssvfstdpvavyqvnrvllpeaifgtdvpompAOAOAOivsAOSdSOSvadsegasspksshknsgqklllapismvisglvalfl"                                                                                                                  
+#>  [8] "mmrgaaptgvvsvmvlmilvllkqiesasangsslglpprkfcniyqgswvydksyplydskncpfierqfncksngrpdseylkyrwqpsgcnlprfngldflgrimkgkklmfvgdslslnqwqsltcllhnaapkanststrsosglsvfsfpaynssimfsrnaflvdivgappkrvmkldsissgslwktadvlvfnswhwwlhtdrkqpwdaimsgnvtvkdmdrlvayekammtwakwidqnidpsktkvffqgispdhgrarewskqggkgscigetkpimgssylagphaaemvvakviktmknqarlmdvtlmsqlrkdghpsvygfgghrmadcshwclsgvpdswnqllyselfhs"
+#>  [9] "meiqmrsimfhlflsllihtqiqavgsldqasvssidvkrhhltvetmpfsgdfvrrqlaggggssggggggggsrggssgggssgggsrgsggggksgggssnrggsggsggnkagkgggsrggddgdgggdgggdsgssgntrgggqqvovvpggrfpsdgvrieyslvlfifmtclvmgscfl"                                                                                                                                                                                      
+#> [10] "maliknnifftsllifvtlfgvavggtvhkvgntkgwtmiggdyeawassrvfqvgdtlvfaynkdyhdvtevthndfemcesskplrryktgsdsisltkpglqhficgvpghckkgqklqihvlpaslghvavovogovrsqssssSOSOSOlvdpovnnapqyqmgotoashsaasadfiftfsfdltlidlctffilffilv"                                                                                                                                                                  
+#> [11] "mktknvkllffffsvsllliavvnaaeghshggpkcecsheddhenkagarkykiaaiptvliagiigvlfpllgkvfpslrpetcfffvtkafaagvilatgfmhvlpeayemlnspcltseawefpftgfiamiaailtlsvdtfatssfykshckaskrvsdgetgessvdsekvqilrtrviaqvlelgiivhsvvigislgasqspdaakalfialmfhqcfeglglggciaqgkfkclsvtimstffaittpigivvgmgiansydessptalivqgvlnaasagiliymslvdllaadfthpkmqsntglqimahialllgaglmsllakwa"                             
+#> [12] "marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTTOoOAaTOoovsAOoovttsooovttaoooanoooovssoooasoooatooovasoooovasoooaTOoovaTOoOAOlaSOOAqvOAOAOTtkodSOSOSOSsSOolOSsdAOgOStdsiSOAOSOTdvndqngaskmvsslvfgsvlvwfmi"
+```
+
+to switch of all PPP+ from beeing detected:
+
+``` r
+at_nsp_ag <- scan_ag(sequence = hyp_pred$sequence,
+                     id = at_nsp$Transcript.id,
+                     dim = 3, #at least 3 dimers must be present
+                     div = 10, #no more than 10 amino acids apart
+                     type = "conservative",
+                     exclude_ext = "all")
+#> sequence vector contains O, O will be considered instead of P
+
+at_nsp_ag$sequence[ind]
+#>  [1] "meispycllsllpifllsgfslsydefdghaatsrallqtrttckedfanknytiitsrckgpnypanvccsafkdfacpfaevlndekndcastmfsyinlygryppgifanmckegkegldctdvtqsasatsdsiprasttaslavlstflvlcllflss"                                                                                                                                                                                                             
+#>  [2] "mayatilmifsvvalmsgerahaavdcsslilnmadclsfvtsgstvvkpegtccsglktvvrtgpeclceafknsgslgltldlskaaslpsvckvaappsarcglsvsgdoOAtAOglSOTagagAOAlssganaaTOvsSOrssdasllsvsfafvifmalissfy"                                                                                                                                                                                                       
+#>  [3] "mgyrrsyaitfvalvaalwsvtkaqpssscvstlttlspclsyitgnsttpsqpccsrldsviksspqcicsavnspipniglninrtqalqlpnacniqtppltqcnaatgOTaqoOAOSOTekTOdvtlTOTslogarsgvgggsktvosvgtgsssrnvdplplhflmfavlvvctssfl"                                                                                                                                                                                         
+#>  [4] "mrlllsllfllalttyssatyclcrdgvgekdlqtsidyacgvlkdcnpihekgpcyqpntikshcdwavntyfqrfgqisgscnfsgtattsqnlpstvvtgclypsSOgsagtTOTtgTOSgtqtfogoOAfgOAgdfdOSgnngapslfisialslgfsvviafl"                                                                                                                                                                                                        
+#>  [5] "mhhhhhpcnrkpfttifsffllylnlhnqqiiearnpsqfttnpsodvsipeikrhlqqygylpqnkesddvsfeqalvryqknlglpitgkpdsdtlsqillprcgfpddvepktapfhtgkkyvyfpgrprwtrdvplkltyafsqenltpylaptdirrvfrrafgkwasvipvsfietedyviadikigffngdhgdgepfdgvlgvlahtfspengrlhldkaetwavdfdeekssvavdlesvavheighvlglghssvkdaamyptlkprskkvnlnmddvvgvqslygtnpnftlnsllasetstnladgsrirsqgmiystlstvialcflnw"                          
+#>  [6] "mnlqavscsfgflssplgvtprtsfrrfviraktepseksveimrkfseqyarrsgtyfcvdkgvtsvvikglaehkdsygaplcpcrhyddkaaevgqgfwncpcvpmrerkechcmlfltpdndfagkdqtitsdeikettanm"                                                                                                                                                                                                                              
+#>  [7] "makmqlsifiavvalivcsasaktaSOOAOvloOTOAOAOAOenvnltellsvagpfhtfldyllstgvietfqnqannteegitifvpkddafkaqknpplsnltkdqlkqlvlfhalphyyslsefknlsqsgpvstfaggqyslkftdvsgtvridslwtrtkvsssvfstdpvavyqvnrvllpeaifgtdvpompAOAOAOivsAOSdSOSvadsegasspksshknsgqklllapismvisglvalfl"                                                                                                                  
+#>  [8] "mmrgaaptgvvsvmvlmilvllkqiesasangsslglpprkfcniyqgswvydksyplydskncpfierqfncksngrpdseylkyrwqpsgcnlprfngldflgrimkgkklmfvgdslslnqwqsltcllhnaapkanststrsosglsvfsfpaynssimfsrnaflvdivgappkrvmkldsissgslwktadvlvfnswhwwlhtdrkqpwdaimsgnvtvkdmdrlvayekammtwakwidqnidpsktkvffqgispdhgrarewskqggkgscigetkpimgssylagphaaemvvakviktmknqarlmdvtlmsqlrkdghpsvygfgghrmadcshwclsgvpdswnqllyselfhs"
+#>  [9] "meiqmrsimfhlflsllihtqiqavgsldqasvssidvkrhhltvetmpfsgdfvrrqlaggggssggggggggsrggssgggssgggsrgsggggksgggssnrggsggsggnkagkgggsrggddgdgggdgggdsgssgntrgggqqvovvpggrfpsdgvrieyslvlfifmtclvmgscfl"                                                                                                                                                                                      
+#> [10] "maliknnifftsllifvtlfgvavggtvhkvgntkgwtmiggdyeawassrvfqvgdtlvfaynkdyhdvtevthndfemcesskplrryktgsdsisltkpglqhficgvpghckkgqklqihvlpaslghvavovogovrsqssssSOSOSOlvdpovnnapqyqmgotoashsaasadfiftfsfdltlidlctffilffilv"                                                                                                                                                                  
+#> [11] "mktknvkllffffsvsllliavvnaaeghshggpkcecsheddhenkagarkykiaaiptvliagiigvlfpllgkvfpslrpetcfffvtkafaagvilatgfmhvlpeayemlnspcltseawefpftgfiamiaailtlsvdtfatssfykshckaskrvsdgetgessvdsekvqilrtrviaqvlelgiivhsvvigislgasqspdaakalfialmfhqcfeglglggciaqgkfkclsvtimstffaittpigivvgmgiansydessptalivqgvlnaasagiliymslvdllaadfthpkmqsntglqimahialllgaglmsllakwa"                             
+#> [12] "marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTtoooaatooovsaooovttsooovttaoooanoooovssoooasoooatooovasoooovasoooatooovatoooAOlaSOOAqvOAOAOTtkodSOSOSOSsSOolOSsdAOgOStdsiSOAOSOTdvndqngaskmvsslvfgsvlvwfmi"
+```
