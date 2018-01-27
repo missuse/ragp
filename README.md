@@ -154,7 +154,7 @@ at_nsp_ag$sequence[ind]
 #> [12] "marsfaiavicivliagvtgqAPTSPPTaTPAPPTPTTPpPAaTPppvsAPppvttSPppvttAPpPAnppppvsSPpPASPpPATPppvaSPpppvaSPpPATPppvaTPpPAPlaSPPAqvPAPAPTtkpdSPSPSPSsSPplPSsdAPgPStdsiSPAPSPTdvndqngaskmvsslvfgsvlvwfmi"
 ```
 
-Before I wrote OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) are AGII glycomodules but the above output considers P instead of O. If the sequence argument to scan\_ag contains Os at some positions, scan\_ag will consider only hydroxyprolines. To do this the sequence output of predict\_hyp function can be used. Example:
+Before I wrote OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) are AGII glycomodules but the above output considers P instead of O since most of the time the positions of O are unknown. However if the sequence argument to scan\_ag contains O's at some positions, scan\_ag will consider only them. To do this the sequence output of predict\_hyp function can be used. Example:
 
 ``` r
 at_nsp_ag <- scan_ag(sequence = hyp_pred$sequence,
