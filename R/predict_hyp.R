@@ -247,7 +247,10 @@ predict_hyp <- function(sequence, id, tprob = 0.33, split = 1){
     return(prediction)
   }
   )
-  prediction <- as.data.frame(do.call(rbind, result))
+  prediction <- as.data.frame(do.call(rbind, result), stringsAsFactors = FALSE)
+  prediction$prob <- as.numeric(prediction$prob )
+  prediction$P_pos <- as.integer(prediction$P_pos)
+  
   seq <- sub_hyp(sequence, id, prediction)
   result <- list(prediction = prediction,
                  sequence = seq)
