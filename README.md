@@ -123,7 +123,7 @@ Output is a list of two elements. The first element "prediction"" is a data fram
 | AT2G43600.1 | AMWFWNRNVRPALYLGFGEIT | 223    | 0.0404815301299095 | No  |
 | AT2G28410.1 | TNFALAQDRAPHGLAYETPVA | 27     | 0.0615824684500694 | No  |
 
-More details on how hydroxyproline sites are predicted will be availible soon.
+predict\_hyp is also availible as a [shiny app](https://profenicolalac.shinyapps.io/HYPpredict_Shiny/). Details on how hydroxyproline sites are predicted will be availible soon.
 
 AGPs are characterized by the presence of so called AGII glycomodules - amino acid dimers: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other. Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. scan\_ag function attempts to find the mentioned dimers according to user specified rules. Example:
 
