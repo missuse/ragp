@@ -135,9 +135,10 @@ scan_ag <- function(sequence, id = NULL, dim = NULL, div = NULL, type =
     upper_PAST <- stringr::str_replace_all(upper_PAST, "[POpo]{3,}", tolower)
   }
   hyp <- ifelse(any(grepl("O", sequence)), "O", "P")
+  P <- switch(sum(hyp == "O", 1), NULL, "P")
   if (type == "extended"){
-    oldi <- c("CDEFHIKLMNQRWY")
-    newi <- tolower(c("CDEFHIKLMNQRWY"))
+    oldi <- paste0("CDEFHIKLMNQRWY", P)
+    newi <- tolower(oldi)
     upper_PAST <- chartr(old = oldi, new = newi, upper_PAST)
     oldi_p <- paste(oldi, hyp, sep="")
     newi_p <- paste(newi, tolower(hyp), sep="")
@@ -197,9 +198,11 @@ scan_ag <- function(sequence, id = NULL, dim = NULL, div = NULL, type =
     AG_sum <- stringr::str_count(upper_PAST, pastgv)
     AG_locations <- stringr::str_locate_all(upper_PAST, pastgv)
   } else {
-    oldi <- c("CDEFHIKLMNQRWYGV")
-    newi <- tolower(c("CDEFHIKLMNQRWYGV"))
-    upper_PAST <- chartr(old=oldi, new=newi, upper_PAST)
+    oldi <- paste0("CDEFHIKLMNQRWYGV", P)
+    newi <- tolower(oldi)
+    upper_PAST <- chartr(old = oldi,
+                         new = newi,
+                         upper_PAST)
     oldi_p <- paste(oldi, hyp, sep="")
     newi_p <- paste(newi, tolower(hyp), sep="")
     upper_PAST <- gsub(paste("(?<=[", newi_p, oldi_p,
@@ -251,7 +254,7 @@ scan_ag <- function(sequence, id = NULL, dim = NULL, div = NULL, type =
     }
     pastgv <- paste0(char_any, sep = "", collapse = "|")
     AG_sum <- stringr::str_count(upper_PAST, pastgv)
-    AG_locations <- stringr::str_locate_all(upper_PAST,pastgv)
+    AG_locations <- stringr::str_locate_all(upper_PAST, pastgv)
   }
   list <- list(id = as.character(id),
                sequence = upper_PAST,
