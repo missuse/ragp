@@ -4,14 +4,14 @@
 \alias{predict_hyp}
 \title{Predict hydroxyproline positions in plant proteins based on primary structure}
 \usage{
-predict_hyp(sequence, id, tprob = 0.33, split = 1)
+predict_hyp(sequence, id, tprob = 0.32, split = 1)
 }
 \arguments{
 \item{sequence}{A vector of strings representing protein amino acid sequences}
 
 \item{id}{A vector of strings representing protein id's}
 
-\item{tprob}{A numeric value indicating the treshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.33 which corresponds to 0.9674 sensitivity and 0.9568 specificity in 5-fold crossvalidation.}
+\item{tprob}{A numeric value indicating the treshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.32 offering a tradeoff between sensitivity and specificity.}
 
 \item{split}{A numeric value determining the ratio of vectorized and parallelized computation. Should be left at default, lower to 0 - 1 range if low memory errors occur. Increase at your own risk.}
 }
