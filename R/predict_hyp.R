@@ -5,7 +5,7 @@
 #'
 #' @param sequence A vector of strings representing protein amino acid sequences
 #' @param id A vector of strings representing protein id's
-#' @param tprob A numeric value indicating the treshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.33 which corresponds to 0.9674 sensitivity and 0.9568 specificity in 5-fold crossvalidation.
+#' @param tprob A numeric value indicating the treshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.32 offering a tradeoff between sensitivity and specificity.
 #' @param split A numeric value determining the ratio of vectorized and parallelized computation. Should be left at default, lower to 0 - 1 range if low memory errors occur. Increase at your own risk.
 #' @return  A list with two elements:
 #' \describe{
@@ -29,232 +29,122 @@
 #' @export
 
 
-predict_hyp <- function(sequence, id, tprob = 0.33, split = 1){
-  if(missing(sequence)){
+predict_hyp <- function (sequence, id, tprob = 0.32, split = 1) 
+{
+  if (missing(sequence)) {
     stop("protein sequence must be provided to obtain predictions")
   }
-  
-  if(missing(id)){
+  if (missing(id)) {
     stop("protein id must be provided to obtain predictions")
   }
-  
-  if(missing(tprob)){
-    tprob <- 0.33
+  if (missing(tprob)) {
+    tprob <- 0.32
   }
-  
-  if(tprob < 0){
-    tprob <- 0.33
-    warning(paste("treshold probability for prediction should be in 0 - 1 range,",
-                  "tprob was set to the default 0.33"))
+  if (tprob < 0) {
+    tprob <- 0.32
+    warning(paste("treshold probability for prediction should be in 0 - 1 range,", 
+                  "tprob was set to the default 0.32"))
   }
-  
-  if(tprob > 1){
-    tprob <- 0.33
-    warning(paste("treshold probability for prediction should be in 0 - 1 range,",
-                  "tprob was set to the default 0.33"))
+  if (tprob > 1) {
+    tprob <- 0.32
+    warning(paste("treshold probability for prediction should be in 0 - 1 range,", 
+                  "tprob was set to the default 0.32"))
   }
-  
+  if (sum(grepl("P", sequence)) == 0){
+    warning("no prolines in the target sequences")
+    return(NULL)
+  }
   
   splt <- split * 10000
-  
   sequence <- as.character(sequence)
   id <- as.character(id)
-  if(length(sequence) != length(id)) stop("id and sequence vectors are not of same length")
+  if (length(sequence) != length(id)) 
+    stop("id and sequence vectors are not of same length")
   
-  extractMBdesc <- function(x){
-    xSplitted <- strsplit(as.character(x), split = "")
-    P <- lapply(xSplitted,
-                FUN = function(z) sapply(z, function(x) Pr[,colnames(Pr) == x]))
-    P <- do.call(rbind, P)
-    nlag <- 6
-    N <- 21
-    MB <- vector("list", 12)
-    for (j in 1:nlag){
-      MB[[j]] <- rowSums(P[,1:(N -j)]* P[,1:(N - j) + j])/(N - j)
-    }
-    MB <- do.call(rbind, MB)
-    MB <- matrix(as.vector(MB), ncol = nlag*6, byrow=T)
-    colnames(MB) = as.vector(t(outer(props, paste(".lag", 1:nlag,
-                                                  sep = ""), paste, sep = "")))
-    return(MB)
-  }
-  
-  QSOlevel <- function(m){
-    QSObabe <- function(x){
-      w <- 0.1
-      nlag <- 12
-      N <- 21
-      xSplitted <- strsplit(as.character(x), split = "")
-      xSplitted <- do.call(rbind, xSplitted)
-      tau1 <- list()
-      for (d in 1:nlag) {
-        for (i in 1:(N - d)){
-          tau1[[length(tau1)+1]] <- diag(as.matrix(DistMat1)[xSplitted[,i],
-                                                             xSplitted[,i + d]])^2
-        }
-      }
-      tau1 <- t(do.call(rbind, tau1))
-      tau1 <- cbind(rowSums(tau1[,1:20]),
-                    rowSums(tau1[,21:39]),
-                    rowSums(tau1[,40:57]),
-                    rowSums(tau1[,58:74]),
-                    rowSums(tau1[,75:90]),
-                    rowSums(tau1[,91:105]),
-                    rowSums(tau1[,106:119]),
-                    rowSums(tau1[,120:132]),
-                    rowSums(tau1[,133:144]),
-                    rowSums(tau1[,145:155]),
-                    rowSums(tau1[,156:165]),
-                    rowSums(tau1[,166:174]))
-      fr <- sapply(AADict,
-                   function(y) sapply(gregexpr(y,
-                                               as.character(x)),
-                                      function(x) sum(x>0)))
-      Xr1 <- fr/(1 + (w * rowSums(tau1)))
-      colnames(Xr1)  <-  paste("Schneider.Xr.", colnames(Xr1), sep = "")
-      Xd1 <- (w * tau1)/(1 + (w * rowSums(tau1)))
-      colnames(Xd1) <- paste("Schneider.Xd.", 1:nlag, sep = "")
-      tau2 <- list()
-      for (d in 1:nlag) {
-        for (i in 1:(N - d)){
-          tau2[[length(tau2)+1]] <- diag(as.matrix(DistMat2)[xSplitted[,i],
-                                                             xSplitted[,i + d]])^2
-        }
-      }
-      tau2 <- t(do.call(rbind, tau2))
-      tau2 <- cbind(rowSums(tau2[,1:20]),
-                    rowSums(tau2[,21:39]),
-                    rowSums(tau2[,40:57]),
-                    rowSums(tau2[,58:74]),
-                    rowSums(tau2[,75:90]),
-                    rowSums(tau2[,91:105]),
-                    rowSums(tau2[,106:119]),
-                    rowSums(tau2[,120:132]),
-                    rowSums(tau2[,133:144]),
-                    rowSums(tau2[,145:155]),
-                    rowSums(tau2[,156:165]),
-                    rowSums(tau2[,166:174]))
-      Xr2 <- fr/(1 + (w * rowSums(tau2)))
-      colnames(Xr2) <- paste("Grantham.Xr.", colnames(Xr2), sep = "")
-      Xd2 <- (w * tau2)/(1 + (w * rowSums(tau2)))
-      colnames(Xd2) <- paste("Grantham.Xd.", 1:nlag, sep = "")
-      QSO <- cbind(Xr1, Xr2, Xd1, Xd2)
-      return(QSO)
-    }
-    splt <- 180
-    k <- length(m)/splt
-    if(k < 1){
-      QSO_all <- QSObabe(m)
-    }else{
-      pam <- ((seq(length(m))-1) %/% splt) + 1
-      m_split <- split(m, pam)
-      QSO_all <- lapply(m_split, function(x) QSObabe(x))
-      QSO_all <- do.call(rbind, QSO_all)
-    }
-    return(QSO_all)
-  }
-  
-  getAAindex <- function(test_fragment){
-    test_fragment <- as.character(test_fragment)
-    test_fragment <- toupper(test_fragment)
-    stopifnot(nchar(test_fragment) == 21)
-    frag_vector <- unlist(strsplit(test_fragment, ""))
-    aaidx <- aaidx[c(2,4,5,3,1,6),]
-    frag_var <- sapply(frag_vector,
-                       function(x) aaidx[,colnames(aaidx) == x])
-    frag_var <- frag_var[,-11]
-    frag_var <- as.numeric(frag_var)
-    var_names <- expand.grid(as.character(1:nrow(aaidx)),
-                             as.character((-10:10)[-11]))
-    names(frag_var) <- paste(var_names$Var1, var_names$Var2, sep="_")
-    return(frag_var)
-  }
-  
-  getKmer <- function(sequence, id, kmer){
-    sequence <- as.character(sequence)
-    sequence <- toupper(sequence)
-    n_char <- nchar(sequence)
-    P_pos <- unlist(gregexpr("P", sequence))
-    P_mer <- sapply(P_pos, function(x) substr(sequence,
-                                              start = x - kmer,
-                                              stop = x + kmer))
-    P_mer <- cbind(id = as.character(rep(id, length(P_mer))),
-                   substr = as.character(P_mer),
-                   pos = as.character(P_pos),
-                   nchar = as.character(rep(n_char, length(P_pos))))
-    return(P_mer)
-  }
-  
-  sub_hyp <- function(sequence, id, hyp){
-    sequence <- unlist(lapply(id, function(x){
-      hyp <- hyp[hyp$id == x,]
-      p_pos <- as.numeric(as.character(hyp$P_pos[hyp$HYP == "Yes"]))
-      sequencei <- as.character(sequence[id == x])
-      for(i in p_pos){
-        substr(sequencei, start = i, stop = i) <- "O"
-      }
-      sequencei
-    }
-    )
-    )
-  }
-  
-  k <- length(sequence)/splt
-  
-  pam <- ((seq(length(sequence))-1) %/% splt) + 1
+  pam <- ((seq(length(sequence)) - 1)%/%splt) + 1
   m_split <- split(data.frame(sequence, id), pam)
-  
-  result <- lapply(m_split, function(x){
-    sequence <- x[,1]
-    id <- x[,2]
-    seq_kmer <- vector("list",length(sequence))
-    for(i in 1:length(sequence)){
-      seq_kmer[[i]] <- getKmer(sequence = sequence[i],
-                               id = id[i],
-                               kmer = 10)
+  result <- lapply(m_split, function(x) {
+    sequence <- x[, 1]
+    id <- x[, 2]
+    seq_kmer <- vector("list", length(sequence))
+    for (i in 1:length(sequence)) {
+      seq_kmer[[i]] <- getKmer(sequence = sequence[i], 
+                               id = id[i], kmer = 10)
+    }
+    seq_kmer <- do.call(rbind, seq_kmer)
+    seq_kmer[, 2] <- as.character(seq_kmer[, 2])
+    
+    if (sum((grepl(paste("[^", paste(AADict, sep = "", collapse = ""), 
+                         "]", sep = "", collapse = ""), seq_kmer[,2]))) != 
+        0) {
+      stop("characters other than single letter code for amino acids are present")
     }
     
-    seq_kmer <- do.call(rbind, seq_kmer)
-    seq_kmer <- seq_kmer[nchar(as.character(seq_kmer[,2])) == 21,]
-    seq_kmer[,2] <- as.character(seq_kmer[,2])
-    seq_kmer <- as.data.frame(seq_kmer)
+    kmer21 <- seq_kmer[nchar(seq_kmer[,2]) == 21,]
+    kmer13 <- seq_kmer[nchar(seq_kmer[,2]) < 21 & nchar(seq_kmer[,2]) >= 17 & as.numeric(seq_kmer[,3]) > 10, , drop = FALSE]
     
-    if(sum((grepl(paste("[^", paste(AADict, sep = "",
-                                    collapse = ""),"]",
-                        sep = "", collapse = ""),
-                  seq_kmer$substr))) != 0){
-      stop("characters other than single letter code for amino acids are present")}
+    if(length(kmer13) != 0){
+      kmer13[,2] <- substring(kmer13[,2], first = 5, last = 17)
+      
+      MBI_13 <- getAAindex(kmer13[,2],  aaidx)
+      MoreauBroto_lag6_13 <- extractMBdesc(kmer13[,2])
+      QSO_lag12_13 <- QSOlevel(kmer13[,2])
+      ATC_13 <- getAAindex(kmer13[,2], Atchley)
+      CTDC_13 <- do.call(rbind, lapply(kmer13[,2], function(x) CTDC(x)))
+      
+      dtest13 <- data.matrix(cbind(ATC_13,
+                                   MoreauBroto_lag6_13,
+                                   QSO_lag12_13 ,
+                                   MBI_13,
+                                   CTDC_13))
+      
+      
+      prob_13 <- xgboost:::predict.xgb.Booster(model_13, dtest13)
+      HYP_13 <- ifelse(prob_13 >= tprob, "Yes", "No")
+      prediction13 <- cbind(id = as.character(kmer13[,1]),
+                            substr = as.character(kmer13[,2]), 
+                            P_pos = as.character(kmer13[,3]),
+                            prob = as.character(prob_13), 
+                            HYP = as.character(HYP_13))
+    } else {prediction13 <- NULL }
     
-    MBI_var <- t(sapply(seq_kmer$substr,  FUN = getAAindex))
-    row.names(MBI_var) <- 1:length(seq_kmer$substr)
+    MBI_21 <- getAAindex(kmer21[,2], aaidx)
+    MoreauBroto_lag6_21 <- extractMBdesc(kmer21[,2])
+    QSO_lag12_21 <- QSOlevel(kmer21[,2])
+    ATC_21 <- getAAindex(kmer21[,2], Atchley)
+    CTDC_21 <- do.call(rbind, lapply(kmer21[,2], function(x) CTDC(x)))
     
-    QSO_lag12_var <- QSOlevel(seq_kmer$substr)
-    MoreauBroto_lag6_var <- extractMBdesc(seq_kmer$substr)
+    dtest21 <- data.matrix(cbind(ATC_21,
+                                 MoreauBroto_lag6_21,
+                                 QSO_lag12_21 ,
+                                 MBI_21,
+                                 CTDC_21))
     
-    dtest <- data.matrix(cbind(MBI_var,
-                               MoreauBroto_lag6_var,
-                               QSO_lag12_var))
     
-    prob <- xgboost:::predict.xgb.Booster(model, dtest)
+    prob_21 <- xgboost:::predict.xgb.Booster(model_21, dtest21)
     
-    HYP <- ifelse(prob >= tprob, "Yes", "No")
+    HYP_21 <- ifelse(prob_21 >= tprob, "Yes", "No")
     
-    prediction <- cbind(id = as.character(seq_kmer$id),
-                        substr = as.character(seq_kmer$substr),
-                        P_pos = as.character(seq_kmer$pos),
-                        prob = as.character(prob),
-                        HYP = as.character(HYP))
-    return(prediction)
-  }
-  )
+    prediction21 <- cbind(id = as.character(kmer21[,1]),
+                          substr = as.character(kmer21[,2]), 
+                          P_pos = as.character(kmer21[,3]),
+                          prob = as.character(prob_21), 
+                          HYP = as.character(HYP_21))
+    
+    res <- as.data.frame(rbind(prediction21, prediction13), stringsAsFactors = FALSE)
+    res[,3] <- as.numeric(res[,3])
+    res[,4] <- as.numeric(res[,4])
+    res <- res[order(res[,1], res[,3]),]
+    res <- merge(data.frame(id = factor(id, levels = id)), res)
+    res <- res[order(res$id, res$P_pos),]
+    res <- as.matrix(res)
+    return(res)
+  })
   prediction <- as.data.frame(do.call(rbind, result), stringsAsFactors = FALSE)
-  prediction$prob <- as.numeric(prediction$prob )
+  prediction$prob <- as.numeric(prediction$prob)
   prediction$P_pos <- as.integer(prediction$P_pos)
-  
+  row.names(prediction) <- 1:nrow(prediction)
   seq <- sub_hyp(sequence, id, prediction)
-  result <- list(prediction = prediction,
-                 sequence = seq)
+  result <- list(prediction = prediction, sequence = seq)
   return(result)
 }
-
-
