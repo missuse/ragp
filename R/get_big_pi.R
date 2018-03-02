@@ -57,7 +57,7 @@
 #'                           short.out = F)
 #'
 #'lapply(big_pi_pred,
-#'       function(z) extract_val(x="Term  3", y=z)[4])
+#'       function(z) extract_val(x = "Term  3", y = z)[4])
 #'
 #'lapply(test_big_po,
 #'       function(z) extract_val(x = "Total Score", y = z)[1])

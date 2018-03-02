@@ -16,10 +16,11 @@
 #' data(at_nsp)
 #' library(seqinr)
 #' write.fasta(sequence = strsplit(at_nsp$sequence, ""),
-#'             name = at_nsp$Transcript.id, file = "at_nsp.fasta")
+#'             name = at_nsp$Transcript.id,
+#'             file = "at_nsp.fasta")
 #'
 #' #assumes input/output file are in working directory:
-#' file_paths = split_fasta(path_in = "at_nsp.fasta",
+#' file_paths <- split_fasta(path_in = "at_nsp.fasta",
 #'                          path_out = "at_nsp_split",
 #'                          num_seq = 500)
 #' }

@@ -53,9 +53,6 @@ A data frame with columns:
 \description{
 SignalP 4.1 server predicts the presence and location of signal peptide cleavage sites in amino acid sequences from different organisms: Gram-positive prokaryotes, Gram-negative prokaryotes, and eukaryotes. The method incorporates a prediction of cleavage sites and a signal peptide/non-signal peptide prediction based on a combination of several artificial neural networks.
 }
-\details{
-get_signalp_file is usefull when dealing with larger collections of sequences (for example whole transcriptome anotation), however for checking several sequences already in global enviroment the recomended aproach is to use get_signalp.
-}
 \examples{
 \dontrun{
 library(seqinr)

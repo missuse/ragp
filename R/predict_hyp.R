@@ -25,7 +25,8 @@
 #' ind <- c(129, 145, 147, 160, 170,
 #'     180, 189, 203, 205, 214, 217, 224)
 #'
-#' hyp_pred <- predict_hyp(sequence = at_nsp$sequence[ind], id = at_nsp$Transcript.id[ind])
+#' hyp_pred <- predict_hyp(sequence = at_nsp$sequence[ind],
+#'                         id = at_nsp$Transcript.id[ind])
 #' @export
 
 

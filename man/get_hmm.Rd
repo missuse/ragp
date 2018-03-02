@@ -42,7 +42,7 @@ of a protein sequence vs a profile-HMM database (Pfam-A).
 }
 \examples{
 
-pfam_pred = get_hmm(sequence = at_nsp$sequence[1:20],
+pfam_pred <- get_hmm(sequence = at_nsp$sequence[1:20],
                   id = at_nsp$Transcript.id[1:20])
 
 }

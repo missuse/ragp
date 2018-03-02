@@ -31,7 +31,7 @@ if simplify == F a named list with components:
 \item{$type}{Character, as supplied in the function call, defaults to "past"}
 \item{$user}{Character vector, as supplied in the function call or NULL if not supplied}
 }
-if simplify == T a data frame with column names corresponding to the list components.
+if simplify == TRUE a data frame with column names corresponding to the list components.
 }
 \description{
 Calculate the compositional bias of whole protein sequences, or slide along the sequences and calculate the bias for all subsequences of a defined length (frame). Sequence motifs can also be searched.
@@ -41,22 +41,33 @@ Calculate the compositional bias of whole protein sequences, or slide along the 
 library(ragp)
 data(at_nsp)
 
-test_bias = calculate_bias(at_nsp$sequence[1:20], id = at_nsp$Transcript.id[1:20])
+test_bias <- calculate_bias(sequence = at_nsp$sequence[1:20],
+                            id = at_nsp$Transcript.id[1:20])
 
 #when frame is not specified the output can be converted to a data frame for easier manipulation
 as.data.frame(do.call(cbind, test_bias))
 
-test_bias = calculate_bias(at_nsp$sequence[1:20], id = at_nsp$Transcript.id[1:20], frame = 20, user = c("P", "V", "K", "C", "Y", "T"))
+test_bias <- calculate_bias(sequence = at_nsp$sequence[1:20],
+                            id = at_nsp$Transcript.id[1:20],
+                            frame = 20,
+                            user = c("P", "V", "K", "C", "Y", "T"))
 
 #for motif search input a string instead of a character vector to user argument
-test_bias = calculate_bias(at_nsp$sequence, id = at_nsp$Transcript.id, user = "PTYK")
+test_bias <- calculate_bias(sequence = at_nsp$sequence,
+                            id = at_nsp$Transcript.id,
+                            user = "PTYK")
 
 #count all sequencs with a "PAST" bias over 45\%
-test_bias = calculate_bias(at_nsp$sequence, id = at_nsp$Transcript.id, simplify = T)
+test_bias <- calculate_bias(sequence = at_nsp$sequence,
+                            id = at_nsp$Transcript.id,
+                            simplify = TRUE)
 nrow(test_bias[test_bias$bias_percent >= 45, ])
 
 # count all sequencs with 2 or more SPPP motifs
-test_bias = calculate_bias(at_nsp$sequence, id = at_nsp$Transcript.id, simplify = T, user = "SPPP")
+test_bias <- calculate_bias(sequence = at_nsp$sequence,
+                            id = at_nsp$Transcript.id,
+                            simplify = TRUE,
+                            user = "SPPP")
 nrow(test_bias[test_bias$bias_sum >= 2,])
 
 }

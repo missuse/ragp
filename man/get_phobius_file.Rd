@@ -34,7 +34,9 @@ data(at_nsp)
 
 #create a fasta file:
 library(seqinr)
-write.fasta(sequence = strsplit(at_nsp$sequence, ""), name = at_nsp$Transcript.id, file = "at_nsp.fasta")
+write.fasta(sequence = strsplit(at_nsp$sequence, ""),
+           name = at_nsp$Transcript.id,
+           file = "at_nsp.fasta")
 
 #get predictions
 phobius_pred <- get_phobius_file("at_nsp.fasta")

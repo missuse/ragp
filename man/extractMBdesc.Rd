@@ -7,7 +7,7 @@
 extractMBdesc(x)
 }
 \arguments{
-\item{m}{A vector of k-mers}
+\item{x}{A vector of k-mers}
 }
 \value{
 A matrix with the Normalized Moreau-Broto Autocorrelation Descriptor (dim: 36)

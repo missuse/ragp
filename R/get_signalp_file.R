@@ -30,7 +30,6 @@
 #'
 #' @source \url{http://www.cbs.dtu.dk/services/SignalP-4.1/}
 #' @references Petersen TN. Brunak S. Heijne G. Nielsen H. (2011) SignalP 4.0: discriminating signal peptides from transmembrane regions. Nature Methods 8: 785-786
-#' @details get_signalp_file is usefull when dealing with larger collections of sequences (for example whole transcriptome anotation), however for checking several sequences already in global enviroment the recomended aproach is to use get_signalp.
 #'
 #' @seealso \code{\link[ragp]{get_targetp_file}}
 #'
