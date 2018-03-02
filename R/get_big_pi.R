@@ -54,7 +54,7 @@
 #'
 #' #run function with short.out=F
 #' big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
-#'                           short.out = F)
+#'                           short.out = FALSE)
 #'
 #'lapply(big_pi_pred,
 #'       function(z) extract_val(x = "Term  3", y = z)[4])
@@ -70,7 +70,7 @@
 #'@export
 
 
-get_big_pi <- function(sequence, short.out = T, sleep = NULL, verbose = NULL){
+get_big_pi <- function(sequence, short.out = TRUE, sleep = NULL, verbose = NULL){
   short.out <- short.out
   if (missing(short.out)){
     short.out <- T
@@ -115,7 +115,7 @@ get_big_pi <- function(sequence, short.out = T, sleep = NULL, verbose = NULL){
         warning(paste("sequence",
                       "[", i, "]",
                       " contains symbols not corresponding to amino acids",
-                      sep = ""), call. = F)
+                      sep = ""), call. = FALSE)
         quality_gpi <- "None"
         position_gpi <- "invalid character"
         total_score <- NA
@@ -148,7 +148,7 @@ get_big_pi <- function(sequence, short.out = T, sleep = NULL, verbose = NULL){
            length(grep(site_2, impro)) == 0){
           quality_gpi <- unlist(
             strsplit(impro[grep("Quality of the site", impro)],
-                     " {2,10}", perl = T))[2]
+                     " {2,10}", perl = TRUE))[2]
           position_gpi <- extract_val("Sequence position of the omega-site",
                                    impro)
           total_score <- extract_val("Total Score\\.",
@@ -166,8 +166,8 @@ get_big_pi <- function(sequence, short.out = T, sleep = NULL, verbose = NULL){
             if (length(grep(site_1, impro)) > 0 &
                 length(grep(site_2, impro)) > 0){
           quality_gpi <- unlist(
-            strsplit(head(impro[grep("Quality of the site", impro)], 1),
-                     " {2,10}", perl = T))[2]
+            strsplit(utils::head(impro[grep("Quality of the site", impro)], 1),
+                     " {2,10}", perl = TRUE))[2]
           position_gpi <- extract_val("Sequence position of the omega-site",
                                    impro)[1]
           total_score <- extract_val("Total Score\\.",
@@ -177,8 +177,8 @@ get_big_pi <- function(sequence, short.out = T, sleep = NULL, verbose = NULL){
           profile_i_score <- extract_val("Profile independent Score",
                                       impro)[1]
           alt_quality_gpi <- unlist(
-            strsplit(tail(impro[grep("Quality of the site", impro)], 1),
-                     " {2,10}", perl = T))[2]
+            strsplit(utils::tail(impro[grep("Quality of the site", impro)], 1),
+                     " {2,10}", perl = TRUE))[2]
           alt_position_gpi <- extract_val("Sequence position of the omega-site",
                                        impro)[2]
           alt_total_score <- extract_val("Total Score\\.",
@@ -216,9 +216,9 @@ get_big_pi <- function(sequence, short.out = T, sleep = NULL, verbose = NULL){
       big_pi$alt_total_score[i] <- alt_total_score
       big_pi$alt_profile_score[i] <- alt_profile_score
       big_pi$alt_profile_i_score[i] <- alt_profile_i_score
-      if (verbose == T){
+      if (verbose == TRUE){
         print(paste(i, "-", " Total Score:", total_score))
-        flush.console()
+        utils::flush.console()
       }
       Sys.sleep(sleep)
     }
@@ -229,7 +229,7 @@ get_big_pi <- function(sequence, short.out = T, sleep = NULL, verbose = NULL){
       if (length(grep(aa_regex, sequence[i])) >= 1){
         warning(paste("sequence", "[", i, "]",
                       " contains symbols not corresponding to amino acids",
-                      sep = ""), call. = F)
+                      sep = ""), call. = FALSE)
         impro <- paste("sequence", "[", i, "]",
                     " contains symbols not corresponding to amino acids",
                     sep = "")
@@ -242,9 +242,9 @@ get_big_pi <- function(sequence, short.out = T, sleep = NULL, verbose = NULL){
           impro <- impro[grep(crop_1, impro):length(impro)]
           score_print <- extract_val("Total Score\\.",
                                   impro)[1]
-          if (verbose == T){
+          if (verbose == TRUE){
             print(paste(i, "-", " Total Score:", score_print))
-            flush.console()
+            utils::flush.console()
           }
         } else {
           impro <- paste("Your sequence length is too short for the",
