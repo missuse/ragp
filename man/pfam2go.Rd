@@ -31,8 +31,8 @@ The objective of gene onthology (GO) is to provide controlled vocabularies for t
 library(ragp)
 data(at_nsp)
 
-pfam_pred <- get_hmm(sequence = at_nsp$sequence[1:20],
-                     id = at_nsp$Transcript.id[1:20])
+pfam_pred <- get_hmm(sequence = at_nsp$sequence[1:5],
+                     id = at_nsp$Transcript.id[1:5])
 
 pfam_pred_go <- pfam2go(data_pfam = pfam_pred, pfam = "acc")
 

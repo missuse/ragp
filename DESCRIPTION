@@ -1,7 +1,7 @@
 Package: ragp
 Type: Package
 Title: Mining for Arabinogalactan Protein Sequences
-Version: 0.0.0.9002
+Version: 0.0.0.9003
 Authors@R: c(
   person("Milan", "Dragicevic", email = "mdragicevic@ibiss.bg.ac.rs",
          role = c("aut", "cre")),
@@ -10,11 +10,11 @@ Author: Milan Dragicevic [aut, cre],
   Danijela Paunovic [aut]
 Maintainer: Milan Dragicevic <mdragicevic@ibiss.bg.ac.rs>
 Description: Identification of plant arabinogalactan protein sequences
-    by performing sequance bias and motif search, prediciton of
+    by performing sequence bias and motif search, prediction of
 	hydroxilated proline residues and scraping relevant data from
-	web based prediciton services.
+	web based prediction services.
 Depends: R (>= 3.3.0)
-License: MIT
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: xgboost (>= 0.6),
@@ -22,7 +22,7 @@ Imports: xgboost (>= 0.6),
     stringr (>= 1.2.0),
 	httr (>= 1.3.1),
 	xml2 (>= 1.1.1),
-	seqinr(>= 3.3)
+	seqinr(>= 3.3),
+    utils (>= 3.3)
 RoxygenNote: 6.0.1
 Suggests: signalHsmm
-    

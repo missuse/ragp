@@ -31,8 +31,8 @@
 #'
 #'@examples
 #'
-#'pfam_pred <- get_hmm(sequence = at_nsp$sequence[1:20],
-#'                   id = at_nsp$Transcript.id[1:20])
+#'pfam_pred <- get_hmm(sequence = at_nsp$sequence[1:4],
+#'                     id = at_nsp$Transcript.id[1:4])
 #'
 #'@export
 
@@ -80,7 +80,7 @@ get_hmm = function (sequence, id, verbose = NULL, sleep = NULL)
       pfam[[i]] <- hitx
       if (verbose == T) {
         print(hitx[, 1:11])
-        flush.console()
+        utils::flush.console()
       }
       Sys.sleep(sleep)
     }
@@ -92,7 +92,7 @@ get_hmm = function (sequence, id, verbose = NULL, sleep = NULL)
       pfam[[i]] <- hitx
       if (verbose == T) {
         print(hitx[, 1:11])
-        flush.console()
+        utils::flush.console()
       }
       Sys.sleep(sleep)
     }

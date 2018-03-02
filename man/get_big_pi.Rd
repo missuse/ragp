@@ -7,7 +7,7 @@
 \url{http://mendel.imp.ac.at/gpi/plant_server.html}
 }
 \usage{
-get_big_pi(sequence, short.out = T, sleep = NULL, verbose = NULL)
+get_big_pi(sequence, short.out = TRUE, sleep = NULL, verbose = NULL)
 }
 \arguments{
 \item{sequence}{A vector of strings representing protein amino acid sequences}
@@ -44,9 +44,8 @@ big-PI Plant Predictor is a web server utlizing a scoring algorithm for predicti
 library(ragp)
 data(at_nsp)
 
-#indexes of some sequences known to have a positive prediction
-ind <- c(129, 145, 147, 160, 170,
-    180, 189, 203, 205, 214, 217, 224)
+#indexes of some sequences in at_nsp
+ind <- c(129, 145, 147, 160, 170)
 
 big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind])
 
@@ -65,14 +64,14 @@ extract_val <- function(x, y){
 #define a regex that extracts numerics
 num_reg <- "[-+]?[0-9]*\\\\.?[0-9]+([eE][-+]?[0-9]+)?"
 
-#run function with short.out=F
+#run function with short.out = FALSE
 big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
-                          short.out = F)
+                          short.out = FALSE)
 
 lapply(big_pi_pred,
       function(z) extract_val(x = "Term  3", y = z)[4])
 
-lapply(test_big_po,
+lapply(big_pi_pred,
       function(z) extract_val(x = "Total Score", y = z)[1])
 
 #interested in the alternative site:

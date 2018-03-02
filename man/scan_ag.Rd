@@ -75,7 +75,7 @@ at_sp_ag_ext <- scan_ag(sequence = at_nsp$sequence,
                      div = 6,
                      type = "extended", exclude_ext = "yes")
 
-at_sp_ag_ext$sequence[at_sp_ag_ext$sequence! = at_sp_agt$sequence]
+at_sp_ag_ext$sequence[at_sp_ag_ext$sequence != at_sp_ag$sequence]
 
 
 }

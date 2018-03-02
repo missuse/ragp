@@ -17,6 +17,7 @@
 #'   \item{sequence}{sequences with prolines - P substituted with hydroxyprolines - O according to the prediction}
 #' }
 #'
+#' 
 #' @examples
 #' library(ragp)
 #' data(at_nsp)
@@ -64,6 +65,7 @@ predict_hyp <- function (sequence, id, tprob = 0.32, split = 1)
   
   pam <- ((seq(length(sequence)) - 1)%/%splt) + 1
   m_split <- split(data.frame(sequence, id), pam)
+  predict <- utils::getFromNamespace("predict.xgb.Booster", "xgboost")
   result <- lapply(m_split, function(x) {
     sequence <- x[, 1]
     id <- x[, 2]
@@ -100,7 +102,7 @@ predict_hyp <- function (sequence, id, tprob = 0.32, split = 1)
                                    CTDC_13))
       
       
-      prob_13 <- xgboost:::predict.xgb.Booster(model_13, dtest13)
+      prob_13 <- predict(model_13, dtest13)
       HYP_13 <- ifelse(prob_13 >= tprob, "Yes", "No")
       prediction13 <- cbind(id = as.character(kmer13[,1]),
                             substr = as.character(kmer13[,2]), 
@@ -122,7 +124,7 @@ predict_hyp <- function (sequence, id, tprob = 0.32, split = 1)
                                  CTDC_21))
     
     
-    prob_21 <- xgboost:::predict.xgb.Booster(model_21, dtest21)
+    prob_21 <- predict(model_21, dtest21)
     
     HYP_21 <- ifelse(prob_21 >= tprob, "Yes", "No")
     
