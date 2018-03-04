@@ -48,11 +48,11 @@ data(at_nsp)
 ind <- c(129, 145, 147, 160, 170)
 
 big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
-                          id = at_nsp$Transcript$id[ind],
+                          id = at_nsp$Transcript.id[ind],
                           simplify = FALSE)
                           
 big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
-                          id = at_nsp$Transcript$id[ind],
+                          id = at_nsp$Transcript.id[ind],
                           simplify = TRUE)
 }
 \references{
