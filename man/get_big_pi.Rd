@@ -7,35 +7,35 @@
 \url{http://mendel.imp.ac.at/gpi/plant_server.html}
 }
 \usage{
-get_big_pi(sequence, short.out = TRUE, sleep = NULL, verbose = NULL)
+get_big_pi(sequence, id, simplify = TRUE, sleep = NULL, verbose = TRUE)
 }
 \arguments{
 \item{sequence}{A vector of strings representing protein amino acid sequences}
 
-\item{short.out}{A bolean indicating the type of returned object, defaults to T}
+\item{id}{A vector of strings representing protein identifiers}
 
-\item{sleep}{A numeric indicating the pause in seconds betwean server calls, at default set to 2}
+\item{simplify}{A bolean indicating the type of returned object, defaults to TRUE}
 
-\item{verbose}{Bolean wheather to print out the total score for each sequence, defaults to T}
+\item{sleep}{A numeric indicating the pause in seconds betwean server calls, at default set to 1}
+
+\item{verbose}{Bolean wheather to print out the total score for each sequence, defaults to TRUE}
 }
 \value{
-If short.out==T:
+If simplify == TRUE:
 A data frame with columns:
 \describe{
-  \item{quality_gpi}{Character, indicating the "Quality of the highest scoring omega-site"}
-  \item{position_gpi}{Iinteger, indicating the "Sequence position of the highest scoring omega-site"}
-  \item{total_score}{Numeric, indicating "Total Score of the highest scoring omega-site"}
-  \item{profile_score}{Numeric, indicating the "Profile Score highest scoring omega-site"}
-  \item{profile_i_score}{Numeric, indicating "Profile independent Score of the highest scoring omega-site"}
-  \item{alt_quality_gpi}{Character, indicating the "Quality of the alternative omega-site", if present, else NA}
-  \item{alt_position_gpi}{Integer, indicating the "Sequence position of the alternative omega-site", if present, else NA}
-  \item{alt_total_score}{Numeric, indicating "Total Score of the alternative omega-site", if present, else NA}
-  \item{alt_profile_score}{Numeric, indicating the "Profile Score of the alternative omega-site", if present, else NA}
-  \item{alt_profile_i_score}{Numeric, indicating "Profile independent Score of the alternative omega-site" if present, else NA}
+  \item{omega_site}{Character, indicating the sequence position of the highest scoring omega-site}
+  \item{Quality}{Character, indicating the quality of the highest scoring omega-site}
+  \item{PValue}{Numeric, indicating the p-value for the prediction of the highest scoring omega-site"}
+  \item{id}{Character, indicating the protein identifier}
   }
 
-If short.out==F:
-A list where each element correspondes to one queried sequence containing lines of text of the whole big-PI Plant Predictor output.
+If simplify == FALSE:
+A list of predictions, each element named according to the sequence id, containg a two element list:
+\describe{
+  \item{prediction}{data frame, resembling the one returned by simplify == TRUE, along with alternative site predictions (if present)}
+  \item{calculation}{data frame, with profile dependant and profile independant scores}
+  }
 }
 \description{
 big-PI Plant Predictor is a web server utlizing a scoring algorithm for prediction of GPI modification sites in plants.
@@ -47,38 +47,13 @@ data(at_nsp)
 #indexes of some sequences in at_nsp
 ind <- c(129, 145, 147, 160, 170)
 
-big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind])
-
-#extract terms not included in the short output:
-
-#first define a function for extraction
-
-extract_val <- function(x, y){
- res <- regmatches(y[grep(x, y)],
-             gregexpr(num_reg, y[grep(x, y)]))
- res <- unlist(res)
- res <- as.numeric(res)
- return(res)
-}
-
-#define a regex that extracts numerics
-num_reg <- "[-+]?[0-9]*\\\\.?[0-9]+([eE][-+]?[0-9]+)?"
-
-#run function with short.out = FALSE
 big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
-                          short.out = FALSE)
-
-lapply(big_pi_pred,
-      function(z) extract_val(x = "Term  3", y = z)[4])
-
-lapply(big_pi_pred,
-      function(z) extract_val(x = "Total Score", y = z)[1])
-
-#interested in the alternative site:
-lapply(big_pi_pred,
-      function(x) extract_val(x = "Term  3", y = x)[5])
-#NAs do not have the alternative site
-
+                          id = at_nsp$Transcript$id[ind],
+                          simplify = FALSE)
+                          
+big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
+                          id = at_nsp$Transcript$id[ind],
+                          simplify = TRUE)
 }
 \references{
 Eisenhaber B. Wildpaner M. Schultz CJ. Borner GHH. Dupree P. Eisenhaber F. (2003) Glycosylphosphatidylinositol lipid anchoring of plant proteins. Sensitive prediction from sequence- and genome-wide studies for Arabidopsis and rice. Plant Physiology 133(4): 1691-701
