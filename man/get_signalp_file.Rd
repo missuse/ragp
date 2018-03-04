@@ -48,6 +48,7 @@ A data frame with columns:
   \item{Dmaxcut}{Numeric, as from input, Dcut_noTM if SignalP-noTM network used and Dcut_TM if SignalP-TM network used}
   \item{Networks.used}{Character, which network was used for the prediction: SignalP-noTM or SignalP-TM}
   \item{id}{Character, as from input}
+  \item{is.signalp}{Logical, did SignalP predict the presence of a signal peptide}
   }
 }
 \description{

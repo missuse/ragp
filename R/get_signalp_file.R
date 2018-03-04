@@ -26,6 +26,7 @@
 #'   \item{Dmaxcut}{Numeric, as from input, Dcut_noTM if SignalP-noTM network used and Dcut_TM if SignalP-TM network used}
 #'   \item{Networks.used}{Character, which network was used for the prediction: SignalP-noTM or SignalP-TM}
 #'   \item{id}{Character, as from input}
+#'   \item{is.signalp}{Logical, did SignalP predict the presence of a signal peptide}
 #'   }
 #'
 #' @source \url{http://www.cbs.dtu.dk/services/SignalP-4.1/}
@@ -176,5 +177,6 @@ get_signalp_file = function (file, org_type = c("euk", "gram-", "gram+"), Dcut_t
     collected_res[[i]] <- res2_split
   }
   collected_res <- do.call(rbind, collected_res)
+  collected_res$is.signalp <- collected_res$is.sp == "Y"
   return(collected_res)
 }

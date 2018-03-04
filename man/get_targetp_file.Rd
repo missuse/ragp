@@ -43,6 +43,7 @@ A data frame with columns:
   \item{Loc}{Character, one of C (chloroplast), M (mitochondrion), S (secretory pathway), - (any other location) or * ("don't know"; indicates that cutoff restrictions were set and the winning network output score was below the requested cutoff for that category.) }
   \item{TPlen}{Integer, predicted presequence length}
   \item{RC}{Integer, reliability class, from 1 to 5, where 1 indicates the strongest prediction. RC is a measure of the size of the difference ('diff') between the highest (winning) and the second highest output scores. There are 5 reliability classes, defined as follows: 1 : diff > 0.800, 2 : 0.800 > diff > 0.600, 3 : 0.600 > diff > 0.400, 4 : 0.400 > diff > 0.200, 5 : 0.200 > diff. Thus, the lower the value of RC the safer the prediction.}
+  \item{is.signalp}{Logical, did TargetP predict the presence of a signal peptide}
   }
 }
 \description{

@@ -14,6 +14,7 @@
 #'   \item{Quality}{Character, indicating the quality of the highest scoring omega-site}
 #'   \item{PValue}{Numeric, indicating the p-value for the prediction of the highest scoring omega-site"}
 #'   \item{id}{Character, indicating the protein identifier}
+#'   \item{is.bigpi}{Logical, did big-Pi predict the presence of a GPI}
 #'   }
 #'
 #' If simplify == FALSE:
@@ -242,6 +243,7 @@ get_big_pi <- function(sequence, id, simplify = TRUE, sleep = NULL, verbose = TR
     })
     big_pi_list <- do.call(rbind, big_pi_list)
     big_pi_list$id <- id
+    big_pi_list$is.bigpi <- big_pi_list$Quality != "None"
   } else {
     (names(big_pi_list) <- id)
   }

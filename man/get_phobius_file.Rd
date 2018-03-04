@@ -20,6 +20,7 @@ A data frame with columns:
 \item{sp}{Character, Y/0 indicator if a signal peptide was predicted or not.}
 \item{prediction}{Character string, predicted topology of the protein.}
 \item{cut_site}{Integer, first amino acid after removal of the signal peptide}
+\item{is.phobius}{Logical, did Phobius predict the presence of a signal peptide}
 }
 }
 \description{
