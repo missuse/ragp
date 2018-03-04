@@ -62,7 +62,7 @@ get_phobius_file = function(file){
   collected_res <- do.call(rbind, collected_res)
   collected_res$cut_site <- stringr::str_extract(collected_res$prediction,
                                                  "(?<=/)\\d+")
-  collected_res$is.phobius <- phobius_pred$sp == "Y"
+  collected_res$is.phobius <- collected_res$sp == "Y"
   return(collected_res)
 }
 
