@@ -67,16 +67,16 @@ first 10 rows of the GO result with selected columns:
 
 | id          | name             | acc        | GO\_name                                       | GO\_acc      |
 |:------------|:-----------------|:-----------|:-----------------------------------------------|:-------------|
-| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:translation>                               | <GO:0006412> |
-| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:intracellular>                             | <GO:0005622> |
-| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:rRNA> binding                              | <GO:0019843> |
 | ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:structural> constituent of ribosome        | <GO:0003735> |
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:rRNA> binding                              | <GO:0019843> |
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:intracellular>                             | <GO:0005622> |
 | ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:ribosome>                                  | <GO:0005840> |
-| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitinase> activity                        | <GO:0004568> |
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:translation>                               | <GO:0006412> |
 | AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
 | AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitin> catabolic process                  | <GO:0006032> |
 | AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitinase> activity                        | <GO:0004568> |
 | AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
+| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitin> catabolic process                  | <GO:0006032> |
 
 Count specific amino acids or amino acid motifs:
 
@@ -109,18 +109,18 @@ hyp_pred <- predict_hyp(sequence = at_nsp$sequence,
 
 Output is a list of two elements. The first element "prediction"" is a data frame. First 10 rows:
 
-| id          | substr                | P\_pos | prob               | HYP |
-|:------------|:----------------------|:-------|:-------------------|:----|
-| AT2G43600.1 | FSQNCMDTSCPGLKECCSRWG | 31     | 0.0376294292509556 | No  |
-| AT2G43600.1 | EYCGFFCFSGPCNIKGKSYGY | 58     | 0.0523086786270142 | No  |
-| AT2G43600.1 | YGYDYNVDAGPRGKIETVITS | 76     | 0.110943540930748  | No  |
-| AT2G43600.1 | ERYCSKSKKYPCEPGKNYYGR | 163    | 0.075996607542038  | No  |
-| AT2G43600.1 | CSKSKKYPCEPGKNYYGRGLL | 166    | 0.0564411692321301 | No  |
-| AT2G43600.1 | YYGAGKHLGLPLLKDPDLVSR | 194    | 0.0403638146817684 | No  |
-| AT2G43600.1 | KHLGLPLLKDPDLVSRSPEVA | 199    | 0.0384472720324993 | No  |
-| AT2G43600.1 | LKDPDLVSRSPEVAFKFAMWF | 206    | 0.0404469892382622 | No  |
-| AT2G43600.1 | AMWFWNRNVRPALYLGFGEIT | 223    | 0.0404815301299095 | No  |
-| AT2G28410.1 | TNFALAQDRAPHGLAYETPVA | 27     | 0.0615824684500694 | No  |
+| id          | substr                |  P\_pos|  prob| HYP |
+|:------------|:----------------------|-------:|-----:|:----|
+| AT2G43600.1 | FSQNCMDTSCPGLKECCSRWG |      31|  0.02| No  |
+| AT2G43600.1 | EYCGFFCFSGPCNIKGKSYGY |      58|  0.02| No  |
+| AT2G43600.1 | YGYDYNVDAGPRGKIETVITS |      76|  0.03| No  |
+| AT2G43600.1 | ERYCSKSKKYPCEPGKNYYGR |     163|  0.04| No  |
+| AT2G43600.1 | CSKSKKYPCEPGKNYYGRGLL |     166|  0.02| No  |
+| AT2G43600.1 | YYGAGKHLGLPLLKDPDLVSR |     194|  0.02| No  |
+| AT2G43600.1 | KHLGLPLLKDPDLVSRSPEVA |     199|  0.02| No  |
+| AT2G43600.1 | LKDPDLVSRSPEVAFKFAMWF |     206|  0.02| No  |
+| AT2G43600.1 | AMWFWNRNVRPALYLGFGEIT |     223|  0.02| No  |
+| AT2G43600.1 | EMLGVTPDQGLDC         |     267|  0.00| No  |
 
 predict\_hyp is also availible as a [shiny app](https://profenicolalac.shinyapps.io/HYPpredict_Shiny/). Details on how hydroxyproline sites are predicted will be availible soon.
 
