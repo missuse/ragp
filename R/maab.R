@@ -57,7 +57,7 @@
 #'                   
 #' test_bias <- maab(sequence = at_nsp$sequence[1:20],
 #'                   id = at_nsp$Transcript.id[1:20],
-#'                   custom = c("KKP", "SD[GD]"))                       
+#'                   custom = c("KKP", "SD[GD], "P"))                       
 #'                   
 #' @export                  
 
