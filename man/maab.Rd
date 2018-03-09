@@ -13,7 +13,7 @@ maab(sequence, id, frame = NULL, custom = NULL)
 
 \item{frame}{An optional integer defining the frame length for sliding along the sequences}
 
-\item{custom}{An optional character vector which can contain amino acid one letter symbols eg. c("P", "V", "K", "C", "Y", "T"), strings corresponding to amino acid motifs eg c("PTYK", "PVKC"), mixing of types is supported. Common regex operators can also be utilized.}
+\item{custom}{An optional character vector which can contain amino acid one letter symbols eg. c("P", "V", "K", "C", "T"), strings corresponding to amino acid motifs eg c("PTYK", "PVKC"), mixing of types is supported. Common regex operators can also be utilized.}
 }
 \value{
 by default if, frame is not specified a data frame is returned with columns:

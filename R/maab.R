@@ -5,7 +5,7 @@
 #' @param sequence A vector of strings representing protein amino acid sequences
 #' @param id A vector of strings representing the names of the corresponding sequences
 #' @param frame An optional integer defining the frame length for sliding along the sequences
-#' @param custom An optional character vector which can contain amino acid one letter symbols eg. c("P", "V", "K", "C", "Y", "T"), strings corresponding to amino acid motifs eg c("PTYK", "PVKC"), mixing of types is supported. Common regex operators can also be utilized.
+#' @param custom An optional character vector which can contain amino acid one letter symbols eg. c("P", "V", "K", "C", "T"), strings corresponding to amino acid motifs eg c("PTYK", "PVKC"), mixing of types is supported. Common regex operators can also be utilized.
 #' 
 #' @return by default if, frame is not specified a data frame is returned with columns:
 #' \enumerate{
