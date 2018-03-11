@@ -1,13 +1,14 @@
 #' Find AGII glycomodules in protein sequences
 #'
 #' AGII glycomodules are amino acid dimmers: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other (Tan et al., 2003).
-#' Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. This function attempts to find the mentioned dimmers according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead. If any sequence from the supplied contains "O" the function will consider only true AGII glycomodules.
+#' Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine and V - valine. This function attempts to find the mentioned dimmers according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead. If any sequence from the supplied contains "O" the function will consider only true AGII glycomodules.
 #'
-#'@param sequence A vector of strings representing protein amino acid sequences.
-#'@param id An optional vector of strings representing the names of the corresponding sequences.
+#'@param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
+#'@param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#'@param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #'@param dim An integer defining the minimum number of close dimmers to be considered, at default set to 3.
 #'@param div An integer defining the maximum number of amino acids that can separate the dimmers for them to be considered, at default to 10
-#'@param type One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P|O partners in dimmers, if extended dimmers involving P|O with A, S, T, G and V will be consdered. At default set to "extended".
+#'@param type One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P|O partners in dimmers, if extended dimmers involving P|O with A, S, T, G and V will be considered. At default set to "extended".
 #'@param exclude_ext One of c("no", "yes", "all"), should extensin (SPPP+) regions be excluded from the search: "no" - do not exclude SPPP+; "yes" - exclude all SPPP+; "all" - exclude all PPP+
 #'
 #'@return A named list with components:
@@ -16,9 +17,9 @@
 #'   \item{$sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dimmers that satisfy the user set conditions) in uppercase}
 #'   \item{$AG_aa}{Numeric vector, each element corresponding to the number of matched letters (amino acids in dimmers that satisfy the user set conditions) in each input sequence}
 #'   \item{$AG_locations}{List of numeric vectors, each element corresponding to the locations of found dimmers}
-#'   \item{$total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids betwean dimers in a match) in each sequence}
-#'   \item{$longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids betwean dimers in a match) in each sequence}
-#'   \item{$locations}{List of matrices, each element describing the start and end locations of the found stretches of dimmers (including the amino acids betwean dimers in a match)}
+#'   \item{$total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+#'   \item{$longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+#'   \item{$locations}{List of matrices, each element describing the start and end locations of the found stretches of dimmers (including the amino acids between dimers in a match)}
 #'   \item{$dim}{Integer, as from input, default dim = 3}
 #'   \item{$div}{Integer, as from input, default div = 10}
 #'   \item{$type}{Character, as from input, one of c("conservative", "extended")}
@@ -33,7 +34,7 @@
 #' data(at_nsp)
 #'
 #' # find all stretches of AP, SP, TP, PA, PS and PT dimmers where there are at least
-#' # 3 dimmers separated by a maximim of 10 amino acids betwean each two dimmers
+#' # 3 dimmers separated by a maximum of 10 amino acids between each two dimmers
 #' at_nsp_ag <- scan_ag(sequence = at_nsp$sequence[1:20],
 #'                      id = at_nsp$Transcript.id[1:20],
 #'                      dim = 3,
@@ -41,7 +42,7 @@
 #'                      type = "conservative")
 #'
 #' # find all stretches of AP, SP, TP, GP, VP, PA, PS, PT PG, and PV dimmers where there
-#' # are at least 2 dimmers separated by a maximim of 4 amino acids betwean them
+#' # are at least 2 dimmers separated by a maximum of 4 amino acids between them
 #' at_nsp_ag <- scan_ag(sequence = at_nsp$sequence[1:20],
 #'                      id = at_nsp$Transcript.id[1:20],
 #'                      dim = 2,
@@ -68,10 +69,64 @@
 #'@export
 
 
-scan_ag <- function(sequence, id = NULL, dim = NULL, div = NULL, type = 
+scan_ag <- function(data = NULL, sequence, id, dim = 3, div = 10, type = 
                       c("conservative", "extended"), exclude_ext = c("no", "yes", "all")){
-  if (is.null(id)) id <- rep(NA, length(sequence))
-  id <- as.character(id)
+  if(missing(data)){
+    if (missing(sequence)){
+      stop("protein sequence must be provided to obtain predictions")
+    }
+    if (missing(id)){
+      stop("protein id must be provided to obtain predictions")
+    }
+    id <- as.character(id)
+    sequence <- toupper(as.character(sequence))
+    if (length(sequence) != length(id)){
+      stop("id and sequence vectors are not of same length")
+    }
+  }
+  if(class(data[[1]]) ==  "SeqFastaAA"){
+    dat <- lapply(data, paste0, collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$", "", sequence)
+  }
+  if(class(data) == "data.frame"){
+    if(missing(sequence)){
+      stop("the column name with the sequences must be specified")
+    }
+    if(missing(id)){
+      stop("the column name with the sequence id's must be specified")
+    }
+    id <- if(deparse(substitute(id)) %in% colnames(data)){
+      data[[deparse(substitute(id))]]
+    } else if(id %in% colnames(data)){
+      data[[id]]
+    } else {
+      stop("specified id not found in data")
+    }
+    id <- as.character(id)  
+    sequence  <- if(deparse(substitute(sequence)) %in% colnames(data)){
+      data[[deparse(substitute(sequence))]]
+    } else if(sequence %in% colnames(data)){
+      data[[sequence]]
+    } else {
+      stop("specified id not found in data")
+    }
+    sequence <- toupper(as.character(sequence))
+  }
+  if(class(data) == "character"){
+    if (file.exists(data)){
+      dat <- seqinr::read.fasta(file = data,
+                                seqtype = "AA",
+                                as.string = FALSE)
+      dat <- lapply(dat, paste0, collapse ="")
+      id <- names(dat)
+      sequence <- toupper(as.character(unlist(dat)))
+      sequence <- sub("\\*$", "", sequence)
+    } else {
+      stop("cannot find file in the specified path")
+    }
+  }
   if (is.null(dim)) dim <- 3
   dim <- as.integer(dim)
   if (length(dim) != 1)
@@ -84,7 +139,6 @@ scan_ag <- function(sequence, id = NULL, dim = NULL, div = NULL, type =
   if (!type %in% c("conservative", "extended"))
     stop ("type should be one of: conservative or extended")
   if (type == "extended") aa <- "[ASTGV]" else aa <- "[AST]"
-  sequence <- toupper(sequence)
   if (missing(exclude_ext)) exclude_ext <- "none"
   regex <- paste("(P",  aa, "P(?!" , aa, ")|", aa, "P",
                  aa, "(?!P)|", aa, "P|P", aa, ")(.{0,", div, "}(P",

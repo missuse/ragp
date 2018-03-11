@@ -7,21 +7,23 @@
 \url{https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan}
 }
 \usage{
-get_hmm(sequence, id, verbose = NULL, sleep = NULL)
+get_hmm(data = NULL, sequence, id, verbose = NULL, sleep = NULL)
 }
 \arguments{
-\item{sequence}{A vector of strings representing protein amino acid sequences}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
 
-\item{id}{A vector of strings representing the names of the corresponding sequences}
+\item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{verbose}{Bolean wheather to print out the output for each sequence, defaults to T}
+\item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{sleep}{Numeric indicating the pause in seconds betwean server calls, at default set to 1}
+\item{verbose}{Bolean, whether to print out the output for each sequence, defaults to T}
+
+\item{sleep}{Numeric indicating the pause in seconds between server calls, at default set to 1}
 }
 \value{
 A data frame with columns:
 \describe{
-  \item{id}{Character, as suplied in the function call}
+  \item{id}{Character, as supplied in the function call}
   \item{name}{Character, PFAM family name}
   \item{acc}{Character, PFAM family accession}
   \item{desc}{Character, PFAM family description}
@@ -33,7 +35,7 @@ A data frame with columns:
   \item{ievalue}{Numeric, the "independent E-value", the E-value that the sequence/profile comparison would have received if this were the only domain envelope found in it, excluding any others. This is a stringent measure of how reliable this particular domain may be. The independent E-value uses the total number of targets in the target database.}
   \item{cevalue}{Numeric, the "conditional E-value", a permissive measure of how reliable this particular domain may be.}
   \item{bitscore}{Numeric, the domain bit score.}
-  \item{reported}{Logical, is the result reported on the hmmer site. The hmmer web server outputs more hmm profile matches than it presents to the user. Results below a certain treshold are not reported (hidden) on the site.}
+  \item{reported}{Logical, is the result reported on the hmmer site. The hmmer web server outputs more hmm profile matches than it presents to the user. Results below a certain threshold are not reported (hidden) on the site.}
 }
 }
 \description{

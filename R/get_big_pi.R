@@ -1,12 +1,13 @@
 #' Scraping big-PI Plant Predictor web server.
 #'
-#' big-PI Plant Predictor is a web server utlizing a scoring algorithm for prediction of GPI modification sites in plants.
+#' big-PI Plant Predictor is a web server utilizing a scoring algorithm for prediction of GPI modification sites in plants.
 #'
-#' @param sequence A vector of strings representing protein amino acid sequences
-#' @param id A vector of strings representing protein identifiers 
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
+#' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param simplify A bolean indicating the type of returned object, defaults to TRUE
-#' @param sleep A numeric indicating the pause in seconds betwean server calls, at default set to 1
-#' @param verbose Bolean wheather to print out the total score for each sequence, defaults to TRUE
+#' @param sleep A numeric indicating the pause in seconds between server calls, at default set to 1
+#' @param verbose Bolean whether to print out the total score for each sequence, defaults to TRUE
 #' @return If simplify == TRUE:
 #' A data frame with columns:
 #' \describe{
@@ -18,10 +19,10 @@
 #'   }
 #'
 #' If simplify == FALSE:
-#' A list of predictions, each element named according to the sequence id, containg a two element list:
+#' A list of predictions, each element named according to the sequence id, containing a two element list:
 #' \describe{
 #'   \item{prediction}{data frame, resembling the one returned by simplify == TRUE, along with alternative site predictions (if present)}
-#'   \item{calculation}{data frame, with profile dependant and profile independant scores}
+#'   \item{calculation}{data frame, with profile dependent and profile independent scores}
 #'   }
 #'
 #' @source \url{http://mendel.imp.ac.at/gpi/plant_server.html}
@@ -38,15 +39,16 @@
 #'                           id = at_nsp$Transcript.id[ind],
 #'                           simplify = FALSE)
 #'                           
-#' big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
-#'                           id = at_nsp$Transcript.id[ind],
+#' big_pi_pred <- get_big_pi(data = at_nsp[ind,],
+#'                           sequence = sequence,
+#'                           id = Transcript.id,
 #'                           simplify = TRUE)
 
 #'@export
 
 
 
-get_big_pi <- function(sequence, id, simplify = TRUE, sleep = NULL, verbose = TRUE){
+get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = NULL, verbose = TRUE){
   if (missing(simplify)){
     simplify <- TRUE
   }
@@ -56,8 +58,62 @@ get_big_pi <- function(sequence, id, simplify = TRUE, sleep = NULL, verbose = TR
   if (missing(verbose)){
     verbose <- TRUE
   }
-  sequence <- as.character(sequence)
-  id <- as.character(id)
+  if(missing(data)){
+    if (missing(sequence)){
+      stop("protein sequence must be provided to obtain predictions")
+    }
+    if (missing(id)){
+      stop("protein id must be provided to obtain predictions")
+    }
+    id <- as.character(id)
+    sequence <- toupper(as.character(sequence))
+    if (length(sequence) != length(id)){
+      stop("id and sequence vectors are not of same length")
+    }
+  }
+  if(class(data[[1]]) ==  "SeqFastaAA"){
+    dat <- lapply(data, paste0, collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$", "", sequence)
+  }
+  if(class(data) == "data.frame"){
+    if(missing(sequence)){
+      stop("the column name with the sequences must be specified")
+    }
+    if(missing(id)){
+      stop("the column name with the sequence id's must be specified")
+    }
+    id <- if(deparse(substitute(id)) %in% colnames(data)){
+      data[[deparse(substitute(id))]]
+    } else if(id %in% colnames(data)){
+      data[[id]]
+    } else {
+      stop("specified id not found in data")
+    }
+    id <- as.character(id)  
+    sequence  <- if(deparse(substitute(sequence)) %in% colnames(data)){
+      data[[deparse(substitute(sequence))]]
+    } else if(sequence %in% colnames(data)){
+      data[[sequence]]
+    } else {
+      stop("specified id not found in data")
+    }
+    sequence <- toupper(as.character(sequence))
+  }
+  if(class(data) == "character"){
+    if (file.exists(data)){
+      dat <- seqinr::read.fasta(file = data,
+                                seqtype = "AA",
+                                as.string = FALSE)
+      dat <- lapply(dat, paste0, collapse ="")
+      id <- names(dat)
+      sequence <- toupper(as.character(unlist(dat)))
+      sequence <- sub("\\*$", "", sequence)
+    } else {
+      stop("cannot find file in the specified path")
+    }
+  }
   if (length(sequence) != length(id)) 
     stop("id and sequence vectors are not of same length")
   url <- "http://mendel.imp.ac.at/gpi/plant_server.html"

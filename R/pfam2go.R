@@ -1,6 +1,6 @@
 #' Add GO terms based on pfam accessions
 #'
-#' The objective of gene onthology (GO) is to provide controlled vocabularies for the description of the biological process, molecular function, and cellular component of gene products. This function maps existing PFAM accessions to corresponding GO terms.
+#' The objective of gene ontology (GO) is to provide controlled vocabularies for the description of the biological process, molecular function, and cellular component of gene products. This function maps existing PFAM accessions to corresponding GO terms.
 #'
 #' @param data_pfam a data frame containing a column with PFAM accessions
 #' @param pfam a string defining the column name where the PFAM accessions are stored. Defaults to "acc" as per output of get_hmm function.

@@ -3,14 +3,14 @@
 #' TargetP 1.1 predicts the subcellular location of eukaryotic proteins. The location assignment is based on the predicted presence of any of the N-terminal presequences: chloroplast transit peptide (cTP), mitochondrial targeting peptide (mTP) or secretory pathway signal peptide (SP). TargetP uses ChloroP and SignalP to predict cleavage sites for cTP and SP, respectively. For the sequences predicted to contain an N-terminal presequence a potential cleavage site is also predicted.
 #'
 #' @param file A path to the FASTA formated file that is to be processed
-#' @param org_type One of c("non_plant", "plant"), defaults to "plant". Which models should be used for prediciton.
-#' @param cutoffs One of c("winner_takes_all", "spec95", "spec90", "custom"), defaults to "winner_takes_all". If "winner_takes_all" no cutoffs are specified, if "spec95" or "spec90" are selected, predefined set of cutoffs that yielded >0.95 or >0.9 specificity on the TargetP test sets. If "custom" specified user defined cutoffs should be sepcified in "tcut", "pcut", "scut", ocut".
+#' @param org_type One of c("non_plant", "plant"), defaults to "plant". Which models should be used for prediction.
+#' @param cutoffs One of c("winner_takes_all", "spec95", "spec90", "custom"), defaults to "winner_takes_all". If "winner_takes_all" no cutoffs are specified, if "spec95" or "spec90" are selected, predefined set of cutoffs that yielded >0.95 or >0.9 specificity on the TargetP test sets. If "custom" specified user defined cutoffs should be specified in "tcut", "pcut", "scut", ocut".
 #' @param tcut A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). mTP user specified cutoff.
 #' @param pcut A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). cTP user specified cutoff.
 #' @param scut A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). SP user specified cutoff.
 #' @param ocut A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). User specified cutoff for "other" (not with mTP, cTP, SP).
 #' @param spliter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.
-#' @param sleep A numeric indicating the pause in seconds betwean server calls, at default set to 1
+#' @param sleep A numeric indicating the pause in seconds between server calls, at default set to 1
 #' @return  A data frame with columns:
 #' \describe{
 #'   \item{Name}{Character, sequence name truncated to 20 characters}

@@ -4,19 +4,21 @@
 \alias{scan_ag}
 \title{Find AGII glycomodules in protein sequences}
 \usage{
-scan_ag(sequence, id = NULL, dim = NULL, div = NULL,
+scan_ag(data = NULL, sequence, id, dim = 3, div = 10,
   type = c("conservative", "extended"), exclude_ext = c("no", "yes", "all"))
 }
 \arguments{
-\item{sequence}{A vector of strings representing protein amino acid sequences.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
 
-\item{id}{An optional vector of strings representing the names of the corresponding sequences.}
+\item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
+
+\item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
 \item{dim}{An integer defining the minimum number of close dimmers to be considered, at default set to 3.}
 
 \item{div}{An integer defining the maximum number of amino acids that can separate the dimmers for them to be considered, at default to 10}
 
-\item{type}{One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P|O partners in dimmers, if extended dimmers involving P|O with A, S, T, G and V will be consdered. At default set to "extended".}
+\item{type}{One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P|O partners in dimmers, if extended dimmers involving P|O with A, S, T, G and V will be considered. At default set to "extended".}
 
 \item{exclude_ext}{One of c("no", "yes", "all"), should extensin (SPPP+) regions be excluded from the search: "no" - do not exclude SPPP+; "yes" - exclude all SPPP+; "all" - exclude all PPP+}
 }
@@ -27,9 +29,9 @@ A named list with components:
   \item{$sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dimmers that satisfy the user set conditions) in uppercase}
   \item{$AG_aa}{Numeric vector, each element corresponding to the number of matched letters (amino acids in dimmers that satisfy the user set conditions) in each input sequence}
   \item{$AG_locations}{List of numeric vectors, each element corresponding to the locations of found dimmers}
-  \item{$total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids betwean dimers in a match) in each sequence}
-  \item{$longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids betwean dimers in a match) in each sequence}
-  \item{$locations}{List of matrices, each element describing the start and end locations of the found stretches of dimmers (including the amino acids betwean dimers in a match)}
+  \item{$total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+  \item{$longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+  \item{$locations}{List of matrices, each element describing the start and end locations of the found stretches of dimmers (including the amino acids between dimers in a match)}
   \item{$dim}{Integer, as from input, default dim = 3}
   \item{$div}{Integer, as from input, default div = 10}
   \item{$type}{Character, as from input, one of c("conservative", "extended")}
@@ -37,7 +39,7 @@ A named list with components:
 }
 \description{
 AGII glycomodules are amino acid dimmers: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other (Tan et al., 2003).
-Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. This function attempts to find the mentioned dimmers according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead. If any sequence from the supplied contains "O" the function will consider only true AGII glycomodules.
+Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine and V - valine. This function attempts to find the mentioned dimmers according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead. If any sequence from the supplied contains "O" the function will consider only true AGII glycomodules.
 }
 \details{
 The function can be supplied with the sequences resulting from predict_hyp in which case only AGII glycomodules containing O instead of P will be considered.
@@ -46,7 +48,7 @@ The function can be supplied with the sequences resulting from predict_hyp in wh
 data(at_nsp)
 
 # find all stretches of AP, SP, TP, PA, PS and PT dimmers where there are at least
-# 3 dimmers separated by a maximim of 10 amino acids betwean each two dimmers
+# 3 dimmers separated by a maximum of 10 amino acids between each two dimmers
 at_nsp_ag <- scan_ag(sequence = at_nsp$sequence[1:20],
                      id = at_nsp$Transcript.id[1:20],
                      dim = 3,
@@ -54,7 +56,7 @@ at_nsp_ag <- scan_ag(sequence = at_nsp$sequence[1:20],
                      type = "conservative")
 
 # find all stretches of AP, SP, TP, GP, VP, PA, PS, PT PG, and PV dimmers where there
-# are at least 2 dimmers separated by a maximim of 4 amino acids betwean them
+# are at least 2 dimmers separated by a maximum of 4 amino acids between them
 at_nsp_ag <- scan_ag(sequence = at_nsp$sequence[1:20],
                      id = at_nsp$Transcript.id[1:20],
                      dim = 2,

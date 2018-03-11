@@ -2,8 +2,9 @@
 #'
 #' Calculate the compositional bias of whole protein sequences, or slide along the sequences and calculate the bias for all subsequences of a defined length (frame). Sequence motifs can also be searched.
 #' 
-#' @param sequence A vector of strings representing protein amino acid sequences
-#' @param id A vector of strings representing the names of the corresponding sequences
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
+#' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param frame An optional integer defining the frame length for sliding along the sequences
 #' @param custom An optional character vector which can contain amino acid one letter symbols eg. c("P", "V", "K", "C", "T"), strings corresponding to amino acid motifs eg c("PTYK", "PVKC"), mixing of types is supported. Common regex operators can also be utilized.
 #' 
@@ -57,14 +58,68 @@
 #'                   
 #' test_bias <- maab(sequence = at_nsp$sequence[1:20],
 #'                   id = at_nsp$Transcript.id[1:20],
-#'                   custom = c("KKP", "SD[GD], "P"))                       
+#'                   custom = c("KKP", "SD[GD]", "P"))                       
 #'                   
 #' @export                  
 
 
-maab <- function(sequence, id, frame = NULL, custom = NULL){
-  sequence <- toupper(as.character(sequence))
-  id <- as.character(id)
+maab <- function(data = NULL, sequence, id, frame = NULL, custom = NULL){
+  if(missing(data)){
+    if (missing(sequence)){
+      stop("protein sequence must be provided to obtain predictions")
+    }
+    if (missing(id)){
+      stop("protein id must be provided to obtain predictions")
+    }
+    id <- as.character(id)
+    sequence <- toupper(as.character(sequence))
+    if (length(sequence) != length(id)){
+      stop("id and sequence vectors are not of same length")
+    }
+  }
+  if(class(data[[1]]) ==  "SeqFastaAA"){
+    dat <- lapply(data, paste0, collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$", "", sequence)
+  }
+  if(class(data) == "data.frame"){
+    if(missing(sequence)){
+      stop("the column name with the sequences must be specified")
+    }
+    if(missing(id)){
+      stop("the column name with the sequence id's must be specified")
+    }
+    id <- if(deparse(substitute(id)) %in% colnames(data)){
+      data[[deparse(substitute(id))]]
+    } else if(id %in% colnames(data)){
+      data[[id]]
+    } else {
+      stop("specified id not found in data")
+    }
+    id <- as.character(id)  
+    sequence  <- if(deparse(substitute(sequence)) %in% colnames(data)){
+      data[[deparse(substitute(sequence))]]
+    } else if(sequence %in% colnames(data)){
+      data[[sequence]]
+    } else {
+      stop("specified id not found in data")
+    }
+    sequence <- toupper(as.character(sequence))
+  }
+  if(class(data) == "character"){
+    if (file.exists(data)){
+      dat <- seqinr::read.fasta(file = data,
+                                seqtype = "AA",
+                                as.string = FALSE)
+      dat <- lapply(dat, paste0, collapse ="")
+      id <- names(dat)
+      sequence <- toupper(as.character(unlist(dat)))
+      sequence <- sub("\\*$", "", sequence)
+    } else {
+      stop("cannot find file in the specified path")
+    }
+  }
   seq_len <- nchar(sequence)
   if (!missing(frame)){
     if (!all.equal(frame, as.integer(frame), check.attributes = FALSE)){

@@ -7,18 +7,21 @@
 \url{http://mendel.imp.ac.at/gpi/plant_server.html}
 }
 \usage{
-get_big_pi(sequence, id, simplify = TRUE, sleep = NULL, verbose = TRUE)
+get_big_pi(data = NULL, sequence, id, simplify = TRUE, sleep = NULL,
+  verbose = TRUE)
 }
 \arguments{
-\item{sequence}{A vector of strings representing protein amino acid sequences}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
 
-\item{id}{A vector of strings representing protein identifiers}
+\item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
+
+\item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
 \item{simplify}{A bolean indicating the type of returned object, defaults to TRUE}
 
-\item{sleep}{A numeric indicating the pause in seconds betwean server calls, at default set to 1}
+\item{sleep}{A numeric indicating the pause in seconds between server calls, at default set to 1}
 
-\item{verbose}{Bolean wheather to print out the total score for each sequence, defaults to TRUE}
+\item{verbose}{Bolean whether to print out the total score for each sequence, defaults to TRUE}
 }
 \value{
 If simplify == TRUE:
@@ -32,14 +35,14 @@ A data frame with columns:
   }
 
 If simplify == FALSE:
-A list of predictions, each element named according to the sequence id, containg a two element list:
+A list of predictions, each element named according to the sequence id, containing a two element list:
 \describe{
   \item{prediction}{data frame, resembling the one returned by simplify == TRUE, along with alternative site predictions (if present)}
-  \item{calculation}{data frame, with profile dependant and profile independant scores}
+  \item{calculation}{data frame, with profile dependent and profile independent scores}
   }
 }
 \description{
-big-PI Plant Predictor is a web server utlizing a scoring algorithm for prediction of GPI modification sites in plants.
+big-PI Plant Predictor is a web server utilizing a scoring algorithm for prediction of GPI modification sites in plants.
 }
 \examples{
 library(ragp)
@@ -52,8 +55,9 @@ big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
                           id = at_nsp$Transcript.id[ind],
                           simplify = FALSE)
                           
-big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
-                          id = at_nsp$Transcript.id[ind],
+big_pi_pred <- get_big_pi(data = at_nsp[ind,],
+                          sequence = sequence,
+                          id = Transcript.id,
                           simplify = TRUE)
 }
 \references{

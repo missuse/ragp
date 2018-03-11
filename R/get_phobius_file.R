@@ -2,7 +2,7 @@
 #'
 #' Phobius web server is a combined transmembrane topology and signal peptide (N-sp) predictor. Currently only "normal prediction" of signal peptides is supported by the function.
 #'
-#' @param file path to the fasta formated file to be analyzed
+#' @param file path to the fasta formatted file to be analyzed
 #'
 #' @return  A data frame with columns:
 #' \describe{
@@ -15,7 +15,7 @@
 #'}
 #'
 #' @details
-#' The topology (prediction column of the result) is given as the position of the transmembrane helices separated by 'i' if the loop is on the cytoplasmic or 'o' if it is on the non cytoplasmic side. A signal peptide is given by the position of its h-region separated by a n and a c, and and the position of the last amino acid in the signal peptide and the first of the mature protein separated by a /.
+#' The topology (prediction column of the result) is given as the position of the transmembrane helices separated by 'i' if the loop is on the cytoplasmic or 'o' if it is on the non-cytoplasmic side. A signal peptide is given by the position of its h-region separated by a n and a c, and the position of the last amino acid in the signal peptide and the first of the mature protein separated by a /.
 #'
 #' @source \url{http://phobius.sbc.su.se/}
 #'

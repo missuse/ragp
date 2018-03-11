@@ -12,7 +12,7 @@
 #' @examples
 #'\dontrun{
 #' library(ragp)
-#' #create a fasta file to be procesed, not needed if the input file is already present
+#' #create a fasta file to be processed, not needed if the input file is already present
 #' data(at_nsp)
 #' library(seqinr)
 #' write.fasta(sequence = strsplit(at_nsp$sequence, ""),

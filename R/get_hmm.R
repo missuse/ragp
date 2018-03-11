@@ -3,14 +3,15 @@
 #' hmmer web server offers biosequence analysis using profile hidden Markov Models. This function allows searching
 #' of a protein sequence vs a profile-HMM database (Pfam-A).
 #'
-#' @param sequence A vector of strings representing protein amino acid sequences
-#' @param id A vector of strings representing the names of the corresponding sequences
-#' @param verbose Bolean wheather to print out the output for each sequence, defaults to T
-#' @param sleep Numeric indicating the pause in seconds betwean server calls, at default set to 1
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
+#' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#' @param verbose Bolean, whether to print out the output for each sequence, defaults to T
+#' @param sleep Numeric indicating the pause in seconds between server calls, at default set to 1
 #'
 #' @return A data frame with columns:
 #' \describe{
-#'   \item{id}{Character, as suplied in the function call}
+#'   \item{id}{Character, as supplied in the function call}
 #'   \item{name}{Character, PFAM family name}
 #'   \item{acc}{Character, PFAM family accession}
 #'   \item{desc}{Character, PFAM family description}
@@ -22,7 +23,7 @@
 #'   \item{ievalue}{Numeric, the "independent E-value", the E-value that the sequence/profile comparison would have received if this were the only domain envelope found in it, excluding any others. This is a stringent measure of how reliable this particular domain may be. The independent E-value uses the total number of targets in the target database.}
 #'   \item{cevalue}{Numeric, the "conditional E-value", a permissive measure of how reliable this particular domain may be.}
 #'   \item{bitscore}{Numeric, the domain bit score.}
-#'   \item{reported}{Logical, is the result reported on the hmmer site. The hmmer web server outputs more hmm profile matches than it presents to the user. Results below a certain treshold are not reported (hidden) on the site.}
+#'   \item{reported}{Logical, is the result reported on the hmmer site. The hmmer web server outputs more hmm profile matches than it presents to the user. Results below a certain threshold are not reported (hidden) on the site.}
 #' }
 #'
 #'@source \url{https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan}
@@ -37,16 +38,69 @@
 #'@export
 
 
-get_hmm = function (sequence, id, verbose = NULL, sleep = NULL)
-{
+get_hmm <- function(data = NULL, sequence, id, verbose = NULL, sleep = NULL){
   if (missing(verbose)) {
     verbose <- T
   }
   if (missing(sleep)) {
     sleep <- 1
   }
-  sequence <- toupper(as.character(sequence))
-  id <- as.character(id)
+  if(missing(data)){
+    if (missing(sequence)){
+      stop("protein sequence must be provided to obtain predictions")
+    }
+    if (missing(id)){
+      stop("protein id must be provided to obtain predictions")
+    }
+    id <- as.character(id)
+    sequence <- toupper(as.character(sequence))
+    if (length(sequence) != length(id)){
+      stop("id and sequence vectors are not of same length")
+    }
+  }
+  if(class(data[[1]]) ==  "SeqFastaAA"){
+    dat <- lapply(data, paste0, collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$", "", sequence)
+  }
+  if(class(data) == "data.frame"){
+    if(missing(sequence)){
+      stop("the column name with the sequences must be specified")
+    }
+    if(missing(id)){
+      stop("the column name with the sequence id's must be specified")
+    }
+    id <- if(deparse(substitute(id)) %in% colnames(data)){
+      data[[deparse(substitute(id))]]
+    } else if(id %in% colnames(data)){
+      data[[id]]
+    } else {
+      stop("specified id not found in data")
+    }
+    id <- as.character(id)  
+    sequence  <- if(deparse(substitute(sequence)) %in% colnames(data)){
+      data[[deparse(substitute(sequence))]]
+    } else if(sequence %in% colnames(data)){
+      data[[sequence]]
+    } else {
+      stop("specified id not found in data")
+    }
+    sequence <- toupper(as.character(sequence))
+  }
+  if(class(data) == "character"){
+    if (file.exists(data)){
+      dat <- seqinr::read.fasta(file = data,
+                                seqtype = "AA",
+                                as.string = FALSE)
+      dat <- lapply(dat, paste0, collapse ="")
+      id <- names(dat)
+      sequence <- toupper(as.character(unlist(dat)))
+      sequence <- sub("\\*$", "", sequence)
+    } else {
+      stop("cannot find file in the specified path")
+    }
+  }
   n <- length(sequence)
   url <- "https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan"
   pfam <- list()

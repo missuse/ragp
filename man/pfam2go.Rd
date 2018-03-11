@@ -24,7 +24,7 @@ A merged data frame with columns as provided in data_pfam argument and additiona
   }
 }
 \description{
-The objective of gene onthology (GO) is to provide controlled vocabularies for the description of the biological process, molecular function, and cellular component of gene products. This function maps existing PFAM accessions to corresponding GO terms.
+The objective of gene ontology (GO) is to provide controlled vocabularies for the description of the biological process, molecular function, and cellular component of gene products. This function maps existing PFAM accessions to corresponding GO terms.
 }
 \examples{
 

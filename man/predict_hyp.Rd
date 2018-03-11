@@ -4,14 +4,16 @@
 \alias{predict_hyp}
 \title{Predict hydroxyproline positions in plant proteins based on primary structure}
 \usage{
-predict_hyp(sequence, id, tprob = 0.32, split = 1)
+predict_hyp(data = NULL, sequence, id, tprob = 0.32, split = 1)
 }
 \arguments{
-\item{sequence}{A vector of strings representing protein amino acid sequences}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
 
-\item{id}{A vector of strings representing protein id's}
+\item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{tprob}{A numeric value indicating the treshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.32 offering a tradeoff between sensitivity and specificity.}
+\item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
+
+\item{tprob}{A numeric value indicating the threshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.32 offering a tradeoff between sensitivity and specificity.}
 
 \item{split}{A numeric value determining the ratio of vectorized and parallelized computation. Should be left at default, lower to 0 - 1 range if low memory errors occur. Increase at your own risk.}
 }
@@ -19,10 +21,11 @@ predict_hyp(sequence, id, tprob = 0.32, split = 1)
 A list with two elements:
 \describe{
   \item{prediction}{data frame with columns:
-  id - character, indicating the inputed protein id's;
+  id - character, indicating the inputted protein id's;
   substr - character, indicating the sequence substring which was used for predictions;
   P_pos - integer, position of proline in the sequence;
-  prob - numeric, predicted probability of beeing hydroxyproline}
+  prob - numeric, predicted probability of being hydroxyproline;
+  HYP - character, is the site predicted as a hydroxyproline}
   \item{sequence}{sequences with prolines - P substituted with hydroxyprolines - O according to the prediction}
 }
 }

@@ -4,12 +4,14 @@
 \alias{maab}
 \title{Motif and amino acid bias of a protein sequence}
 \usage{
-maab(sequence, id, frame = NULL, custom = NULL)
+maab(data = NULL, sequence, id, frame = NULL, custom = NULL)
 }
 \arguments{
-\item{sequence}{A vector of strings representing protein amino acid sequences}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
 
-\item{id}{A vector of strings representing the names of the corresponding sequences}
+\item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
+
+\item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
 \item{frame}{An optional integer defining the frame length for sliding along the sequences}
 
@@ -51,6 +53,23 @@ Calculate the compositional bias of whole protein sequences, or slide along the 
 }
 \details{
 By default the function provides motif and amino acid bias descriptors used for classification of HRGP's by the MAAB pipeline (Johnson et al. 2017). Arabinogalactan descriptors used in the MAAB pipeline other than the percent of PAST amino acids are not incorporated in this function. Users can specify a sliding frame window in order to calculate partial sequence descriptors or specify custom search criteria.
+}
+\examples{
+
+library(ragp)
+data(at_nsp)
+
+test_bias <- maab(sequence = at_nsp$sequence,
+                  id = at_nsp$Transcript.id)
+                  
+test_bias <- maab(sequence = at_nsp$sequence[1:20],
+                  id = at_nsp$Transcript.id[1:20],
+                  frame = 30)
+                  
+test_bias <- maab(sequence = at_nsp$sequence[1:20],
+                  id = at_nsp$Transcript.id[1:20],
+                  custom = c("KKP", "SD[GD]", "P"))                       
+                  
 }
 \references{
 Johnson KL, Cassin AM, Lonsdale A, Bacic A, Doblin MS, Schultz CJ. (2017) Pipeline to Identify Hydroxyproline-Rich Glycoproteins. Plant Physiol 174(2): 886-903.

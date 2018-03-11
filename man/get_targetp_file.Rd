@@ -15,9 +15,9 @@ get_targetp_file(file, org_type = c("non_plant", "plant"),
 \arguments{
 \item{file}{A path to the FASTA formated file that is to be processed}
 
-\item{org_type}{One of c("non_plant", "plant"), defaults to "plant". Which models should be used for prediciton.}
+\item{org_type}{One of c("non_plant", "plant"), defaults to "plant". Which models should be used for prediction.}
 
-\item{cutoffs}{One of c("winner_takes_all", "spec95", "spec90", "custom"), defaults to "winner_takes_all". If "winner_takes_all" no cutoffs are specified, if "spec95" or "spec90" are selected, predefined set of cutoffs that yielded >0.95 or >0.9 specificity on the TargetP test sets. If "custom" specified user defined cutoffs should be sepcified in "tcut", "pcut", "scut", ocut".}
+\item{cutoffs}{One of c("winner_takes_all", "spec95", "spec90", "custom"), defaults to "winner_takes_all". If "winner_takes_all" no cutoffs are specified, if "spec95" or "spec90" are selected, predefined set of cutoffs that yielded >0.95 or >0.9 specificity on the TargetP test sets. If "custom" specified user defined cutoffs should be specified in "tcut", "pcut", "scut", ocut".}
 
 \item{tcut}{A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). mTP user specified cutoff.}
 
@@ -29,7 +29,7 @@ get_targetp_file(file, org_type = c("non_plant", "plant"),
 
 \item{spliter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
 
-\item{sleep}{A numeric indicating the pause in seconds betwean server calls, at default set to 1}
+\item{sleep}{A numeric indicating the pause in seconds between server calls, at default set to 1}
 }
 \value{
 A data frame with columns:

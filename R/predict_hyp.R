@@ -3,17 +3,19 @@
 #' predict_hyp is a hydroxyproline site prediction algorithm for plant proteins, based on the xgboost distributed gradient boosting library.
 #' It was trained on plant sequences with experimentally determined 4-hydroxyprolines from uniprot data base. N- and C- terminal prolines surrounded by less than 10 amino acid residues will be excluded.
 #'
-#' @param sequence A vector of strings representing protein amino acid sequences
-#' @param id A vector of strings representing protein id's
-#' @param tprob A numeric value indicating the treshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.32 offering a tradeoff between sensitivity and specificity.
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
+#' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#' @param tprob A numeric value indicating the threshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.32 offering a tradeoff between sensitivity and specificity.
 #' @param split A numeric value determining the ratio of vectorized and parallelized computation. Should be left at default, lower to 0 - 1 range if low memory errors occur. Increase at your own risk.
 #' @return  A list with two elements:
 #' \describe{
 #'   \item{prediction}{data frame with columns:
-#'   id - character, indicating the inputed protein id's;
+#'   id - character, indicating the inputted protein id's;
 #'   substr - character, indicating the sequence substring which was used for predictions;
 #'   P_pos - integer, position of proline in the sequence;
-#'   prob - numeric, predicted probability of beeing hydroxyproline}
+#'   prob - numeric, predicted probability of being hydroxyproline;
+#'   HYP - character, is the site predicted as a hydroxyproline}
 #'   \item{sequence}{sequences with prolines - P substituted with hydroxyprolines - O according to the prediction}
 #' }
 #'
@@ -31,14 +33,8 @@
 #' @export
 
 
-predict_hyp <- function (sequence, id, tprob = 0.32, split = 1) 
-{
-  if (missing(sequence)) {
-    stop("protein sequence must be provided to obtain predictions")
-  }
-  if (missing(id)) {
-    stop("protein id must be provided to obtain predictions")
-  }
+
+predict_hyp <- function (data = NULL, sequence, id, tprob = 0.32, split = 1){
   if (missing(tprob)) {
     tprob <- 0.32
   }
@@ -52,17 +48,69 @@ predict_hyp <- function (sequence, id, tprob = 0.32, split = 1)
     warning(paste("treshold probability for prediction should be in 0 - 1 range,", 
                   "tprob was set to the default 0.32"))
   }
+  if(missing(data)){
+    if (missing(sequence)){
+      stop("protein sequence must be provided to obtain predictions")
+    }
+    if (missing(id)){
+      stop("protein id must be provided to obtain predictions")
+    }
+    id <- as.character(id)
+    sequence <- toupper(as.character(sequence))
+    if (length(sequence) != length(id)){
+      stop("id and sequence vectors are not of same length")
+    }
+  }
+  if(class(data[[1]]) ==  "SeqFastaAA"){
+    dat <- lapply(data, paste0, collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$", "", sequence)
+  }
+  if(class(data) == "data.frame"){
+    if(missing(sequence)){
+      stop("the column name with the sequences must be specified")
+    }
+    if(missing(id)){
+      stop("the column name with the sequence id's must be specified")
+    }
+    id <- if(deparse(substitute(id)) %in% colnames(data)){
+      data[[deparse(substitute(id))]]
+    } else if(id %in% colnames(data)){
+      data[[id]]
+    } else {
+      stop("specified id not found in data")
+    }
+    id <- as.character(id)  
+    sequence  <- if(deparse(substitute(sequence)) %in% colnames(data)){
+      data[[deparse(substitute(sequence))]]
+    } else if(sequence %in% colnames(data)){
+      data[[sequence]]
+    } else {
+      stop("specified id not found in data")
+    }
+    sequence <- toupper(as.character(sequence))
+  }
+  if(class(data) == "character"){
+    if (file.exists(data)){
+      dat <- seqinr::read.fasta(file = data,
+                                seqtype = "AA",
+                                as.string = FALSE)
+      dat <- lapply(dat, paste0, collapse ="")
+      id <- names(dat)
+      sequence <- toupper(as.character(unlist(dat)))
+      sequence <- sub("\\*$", "", sequence)
+    } else {
+      stop("cannot find file in the specified path")
+    }
+  }
+  
   if (sum(grepl("P", sequence)) == 0){
     warning("no prolines in the target sequences")
     return(NULL)
   }
   
   splt <- split * 10000
-  sequence <- as.character(sequence)
-  id <- as.character(id)
-  if (length(sequence) != length(id)) 
-    stop("id and sequence vectors are not of same length")
-  
   pam <- ((seq(length(sequence)) - 1)%/%splt) + 1
   m_split <- split(data.frame(sequence, id), pam)
   predict <- utils::getFromNamespace("predict.xgb.Booster", "xgboost")
@@ -77,14 +125,31 @@ predict_hyp <- function (sequence, id, tprob = 0.32, split = 1)
     seq_kmer <- do.call(rbind, seq_kmer)
     seq_kmer[, 2] <- as.character(seq_kmer[, 2])
     
-    if (sum((grepl(paste("[^", paste(AADict, sep = "", collapse = ""), 
-                         "]", sep = "", collapse = ""), seq_kmer[,2]))) != 
+    seq_kmer <- cbind(seq_kmer, order = 1:nrow(seq_kmer))
+    non_aa <- grep(paste("[^",
+                         paste(AADict,
+                               sep = "", collapse = ""), 
+                         "]",
+                         sep = "",
+                         collapse = ""),
+                   seq_kmer[,2])
+    if (sum((grep(paste("[^", paste(AADict, sep = "", collapse = ""), 
+                        "]", sep = "", collapse = ""), seq_kmer[,2]))) != 
         0) {
-      stop("characters other than single letter code for amino acids are present")
+      warning("characters other than single letter code for amino acids are present")
+    }
+    if(length(non_aa) > 0){
+      seq_non_aa <- seq_kmer[non_aa,, drop = FALSE]
+      seq_kmer <- seq_kmer[-non_aa,]
+    } else {
+      seq_non_aa <- NULL
     }
     
     kmer21 <- seq_kmer[nchar(seq_kmer[,2]) == 21,]
-    kmer13 <- seq_kmer[nchar(seq_kmer[,2]) < 21 & nchar(seq_kmer[,2]) >= 17 & as.numeric(seq_kmer[,3]) > 10, , drop = FALSE]
+    kmer13 <- seq_kmer[nchar(seq_kmer[,2]) < 21 &
+                         nchar(seq_kmer[,2]) >= 17 &
+                         as.numeric(seq_kmer[,3]) > 10, ,
+                       drop = FALSE]
     
     if(length(kmer13) != 0){
       kmer13[,2] <- substring(kmer13[,2], first = 5, last = 17)
@@ -108,7 +173,8 @@ predict_hyp <- function (sequence, id, tprob = 0.32, split = 1)
                             substr = as.character(kmer13[,2]), 
                             P_pos = as.character(kmer13[,3]),
                             prob = as.character(prob_13), 
-                            HYP = as.character(HYP_13))
+                            HYP = as.character(HYP_13),
+                            order = kmer13[,5])
     } else {prediction13 <- NULL }
     
     MBI_21 <- getAAindex(kmer21[,2], aaidx)
@@ -132,15 +198,28 @@ predict_hyp <- function (sequence, id, tprob = 0.32, split = 1)
                           substr = as.character(kmer21[,2]), 
                           P_pos = as.character(kmer21[,3]),
                           prob = as.character(prob_21), 
-                          HYP = as.character(HYP_21))
+                          HYP = as.character(HYP_21),
+                          order = kmer21[,5])
     
-    res <- as.data.frame(rbind(prediction21, prediction13), stringsAsFactors = FALSE)
+    res <- as.data.frame(rbind(prediction21,
+                               prediction13),
+                         stringsAsFactors = FALSE)
     res[,3] <- as.numeric(res[,3])
     res[,4] <- as.numeric(res[,4])
-    res <- res[order(res[,1], res[,3]),]
-    res <- merge(data.frame(id = factor(id, levels = id)), res)
-    res <- res[order(res$id, res$P_pos),]
-    res <- as.matrix(res)
+    if (length(non_aa) > 0){
+      prediction_none <- cbind(id = as.character(seq_non_aa[,1]),
+                               substr = as.character(seq_non_aa[,2]), 
+                               P_pos = as.character(seq_non_aa[,3]),
+                               prob = NA, 
+                               HYP = NA,
+                               order = seq_non_aa[,5])
+      res <- rbind(res, prediction_none)
+      res <- res[order(as.numeric(res[,6])),]
+      res <- res[,-6]
+    } else {
+      res <- res[order(as.numeric(res[,6])),]
+      res <- res[,-6]
+    }
     return(res)
   })
   prediction <- as.data.frame(do.call(rbind, result), stringsAsFactors = FALSE)
