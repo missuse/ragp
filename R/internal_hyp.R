@@ -47,7 +47,7 @@ extractMBdesc <- function(x) {
 #' @note This is an internal function used inside predict_hyp
 #' 
 #' @references Kuo-Chen Chou. Prediction of Protein Subcellar Locations by Incorporating Quasi-Sequence-Order Effect. Biochemical and Biophysical Research Communications, 2000, 278, 477-483.
-#' Gisbert Schneider and Paul Wrede. The Rational Design of Amino Acid Sequences by Artifical Neural Networks and Simulated Molecular Evolution: Do Novo Design of an Idealized Leader Cleavge Site. Biophys Journal, 1994, 66, 335-344.
+#' Gisbert Schneider and Paul Wrede. The Rational Design of Amino Acid Sequences by Artifical Neural Networks and Simulated Molecular Evolution: Do Novo Design of an Idealized Leader Cleavage Site. Biophys Journal, 1994, 66, 335-344.
 #' 
 #' @seealso \code{\link[ragp]{predict_hyp} \link[protr]{extractQSO}}
 
@@ -278,7 +278,7 @@ getKmer <- function(sequence, id, kmer) {
   return(P_mer)
 }
 
-#' Substitute prolines in hydroxyprolines 
+#' Substitute prolines to hydroxyprolines 
 #'
 #' This function substitutes P with O based on predict_hyp prediction
 #' 

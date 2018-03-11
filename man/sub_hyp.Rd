@@ -2,7 +2,7 @@
 % Please edit documentation in R/internal_hyp.R
 \name{sub_hyp}
 \alias{sub_hyp}
-\title{Substitute prolines in hydroxyprolines}
+\title{Substitute prolines to hydroxyprolines}
 \usage{
 sub_hyp(sequence, id, hyp)
 }
