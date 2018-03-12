@@ -16,7 +16,9 @@
 #'   P_pos - integer, position of proline in the sequence;
 #'   prob - numeric, predicted probability of being hydroxyproline;
 #'   HYP - character, is the site predicted as a hydroxyproline}
-#'   \item{sequence}{sequences with prolines - P substituted with hydroxyprolines - O according to the prediction}
+#'   \item{sequence}{data frame with columns:
+#'   sequence - sequences with prolines - P substituted with hydroxyprolines - O according to the prediction;
+#'   id - corresponding id's}
 #' }
 #'
 #' 
@@ -227,6 +229,7 @@ predict_hyp <- function (data = NULL, sequence, id, tprob = 0.32, split = 1){
   prediction$P_pos <- as.integer(prediction$P_pos)
   row.names(prediction) <- 1:nrow(prediction)
   seq <- sub_hyp(sequence, id, prediction)
+  seq <- data.frame(sequence = seq, id = id, stringsAsFactors = FALSE)
   result <- list(prediction = prediction, sequence = seq)
   return(result)
 }

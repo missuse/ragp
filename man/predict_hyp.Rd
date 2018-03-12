@@ -26,7 +26,9 @@ A list with two elements:
   P_pos - integer, position of proline in the sequence;
   prob - numeric, predicted probability of being hydroxyproline;
   HYP - character, is the site predicted as a hydroxyproline}
-  \item{sequence}{sequences with prolines - P substituted with hydroxyprolines - O according to the prediction}
+  \item{sequence}{data frame with columns:
+  sequence - sequences with prolines - P substituted with hydroxyprolines - O according to the prediction;
+  id - corresponding id's}
 }
 }
 \description{
