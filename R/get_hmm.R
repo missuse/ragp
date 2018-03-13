@@ -32,8 +32,8 @@
 #'
 #'@examples
 #'
-#'pfam_pred <- get_hmm(sequence = at_nsp$sequence[1:4],
-#'                     id = at_nsp$Transcript.id[1:4])
+#'pfam_pred <- get_hmm(sequence = at_nsp$sequence[1],
+#'                     id = at_nsp$Transcript.id[1])
 #'
 #'@export
 
