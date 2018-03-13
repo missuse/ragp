@@ -62,8 +62,7 @@ get_hmm <- function(data = NULL, sequence, id, verbose = NULL, sleep = NULL){
     dat <- lapply(data, paste0, collapse ="")
     id <- names(dat)
     sequence <- toupper(as.character(unlist(dat)))
-    sequence <- sub("\\*$", "", sequence)
-  }
+    }
   if(class(data) == "data.frame"){
     if(missing(sequence)){
       stop("the column name with the sequences must be specified")
@@ -96,11 +95,11 @@ get_hmm <- function(data = NULL, sequence, id, verbose = NULL, sleep = NULL){
       dat <- lapply(dat, paste0, collapse ="")
       id <- names(dat)
       sequence <- toupper(as.character(unlist(dat)))
-      sequence <- sub("\\*$", "", sequence)
     } else {
       stop("cannot find file in the specified path")
     }
   }
+  sequence <- sub("\\*$", "", sequence)
   n <- length(sequence)
   url <- "https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan"
   pfam <- list()
@@ -133,6 +132,7 @@ get_hmm <- function(data = NULL, sequence, id, verbose = NULL, sleep = NULL){
       hitx <- as.data.frame(hitx, stringsAsFactors = F)
       pfam[[i]] <- hitx
       if (verbose == T) {
+        print(i, quote = FALSE)
         print(hitx[, 1:11])
         utils::flush.console()
       }
