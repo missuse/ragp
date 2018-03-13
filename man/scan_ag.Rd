@@ -5,7 +5,8 @@
 \title{Find AGII glycomodules in protein sequences}
 \usage{
 scan_ag(data = NULL, sequence, id, dim = 3, div = 10,
-  type = c("conservative", "extended"), exclude_ext = c("no", "yes", "all"))
+  type = c("conservative", "extended"), exclude_ext = c("no", "yes", "all"),
+  simplify = TRUE)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
@@ -21,20 +22,31 @@ scan_ag(data = NULL, sequence, id, dim = 3, div = 10,
 \item{type}{One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P|O partners in dimmers, if extended dimmers involving P|O with A, S, T, G and V will be considered. At default set to "extended".}
 
 \item{exclude_ext}{One of c("no", "yes", "all"), should extensin (SPPP+) regions be excluded from the search: "no" - do not exclude SPPP+; "yes" - exclude all SPPP+; "all" - exclude all PPP+}
+
+\item{simplify}{Boolean, should the function return a data frame or a list additional values.}
 }
 \value{
-A named list with components:
+If simplify TRUE, a data frame with columns
 \describe{
-  \item{$id}{Character vector, as supplied in the function call or NA if not supplied}
-  \item{$sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dimmers that satisfy the user set conditions) in uppercase}
-  \item{$AG_aa}{Numeric vector, each element corresponding to the number of matched letters (amino acids in dimmers that satisfy the user set conditions) in each input sequence}
-  \item{$AG_locations}{List of numeric vectors, each element corresponding to the locations of found dimmers}
-  \item{$total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
-  \item{$longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
-  \item{$locations}{List of matrices, each element describing the start and end locations of the found stretches of dimmers (including the amino acids between dimers in a match)}
-  \item{$dim}{Integer, as from input, default dim = 3}
-  \item{$div}{Integer, as from input, default div = 10}
-  \item{$type}{Character, as from input, one of c("conservative", "extended")}
+  \item{id}{Character vector, as supplied in the function call or NA if not supplied}
+  \item{sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dimmers that satisfy the user set conditions) in uppercase}
+  \item{AG_aa}{Numeric vector, each element corresponding to the number of matched letters (amino acids in dimmers that satisfy the user set conditions) in each input sequence}
+  \item{total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+  \item{longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+}
+If simplify FALSE, a list with elements
+
+\describe{
+  \item{id}{Character vector, as supplied in the function call or NA if not supplied}
+  \item{sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dimmers that satisfy the user set conditions) in uppercase}
+  \item{AG_aa}{Numeric vector, each element corresponding to the number of matched letters (amino acids in dimmers that satisfy the user set conditions) in each input sequence}
+  \item{AG_locations}{List of numeric vectors, each element corresponding to the locations of found dimmers}
+  \item{total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+  \item{longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+  \item{locations}{List of matrices, each element describing the start and end locations of the found stretches of dimmers (including the amino acids between dimers in a match)}
+  \item{dim}{Integer, as from input, default dim = 3}
+  \item{div}{Integer, as from input, default div = 10}
+  \item{type}{Character, as from input, one of c("conservative", "extended")}
 }
 }
 \description{

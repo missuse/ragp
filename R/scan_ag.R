@@ -10,19 +10,29 @@
 #'@param div An integer defining the maximum number of amino acids that can separate the dimmers for them to be considered, at default to 10
 #'@param type One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P|O partners in dimmers, if extended dimmers involving P|O with A, S, T, G and V will be considered. At default set to "extended".
 #'@param exclude_ext One of c("no", "yes", "all"), should extensin (SPPP+) regions be excluded from the search: "no" - do not exclude SPPP+; "yes" - exclude all SPPP+; "all" - exclude all PPP+
+#'@param simplify Boolean, should the function return a data frame or a list additional values.
 #'
-#'@return A named list with components:
+#'@return If simplify TRUE, a data frame with columns
+#'\describe{
+#'   \item{id}{Character vector, as supplied in the function call or NA if not supplied}
+#'   \item{sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dimmers that satisfy the user set conditions) in uppercase}
+#'   \item{AG_aa}{Numeric vector, each element corresponding to the number of matched letters (amino acids in dimmers that satisfy the user set conditions) in each input sequence}
+#'   \item{total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+#'   \item{longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+#'}
+#'If simplify FALSE, a list with elements
+#'
 #' \describe{
-#'   \item{$id}{Character vector, as supplied in the function call or NA if not supplied}
-#'   \item{$sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dimmers that satisfy the user set conditions) in uppercase}
-#'   \item{$AG_aa}{Numeric vector, each element corresponding to the number of matched letters (amino acids in dimmers that satisfy the user set conditions) in each input sequence}
-#'   \item{$AG_locations}{List of numeric vectors, each element corresponding to the locations of found dimmers}
-#'   \item{$total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
-#'   \item{$longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
-#'   \item{$locations}{List of matrices, each element describing the start and end locations of the found stretches of dimmers (including the amino acids between dimers in a match)}
-#'   \item{$dim}{Integer, as from input, default dim = 3}
-#'   \item{$div}{Integer, as from input, default div = 10}
-#'   \item{$type}{Character, as from input, one of c("conservative", "extended")}
+#'   \item{id}{Character vector, as supplied in the function call or NA if not supplied}
+#'   \item{sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dimmers that satisfy the user set conditions) in uppercase}
+#'   \item{AG_aa}{Numeric vector, each element corresponding to the number of matched letters (amino acids in dimmers that satisfy the user set conditions) in each input sequence}
+#'   \item{AG_locations}{List of numeric vectors, each element corresponding to the locations of found dimmers}
+#'   \item{total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+#'   \item{longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+#'   \item{locations}{List of matrices, each element describing the start and end locations of the found stretches of dimmers (including the amino acids between dimers in a match)}
+#'   \item{dim}{Integer, as from input, default dim = 3}
+#'   \item{div}{Integer, as from input, default div = 10}
+#'   \item{type}{Character, as from input, one of c("conservative", "extended")}
 #' }
 #' 
 #'@details The function can be supplied with the sequences resulting from predict_hyp in which case only AGII glycomodules containing O instead of P will be considered.
@@ -69,8 +79,9 @@
 #'@export
 
 
-scan_ag <- function(data = NULL, sequence, id, dim = 3, div = 10, type = 
-                      c("conservative", "extended"), exclude_ext = c("no", "yes", "all")){
+scan_ag <- function(data = NULL, sequence, id, dim = 3, div = 10,
+                    type = c("conservative", "extended"),
+                    exclude_ext = c("no", "yes", "all"), simplify = TRUE){
   if(missing(data)){
     if (missing(sequence)){
       stop("protein sequence must be provided to obtain predictions")
@@ -310,17 +321,26 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3, div = 10, type =
     AG_sum <- stringr::str_count(upper_PAST, pastgv)
     AG_locations <- stringr::str_locate_all(upper_PAST, pastgv)
   }
-  list <- list(id = as.character(id),
-               sequence = upper_PAST,
-               AG_aa = as.numeric(as.character(AG_sum)),
-               AG_locations = lapply(AG_locations, function (x) 
-                 unique(as.vector(x))),
-               total_length = as.numeric(as.character(length_detected)),
-               longest = as.numeric(as.character(longest_detected)),
-               locations = locations,
-               dim = dim,
-               div = div,
-               type = type)
-  class(list) <- c("AGII", "scan", "list")
-  return(list)
+  if (simplify){
+    out <- data.frame(id = as.character(id),
+                      sequence = upper_PAST,
+                      AG_aa = as.numeric(as.character(AG_sum)),
+                      total_length = as.numeric(as.character(length_detected)),
+                      longest = as.numeric(as.character(longest_detected)),
+                      stringsAsFactors = FALSE)
+    return(out)
+    } else {
+      list <- list(id = as.character(id),
+                   sequence = upper_PAST,
+                   AG_aa = as.numeric(as.character(AG_sum)),
+                   AG_locations = lapply(AG_locations,
+                                         function (x) unique(as.vector(x))),
+                   total_length = as.numeric(as.character(length_detected)),
+                   longest = as.numeric(as.character(longest_detected)),
+                   locations = locations,
+                   dim = dim,
+                   div = div,
+                   type = type)
+      return(list)
+    }
 }

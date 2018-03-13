@@ -67,7 +67,6 @@ predict_hyp <- function (data = NULL, sequence, id, tprob = 0.32, split = 1){
     dat <- lapply(data, paste0, collapse ="")
     id <- names(dat)
     sequence <- toupper(as.character(unlist(dat)))
-    sequence <- sub("\\*$", "", sequence)
   }
   if(class(data) == "data.frame"){
     if(missing(sequence)){
@@ -101,12 +100,11 @@ predict_hyp <- function (data = NULL, sequence, id, tprob = 0.32, split = 1){
       dat <- lapply(dat, paste0, collapse ="")
       id <- names(dat)
       sequence <- toupper(as.character(unlist(dat)))
-      sequence <- sub("\\*$", "", sequence)
     } else {
       stop("cannot find file in the specified path")
     }
   }
-  
+  sequence <- sub("\\*$", "", sequence)
   if (sum(grepl("P", sequence)) == 0){
     warning("no prolines in the target sequences")
     return(NULL)
