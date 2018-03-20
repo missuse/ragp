@@ -75,7 +75,6 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = NULL,
     dat <- lapply(data, paste0, collapse ="")
     id <- names(dat)
     sequence <- toupper(as.character(unlist(dat)))
-    sequence <- sub("\\*$", "", sequence)
   }
   if(class(data) == "data.frame"){
     if(missing(sequence)){
@@ -109,11 +108,11 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = NULL,
       dat <- lapply(dat, paste0, collapse ="")
       id <- names(dat)
       sequence <- toupper(as.character(unlist(dat)))
-      sequence <- sub("\\*$", "", sequence)
     } else {
       stop("cannot find file in the specified path")
     }
   }
+  sequence <- sub("\\*$", "", sequence)
   if (length(sequence) != length(id)) 
     stop("id and sequence vectors are not of same length")
   url <- "http://mendel.imp.ac.at/gpi/plant_server.html"
