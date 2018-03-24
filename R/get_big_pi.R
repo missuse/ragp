@@ -83,20 +83,24 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = NULL,
     if(missing(id)){
       stop("the column name with the sequence id's must be specified")
     }
-    id <- if(deparse(substitute(id)) %in% colnames(data)){
-      data[[deparse(substitute(id))]]
-    } else if(id %in% colnames(data)){
+    id <- as.character(substitute(id))
+    sequence <- as.character(substitute(sequence))
+    if (length(id) != 1L){
+      stop("only one column name for 'id' must be specifed")
+    }
+    if (length(sequence) != 1L){
+      stop("only one column name for 'sequence' must be specifed")
+    }
+    id <- if(id %in% colnames(data)){
       data[[id]]
     } else {
-      stop("specified id not found in data")
+      stop("specified 'id' not found in data")
     }
     id <- as.character(id)  
-    sequence  <- if(deparse(substitute(sequence)) %in% colnames(data)){
-      data[[deparse(substitute(sequence))]]
-    } else if(sequence %in% colnames(data)){
+    sequence  <- if(sequence %in% colnames(data)){
       data[[sequence]]
     } else {
-      stop("specified id not found in data")
+      stop("specified 'sequence' not found in data")
     }
     sequence <- toupper(as.character(sequence))
   }
@@ -113,8 +117,6 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = NULL,
     }
   }
   sequence <- sub("\\*$", "", sequence)
-  if (length(sequence) != length(id)) 
-    stop("id and sequence vectors are not of same length")
   url <- "http://mendel.imp.ac.at/gpi/plant_server.html"
   session <- rvest::html_session(url)
   form <- rvest::html_form(session)[[2]]

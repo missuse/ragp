@@ -99,7 +99,6 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3, div = 10,
     dat <- lapply(data, paste0, collapse ="")
     id <- names(dat)
     sequence <- toupper(as.character(unlist(dat)))
-    sequence <- sub("\\*$", "", sequence)
   }
   if(class(data) == "data.frame"){
     if(missing(sequence)){
@@ -108,20 +107,24 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3, div = 10,
     if(missing(id)){
       stop("the column name with the sequence id's must be specified")
     }
-    id <- if(deparse(substitute(id)) %in% colnames(data)){
-      data[[deparse(substitute(id))]]
-    } else if(id %in% colnames(data)){
+    id <- as.character(substitute(id))
+    sequence <- as.character(substitute(sequence))
+    if (length(id) != 1L){
+      stop("only one column name for 'id' must be specifed")
+    }
+    if (length(sequence) != 1L){
+      stop("only one column name for 'sequence' must be specifed")
+    }
+    id <- if(id %in% colnames(data)){
       data[[id]]
     } else {
-      stop("specified id not found in data")
+      stop("specified 'id' not found in data")
     }
     id <- as.character(id)  
-    sequence  <- if(deparse(substitute(sequence)) %in% colnames(data)){
-      data[[deparse(substitute(sequence))]]
-    } else if(sequence %in% colnames(data)){
+    sequence  <- if(sequence %in% colnames(data)){
       data[[sequence]]
     } else {
-      stop("specified id not found in data")
+      stop("specified 'sequence' not found in data")
     }
     sequence <- toupper(as.character(sequence))
   }
@@ -133,11 +136,11 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3, div = 10,
       dat <- lapply(dat, paste0, collapse ="")
       id <- names(dat)
       sequence <- toupper(as.character(unlist(dat)))
-      sequence <- sub("\\*$", "", sequence)
     } else {
       stop("cannot find file in the specified path")
     }
   }
+  sequence <- sub("\\*$", "", sequence)
   if (is.null(dim)) dim <- 3
   dim <- as.integer(dim)
   if (length(dim) != 1)
