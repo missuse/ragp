@@ -80,26 +80,12 @@ first 10 rows of the GO result with selected columns:
 | AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
 | AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitin> catabolic process                  | <GO:0006032> |
 
-Count specific amino acids or amino acid motifs:
+Perform motif and amino acid bias classification of HRGP's:
 
 ``` r
 PAST_bias <- maab(sequence = at_nsp$sequence, #a vector of protein sequences as strings
                   id = at_nsp$Transcript.id) #a vector of protein identifiers as strings
                  
-```
-
-Filter sequences with total PAST% over 45%:
-
-``` r
-PAST45_bias <- PAST_bias[PAST_bias$past_percent > 45,]
-```
-
-Count user specified sequence motifs:
-
-``` r
-SPPP_bias <- maab(sequence = at_nsp$sequence,
-                  id = at_nsp$Transcript.id, 
-                  custom = "SPPP") #motif that should be counted
 ```
 
 Predict hydroxyproline sites in sequences:
