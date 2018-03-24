@@ -2,9 +2,10 @@
 % Please edit documentation in R/maab.R
 \name{maab}
 \alias{maab}
-\title{Motif and amino acid bias of a protein sequence}
+\title{MAAB classification of Hydroxyproline‐rich Glycoproteins}
 \usage{
-maab(data = NULL, sequence, id, frame = NULL, custom = NULL)
+maab(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"),
+  gpi = NULL)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
@@ -13,62 +14,41 @@ maab(data = NULL, sequence, id, frame = NULL, custom = NULL)
 
 \item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{frame}{An optional integer defining the frame length for sliding along the sequences}
+\item{order}{Order of motif counting, the default is as in Johnson et al. (2017).}
 
-\item{custom}{An optional character vector which can contain amino acid one letter symbols eg. c("P", "V", "K", "C", "T"), strings corresponding to amino acid motifs eg c("PTYK", "PVKC"), mixing of types is supported. Common regex operators can also be utilized.}
+\item{gpi}{A Boolean vector indicating if the corresponding id contains a GPI or not. Can be the 'is.bigpi' column from the output of get_big_pi.}
 }
 \value{
-by default if, frame is not specified a data frame is returned with columns:
+A data frame with columns:
 \enumerate{
-\item{past_count:} {summed count of "P", "A", "S" and "T" amino acids}
-\item{pvyk_count:} {summed count of "P", "V", "Y" and "K" amino acids}
-\item{psky_count:} {summed count of "P", "S", "K" and "Y" amino acids}
-\item{p_count:} {count of "P"}
-\item{ext_sp_count:} {summed count of SPPP+ motifs}
-\item{ext_fyxy_count:} {summed count of [FY]XY motifs}
-\item{ext_khy_count:} {summed count of KHY motifs}
-\item{ext_vyhkde_count:} {summed count of VY[HKDE] motifs}
-\item{ext_vxy_count:} {summed count of VXY motifs}
-\item{ext_yy_count:} {summed count of YY motifs}
-\item{prp_ppvqk_count:} {summed count of PPV[QK] motifs}
-\item{prp_ppvxkt_count:} {summed count of PPVX[KT] motifs}
-\item{ppr_kkpcpp:} {summed count of KKPCPP motifs}
-\item{past_percent:} {summed percent of "P", "A", "S" and "T" amino acids}
-\item{pvyk_percent:} {summed percent of "P", "V", "Y" and "K" amino acids}
-\item{psky_percent:} {summed percent of "P", "S", "K" and "Y" amino acids}
-\item{p_percent:} {percent of "P"}
-\item{id:} {names of the corresponding sequences, as per input}
-}
-
-if frame is specified a list with two elements is returned:
-\enumerate{
-\item{protein:} {a named list with names corresponding to sequence id's, where each element is a data frame resembling the one returned when frame = NULL, each row of which corresponds to each sequence frame}
-\item{maab:} {a character vector with search criteria}
+\item{id} {protein identifiers as from input}
+\item{ext_sp} {number of extensin SPn motifs, counted using SP{3,5}}
+\item{ext_tyr} {number of extensin TYR motifs, sum of matches for: [FY].Y, KHY, VY[HKDE], V.Y, YY}
+\item{prp} {number of proline rich protein motifs, sum of matches for: PPV.[KT], PPV[QK], KKPCPP}
+\item{agp} {number of arabinogalactan motifs, sum of matches for: [AVTG]P{1,3}, [ASVTG]P{1,2}}
+\item{past_percent} {summed percent of "P", "A", "S" and "T" amino acids}
+\item{pvyk_percent} {summed percent of "P", "V", "Y" and "K" amino acids}
+\item{psky_percent} {summed percent of "P", "S", "K" and "Y" amino acids}
+\item{p_percent} {percent of "P"}
+\item{coverage} {the coverage of sequence by the identified motifs}
+\item{maab_class} {determined maab class}
 }
 
 if custom is specified the returned object contains counts for each element specified in custom; additionally percentage is calculated for all elements containing a single symbol.
 }
 \description{
-Calculate the compositional bias of whole protein sequences, or slide along the sequences and calculate the bias for all subsequences of a defined length (frame). Sequence motifs can also be searched.
+Perform Motif and amino acid bias classification of Hydroxyproline‐rich Glycoproteins according to Johnson et al. (2017)
 }
 \details{
-By default the function provides motif and amino acid bias descriptors used for classification of HRGP's by the MAAB pipeline (Johnson et al. 2017). Arabinogalactan descriptors used in the MAAB pipeline other than the percent of PAST amino acids are not incorporated in this function. Users can specify a sliding frame window in order to calculate partial sequence descriptors or specify custom search criteria.
+The function provides motif and amino acid bias descriptors used for classification of HRGP's by the MAAB pipeline (Johnson et al. 2017) as well as the determined HRGP classes. The motifs are counted in a specific order ext > tyr > prp > agp, and overlapping motifs are not counted. Hence the classification depends on the order of counting, this is most noticeable for tyr and prp, we recommend using both the default order and  'order = c("ext", "prp","tyr", "agp")'.
 }
 \examples{
 
 library(ragp)
 data(at_nsp)
 
-test_bias <- maab(sequence = at_nsp$sequence,
-                  id = at_nsp$Transcript.id)
-                  
-test_bias <- maab(sequence = at_nsp$sequence[1:20],
-                  id = at_nsp$Transcript.id[1:20],
-                  frame = 30)
-                  
-test_bias <- maab(sequence = at_nsp$sequence[1:20],
-                  id = at_nsp$Transcript.id[1:20],
-                  custom = c("KKP", "SD[GD]", "P"))                       
+maab_class <- maab(sequence = at_nsp$sequence,
+                   id = at_nsp$Transcript.id)
                   
 }
 \references{

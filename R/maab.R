@@ -1,44 +1,31 @@
-#' Motif and amino acid bias of a protein sequence
+#' MAAB classification of Hydroxyproline‐rich Glycoproteins
 #'
-#' Calculate the compositional bias of whole protein sequences, or slide along the sequences and calculate the bias for all subsequences of a defined length (frame). Sequence motifs can also be searched.
+#' Perform Motif and amino acid bias classification of Hydroxyproline‐rich Glycoproteins according to Johnson et al. (2017)
 #' 
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
-#' @param frame An optional integer defining the frame length for sliding along the sequences
-#' @param custom An optional character vector which can contain amino acid one letter symbols eg. c("P", "V", "K", "C", "T"), strings corresponding to amino acid motifs eg c("PTYK", "PVKC"), mixing of types is supported. Common regex operators can also be utilized.
-#' 
-#' @return by default if, frame is not specified a data frame is returned with columns:
+#' @param order Order of motif counting, the default is as in Johnson et al. (2017).
+#' @param gpi A Boolean vector indicating if the corresponding id contains a GPI or not. Can be the 'is.bigpi' column from the output of get_big_pi.
+#'    
+#' @return A data frame with columns:
 #' \enumerate{
-#' \item{past_count:} {summed count of "P", "A", "S" and "T" amino acids}
-#' \item{pvyk_count:} {summed count of "P", "V", "Y" and "K" amino acids}
-#' \item{psky_count:} {summed count of "P", "S", "K" and "Y" amino acids}
-#' \item{p_count:} {count of "P"}
-#' \item{ext_sp_count:} {summed count of SPPP+ motifs}
-#' \item{ext_fyxy_count:} {summed count of [FY]XY motifs}
-#' \item{ext_khy_count:} {summed count of KHY motifs}
-#' \item{ext_vyhkde_count:} {summed count of VY[HKDE] motifs}
-#' \item{ext_vxy_count:} {summed count of VXY motifs}
-#' \item{ext_yy_count:} {summed count of YY motifs}
-#' \item{prp_ppvqk_count:} {summed count of PPV[QK] motifs}
-#' \item{prp_ppvxkt_count:} {summed count of PPVX[KT] motifs}
-#' \item{ppr_kkpcpp:} {summed count of KKPCPP motifs}
-#' \item{past_percent:} {summed percent of "P", "A", "S" and "T" amino acids}
-#' \item{pvyk_percent:} {summed percent of "P", "V", "Y" and "K" amino acids}
-#' \item{psky_percent:} {summed percent of "P", "S", "K" and "Y" amino acids}
-#' \item{p_percent:} {percent of "P"}
-#' \item{id:} {names of the corresponding sequences, as per input}
+#' \item{id} {protein identifiers as from input}
+#' \item{ext_sp} {number of extensin SPn motifs, counted using SP{3,5}}
+#' \item{ext_tyr} {number of extensin TYR motifs, sum of matches for: [FY].Y, KHY, VY[HKDE], V.Y, YY}
+#' \item{prp} {number of proline rich protein motifs, sum of matches for: PPV.[KT], PPV[QK], KKPCPP}
+#' \item{agp} {number of arabinogalactan motifs, sum of matches for: [AVTG]P{1,3}, [ASVTG]P{1,2}}
+#' \item{past_percent} {summed percent of "P", "A", "S" and "T" amino acids}
+#' \item{pvyk_percent} {summed percent of "P", "V", "Y" and "K" amino acids}
+#' \item{psky_percent} {summed percent of "P", "S", "K" and "Y" amino acids}
+#' \item{p_percent} {percent of "P"}
+#' \item{coverage} {the coverage of sequence by the identified motifs}
+#' \item{maab_class} {determined maab class}
 #'}
-#' 
-#' if frame is specified a list with two elements is returned:
-#' \enumerate{
-#' \item{protein:} {a named list with names corresponding to sequence id's, where each element is a data frame resembling the one returned when frame = NULL, each row of which corresponds to each sequence frame}
-#' \item{maab:} {a character vector with search criteria}
-#' }
 #' 
 #' if custom is specified the returned object contains counts for each element specified in custom; additionally percentage is calculated for all elements containing a single symbol.  
 #' 
-#' @details By default the function provides motif and amino acid bias descriptors used for classification of HRGP's by the MAAB pipeline (Johnson et al. 2017). Arabinogalactan descriptors used in the MAAB pipeline other than the percent of PAST amino acids are not incorporated in this function. Users can specify a sliding frame window in order to calculate partial sequence descriptors or specify custom search criteria.
+#' @details The function provides motif and amino acid bias descriptors used for classification of HRGP's by the MAAB pipeline (Johnson et al. 2017) as well as the determined HRGP classes. The motifs are counted in a specific order ext > tyr > prp > agp, and overlapping motifs are not counted. Hence the classification depends on the order of counting, this is most noticeable for tyr and prp, we recommend using both the default order and  'order = c("ext", "prp","tyr", "agp")'. 
 #' 
 #' @references Johnson KL, Cassin AM, Lonsdale A, Bacic A, Doblin MS, Schultz CJ. (2017) Pipeline to Identify Hydroxyproline-Rich Glycoproteins. Plant Physiol 174(2): 886-903.
 #'
@@ -49,21 +36,26 @@
 #' library(ragp)
 #' data(at_nsp)
 #'
-#' test_bias <- maab(sequence = at_nsp$sequence,
-#'                   id = at_nsp$Transcript.id)
-#'                   
-#' test_bias <- maab(sequence = at_nsp$sequence[1:20],
-#'                   id = at_nsp$Transcript.id[1:20],
-#'                   frame = 30)
-#'                   
-#' test_bias <- maab(sequence = at_nsp$sequence[1:20],
-#'                   id = at_nsp$Transcript.id[1:20],
-#'                   custom = c("KKP", "SD[GD]", "P"))                       
+#' maab_class <- maab(sequence = at_nsp$sequence,
+#'                    id = at_nsp$Transcript.id)
 #'                   
 #' @export                  
 
 
-maab <- function(data = NULL, sequence, id, frame = NULL, custom = NULL){
+maab <- function(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"), gpi = NULL){
+  if(missing(order)) order <- c("ext", "tyr", "prp", "agp")
+  if(!is.character(order)){
+    stop("order should be a character vector containing four elements:
+         'ext', 'tyr', 'prp', 'agp'")
+  }
+  if(length(order) != 4){
+    stop("order should be a character vector containing four elements:
+         'ext', 'tyr', 'prp', 'agp'")
+  }
+  if(sum(order %in% c("ext", "tyr", "prp", "agp")) != 4){
+    stop("order should contain only elements:
+         'ext', 'tyr', 'prp', 'agp'")
+  }
   if(missing(data)){
     if (missing(sequence)){
       stop("protein sequence must be provided to obtain predictions")
@@ -81,7 +73,6 @@ maab <- function(data = NULL, sequence, id, frame = NULL, custom = NULL){
     dat <- lapply(data, paste0, collapse ="")
     id <- names(dat)
     sequence <- toupper(as.character(unlist(dat)))
-    sequence <- sub("\\*$", "", sequence)
   }
   if(class(data) == "data.frame"){
     if(missing(sequence)){
@@ -90,20 +81,24 @@ maab <- function(data = NULL, sequence, id, frame = NULL, custom = NULL){
     if(missing(id)){
       stop("the column name with the sequence id's must be specified")
     }
-    id <- if(deparse(substitute(id)) %in% colnames(data)){
-      data[[deparse(substitute(id))]]
-    } else if(id %in% colnames(data)){
+    id <- as.character(substitute(id))
+    sequence <- as.character(substitute(sequence))
+    if (length(id) != 1L){
+      stop("only one column name for 'id' must be specifed")
+    }
+    if (length(sequence) != 1L){
+      stop("only one column name for 'sequence' must be specifed")
+    }
+    id <- if(id %in% colnames(data)){
       data[[id]]
     } else {
-      stop("specified id not found in data")
+      stop("specified 'id' not found in data")
     }
     id <- as.character(id)  
-    sequence  <- if(deparse(substitute(sequence)) %in% colnames(data)){
-      data[[deparse(substitute(sequence))]]
-    } else if(sequence %in% colnames(data)){
+    sequence  <- if(sequence %in% colnames(data)){
       data[[sequence]]
     } else {
-      stop("specified id not found in data")
+      stop("specified 'sequence' not found in data")
     }
     sequence <- toupper(as.character(sequence))
   }
@@ -115,188 +110,210 @@ maab <- function(data = NULL, sequence, id, frame = NULL, custom = NULL){
       dat <- lapply(dat, paste0, collapse ="")
       id <- names(dat)
       sequence <- toupper(as.character(unlist(dat)))
-      sequence <- sub("\\*$", "", sequence)
     } else {
       stop("cannot find file in the specified path")
     }
   }
+  sequence <- sub("\\*$", "", sequence)
   seq_len <- nchar(sequence)
-  if (!missing(frame)){
-    if (!all.equal(frame, as.integer(frame), check.attributes = FALSE)){
-      stop ("frame must be an integer")
-    }
-  }
   amino_acids = c("A", "R", "N", "D", "C",
                   "Q", "E", "G", "H", "I",
                   "L", "K", "M", "F", "P",
                   "S", "T", "W", "Y", "V")
-  if (!missing(custom)){
-    symbols <- toupper(gsub("[^\\pL']+", "", custom, perl = T))
-    if(any(!unlist(strsplit(symbols, split = "")) %in% amino_acids)){
-      warning("custom contains characters other than amino acid symbols")
-    }
-    }
-    if (missing(custom)){
-    hrgp_aa <- c( "P|A|S|T",
-                  "P|V|Y|K",
-                  "P|S|K|Y",
-                  "P",
-                  "SP{3,}",
-                  "[FY].Y",
-                  "KHY",
-                  "VY[HKDE]",
-                  "V.Y",
-                  "YY",
-                  "PPV[QK]",
-                  "PPV.[KT]",
-                  "KKPCPP")
-    hrgp_name <- c("past_count",
-                   "pvyk_count",
-                   "psky_count",
-                   "p_count",
-                   "ext_sp_count",
-                   "ext_fyxy_count",
-                   "ext_khy_count",
-                   "ext_vyhkde_count",
-                   "ext_vxy_count",
-                   "ext_yy_count",
-                   "prp_ppvqk_count",
-                   "prp_ppvxkt_count",
-                   "ppr_kkpcpp")
-    if (missing(frame)){
-      out_count <-  lapply(hrgp_aa, function(x){
-        stringr::str_count(sequence, x)
-      })
-      names(out_count) <- hrgp_name
-      out_percent <- lapply(1:4, function(x){
-        out_count[[x]] / seq_len * 100
-      })
-      names(out_percent) <- paste0(c("past",
-                                     "pvyk",
-                                     "psky",
-                                     "p"), "_percent")
-      out <- c(out_count,
-               out_percent)
-      out <- do.call(cbind, out)
-      out <- as.data.frame(out,
-                           stringsAsFactors = FALSE)
-      out$id <- id
-      return(out)
-    } else {
-      res <- lapply(sequence, function(x){
-        if (frame > nchar(x)) frame <- nchar(x)
-        aa_out <- lapply(hrgp_aa, function(k){
-          P_count <- vector("numeric", length = (nchar(x) - frame + 1))
-          for (i in 1 : (nchar(x) - frame + 1)){
-            P_count[i] <- stringr::str_count(substr(x,
-                                                    start = i,
-                                                    stop = i + frame - 1), k)
-            
-          }
-          P_count 
-        }
-        )
-        names(aa_out) <- hrgp_name 
-        out_percent <- lapply(1:4, function(x){
-          aa_out[[x]] / frame * 100
-        }
-        )
-        
-        names(out_percent) <- paste0(c("past",
-                                       "pvyk",
-                                       "psky",
-                                       "p"), "_percent")
-        out <- c(aa_out,
-                 out_percent)
-        out <- do.call(cbind, out)
-        out <- as.data.frame(out,
-                             stringsAsFactors = FALSE)
-        out$frame_start <- 1 : (nchar(x) - frame + 1)
-        out$frame_end <- frame  : nchar(x)
-        return(out)
-      }
-      )
-      names(res) <- id
-      out <- list(protein = res,
-                  maab = hrgp_aa)
-      return(out)
-    }
+  hrgp_aa_name <- c("past_count",
+                    "pvyk_count",
+                    "psky_count",
+                    "p_count")
+  
+  hrgp_aa <- c("P|A|S|T",
+               "P|V|Y|K",
+               "P|S|K|Y",
+               "P")
+  
+  HGRP <- list(ext = "SP{3,5}",
+               tyr = c("[FY].Y",
+                       "KHY",
+                       "VY[HKDE]",
+                       "V.Y",
+                       "YY"),
+               prp = c("PPV.[KT]",
+                       "PPV[QK]",
+                       "KKPCPP"),
+               agp = c("[AVTG]P{1,3}",
+                       "[ASVTG]P{1,2}"))
+  
+  
+  HGRP_names <- list(ext = "ext_sp",
+                     tyr = c("ext_fyxy_count",
+                             "ext_khy_count",
+                             "ext_vyhkde_count",
+                             "ext_vxy_count",
+                             "ext_yy_count"),
+                     prp = c("prp_ppvqk_count",
+                             "prp_ppvxkt_count",
+                             "ppr_kkpcpp"),
+                     agp = c("agp_atgvppp_count",
+                             "agp_astgvp_count"))
+  
+  hrgp_m_name <- as.vector(unlist(HGRP_names[order]))
+
+  hrgp_motif <- as.vector(unlist(HGRP[order]))
+  
+  out_count <-  lapply(hrgp_aa, function(x){
+    stringr::str_count(sequence, x)
+  })           
+  out_percent <- lapply(1:4, function(x){
+    out_count[[x]] / seq_len * 100
+  })
+  names(out_percent) <- paste0(c("past",
+                                 "pvyk",
+                                 "psky",
+                                 "p"), "_percent")
+  
+  sequencei <- sequence
+  counts <- vector("list", length(hrgp_motif))
+  lens <- vector("list", length(hrgp_motif))
+  for(i in seq_along(hrgp_motif)){
+    counts[[i]] <- stringr::str_count(sequencei, hrgp_motif[i])
+    stringr::str_extract_all(sequencei, hrgp_motif[i])
+    lens[[i]] <- unlist(lapply(stringr::str_extract_all(sequencei,
+                                                        hrgp_motif[i]),
+                               function(x){
+      return(nchar(paste(x, collapse = "")))
+    }))
+    sequencei <- stringr::str_replace_all(sequencei,
+                                          hrgp_motif[i], "XX")
   }
-  if (!missing(custom)){
-    hrgp_aa <- custom
-    hrgp_name <- tolower(gsub("[^\\pL']+", "", hrgp_aa, perl = T))
-    if (missing(frame)){
-      out_count <-  lapply(hrgp_aa, function(x){
-        stringr::str_count(sequence, x)
-      }
-      )
-      names(out_count) <- paste0(hrgp_name,
-                                 "_count")
-      perc <- which(nchar(hrgp_aa) == 1)
-      if (length(perc) > 0){
-        out_percent <- lapply(perc, function(x){
-          out_count[[x]] / seq_len * 100
-          }
-          )
-        names(out_percent) <- paste(hrgp_name[perc],
-                                    "percent",
-                                    sep = "_")
-        out <- c(out_count, out_percent)
-        } else {
-          out <- out_count
-          }
-      out <- do.call(cbind, out)
-      out <- as.data.frame(out, stringsAsFactors = FALSE)
-      out$id <- id
-      return(out)
-    } else {
-      res <- lapply(sequence, function(x){
-        if (frame > nchar(x)) frame <- nchar(x)
-        aa_out <- lapply(hrgp_aa, function(k){
-          P_count <- vector("numeric", length = (nchar(x) - frame + 1))
-          for (i in 1 : (nchar(x) - frame + 1)){
-            P_count[i] <- stringr::str_count(substr(x,
-                                                    start = i,
-                                                    stop = i + frame - 1), k)
-            
-          }
-          P_count 
-        }
-        )
-        names(aa_out) <- paste0(hrgp_name, "_count")
-        perc <- which(nchar(hrgp_aa) == 1)
-        if (length(perc) > 0){
-          out_percent <- lapply(perc, function(x){
-            aa_out[[x]] / frame * 100
-          }
-          )
-          names(out_percent) <- paste(hrgp_name[perc],
-                                      "percent",
-                                      sep = "_")
-          out <- c(aa_out,
-                   out_percent)
-        } else {
-          out <- aa_out
-        }
-        out <- do.call(cbind, out)
-        out <- as.data.frame(out,
-                             stringsAsFactors = FALSE)
-        out$frame_start <- 1 : (nchar(x) - frame + 1)
-        out$frame_end <- frame  : nchar(x)
-        out
-        }
-        )
-      names(res) <- id
-      out <- list(protein = res,
-                  maab = hrgp_aa)
-      return(out)
-    }
+  
+  lens <- do.call(cbind, lens)
+  coverage <- rowSums(lens)/seq_len
+  names(counts) <- hrgp_m_name
+  counts <- do.call(cbind, counts)
+  out_percent <- do.call(cbind, out_percent)
+  counts2 <- data.frame(ext_sp = counts[,"ext_sp"],
+                        ext_tyr = rowSums(counts[,c("ext_fyxy_count",
+                                                    "ext_khy_count",
+                                                    "ext_vyhkde_count",
+                                                    "ext_vxy_count",
+                                                    "ext_yy_count")]),
+                        prp = rowSums(counts[,c("prp_ppvqk_count",
+                                                "prp_ppvxkt_count",
+                                                "ppr_kkpcpp")]),
+                        agp = rowSums(counts[,c("agp_atgvppp_count",
+                                                "agp_astgvp_count")]),
+                        out_percent,
+                        coverage = coverage)
+  predict_maab <- function(maab){
+    past_percent <- maab$past_percent
+    pvyk_percent <- maab$pvyk_percent
+    psky_percent <- maab$psky_percent
+    p_percent <- maab$p_percent
+    ext_sp_count <- maab$ext_sp
+    tyr <- maab$ext_tyr
+    agp <- maab$agp
+    prp <- maab$prp
+    ext <- tyr + ext_sp_count
+    coverage <- maab$coverage
+    categorisation <- ifelse((past_percent >= 45 |
+                                pvyk_percent >= 45 |
+                                psky_percent >= 45) &
+                               p_percent >= 10, 1, 0)
+    
+    ext_rat <- ext_sp_count / tyr
+    
+    groups <- ifelse(categorisation == 1 &
+                       past_percent >= 45 &
+                       past_percent - pvyk_percent >= 2 &
+                       past_percent - psky_percent >= 2,  "1/4", "0")
+    
+    groups <- ifelse(categorisation == 1 &
+                       psky_percent >= 45 &
+                       psky_percent - past_percent >= 2 &
+                       psky_percent - pvyk_percent >= 2,  "2/9", groups)
+    
+    groups <- ifelse(categorisation == 1 &
+                       pvyk_percent >= 45 &
+                       pvyk_percent - past_percent >= 2 &
+                       pvyk_percent - psky_percent >= 2,  "3/14", groups)
+    
+    groups <- ifelse(categorisation == 1 &
+                       groups == "0", "Shared", groups)
+    
+    groups <- ifelse(groups == "1/4" &
+                       agp/2 <= ext &
+                       prp <= ext, "5", groups)
+    groups <- ifelse(groups == "5" &
+                       ext_rat > 4, "6", groups)
+    groups <- ifelse(groups == "5" &
+                       ext_rat < 0.25, "7", groups)
+    groups <- ifelse(groups == "1/4" &
+                       agp/2 < prp &
+                       ext < prp, "8", groups)
+    
+    groups <- ifelse(groups == "2/9" &
+                       agp/2 > ext &
+                       agp/2 > prp, "10", groups)
+    groups <- ifelse(groups == "2/9" &
+                       prp > ext &
+                       prp > agp/2, "13", groups)
+    groups <- ifelse(groups == "2/9" &
+                       ext_rat > 4, "11", groups)
+    groups <- ifelse(groups == "2/9" &
+                       ext_rat < 0.25, "12", groups)
+    
+    groups <- ifelse(groups == "3/14" &
+                       agp/2 > prp &
+                       agp/2 > ext,
+                     "15", groups)
+    groups <- ifelse(groups == "3/14" &
+                       ext >= prp &
+                       ext >= agp/2,
+                     "16", groups)
+    groups <- ifelse(groups == "16"&
+                       ext_rat > 4, "17", groups)
+    groups <- ifelse(groups == "16"&
+                       ext_rat < 0.25, "18", groups)
+    
+    groups <- ifelse(groups == "Shared" &
+                       agp/2 > ext &
+                       agp/2 > prp, "19", groups)
+    
+    groups <- ifelse(groups == "Shared" &
+                       prp > ext &
+                       prp > agp/2, "23", groups)
+    
+    groups <- ifelse(groups == "Shared" &
+                       ext >= prp &
+                       ext >= agp/2, "20", groups)
+    groups <- ifelse(groups == "20" &
+                       ext_rat > 4, "21", groups)
+    groups <- ifelse(groups == "20" &
+                       ext_rat < 0.25, "22", groups)
+    
+    groups <- ifelse(coverage < 0.15 &
+                       categorisation == 1 , 24, groups)
+    groups
   }
+  maab_class <- predict_maab(counts2)
+  if(!missing(gpi)){
+    if(!is.logical(gpi)){
+      stop("gpi must be a logical vector")
+    }
+    if(length(gpi) != length(sequecne)){
+      stop("gpi must be the same length as the provided sequences")
+    }
+    predict_maab <- ifelse(predict_maab == "1/4" & gpi, "1", predict_maab)
+    predict_maab <- ifelse(predict_maab == "1/4" & !gpi, "4", predict_maab)
+    predict_maab <- ifelse(predict_maab == "2/9" & gpi, "9", predict_maab)
+    predict_maab <- ifelse(predict_maab == "2/9" & !gpi, "2", predict_maab)
+    predict_maab <- ifelse(predict_maab == "3/14" & gpi, "14", predict_maab)
+    predict_maab <- ifelse(predict_maab == "3/14" & !gpi, "3", predict_maab)
+  }
+
+  out <- data.frame(id = id, 
+                    counts2,
+                    maab_class = as.factor(maab_class),
+                    stringsAsFactors = FALSE)
+  return(out)
 }
 
-  
-
-  
-  
-  
-    
