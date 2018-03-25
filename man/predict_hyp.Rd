@@ -4,7 +4,7 @@
 \alias{predict_hyp}
 \title{Predict hydroxyproline positions in plant proteins based on primary structure}
 \usage{
-predict_hyp(data = NULL, sequence, id, tprob = 0.32, split = 1)
+predict_hyp(data = NULL, sequence, id, tprob = 0.3, split = 1)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
@@ -13,7 +13,7 @@ predict_hyp(data = NULL, sequence, id, tprob = 0.32, split = 1)
 
 \item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{tprob}{A numeric value indicating the threshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.32 offering a tradeoff between sensitivity and specificity.}
+\item{tprob}{A numeric value indicating the threshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.3 offering a tradeoff between sensitivity and specificity.}
 
 \item{split}{A numeric value determining the ratio of vectorized and parallelized computation. Should be left at default, lower to 0 - 1 range if low memory errors occur. Increase at your own risk.}
 }

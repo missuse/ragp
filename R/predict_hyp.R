@@ -6,7 +6,7 @@
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
-#' @param tprob A numeric value indicating the threshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.32 offering a tradeoff between sensitivity and specificity.
+#' @param tprob A numeric value indicating the threshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.3 offering a tradeoff between sensitivity and specificity.
 #' @param split A numeric value determining the ratio of vectorized and parallelized computation. Should be left at default, lower to 0 - 1 range if low memory errors occur. Increase at your own risk.
 #' @return  A list with two elements:
 #' \describe{
@@ -36,19 +36,19 @@
 
 
 
-predict_hyp <- function (data = NULL, sequence, id, tprob = 0.32, split = 1){
+predict_hyp <- function (data = NULL, sequence, id, tprob = 0.3, split = 1){
   if (missing(tprob)) {
-    tprob <- 0.32
+    tprob <- 0.3
   }
   if (tprob < 0) {
-    tprob <- 0.32
+    tprob <- 0.3
     warning(paste("treshold probability for prediction should be in 0 - 1 range,", 
-                  "tprob was set to the default 0.32"))
+                  "tprob was set to the default 0.3"))
   }
   if (tprob > 1) {
-    tprob <- 0.32
+    tprob <- 0.3
     warning(paste("treshold probability for prediction should be in 0 - 1 range,", 
-                  "tprob was set to the default 0.32"))
+                  "tprob was set to the default 0.3"))
   }
   if(missing(data)){
     if (missing(sequence)){
