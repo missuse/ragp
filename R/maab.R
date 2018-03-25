@@ -299,7 +299,7 @@ maab <- function(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"
     if(!is.logical(gpi)){
       stop("gpi must be a logical vector")
     }
-    if(length(gpi) != length(sequecne)){
+    if(length(gpi) != length(sequence)){
       stop("gpi must be the same length as the provided sequences")
     }
     predict_maab <- ifelse(predict_maab == "1/4" & gpi, "1", predict_maab)
