@@ -302,12 +302,12 @@ maab <- function(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"
     if(length(gpi) != length(sequence)){
       stop("gpi must be the same length as the provided sequences")
     }
-    predict_maab <- ifelse(predict_maab == "1/4" & gpi, "1", predict_maab)
-    predict_maab <- ifelse(predict_maab == "1/4" & !gpi, "4", predict_maab)
-    predict_maab <- ifelse(predict_maab == "2/9" & gpi, "9", predict_maab)
-    predict_maab <- ifelse(predict_maab == "2/9" & !gpi, "2", predict_maab)
-    predict_maab <- ifelse(predict_maab == "3/14" & gpi, "14", predict_maab)
-    predict_maab <- ifelse(predict_maab == "3/14" & !gpi, "3", predict_maab)
+    maab_class <- ifelse(maab_class == "1/4" & gpi, "1", maab_class)
+    maab_class <- ifelse(maab_class == "1/4" & !gpi, "4", maab_class)
+    maab_class <- ifelse(maab_class == "2/9" & gpi, "9", maab_class)
+    maab_class <- ifelse(maab_class == "2/9" & !gpi, "2", maab_class)
+    maab_class <- ifelse(maab_class == "3/14" & gpi, "14", maab_class)
+    maab_class <- ifelse(maab_class == "3/14" & !gpi, "3", maab_class)
   }
 
   out <- data.frame(id = id, 
