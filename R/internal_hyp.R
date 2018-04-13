@@ -18,7 +18,7 @@
 
 extractMBdesc <- function(x){
   N <- nchar(x[1])
-  m1 <- t(ragp:::Pr)[strsplit(paste(x, collapse = ""), "")[[1]], ]
+  m1 <- t(Pr)[strsplit(paste(x, collapse = ""), "")[[1]], ]
   P <- do.call(cbind, lapply(1:N, function(i) m1[seq(i, nrow(m1), by = N), ]))
   P <- do.call(cbind, lapply(1:6, function(x) P[,seq(x, ncol(P), by = 6)]))
   P <- matrix(t(P), byrow = T, ncol = N)
