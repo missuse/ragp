@@ -16,23 +16,29 @@
 #' @seealso \code{\link[ragp]{predict_hyp} \link[protr]{extractMoreauBroto}}
 
 
-extractMBdesc <- function(x) {
-  xSplitted <- strsplit(as.character(x), split = "")
-  P <- lapply(xSplitted, FUN = function(z) sapply(z, function(x) Pr[, 
-                                                                    colnames(Pr) == x]))
-  P <- do.call(rbind, P)
-  nlag <- 6
-  N <- as.numeric(nchar(x[1]))
-  MB <- vector("list", 12)
+extractMBdesc <- function(x){
+  N <- nchar(x[1])
+  m1 <- t(ragp:::Pr)[strsplit(paste(x, collapse = ""), "")[[1]], ]
+  P <- do.call(cbind, lapply(1:N, function(i) m1[seq(i, nrow(m1), by = N), ]))
+  P <- do.call(cbind, lapply(1:6, function(x) P[,seq(x, ncol(P), by = 6)]))
+  P <- matrix(t(P), byrow = T, ncol = N)
+  MB <- vector("list", 6)
+  nlag = 6
   for (j in 1:nlag) {
     MB[[j]] <- rowSums(P[, 1:(N - j)] * P[, 1:(N - j) + j])/(N - j)
   }
-  MB <- do.call(rbind, MB)
-  MB <- matrix(as.vector(MB), ncol = nlag * 6, byrow = T)
-  colnames(MB) = as.vector(t(outer(props, paste(".lag", 
-                                                1:nlag, sep = ""), paste, sep = "")))
+  MB <- do.call(cbind, MB)
+  MB <- matrix(t(MB), byrow = T, ncol = 36)
+  
+  colnames(MB) = as.vector(t(outer(ragp:::props,
+                                   paste(".lag",
+                                         1:nlag,
+                                         sep = ""),
+                                   paste,
+                                   sep = "")))
   return(MB)
 }
+
 
 #' Quasi-Sequence-Order (QSO) Descriptor
 #'
