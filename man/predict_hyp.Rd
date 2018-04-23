@@ -15,7 +15,7 @@ predict_hyp(data = NULL, sequence, id, tprob = 0.3, split = 1)
 
 \item{tprob}{A numeric value indicating the threshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.3 offering a tradeoff between sensitivity and specificity.}
 
-\item{split}{A numeric value determining the ratio of vectorized and parallelized computation. Should be left at default, lower to 0 - 1 range if low memory errors occur. Increase at your own risk.}
+\item{split}{A numeric value determining the ratio of vectorized and sequential computation. Should be left at default, lower to 0 - 1 range if low memory errors occur. Increase at your own risk.}
 }
 \value{
 A list with two elements:
