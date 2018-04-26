@@ -13,6 +13,8 @@
 #' 
 #' @note This is an internal function used inside predict_hyp
 #' 
+#' @author original R code by Nan Xiao, modified by Milan Dragićević
+#' 
 #' @seealso \code{\link[ragp]{predict_hyp} \link[protr]{extractMoreauBroto}}
 
 
@@ -51,6 +53,8 @@ extractMBdesc <- function(x){
 #' @details QSO descriptor is calculated based on two physicochemical distance matrices: Schneider-Wrede (Schneider and Wrede, 1994) and Grantham physicochemical distance matrix (Grantham, 1974)
 #' 
 #' @note This is an internal function used inside predict_hyp
+#' 
+#' @author original R code by Nan Xiao, modified by Milan Dragićević
 #' 
 #' @references Kuo-Chen Chou. Prediction of Protein Subcellar Locations by Incorporating Quasi-Sequence-Order Effect. Biochemical and Biophysical Research Communications, 2000, 278, 477-483.
 #' Gisbert Schneider and Paul Wrede. The Rational Design of Amino Acid Sequences by Artifical Neural Networks and Simulated Molecular Evolution: Do Novo Design of an Idealized Leader Cleavage Site. Biophys Journal, 1994, 66, 335-344.
@@ -181,6 +185,8 @@ QSOlevel <- function(m) {
 #' @return  A matrix with the Composition descriptor (dim: 21)
 #' 
 #' @note This is an internal function used inside predict_hyp
+#' 
+#' @author original R code by Nan Xiao
 #' 
 #' @references Inna Dubchak, Ilya Muchink, Stephen R. Holbrook and Sung-Hou Kim. Prediction of protein folding class using global description of amino acid sequence. Proceedings of the National Academy of Sciences. USA, 1995, 92, 8700-8704.
 #' 

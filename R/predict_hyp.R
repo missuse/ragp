@@ -1,7 +1,7 @@
 #' Predict hydroxyproline positions in plant proteins based on primary structure
 #'
 #' predict_hyp is a hydroxyproline site prediction algorithm for plant proteins, based on the xgboost distributed gradient boosting library.
-#' It was trained on plant sequences with experimentally determined 4-hydroxyprolines from uniprot data base. N- and C- terminal prolines surrounded by less than 10 amino acid residues will be excluded.
+#' It was trained on plant sequences with experimentally determined 4-hydroxyprolines from uniprot data base. Prediction is not possible for prolines which are within 10 N-terminal and 6 C-terminal amino acids, they will be excluded from output.
 #'
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.

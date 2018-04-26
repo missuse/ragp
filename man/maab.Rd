@@ -33,8 +33,6 @@ A data frame with columns:
 \item{coverage} {the coverage of sequence by the identified motifs}
 \item{maab_class} {determined maab class}
 }
-
-if custom is specified the returned object contains counts for each element specified in custom; additionally percentage is calculated for all elements containing a single symbol.
 }
 \description{
 Perform Motif and amino acid bias classification of Hydroxyproline‐rich Glycoproteins according to Johnson et al. (2017)

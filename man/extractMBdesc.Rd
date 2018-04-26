@@ -27,3 +27,6 @@ This is an internal function used inside predict_hyp
 \seealso{
 \code{\link[ragp]{predict_hyp} \link[protr]{extractMoreauBroto}}
 }
+\author{
+original R code by Nan Xiao, modified by Milan Dragićević
+}

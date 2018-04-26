@@ -28,3 +28,6 @@ Gisbert Schneider and Paul Wrede. The Rational Design of Amino Acid Sequences by
 \seealso{
 \code{\link[ragp]{predict_hyp} \link[protr]{extractQSO}}
 }
+\author{
+original R code by Nan Xiao, modified by Milan Dragićević
+}

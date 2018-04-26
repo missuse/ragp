@@ -24,3 +24,6 @@ Inna Dubchak, Ilya Muchink, Stephen R. Holbrook and Sung-Hou Kim. Prediction of 
 \seealso{
 \code{\link[ragp]{predict_hyp} \link[protr]{extractCTDC}}
 }
+\author{
+original R code by Nan Xiao
+}

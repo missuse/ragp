@@ -23,8 +23,6 @@
 #' \item{maab_class} {determined maab class}
 #'}
 #' 
-#' if custom is specified the returned object contains counts for each element specified in custom; additionally percentage is calculated for all elements containing a single symbol.  
-#' 
 #' @details The function provides motif and amino acid bias descriptors used for classification of HRGP's by the MAAB pipeline (Johnson et al. 2017) as well as the determined HRGP classes. The motifs are counted in a specific order ext > tyr > prp > agp, and overlapping motifs are not counted. Hence the classification depends on the order of counting, this is most noticeable for tyr and prp, we recommend using both the default order and  'order = c("ext", "prp","tyr", "agp")'. 
 #' 
 #' @references Johnson KL, Cassin AM, Lonsdale A, Bacic A, Doblin MS, Schultz CJ. (2017) Pipeline to Identify Hydroxyproline-Rich Glycoproteins. Plant Physiol 174(2): 886-903.

@@ -33,7 +33,7 @@ A list with two elements:
 }
 \description{
 predict_hyp is a hydroxyproline site prediction algorithm for plant proteins, based on the xgboost distributed gradient boosting library.
-It was trained on plant sequences with experimentally determined 4-hydroxyprolines from uniprot data base. N- and C- terminal prolines surrounded by less than 10 amino acid residues will be excluded.
+It was trained on plant sequences with experimentally determined 4-hydroxyprolines from uniprot data base. Prediction is not possible for prolines which are within 10 N-terminal and 6 C-terminal amino acids, they will be excluded from output.
 }
 \examples{
 library(ragp)
