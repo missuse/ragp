@@ -48,15 +48,51 @@
 
 
 
-get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = NULL, verbose = TRUE){
+get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1, verbose = TRUE){
   if (missing(simplify)){
     simplify <- TRUE
+  }
+  if (length(simplify) > 1){
+    simplify <- TRUE
+    warning("simplify should be of length 1, setting to default: simplify = TRUE")
+  }
+  if (!is.logical(simplify)){
+    simplify <- as.logical(simplify)
+    warning("simplify is not logical, converting using 'as.logical'")
+  }
+  if (is.na(simplify)){
+    simplify <- TRUE
+    warning("simplify was set to NA, setting to default: simplify = TRUE")
   }
   if (missing(sleep)){
     sleep <- 1
   }
+  if (length(sleep) > 1){
+    sleep <- 1
+    warning("sleep should be of length 1, setting to default: sleep = 1")
+  }
+  if (!is.numeric(sleep)){
+    sleep <- as.numeric(sleep)
+    warning("sleep is not numeric, converting using 'as.numeric'")
+  }
+  if (is.na(sleep)){
+    sleep <- 1
+    warning("sleep was set to NA, setting to default: sleep = 1")
+  }
   if (missing(verbose)){
     verbose <- TRUE
+  }
+  if (length(verbose) > 1){
+    verbose <- TRUE
+    warning("verbose should be of length 1, setting to default: verbose = TRUE")
+  }
+  if (!is.logical(verbose)){
+    verbose <- as.logical(verbose)
+    warning("verbose is not logical, converting using 'as.logical'")
+  }
+  if (is.na(verbose)){
+    verbose <- TRUE
+    warning("verbose was set to NA, setting to default: verbose = TRUE")
   }
   if(missing(data)){
     if (missing(sequence)){

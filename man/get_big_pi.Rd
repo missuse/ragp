@@ -7,7 +7,7 @@
 \url{http://mendel.imp.ac.at/gpi/plant_server.html}
 }
 \usage{
-get_big_pi(data = NULL, sequence, id, simplify = TRUE, sleep = NULL,
+get_big_pi(data = NULL, sequence, id, simplify = TRUE, sleep = 1,
   verbose = TRUE)
 }
 \arguments{

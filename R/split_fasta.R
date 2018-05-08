@@ -26,16 +26,46 @@
 #' }
 #' @export
 
-split_fasta <- function(path_in, path_out, num_seq = NULL, trim = NULL){
+split_fasta <- function(path_in, path_out, num_seq = 20000, trim = FALSE){
   if (!requireNamespace("seqinr", quietly = TRUE)) {
     stop("seqinr needed for this function to work. Please install it.",
          call. = FALSE)
   }
+  if (!file.exists(path_in)){
+    stop("cannot find file in the specified path_in")
+  }
   if (missing(num_seq)){
     num_seq <- 20000
   }
+  if (length(num_seq) > 1){
+    num_seq <- 20000
+    warning("num_seq should be of length 1, setting to default: num_seq = 20000")
+  }
+  if (!is.numeric(num_seq)){
+    num_seq <- as.numeric(num_seq)
+    warning("num_seq is not numeric, converting using 'as.numeric'")
+  }
+  if (is.na(num_seq)){
+    num_seq <- 20000
+    warning("num_seq was set to NA, setting to default: num_seq = 20000")
+  }
+  if (is.numeric(num_seq)){
+    num_seq <- floor(num_seq)
+  }
   if (missing(trim)){
     trim <- FALSE
+  }
+  if (length(trim) > 1){
+    trim <- FALSE
+    warning("trim should be of length 1, setting to default: trim = FALSE")
+  }
+  if (!is.logical(trim)){
+    trim <- as.logical(trim)
+    warning("trim is not logical, converting using 'as.logical'")
+  }
+  if (is.na(trim)){
+    trim <- FALSE
+    warning("trim was set to NA, setting to default: trim = FALSE")
   }
   temp_file <- seqinr::read.fasta(file = path_in, seqtype = "AA")
   if (trim == TRUE){
@@ -56,7 +86,9 @@ split_fasta <- function(path_in, path_out, num_seq = NULL, trim = NULL){
   m_split <- split(temp_file, pam)
   file_list <- vector("character", length(m_split))
   for (i in 1 : length(m_split)){
-    seqinr::write.fasta(sequences = m_split[[i]], names = names(m_split[[i]]), file.out = paste(path_out, i, ".fa", sep=""))
+    seqinr::write.fasta(sequences = m_split[[i]],
+                        names = names(m_split[[i]]),
+                        file.out = paste(path_out, i, ".fa", sep=""))
     file_list[i] <- paste(path_out, i, ".fa", sep="")
   }
   return(file_list)

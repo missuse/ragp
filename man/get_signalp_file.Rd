@@ -8,9 +8,9 @@
 }
 \usage{
 get_signalp_file(file, org_type = c("euk", "gram-", "gram+"),
-  Dcut_type = c("default", "sensitive", "user"), Dcut_noTM = NULL,
-  Dcut_TM = NULL, method = c("best", "notm"), minlen = NULL,
-  trunc = NULL, spliter = NULL, sleep = NULL)
+  Dcut_type = c("default", "sensitive", "user"), Dcut_noTM = 0.45,
+  Dcut_TM = 0.5, method = c("best", "notm"), minlen = NULL,
+  trunc = NULL, splitter = 500, sleep = 3)
 }
 \arguments{
 \item{file}{A path to the FASTA formatted file that is to be processed}
@@ -29,7 +29,7 @@ get_signalp_file(file, org_type = c("euk", "gram-", "gram+"),
 
 \item{trunc}{An integer value corresponding to the N-terminal truncation of input sequence, at default set to 70. By default, the predictor truncates each sequence to max. 70 residues before submitting it to the neural networks. If you want to predict extremely long signal peptides, you can try a higher value, or disable truncation completely by entering 0 (zero).}
 
-\item{spliter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
+\item{splitter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
 
 \item{sleep}{A numeric indicating the pause in seconds between POST and GET server calls, at default set to 1s. Decreasing is not recommended.}
 }

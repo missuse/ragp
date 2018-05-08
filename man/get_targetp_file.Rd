@@ -9,8 +9,8 @@
 \usage{
 get_targetp_file(file, org_type = c("non_plant", "plant"),
   cutoffs = c("winner_takes_all", "spec95", "spec90", "custom"),
-  tcut = NULL, pcut = NULL, scut = NULL, ocut = NULL, spliter = NULL,
-  sleep = NULL)
+  tcut = NULL, pcut = NULL, scut = NULL, ocut = NULL, splitter = 500,
+  sleep = 3)
 }
 \arguments{
 \item{file}{A path to the FASTA formated file that is to be processed}
@@ -27,7 +27,7 @@ get_targetp_file(file, org_type = c("non_plant", "plant"),
 
 \item{ocut}{A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). User specified cutoff for "other" (not with mTP, cTP, SP).}
 
-\item{spliter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
+\item{splitter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
 
 \item{sleep}{A numeric indicating the pause in seconds between server calls, at default set to 1}
 }

@@ -7,7 +7,7 @@
 \url{https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan}
 }
 \usage{
-get_hmm(data = NULL, sequence, id, verbose = NULL, sleep = NULL)
+get_hmm(data = NULL, sequence, id, verbose = TRUE, sleep = 1)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}

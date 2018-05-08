@@ -4,7 +4,7 @@
 \alias{split_fasta}
 \title{Split a fasta formatted file.}
 \usage{
-split_fasta(path_in, path_out, num_seq = NULL, trim = NULL)
+split_fasta(path_in, path_out, num_seq = 20000, trim = FALSE)
 }
 \arguments{
 \item{path_in}{A path to the .FASTA formatted file that is to be processed}

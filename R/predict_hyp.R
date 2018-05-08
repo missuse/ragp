@@ -40,6 +40,18 @@ predict_hyp <- function (data = NULL, sequence, id, tprob = 0.3, split = 1){
   if (missing(tprob)) {
     tprob <- 0.3
   }
+  if (length(tprob) > 1){
+    tprob <- 0.3
+    warning("tprob should be of length 1, setting to default: tprob = 0.3")
+  }
+  if (!is.numeric(tprob)) {
+    tprob <- as.numeric(tprob)
+    warning("tprob is not numeric, converting using 'as.numeric'")
+  }
+  if (is.na(tprob)){
+    tprob <- 0.3
+    warning("tprob was set to NA, setting to default: tprob = 0.3")
+  }
   if (tprob < 0) {
     tprob <- 0.3
     warning(paste("treshold probability for prediction should be in 0 - 1 range,", 
@@ -49,6 +61,27 @@ predict_hyp <- function (data = NULL, sequence, id, tprob = 0.3, split = 1){
     tprob <- 0.3
     warning(paste("treshold probability for prediction should be in 0 - 1 range,", 
                   "tprob was set to the default 0.3"))
+  }
+  if (missing(split)) {
+    split <- 1
+  }
+  if (length(split) > 1){
+    split <- 1
+    warning("split should be of length 1, setting to default: split = 1")
+  }
+  if (!is.numeric(split)) {
+    split <- as.numeric(split)
+    warning("split is not numeric, converting using 'as.numeric'")
+  }
+  if (is.na(split)){
+    split <- 1
+    warning("split was set to NA, setting to default: split = 1")
+  }
+  if (split > 2){
+    warning("setting split > 2 can cause memory problems")
+  }
+  if (split < 0.2){
+    warning("setting split < 0.2 can increase computation time")
   }
   if(missing(data)){
     if (missing(sequence)){

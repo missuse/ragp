@@ -10,7 +10,7 @@
 #' @param method One of c("best", "notm"), defaults to "best". Signalp 4.1 contains two types of neural networks. SignalP-TM has been trained with sequences containing transmembrane segments in the data set, while SignalP-noTM has been trained without those sequences. Per default, SignalP 4.1 uses SignalP-TM as a preprocessor to determine whether to use SignalP-TM or SignalP-noTM in the final prediction (if 4 or more positions are predicted to be in a transmembrane state, SignalP-TM is used, otherwise SignalP-noTM). An exception is Gram-positive bacteria, where SignalP-TM is used always. If you are confident that there are no transmembrane segments in your data, you can get a slightly better performance by choosing "Input sequences do not include TM regions", which will tell SignalP 4.1 to use SignalP-noTM always.
 #' @param minlen An integer value corresponding to the minimal predicted signal peptide length, at default set to 10. SignalP 4.0 could, in rare cases, erroneously predict signal peptides shorter than 10 residues. These errors have in SignalP 4.1 been eliminated by imposing a lower limit on the cleavage site position (signal peptide length). The minimum length is by default 10, but you can adjust it. Signal peptides shorter than 15 residues are very rare. If you want to disable this length restriction completely, enter 0 (zero).
 #' @param trunc An integer value corresponding to the N-terminal truncation of input sequence, at default set to 70. By default, the predictor truncates each sequence to max. 70 residues before submitting it to the neural networks. If you want to predict extremely long signal peptides, you can try a higher value, or disable truncation completely by entering 0 (zero).
-#' @param spliter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.
+#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.
 #' @param sleep A numeric indicating the pause in seconds between POST and GET server calls, at default set to 1s. Decreasing is not recommended.
 #' @return  A data frame with columns:
 #' \describe{
@@ -46,86 +46,143 @@
 
 
 get_signalp_file = function (file, org_type = c("euk", "gram-", "gram+"), Dcut_type = c("default",
-                                                                                        "sensitive", "user"), Dcut_noTM = NULL, Dcut_TM = NULL, method = c("best",
-                                                                                                                                                           "notm"), minlen = NULL, trunc = NULL, spliter = NULL, sleep = NULL)
+                                                                                        "sensitive", "user"), Dcut_noTM = 0.45, Dcut_TM = 0.5, method = c("best",
+                                                                                                                                                           "notm"), minlen = NULL, trunc = NULL, splitter = 500, sleep = 3)
 {
   if (!requireNamespace("seqinr", quietly = TRUE)) {
     stop("seqinr needed for this function to work. Please install it.",
          call. = FALSE)
   }
-  if (missing(org_type)) {
-    org_type <- "euk"
+  if (missing(splitter)) {
+    splitter <- 500
+  }
+  if (length(splitter) > 1){
+    splitter <- 500
+    warning("splitter should be of length 1, setting to default: splitter = 500")
+  }
+  if (!is.numeric(splitter)){
+    splitter <- as.numeric(splitter)
+    warning("splitter is not numeric, converting using 'as.numeric'")
+  }
+  if (is.na(splitter)){
+    splitter <- 500
+    warning("splitter was set to NA, setting to default: splitter = 500")
+  }
+  if (is.numeric(splitter)) {
+    splitter <- floor(splitter)
+  }
+  if (!(splitter %in% 1:2000)) {
+    splitter <- 500
+    warning(paste("Illegal splitter input, splitter will be set to 500"))
   }
   if (missing(sleep)) {
     sleep <- 3
   }
-  if (missing(spliter)) {
-    spliter <- 500
+  if (length(sleep) > 1){
+    sleep <- 3
+    warning("sleep should be of length 1, setting to default: sleep = 3")
   }
-  if (!(spliter %in% 1:2000)) {
-    spliter <- 500
-    warning(paste("Illegal spliter input, spliter will be set to 500"))
+  if (!is.numeric(sleep)){
+    sleep <- as.numeric(sleep)
+    warning("sleep is not numeric, converting using 'as.numeric'")
   }
-  if (sleep < 3)
+  if (is.na(sleep)){
+    sleep <- 3
+    warning("sleep was set to NA, setting to default: sleep = 3")
+  }
+  if (sleep < 2){
     warning("setting sleep to less than 2s can cause problems when fetching results from the server")
-  if (!org_type %in% c("euk", "gram-", "gram+"))
+  }
+  if (missing(org_type)) {
+    org_type <- "euk"
+  }
+  if (!org_type %in% c("euk", "gram-", "gram+")) {
     stop("org_type should be one of: 'euk', 'gram-', 'gram+'")
+  }
+  if (length(org_type) > 1){
+    stop("org_type should be one of: 'euk', 'gram-', 'gram+'")
+  }
   if (missing(Dcut_type)) {
     Dcut_type <- "default"
   }
-  if (!Dcut_type %in% c("default", "sensitive", "user"))
-    stop("org_type should be one of: 'default', 'sensitive', 'user'")
+  if (!Dcut_type %in% c("default", "sensitive", "user")) {
+    stop("Dcut_type should be one of: 'default', 'sensitive', 'user'")
+  }
+  if (length(Dcut_type) > 1){
+    stop("Dcut_type should be one of: 'default', 'sensitive', 'user'")
+  }
   if (missing(Dcut_noTM)) {
     Dcut_noTM <- "0.45"
-  }
-  else {
+  }  else {
     Dcut_noTM <- as.character(Dcut_noTM)[1]
   }
-  if (as.numeric(Dcut_noTM[1]) > 1 | as.numeric(Dcut_noTM[1]) <
-      0)
-    stop("Dcut_noTM must take values in the range 0 - 1")
+  if (!is.numeric(as.numeric(Dcut_noTM))){
+    Dcut_noTM <- "0.45"
+    warning("Dcut_noTM could not be converted to numeric, setting to default: Dcut_noTM = '0.45'")
+  }
+  if (is.na(Dcut_noTM)) {
+    Dcut_noTM <- "0.45"
+    warning("Dcut_noTM was set to NA, setting to default: Dcut_noTM = '0.45'")
+  }
+  if (as.numeric(Dcut_noTM[1]) > 1) {
+    Dcut_noTM <- "0.45"
+    warning("Dcut_noTM must take values in the range 0 - 1,
+            it was set to the default: Dcut_noTM = '0.45'")
+  }
+  if (as.numeric(Dcut_noTM[1]) < 0) {
+    Dcut_noTM <- "0.45"
+    warning("Dcut_noTM must take values in the range 0 - 1,
+            it was set to the default: Dcut_noTM = '0.45'")
+  }    
   if (missing(Dcut_TM)) {
     Dcut_TM <- "0.5"
-  }
-  else {
+  } else {
     Dcut_TM <- as.character(Dcut_TM)[1]
   }
-  if (as.numeric(Dcut_TM[1]) > 1 | as.numeric(Dcut_TM[1]) <
-      0)
-    stop("Dcut_TM must take values in the range 0 - 1")
+  if (!is.numeric(as.numeric(Dcut_TM))){
+    Dcut_TM <- "0.5"
+    warning("Dcut_TM could not be converted to numeric, setting to default: Dcut_TM = '0.5'")
+  }
+  if (is.na(Dcut_TM)) {
+    Dcut_TM <- "0.5"
+    warning("Dcut_noTM was set to NA, setting to default: Dcut_TM = '0.5'")
+  }
+  if (as.numeric(Dcut_TM[1]) > 1) {
+    Dcut_TM <- "0.5"
+    warning("Dcut_TM must take values in the range 0 - 1,
+            it was set to the default: Dcut_TM = '0.5'")
+  }
+  if (as.numeric(Dcut_TM[1]) < 0) {
+    Dcut_TM <- "0.5"
+    warning("Dcut_TM must take values in the range 0 - 1,
+            it was set to the default: Dcut_TM = '0.5'")
+  } 
   if (missing(method)) {
     method <- "best"
   }
-  if (!method %in% c("best", "notm"))
+  if (!method %in% c("best", "notm")){
     stop("method should be one of: 'best', 'notm'")
+  }
+  if (length(method) > 1){
+    stop("method should be one of: 'best', 'notm'")
+  }
   if (missing(minlen)) {
     minlen <- ""
-  }
-  else {
+  }  else {
     minlen <- as.character(minlen)[1]
   }
   if (missing(trunc)) {
     trunc <- ""
-  }
-  else {
+  }  else {
     trunc <- as.character(trunc)[1]
   }
-  split_fasta <- function(x) {
-    temp_file <- seqinr::read.fasta(file = x, seqtype = "AA")
-    len <- length(temp_file)
-    splt <- spliter
-    pam <- ((seq(len) - 1)%/%splt) + 1
-    m_split <- split(temp_file, pam)
-    file_list <- vector("character", length(m_split))
-    for (i in 1:length(m_split)) {
-      seqinr::write.fasta(sequences = m_split[[i]], names = names(m_split[[i]]),
-                          file.out = paste("temp_", i, ".fa", sep = ""))
-      file_list[i] <- paste("temp_", i, ".fa", sep = "")
-    }
-    return(file_list)
+  if (!file.exists(file)){
+    stop("cannot find file in the specified adress")
   }
   url <- "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi"
-  file_list <- split_fasta(file)
+  file_list <- ragp::split_fasta(path_in = file,
+                                 path_out = "temp_signalp_",
+                                 num_seq = splitter)
   jobid <- vector("character", length(file_list))
   for (i in 1:length(file_list)) {
     file_up <- httr::upload_file(file_list[i])
