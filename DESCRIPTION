@@ -1,28 +1,36 @@
 Package: ragp
 Type: Package
-Title: Mining for Arabinogalactan Protein Sequences
-Version: 0.0.0.9003
+Title: Mining for Hydroxyproline rich glycoprotein sequences
+Version: 0.0.0.9007
 Authors@R: c(
-  person("Milan", "Dragicevic", email = "mdragicevic@ibiss.bg.ac.rs",
+  person("Milan", "Dragićević", email = "mdragicevic@ibiss.bg.ac.rs",
          role = c("aut", "cre")),
-  person("Danijela", "Paunovic", role = ("aut")))
-Author: Milan Dragicevic [aut, cre],
-  Danijela Paunovic [aut]
-Maintainer: Milan Dragicevic <mdragicevic@ibiss.bg.ac.rs>
-Description: Identification of plant arabinogalactan protein sequences
+  person("Danijela", "Paunović", role = "aut"),
+  person("Milica", "Bogdanović", role = "ctb"),
+  person("Ana", "Simonović", role = "ctb"),
+  person("Slađana", "Todorović", role = "ctb")
+  )
+Description:
+    Identification of plant hydroxyproline rich glycoprotein sequences
     by performing sequence bias and motif search, prediction of
-	hydroxilated proline residues and scraping relevant data from
-	web based prediction services.
+    hydroxilated proline residues and scraping relevant data from
+    web based prediction services.
 Depends: R (>= 3.3.0)
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: xgboost (>= 0.6),
+Imports: 
+    xgboost (>= 0.6),
     rvest (>= 0.3.2),
     stringr (>= 1.2.0),
-	httr (>= 1.3.1),
-	xml2 (>= 1.1.1),
-	seqinr(>= 3.3),
+    httr (>= 1.3.1),
+    xml2 (>= 1.1.1),
+    seqinr(>= 3.3),
     utils (>= 3.3)
 RoxygenNote: 6.0.1
-Suggests: signalHsmm
+Suggests: 
+    signalHsmm,
+    protr
+URL: https://github.com/missuse/ragp
+BugReports: https://github.com/missuse/ragp/issues
+Encoding: UTF-8
