@@ -20,6 +20,7 @@ plot_domains <- function(sequences,
   
   domcount <- NULL
   for(i in names(sequences)){
+    domcount[i] <- sum(annotations[,1]==i)
   }
   annotations <- data.frame(y = rep(1:(length(sequences)),domcount),
                             annotations)
