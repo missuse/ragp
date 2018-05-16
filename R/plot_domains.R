@@ -15,11 +15,11 @@
 #'@export
 #'
 plot_domains <- function(sequences,
-                         annotations){
+                         annotations,
+                         labels = FALSE){
   
   domcount <- NULL
   for(i in names(sequences)){
-    domcount[i] <- sum(annotations[,1]==i)
   }
   annotations <- data.frame(y = rep(1:(length(sequences)),domcount),
                             annotations)
@@ -72,11 +72,14 @@ plot_domains <- function(sequences,
        geom_line(data=d.backbone,  mapping=aes(x=x, y=y, group=y)) +
        geom_rect(data=d.domains, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2, fill=domain), color="black") +
        geom_rect(data=d.agregions, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill="White", color="black") +
-       geom_text(data=d.domains, aes(x=x1+(x2-x1)/2, y=y1+(y2-y1)/2, label=domain), size=3) +
        theme_bw() +
        theme(panel.grid.major.y = element_blank(),
              panel.grid.minor.y = element_blank(),
              panel.grid.minor.x = element_blank())
+  
+  if(labels){
+    p <- p + geom_text(data=d.domains, aes(x=x1+(x2-x1)/2, y=y1+(y2-y1)/2, label=domain), size=3)
+  }
   
   p
 }   
