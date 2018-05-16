@@ -65,15 +65,18 @@ plot_domains <- function(sequences,
   
   
   # plot
+
   p <- ggplot() + 
-    scale_x_continuous(name="Length") + 
-    scale_y_continuous(name="Protein", breaks = 1:length(sequences), labels=names(sequences)) +
-    geom_line(data=d.backbone,  mapping=aes(x=x, y=y, group=y)) +
-    geom_rect(data=d.domains, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2, fill=domain), color="black", alpha=0.7) +
-    geom_rect(data=d.agregions, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill="White", color="black") +
-    geom_text(data=d.domains, aes(x=x1+(x2-x1)/2, y=y1+(y2-y1)/2, label=domain), size=3) +
-    theme_bw() +
-    theme(panel.grid.major.y = element_blank())
+       scale_x_continuous(name="Length", breaks = seq(0,max(nchar(sequences)), by = 100)) + 
+       scale_y_continuous(name="Protein", breaks = 1:length(sequences), labels=names(sequences)) +
+       geom_line(data=d.backbone,  mapping=aes(x=x, y=y, group=y)) +
+       geom_rect(data=d.domains, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2, fill=domain), color="black") +
+       geom_rect(data=d.agregions, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill="White", color="black") +
+       geom_text(data=d.domains, aes(x=x1+(x2-x1)/2, y=y1+(y2-y1)/2, label=domain), size=3) +
+       theme_bw() +
+       theme(panel.grid.major.y = element_blank(),
+             panel.grid.minor.y = element_blank(),
+             panel.grid.minor.x = element_blank())
   
   p
 }   
