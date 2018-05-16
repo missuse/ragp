@@ -65,9 +65,6 @@ plot_domains <- function(sequences,
   
   
   # plot
-  d <- rbind(d.backbone,
-             d.agregions,
-             d.domains)
   p <- ggplot() + 
     scale_x_continuous(name="Length") + 
     scale_y_continuous(name="Protein", breaks = 1:length(sequences), labels=names(sequences)) +
