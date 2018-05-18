@@ -12,16 +12,23 @@
 #'@seealso \code{\link[ragp]{maab} \link[ragp]{scan_ag}}
 #'
 #'@examples
-#'pfam_pred <- get_hmm(sequence = ,
-#'                     id = ,
-#'                     verbose = FALSE,
-#'                     sleep = 0.1)
-#'                     
-#'                     
+#'annotations <- get_hmm(sequence = sequences,
+#'                       id = names(sequences),
+#'                       verbose = FALSE,
+#'                       sleep = 0.1)
+#'gpis <- ragp::get_big_pi(sequence = sequences,
+#'                         id = names(sequences),
+#'                         verbose = FALSE,
+#'                         sleep = 0.1)   
+#'plot_domains(sequences   = sequences,
+#'             annotations = annotations,
+#'             gpis        = gpis) 
+#'      
 #'@export
 #'
 plot_domains <- function(sequences,
                          annotations,
+                         gpis,
                          labels     = FALSE,
                          dom_limits = TRUE,
                          width = 0.8){
@@ -72,6 +79,11 @@ plot_domains <- function(sequences,
   hyp <- data.frame(y = rep(1:(length(sequences)),hypcount),
                     hyp)
   
+  ## GPI anchors ------
+  gpi  <- data.frame(y=1:nrow(gpi), gpi)
+  gpi2 <- gpi[gpi$is.bigpi,]
+  
+  
   ## Data to plot ---------------------------
   # Backbones data to plot
   y1 <- 1:(length(sequences))
@@ -93,7 +105,7 @@ plot_domains <- function(sequences,
   
   d.agregions=data.frame(x1,x2,y1,y2,domain)
   
-  # Hyp regions data to plot
+  # Hyp data to plot
   y1 <- hyp$y - width/2
   y2 <- hyp$y + width/2
   x1 <- hyp$P_pos
@@ -104,6 +116,11 @@ plot_domains <- function(sequences,
   P <- c(1:length(x1),1:length(x1))
   
   d.hyp=data.frame(x,y,P)
+  
+  # GPI data to plot
+  y <- gpi2$y
+  x <- as.numeric(gpi2$omega_site)
+  d.gpi=data.frame(x,y)
   
   # Domains data to plot
   y1 <- annotations$y - width/2
@@ -131,10 +148,11 @@ plot_domains <- function(sequences,
   if(dom_limits){
     p <- p + geom_rect(data=d.domains.max, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2, fill=domain), color="black", alpha = 0.3)    
   }
-  p <- p + geom_rect(data=d.agregions, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill="White", color="black") 
+  p <- p + geom_rect(data=d.agregions, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill="White", color="black")
   p <- p + geom_rect(data=d.domains, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2, fill=domain), color="black")    
   p <- p + geom_line(data=d.hyp,  mapping=aes(x=x, y=y, group=P), color="darkgrey")
   p <- p + geom_rect(data=d.agregions, mapping=aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), color="black", alpha=0) 
+  p <- p + geom_point(d.gpi, mapping = aes(x, y),shape = 21, colour = "black", fill = "yellow", size = width*2.5)
   
   p <- p + theme_bw()                                                                                                
   p <- p + theme(panel.grid.major.y = element_blank(),
