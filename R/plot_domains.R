@@ -80,7 +80,7 @@ plot_domains <- function(sequences,
                     hyp)
   
   ## GPI anchors ------
-  gpi  <- data.frame(y=1:nrow(gpi), gpi)
+  gpi  <- data.frame(y=1:nrow(gpis), gpis)
   gpi2 <- gpi[gpi$is.bigpi,]
   
   
