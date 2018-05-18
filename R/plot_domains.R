@@ -136,7 +136,7 @@ plot_domains <- function(sequences,
   }
   # N-Glycosylation ---------
   if (!is.null(nglc)){
-    nglc <- pred_nglc (sequences)
+    nglc <- predict_nglc (sequences)
     nglccount <- NULL
     for(i in names(sequences)){
       nglccount[i] <- sum(nglc$id==i, na.rm = 1)
@@ -162,7 +162,7 @@ plot_domains <- function(sequences,
     y2 <- signal$y + width/2
     x1 <- rep(0,nrow(signal))
     x2 <- as.numeric(signal$cut_site)
-    domain  <- rep("signal",nrow(signal))
+    domain  <- rep("Signal",nrow(signal))
     
     d.signal <- data.frame(x1,x2,y1,y2,domain)
   }
@@ -183,22 +183,22 @@ plot_domains <- function(sequences,
   p <- ggplot2::ggplot() 
   p <- p + ggplot2::scale_x_continuous(name="Length", breaks = seq(0,max(nchar(sequences)), by = 100))
   p <- p + ggplot2::scale_y_continuous(name="Protein", breaks = 1:length(sequences), labels=names(sequences))                 
-  p <- p + ggplot2::geom_line (data=d.backbone,  mapping=ggplot2::aes(x=x, y=y, group=y))                                               
+  p <- p + ggplot2::geom_line (d.backbone,  mapping=ggplot2::aes(x=x, y=y, group=y))                                               
  
   if(dom_limits){
-    p <- p + ggplot2::geom_rect(data=d.domains.max, mapping=ggplot2::aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2, fill=domain),
+    p <- p + ggplot2::geom_rect(d.domains.max, mapping=ggplot2::aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2, fill=domain),
                                 color="black", alpha = 0.3)    
   }
   
-  p <- p + ggplot2::geom_rect (data=d.agregions, mapping=ggplot2::aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2),fill="White", color="black")
-  p <- p + ggplot2::geom_rect (data=d.domains,   mapping=ggplot2::aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2, fill=domain), color="black")
-  p <- p + ggplot2::geom_line (data=d.hyp,       mapping=ggplot2::aes(x=x, y=y, group=P), color="#333333")
-  p <- p + ggplot2::geom_rect (data=d.agregions, mapping=ggplot2::aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), color="black", alpha=0)
+  p <- p + ggplot2::geom_rect (d.agregions, mapping=ggplot2::aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2),fill="White", color="black")
+  p <- p + ggplot2::geom_rect (d.domains,   mapping=ggplot2::aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2, fill=domain), color="black")
+  p <- p + ggplot2::geom_line (d.hyp,       mapping=ggplot2::aes(x=x, y=y, group=P), color="#333333")
+  p <- p + ggplot2::geom_rect (d.agregions, mapping=ggplot2::aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), color="black", alpha=0)
   p <- p + ggplot2::geom_point(d.gpi,            mapping=ggplot2::aes(x, y),shape = 21, colour = "black", fill = "yellow", size = width*2.5)
   p <- p + ggplot2::geom_point(d.nglc,           mapping=ggplot2::aes(x, y),shape = 21, colour = "black", fill = "black", size = width*1.5)
 
   if(!is.null(signal)){
-    p <- p + ggplot2::geom_rect (data=d.signal,   mapping=ggplot2::aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill="darkblue", color="black")
+    p <- p + ggplot2::geom_rect (d.signal,   mapping=ggplot2::aes(xmin=x1, xmax=x2, ymin=y1, ymax=y2), fill="darkblue", color="black")
   }
   
   p <- p + ggplot2::theme_bw()                                                                                                
