@@ -1,4 +1,4 @@
-pred_nglc <- function(sequences){
+predict_nglc <- function(sequences){
   
   nglc <- gregexpr('N[^P][ST]', sequences, ignore.case = FALSE)
   countnglc <- unlist(lapply(nglc,length))
