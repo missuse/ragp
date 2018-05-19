@@ -10,17 +10,14 @@ Authors@R: c(
   person("Ana", "Simonović", role = "ctb"),
   person("Slađana", "Todorović", role = "ctb")
   )
-Description:
-    Identification of plant hydroxyproline rich glycoprotein sequences
+Description: Identification of plant hydroxyproline rich glycoprotein sequences
     by performing sequence bias and motif search, prediction of
     hydroxilated proline residues and scraping relevant data from
     web based prediction services.
 Depends: R (>= 3.3.0)
 License: file LICENSE
-Encoding: UTF-8
 LazyData: true
-Imports: 
-    xgboost (>= 0.6),
+Imports: xgboost (>= 0.6),
     rvest (>= 0.3.2),
     stringr (>= 1.2.0),
     httr (>= 1.3.1),

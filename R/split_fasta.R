@@ -21,9 +21,10 @@
 #'
 #' #assumes input/output file are in working directory:
 #' file_paths <- split_fasta(path_in = "at_nsp.fasta",
-#'                          path_out = "at_nsp_split",
-#'                          num_seq = 500)
+#'                           path_out = "at_nsp_split",
+#'                           num_seq = 500)
 #' }
+#' 
 #' @export
 
 split_fasta <- function(path_in, path_out, num_seq = 20000, trim = FALSE){

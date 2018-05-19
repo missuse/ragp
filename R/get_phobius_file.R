@@ -41,7 +41,9 @@ get_phobius_file = function(file){
   if (!file.exists(file)){
     stop("cannot find file in the specified path")
   }
-  file_list = ragp::split_fasta(path_in = file, path_out = "temp_phob_", num_seq = 500)
+  file_list = ragp::split_fasta(path_in = file,
+                                path_out = "temp_phob_",
+                                num_seq = 500)
   len = length(file_list)
   url <- "http://phobius.binf.ku.dk/cgi-bin/predict.pl"
   collected_res = vector("list", len)
