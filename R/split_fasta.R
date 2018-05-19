@@ -10,7 +10,7 @@
 #' @return  A Character vector of the paths to the resulting .FASTA formatted files
 #'
 #' @examples
-#'\dontrun{
+#' \dontrun{
 #' library(ragp)
 #' #create a fasta file to be processed, not needed if the input file is already present
 #' data(at_nsp)

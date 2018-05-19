@@ -33,7 +33,8 @@ write.fasta(sequence = strsplit(at_nsp$sequence, ""),
 
 #assumes input/output file are in working directory:
 file_paths <- split_fasta(path_in = "at_nsp.fasta",
-                         path_out = "at_nsp_split",
-                         num_seq = 500)
+                          path_out = "at_nsp_split",
+                          num_seq = 500)
 }
+
 }
