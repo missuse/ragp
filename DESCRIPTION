@@ -27,8 +27,7 @@ Imports: xgboost (>= 0.6),
 RoxygenNote: 6.0.1
 Suggests: 
     signalHsmm,
-    protr,
-    BiocGenerics
+    protr
 URL: https://github.com/missuse/ragp
 BugReports: https://github.com/missuse/ragp/issues
 Encoding: UTF-8

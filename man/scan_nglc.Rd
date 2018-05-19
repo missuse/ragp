@@ -10,7 +10,7 @@
 scan_nglc(data = NULL, sequence, id, span = 5L, cutoff = 0, nsp = 15L)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call, or an object of class "AAStringSet" resulting from Biostrings::readAAStringSet call.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 

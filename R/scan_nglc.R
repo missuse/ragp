@@ -2,7 +2,7 @@
 #'
 #' Detection is based on PROSITE pattern PS00001. Mean local hydrophilicity (Hopp and Woods, 1981) is used to assess if the asparagines are buried.
 #'
-#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call, or an object of class "AAStringSet" resulting from Biostrings::readAAStringSet call.
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param span An integer specifying how many amino acids around the target asparagine residues is used to calculate hydrophilicity. At default set to 5: asparagine position - 5 to asparagine position +5 residues. Range to consider: 3 - 10. Acceptable values are 0 - 20.
@@ -102,16 +102,6 @@ scan_nglc <- function(data = NULL, sequence, id, span = 5L, cutoff = 0, nsp = 15
     if (length(sequence) != length(id)) {
       stop("id and sequence vectors are not of same length")
     }
-  }
-  if (class(data) == "AAStringSet") {
-    if (!requireNamespace("BiocGenerics", quietly = TRUE)) {
-      stop("Package BiocGenerics needed if AAStringSet object supplied to data.",
-           call. = FALSE)
-    }
-    sequence <- BiocGenerics::unlist(lapply(data, as.character))
-    id <- names(sequence)
-    id <- sub(" .*", "", id)
-    sequence <- unname(sequence)
   }
   if (class(data[[1]]) == "SeqFastaAA") {
     dat <- lapply(data, paste0, collapse = "")
