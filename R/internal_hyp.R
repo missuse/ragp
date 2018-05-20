@@ -32,7 +32,7 @@ extractMBdesc <- function(x){
   MB <- do.call(cbind, MB)
   MB <- matrix(t(MB), byrow = T, ncol = 36)
   
-  colnames(MB) = as.vector(t(outer(ragp:::props,
+  colnames(MB) = as.vector(t(outer(props,
                                    paste(".lag",
                                          1:nlag,
                                          sep = ""),

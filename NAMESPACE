@@ -2,8 +2,11 @@
 
 export(get_big_pi)
 export(get_hmm)
+export(get_phobius)
 export(get_phobius_file)
+export(get_signalp)
 export(get_signalp_file)
+export(get_targetp)
 export(get_targetp_file)
 export(maab)
 export(pfam2go)
