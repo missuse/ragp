@@ -4,10 +4,10 @@
 #'@param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #'@param truncate An integer defining the inter-proline distance above which all distances are combined into a single bin (default = 20)
 #'
-#'@return matrix of inter-proline distances for each sequences (with overflow bin for long inter-proline distances)
+#'@return matrix of inter-proline distances for each sequence (with overflow bin for long inter-proline distances)
 #' 
 #'@details
-#'@seealso \code{\link[ragp]{scan_ag} \link[ragp]{scan_nglc} \link[ragp]{plot_domains}}
+#'@seealso \code{\link[ragp]{scan_ag} \link[ragp]{scan_nglc} \link[ragp]{plot_interpro_heatmap}}
 #'
 #'@examples
 #' interP  <- scan_interpro(sequences)
@@ -42,6 +42,24 @@ scan_interpro <- function(sequences, truncate = 20){
   
   interP
 }
+
+#' Visualise the distribution of inter-proline distances within each sequence
+#'
+#' 
+#'@param interP A matrix of inter-proline distances for each sequence
+#'@param normalise whether to normalise interproline distances for the heatmap
+#'
+#'@return heatmap of inter-proline distances for each sequences
+#' 
+#'@details
+#'@seealso \code{\link[ragp]{scan_interpro} \link[ragp]{plot_domains}}
+#'
+#'@examples
+#' interP  <- scan_interpro(sequences)
+#' heatmap <- plot_interpro_heatmap(interP)
+#' heatmap$newick
+#' 
+#'@export
 
 plot_interpro_heatmap <- function(interP, normalise = TRUE){
   if(normalise){
