@@ -7,16 +7,16 @@
 #'@return matrix of inter-proline distances for each sequence (with overflow bin for long inter-proline distances)
 #' 
 #'@details
-#'@seealso \code{\link[ragp]{scan_ag} \link[ragp]{scan_nglc} \link[ragp]{plot_interpro_heatmap}}
+#'@seealso \code{\link[ragp]{scan_ag} \link[ragp]{scan_nglc} \link[ragp]{plot_interP_heatmap}}
 #'
 #'@examples
-#' interP  <- scan_interpro(sequences)
-#' heatmap <- plot_interpro_heatmap(interP)
+#' interP  <- scan_interP(sequences)
+#' heatmap <- plot_interP_heatmap(interP)
 #' heatmap$newick
 #' 
 #'@export
 
-scan_interpro <- function(sequences, truncate = 20){
+scan_interP <- function(sequences, truncate = 20){
   
   interP.dist <- lapply(stringi::stri_split(sequences,regex = "P"),
                         stringi::stri_length)
@@ -47,21 +47,21 @@ scan_interpro <- function(sequences, truncate = 20){
 #'
 #' 
 #'@param interP A matrix of inter-proline distances for each sequence
-#'@param normalise whether to normalise interproline distances for the heatmap
+#'@param normalise whether to normalise interPline distances for the heatmap
 #'
 #'@return heatmap of inter-proline distances for each sequences
 #' 
 #'@details
-#'@seealso \code{\link[ragp]{scan_interpro} \link[ragp]{plot_domains}}
+#'@seealso \code{\link[ragp]{scan_interP} \link[ragp]{plot_domains}}
 #'
 #'@examples
-#' interP  <- scan_interpro(sequences)
-#' heatmap <- plot_interpro_heatmap(interP)
+#' interP  <- scan_interP(sequences)
+#' heatmap <- plot_interP_heatmap(interP)
 #' heatmap$newick
 #' 
 #'@export
 
-plot_interpro_heatmap <- function(interP, normalise = TRUE){
+plot_interP_heatmap <- function(interP, normalise = TRUE){
   if(normalise){
     interP <- interP/rowSums(interP)
   }
