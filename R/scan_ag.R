@@ -224,9 +224,11 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3L, div = 10L,
   if (exclude_ext == "all"){
     sequence <- stringr::str_replace_all(sequence, "[PO]{3,}", tolower)
   }
+  hyps <- FALSE
   if (any(grepl("O", sequence))) {
     message("sequence vector contains O, O will be considered instead of P")
     regex <- gsub("P", "O", regex, fixed = TRUE)
+    hyps <- TRUE
   }
   lower <- tolower(sequence)
   locations <- stringr::str_locate_all(sequence, regex)
@@ -418,7 +420,10 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3L, div = 10L,
                         tidy_location[,2])
     
     P_loc <- gregexpr("P", substr)
-    
+    if(hyps) {
+      P_loc <- gregexpr("O", substr)
+    }
+      
     P_loc <- lapply(seq_along(P_loc), function(x){
       as.integer(unname(as.vector(P_loc[[x]] + tidy_location[x,1] - 1)))
     }
