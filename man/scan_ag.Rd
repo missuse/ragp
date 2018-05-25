@@ -2,11 +2,11 @@
 % Please edit documentation in R/scan_ag.R
 \name{scan_ag}
 \alias{scan_ag}
-\title{Find AGII glycomodules in protein sequences}
+\title{Find AG glycomodules in protein sequences}
 \usage{
-scan_ag(data = NULL, sequence, id, dim = 3, div = 10,
+scan_ag(data = NULL, sequence, id, dim = 3L, div = 10L,
   type = c("conservative", "extended"), exclude_ext = c("no", "yes", "all"),
-  simplify = TRUE)
+  simplify = TRUE, tidy = FALSE)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
@@ -15,60 +15,73 @@ scan_ag(data = NULL, sequence, id, dim = 3, div = 10,
 
 \item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{dim}{An integer defining the minimum number of close dimmers to be considered, at default set to 3.}
+\item{dim}{An integer defining the minimum number of close dipeptides to be considered, at default set to 3.}
 
-\item{div}{An integer defining the maximum number of amino acids that can separate the dimmers for them to be considered, at default to 10}
+\item{div}{An integer defining the maximum number of amino acids that can separate the dipeptides for them to be considered, at default to 10}
 
-\item{type}{One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P|O partners in dimmers, if extended dimmers involving P|O with A, S, T, G and V will be considered. At default set to "extended".}
+\item{type}{One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P|O partners in dipeptides, if extended dipeptides involving P|O with A, S, T, G and V will be considered. At default set to "extended".}
 
 \item{exclude_ext}{One of c("no", "yes", "all"), should extensin (SPPP+) regions be excluded from the search: "no" - do not exclude SPPP+; "yes" - exclude all SPPP+; "all" - exclude all PPP+}
 
 \item{simplify}{Boolean, should the function return a data frame or a list additional values.}
+
+\item{tidy}{Boolean, should the function return a tidy data frame instead of a list if simplify = FALSE.}
 }
 \value{
-If simplify TRUE, a data frame with columns
+If simplify = TRUE, a data frame with one row per sequence, containing columns:  
 \describe{
-  \item{id}{Character vector, as supplied in the function call or NA if not supplied}
-  \item{sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dimmers that satisfy the user set conditions) in uppercase}
-  \item{AG_aa}{Numeric vector, each element corresponding to the number of matched letters (amino acids in dimmers that satisfy the user set conditions) in each input sequence}
-  \item{total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
-  \item{longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
+  \item{id}{Character, as supplied in the function call.}
+  \item{sequence}{Character, input sequence with amino acids in dipeptides (which satisfy the user set conditions) in uppercase.}
+  \item{AG_aa}{Integer, number of matched amino acids in dipeptides.}
+  \item{total_length}{Integer, total length of the found stretches of dipeptides including the amino acids between dipeptides in a match.}
+  \item{longest}{Integer, maximum length of the found stretches of dipeptides including the amino acids between dipeptides in a match.}
 }
-If simplify FALSE, a list with elements
+
+if simplify = FALSE and tidy = TRUE, a data frame with one row per match, with columns:  
+\describe{
+  \item{id}{Character, as supplied in the function call.}
+  \item{sequence}{Character, input sequence with amino acids in dipeptides that satisfy the user set conditions in uppercase}
+  \item{location.start}{Integer, start of a match.}
+  \item{location.end}{Integer, end of a match.}
+  \item{P_pos}{List column, each element is an integer vector with AG-proline positions in each match.}
+  \item{AG_aa}{Integer, number of amino acids in dipeptides in each match}
+}
+
+If simplify = FALSE and tidy = FALSE, a list with elements:  
 
 \describe{
-  \item{id}{Character vector, as supplied in the function call or NA if not supplied}
-  \item{sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dimmers that satisfy the user set conditions) in uppercase}
-  \item{AG_aa}{Numeric vector, each element corresponding to the number of matched letters (amino acids in dimmers that satisfy the user set conditions) in each input sequence}
-  \item{AG_locations}{List of numeric vectors, each element corresponding to the locations of found dimmers}
-  \item{total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
-  \item{longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
-  \item{locations}{List of matrices, each element describing the start and end locations of the found stretches of dimmers (including the amino acids between dimers in a match)}
+  \item{id}{Character vector, as supplied in the function call.}
+  \item{sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dipeptides that satisfy the user set conditions) in uppercase}
+  \item{AG_aa}{Integer vector, each element corresponding to the number of matched letters (amino acids in dipeptides that satisfy the user set conditions) in each input sequence}
+  \item{AG_locations}{Named (by id) list of Integer vectors, each element corresponding to the locations of found dipeptides}
+  \item{total_length}{Integer vector, with elements corresponding to the total length of the found stretches of dipeptides (including the amino acids between dipeptides in a match) in each sequence}
+  \item{longest}{Integer vector, with elements corresponding to the maximum length of the found stretches of dipeptides (including the amino acids between dipeptides in a match) in each sequence}
+  \item{locations}{Named (by id) list of numeric matrices, each element describing the start and end locations of the found stretches of dipeptides (including the amino acids between dipeptides in a match)}
   \item{dim}{Integer, as from input, default dim = 3}
   \item{div}{Integer, as from input, default div = 10}
   \item{type}{Character, as from input, one of c("conservative", "extended")}
 }
 }
 \description{
-AGII glycomodules are amino acid dimmers: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other (Tan et al., 2003).
-Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine and V - valine. This function attempts to find the mentioned dimmers according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead. If any sequence from the supplied contains "O" the function will consider only true AGII glycomodules.
+AG glycomodules are amino acid dipeptides: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other (Tan et al., 2003).
+Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine and V - valine. This function attempts to find the mentioned dipeptides according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead. If any sequence from the supplied contains "O" the function will consider only true AG glycomodules.
 }
-\details{
-The function can be supplied with the sequences resulting from predict_hyp in which case only AGII glycomodules containing O instead of P will be considered.
+\note{
+The function can be supplied with the sequences resulting from predict_hyp in which case only AG glycomodules containing O instead of P will be considered.
 }
 \examples{
 data(at_nsp)
 
-# find all stretches of AP, SP, TP, PA, PS and PT dimmers where there are at least
-# 3 dimmers separated by a maximum of 10 amino acids between each two dimmers
+# find all stretches of AP, SP, TP, PA, PS and PT dipeptides where there are at least
+# 3 dipeptides separated by a maximum of 10 amino acids between each two dipeptides
 at_nsp_ag <- scan_ag(sequence = at_nsp$sequence[1:20],
                      id = at_nsp$Transcript.id[1:20],
                      dim = 3,
                      div = 10,
                      type = "conservative")
 
-# find all stretches of AP, SP, TP, GP, VP, PA, PS, PT PG, and PV dimmers where there
-# are at least 2 dimmers separated by a maximum of 4 amino acids between them
+# find all stretches of AP, SP, TP, GP, VP, PA, PS, PT PG, and PV dipeptides where there
+# are at least 2 dipeptides separated by a maximum of 4 amino acids between them
 at_nsp_ag <- scan_ag(sequence = at_nsp$sequence[1:20],
                      id = at_nsp$Transcript.id[1:20],
                      dim = 2,
@@ -90,7 +103,6 @@ at_sp_ag_ext <- scan_ag(sequence = at_nsp$sequence,
                      type = "extended", exclude_ext = "yes")
 
 at_sp_ag_ext$sequence[at_sp_ag_ext$sequence != at_sp_ag$sequence]
-
 
 }
 \references{

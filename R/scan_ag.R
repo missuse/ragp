@@ -1,58 +1,70 @@
-#' Find AGII glycomodules in protein sequences
+#' Find AG glycomodules in protein sequences
 #'
-#' AGII glycomodules are amino acid dimmers: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other (Tan et al., 2003).
-#' Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine and V - valine. This function attempts to find the mentioned dimmers according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead. If any sequence from the supplied contains "O" the function will consider only true AGII glycomodules.
+#' AG glycomodules are amino acid dipeptides: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other (Tan et al., 2003).
+#' Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine and V - valine. This function attempts to find the mentioned dipeptides according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead. If any sequence from the supplied contains "O" the function will consider only true AG glycomodules.
 #'
-#'@param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
-#'@param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
-#'@param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
-#'@param dim An integer defining the minimum number of close dimmers to be considered, at default set to 3.
-#'@param div An integer defining the maximum number of amino acids that can separate the dimmers for them to be considered, at default to 10
-#'@param type One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P|O partners in dimmers, if extended dimmers involving P|O with A, S, T, G and V will be considered. At default set to "extended".
-#'@param exclude_ext One of c("no", "yes", "all"), should extensin (SPPP+) regions be excluded from the search: "no" - do not exclude SPPP+; "yes" - exclude all SPPP+; "all" - exclude all PPP+
-#'@param simplify Boolean, should the function return a data frame or a list additional values.
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
+#' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#' @param dim An integer defining the minimum number of close dipeptides to be considered, at default set to 3.
+#' @param div An integer defining the maximum number of amino acids that can separate the dipeptides for them to be considered, at default to 10
+#' @param type One of c("conservative", "extended"), if conservative only A, S and T will be considered as possible P|O partners in dipeptides, if extended dipeptides involving P|O with A, S, T, G and V will be considered. At default set to "extended".
+#' @param exclude_ext One of c("no", "yes", "all"), should extensin (SPPP+) regions be excluded from the search: "no" - do not exclude SPPP+; "yes" - exclude all SPPP+; "all" - exclude all PPP+
+#' @param simplify Boolean, should the function return a data frame or a list additional values.
+#' @param tidy Boolean, should the function return a tidy data frame instead of a list if simplify = FALSE.
 #'
-#'@return If simplify TRUE, a data frame with columns
-#'\describe{
-#'   \item{id}{Character vector, as supplied in the function call or NA if not supplied}
-#'   \item{sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dimmers that satisfy the user set conditions) in uppercase}
-#'   \item{AG_aa}{Numeric vector, each element corresponding to the number of matched letters (amino acids in dimmers that satisfy the user set conditions) in each input sequence}
-#'   \item{total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
-#'   \item{longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
-#'}
-#'If simplify FALSE, a list with elements
+#' @return If simplify = TRUE, a data frame with one row per sequence, containing columns:  
+#' \describe{
+#'   \item{id}{Character, as supplied in the function call.}
+#'   \item{sequence}{Character, input sequence with amino acids in dipeptides (which satisfy the user set conditions) in uppercase.}
+#'   \item{AG_aa}{Integer, number of matched amino acids in dipeptides.}
+#'   \item{total_length}{Integer, total length of the found stretches of dipeptides including the amino acids between dipeptides in a match.}
+#'   \item{longest}{Integer, maximum length of the found stretches of dipeptides including the amino acids between dipeptides in a match.}
+#' }
+#'
+#' if simplify = FALSE and tidy = TRUE, a data frame with one row per match, with columns:  
+#' \describe{
+#'   \item{id}{Character, as supplied in the function call.}
+#'   \item{sequence}{Character, input sequence with amino acids in dipeptides that satisfy the user set conditions in uppercase}
+#'   \item{location.start}{Integer, start of a match.}
+#'   \item{location.end}{Integer, end of a match.}
+#'   \item{P_pos}{List column, each element is an integer vector with AG-proline positions in each match.}
+#'   \item{AG_aa}{Integer, number of amino acids in dipeptides in each match}
+#' }
+#'
+#'If simplify = FALSE and tidy = FALSE, a list with elements:  
 #'
 #' \describe{
-#'   \item{id}{Character vector, as supplied in the function call or NA if not supplied}
-#'   \item{sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dimmers that satisfy the user set conditions) in uppercase}
-#'   \item{AG_aa}{Numeric vector, each element corresponding to the number of matched letters (amino acids in dimmers that satisfy the user set conditions) in each input sequence}
-#'   \item{AG_locations}{List of numeric vectors, each element corresponding to the locations of found dimmers}
-#'   \item{total_length}{Numeric vector, with elements corresponding to the total length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
-#'   \item{longest}{Numeric vector, with elements corresponding to the maximum length of the found stretches of dimmers (including the amino acids between dimers in a match) in each sequence}
-#'   \item{locations}{List of matrices, each element describing the start and end locations of the found stretches of dimmers (including the amino acids between dimers in a match)}
+#'   \item{id}{Character vector, as supplied in the function call.}
+#'   \item{sequence}{Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dipeptides that satisfy the user set conditions) in uppercase}
+#'   \item{AG_aa}{Integer vector, each element corresponding to the number of matched letters (amino acids in dipeptides that satisfy the user set conditions) in each input sequence}
+#'   \item{AG_locations}{Named (by id) list of Integer vectors, each element corresponding to the locations of found dipeptides}
+#'   \item{total_length}{Integer vector, with elements corresponding to the total length of the found stretches of dipeptides (including the amino acids between dipeptides in a match) in each sequence}
+#'   \item{longest}{Integer vector, with elements corresponding to the maximum length of the found stretches of dipeptides (including the amino acids between dipeptides in a match) in each sequence}
+#'   \item{locations}{Named (by id) list of numeric matrices, each element describing the start and end locations of the found stretches of dipeptides (including the amino acids between dipeptides in a match)}
 #'   \item{dim}{Integer, as from input, default dim = 3}
 #'   \item{div}{Integer, as from input, default div = 10}
 #'   \item{type}{Character, as from input, one of c("conservative", "extended")}
 #' }
 #' 
-#'@details The function can be supplied with the sequences resulting from predict_hyp in which case only AGII glycomodules containing O instead of P will be considered.
+#' @note The function can be supplied with the sequences resulting from predict_hyp in which case only AG glycomodules containing O instead of P will be considered.
 #'
-#'@references Tan L, Leykam JF, Kieliszewski MJ. (2003) Glycosylation motifs that direct arabinogalactan addition to arabinogalactan proteins. Plant Physiol 132: 1362-136
-#'@seealso \code{\link[ragp]{maab} \link[ragp]{predict_hyp}}
+#' @references Tan L, Leykam JF, Kieliszewski MJ. (2003) Glycosylation motifs that direct arabinogalactan addition to arabinogalactan proteins. Plant Physiol 132: 1362-136
+#' @seealso \code{\link[ragp]{maab} \link[ragp]{predict_hyp}}
 #'
-#'@examples
+#' @examples
 #' data(at_nsp)
 #'
-#' # find all stretches of AP, SP, TP, PA, PS and PT dimmers where there are at least
-#' # 3 dimmers separated by a maximum of 10 amino acids between each two dimmers
+#' # find all stretches of AP, SP, TP, PA, PS and PT dipeptides where there are at least
+#' # 3 dipeptides separated by a maximum of 10 amino acids between each two dipeptides
 #' at_nsp_ag <- scan_ag(sequence = at_nsp$sequence[1:20],
 #'                      id = at_nsp$Transcript.id[1:20],
 #'                      dim = 3,
 #'                      div = 10,
 #'                      type = "conservative")
 #'
-#' # find all stretches of AP, SP, TP, GP, VP, PA, PS, PT PG, and PV dimmers where there
-#' # are at least 2 dimmers separated by a maximum of 4 amino acids between them
+#' # find all stretches of AP, SP, TP, GP, VP, PA, PS, PT PG, and PV dipeptides where there
+#' # are at least 2 dipeptides separated by a maximum of 4 amino acids between them
 #' at_nsp_ag <- scan_ag(sequence = at_nsp$sequence[1:20],
 #'                      id = at_nsp$Transcript.id[1:20],
 #'                      dim = 2,
@@ -75,13 +87,72 @@
 #'
 #' at_sp_ag_ext$sequence[at_sp_ag_ext$sequence != at_sp_ag$sequence]
 #'
-#'
-#'@export
+#' @export
 
-
-scan_ag <- function(data = NULL, sequence, id, dim = 3, div = 10,
+scan_ag <- function(data = NULL, sequence, id, dim = 3L, div = 10L,
                     type = c("conservative", "extended"),
-                    exclude_ext = c("no", "yes", "all"), simplify = TRUE){
+                    exclude_ext = c("no", "yes", "all"), simplify = TRUE, tidy = FALSE){
+  if (length(dim) > 1){
+    dim <- 3L
+    warning("dim should be of length 1, setting to default: dim = 3")
+  }
+  if (!is.numeric(dim)){
+    dim <- as.numeric(dim)
+    warning("dim is not numeric, converting using 'as.numeric'")
+  }
+  if (is.na(dim)){
+    dim <- 3L
+    warning("dim was set to NA, setting to default: dim = 3")
+  }
+  if (is.numeric(dim)) {
+    dim <- floor(dim)
+  }
+  if (length(div) > 1){
+    div <- 10L
+    warning("div should be of length 1, setting to default: div = 10")
+  }
+  if (!is.numeric(div)){
+    div <- as.numeric(div)
+    warning("div is not numeric, converting using 'as.numeric'")
+  }
+  if (is.na(div)){
+    div <- 10L
+    warning("div was set to NA, setting to default: div = 10")
+  }
+  if (is.numeric(div)) {
+    div <- floor(div)
+  }
+  if (length(simplify) > 1){
+    simplify <- TRUE
+    warning("simplify should be of length 1, setting to default: simplify = TRUE")
+  }
+  if (!is.logical(simplify)){
+    simplify <- as.logical(simplify)
+    warning("simplify is not logical, converting using 'as.logical'")
+  }
+  if (is.na(simplify)){
+    simplify <- TRUE
+    warning("simplify was set to NA, setting to default: simplify = TRUE")
+  }
+  if (length(tidy) > 1){
+    tidy <- FALSE
+    warning("tidy should be of length 1, setting to default: tidy = FALSE")
+  }
+  if (!is.logical(tidy)){
+    tidy <- as.logical(tidy)
+    warning("tidy is not logical, converting using 'as.logical'")
+  }
+  if (is.na(tidy)){
+    tidy <- FALSE
+    warning("tidy was set to NA, setting to default: tidy = FALSE")
+  }
+  if (missing(type)) type <- "extended"
+  if (!type %in% c("conservative", "extended"))
+    stop ("type should be one of: 'conservative', 'extended'")
+  if (missing(exclude_ext)) exclude_ext <- "no"
+  if (!exclude_ext %in% c("no", "yes", "all")){
+    stop ("exclude_ext should be one of: 'no', 'yes', 'all'")
+  }
   if(missing(data)){
     if (missing(sequence)){
       stop("protein sequence must be provided to obtain predictions")
@@ -141,17 +212,6 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3, div = 10,
     }
   }
   sequence <- sub("\\*$", "", sequence)
-  if (is.null(dim)) dim <- 3
-  dim <- as.integer(dim)
-  if (length(dim) != 1)
-    stop ("dim should be an integer of length 1")
-  if (is.null(div)) div <- 10
-  div <- as.integer(div)
-  if (length(div) != 1)
-    stop("div should be an integer of length 1")
-  if(missing(type)) type <- "extended"
-  if (!type %in% c("conservative", "extended"))
-    stop ("type should be one of: conservative or extended")
   if (type == "extended") aa <- "[ASTGV]" else aa <- "[AST]"
   if (missing(exclude_ext)) exclude_ext <- "none"
   regex <- paste("(P",  aa, "P(?!" , aa, ")|", aa, "P",
@@ -168,8 +228,6 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3, div = 10,
     message("sequence vector contains O, O will be considered instead of P")
     regex <- gsub("P", "O", regex, fixed = TRUE)
   }
-  if (missing(sequence)) stop ("no sequence specified")
-  sequence <- as.character(sequence)
   lower <- tolower(sequence)
   locations <- stringr::str_locate_all(sequence, regex)
   n <- length(sequence)
@@ -327,23 +385,73 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3, div = 10,
   if (simplify){
     out <- data.frame(id = as.character(id),
                       sequence = upper_PAST,
-                      AG_aa = as.numeric(as.character(AG_sum)),
-                      total_length = as.numeric(as.character(length_detected)),
-                      longest = as.numeric(as.character(longest_detected)),
+                      AG_aa = as.integer(as.character(AG_sum)),
+                      total_length = as.integer(as.character(length_detected)),
+                      longest = as.integer(as.character(longest_detected)),
                       stringsAsFactors = FALSE)
     return(out)
-    } else {
-      list <- list(id = as.character(id),
-                   sequence = upper_PAST,
-                   AG_aa = as.numeric(as.character(AG_sum)),
-                   AG_locations = lapply(AG_locations,
-                                         function (x) unique(as.vector(x))),
-                   total_length = as.numeric(as.character(length_detected)),
-                   longest = as.numeric(as.character(longest_detected)),
-                   locations = locations,
-                   dim = dim,
-                   div = div,
-                   type = type)
-      return(list)
+  }
+  if (tidy){
+    loc <- unlist(lapply(locations, nrow))
+    
+    tidy_seq <- rep(upper_PAST,
+                    ifelse(loc == 0,
+                           1,
+                           loc))
+    tidy_id <- rep(as.character(id),
+                   ifelse(loc == 0,
+                          1,
+                          loc))
+    tidy_loc <- lapply(locations,
+                       function(x){
+                         if(nrow(x) != 0){
+                           x
+                         } else {
+                           cbind(start = NA,
+                                 end = NA)
+                         }
+                       })
+    tidy_location <- do.call(rbind, tidy_loc)
+    
+    substr <- substring(tidy_seq,
+                        tidy_location[,1],
+                        tidy_location[,2])
+    
+    P_loc <- gregexpr("P", substr)
+    
+    P_loc <- lapply(seq_along(P_loc), function(x){
+      as.integer(unname(as.vector(P_loc[[x]] + tidy_location[x,1] - 1)))
     }
+    )
+    
+    names(P_loc) <- rep("P", length(P_loc))
+    if (any(grepl("O", sequence))) names(P_loc) <- rep("O", length(P_loc))
+    
+    tidy <- data.frame(sequence = as.character(tidy_seq),
+                       id = as.character(tidy_id),
+                       location = tidy_location,
+                       P_pos = I(P_loc),
+                       length = tidy_location[,2] - tidy_location[,1] + 1,
+                       AG_aa = as.integer(stringr::str_count(substr, pastgv)),
+                       stringsAsFactors = FALSE)
+    attributes(tidy)
+    return(tidy)
+  } else {
+    AG_locations <- lapply(AG_locations,
+                           function (x) as.integer(unique(as.vector(x))))
+    names(AG_locations) <- as.character(id)
+    names(locations) <- as.character(id)
+    lst <- list(id = as.character(id),
+                sequence = upper_PAST,
+                AG_aa = as.integer(as.character(AG_sum)),
+                AG_locations = AG_locations,
+                total_length = as.integer(as.character(length_detected)),
+                longest = as.integer(as.character(longest_detected)),
+                locations = locations,
+                dim = as.integer(dim),
+                div = as.integer(div),
+                type = type)
+    return(lst)
+  }
 }
+
