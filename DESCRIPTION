@@ -23,7 +23,8 @@ Imports: xgboost (>= 0.6),
     httr (>= 1.3.1),
     xml2 (>= 1.1.1),
     seqinr(>= 3.3),
-    utils (>= 3.3)
+    utils (>= 3.3),
+    graphics (>= 3.3)
 RoxygenNote: 6.0.1
 Suggests: 
     signalHsmm,

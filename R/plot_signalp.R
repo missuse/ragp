@@ -243,8 +243,8 @@ plot_signalp <- function(sequence,
   res2_tab <- res2[(grep("pos",
                          res2)[1]+1):(grep("Measure",
                                            res2)[1]-1)]
-  res2_tab <- read.table(text = res2_tab,
-                         stringsAsFactors = FALSE)
+  res2_tab <- utils::read.table(text = res2_tab,
+                                stringsAsFactors = FALSE)
   colnames(res2_tab) <- c("pos",
                           "aa",
                           "C",
@@ -254,8 +254,8 @@ plot_signalp <- function(sequence,
                          res2)[1]+1):(grep("Measure",
                                            res2)[1]+4)]
   
-  res2_out <- read.table(text = res2_out,
-                         stringsAsFactors = FALSE)
+  res2_out <- utils::read.table(text = res2_out,
+                                stringsAsFactors = FALSE)
   last_line <- unlist(strsplit(res2[(grep("Measure",
                                           res2)[1]+5)], " +"))
   res2_out <- rbind(res2_out[,2:4],
@@ -270,13 +270,13 @@ plot_signalp <- function(sequence,
                        rev(last_line)[2])
   out <- list(prediction = res2_out,
               plot = res2_tab)
-  plot(res2_tab$S,
-       ylim = c(-0.1, 1),
-       type = "l",
-       col = s.score.col,
-       xlab = "Position",
-       ylab = "Score",
-       yaxt = "n")
+  graphics::plot(res2_tab$S,
+                 ylim = c(-0.1, 1),
+                 type = "l",
+                 col = s.score.col,
+                 xlab = "Position",
+                 ylab = "Score",
+                 yaxt = "n")
   
   if (missing(main)){
     maint <- paste(tit,
@@ -289,44 +289,41 @@ plot_signalp <- function(sequence,
   } else {
     maint <- main
   }
-  title(main = maint,
-        adj = 0,
-        cex.main = 1)
-  axis(2, yaxp = c(0, 1, 5), las = 2)
+  graphics::title(main = maint,
+                  adj = 0,
+                  cex.main = 1)
+  graphics::axis(2, yaxp = c(0, 1, 5), las = 2)
   if(isnoTM) {
-    abline(h = Dcut_noTM,
-           col = t.col,
-           lty = 2)
+    graphics::abline(h = Dcut_noTM,
+                     col = t.col,
+                     lty = 2)
   } else {
-    abline(h = Dcut_TM,
-           col = t.col,
-           lty = 2)
+    graphics::abline(h = Dcut_TM,
+                     col = t.col,
+                     lty = 2)
   }
-  segments(x0 = res2_tab$pos,
-           y0 = res2_tab$C,
-           y1 = 0,
-           col = c.score.col)
-  lines(res2_tab$Y,
-        col = y.score.col)
-  legend("topright",
-         col = c(c.score.col,
-                 s.score.col,
-                 y.score.col),
-         legend = c("C-score",
-                    "S-score",
-                    "Y-score"),
-         lty = 1)
+  graphics::segments(x0 = res2_tab$pos,
+                     y0 = res2_tab$C,
+                     y1 = 0,
+                     col = c.score.col)
+  graphics::lines(res2_tab$Y,
+                  col = y.score.col)
+  graphics::legend("topright",
+                   col = c(c.score.col,
+                           s.score.col,
+                           y.score.col),
+                   legend = c("C-score",
+                              "S-score",
+                              "Y-score"),
+                   lty = 1)
   max_pos <- max(as.numeric(res2_tab$pos))
-  text(seq(1,
-           max_pos,
-           by = 1),
-       -0.02 ,
-       labels = res2_tab$aa,
-       pos = 1,
-       xpd = TRUE,
-       cex = 0.7)
+  graphics::text(seq(1,
+                     max_pos,
+                     by = 1),
+                 -0.02 ,
+                 labels = res2_tab$aa,
+                 pos = 1,
+                 xpd = TRUE,
+                 cex = 0.7)
   invisible(out)
 }
-                         
-
-                     
