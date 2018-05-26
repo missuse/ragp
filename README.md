@@ -112,6 +112,8 @@ pred <- plot_signalp(sequence = at_nsp$sequence[5],
 
 ![](README-SignalP3-1.png)
 
+![alt text](/man/figures/README-SignalP3-1.png)
+
 Example: query GPI and hmm
 --------------------------
 
