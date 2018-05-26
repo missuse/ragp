@@ -297,7 +297,7 @@ at_nsp_ag$sequence[ind]
 Example: scan motifs for N-glycosylation
 ----------------------------------------
 
-N-glycosylation is frequent in secreted proteins. To scan the amino acid motifs for N-glycosylation the function `scan_nglc` can be used. Detection is based on [PROSITE pattern PS00001](https://prosite.expasy.org/PDOC00001). Mean local hydrophilicity \[hopp\_prediction\_1981\] is used to assess if the asparagines are buried:
+N-glycosylation is frequent in secreted proteins. To scan the amino acid motifs for N-glycosylation the function `scan_nglc` can be used. Detection is based on [PROSITE pattern PS00001](https://prosite.expasy.org/PDOC00001). Mean local hydrophilicity (Hopp and Woods 1981) is used to assess if the asparagines are buried:
 
 ``` r
 at_nglc <- scan_nglc(at_nsp,
@@ -315,6 +315,8 @@ Ellis, Miriam, Jack Egelund, Carolyn J. Schultz, and Antony Bacic. 2010. “Arab
 Emanuelsson, O., H. Nielsen, S. Brunak, and G. von Heijne. 2000. “Predicting Subcellular Localization of Proteins Based on Their N-Terminal Amino Acid Sequence.” *Journal of Molecular Biology* 300 (4): 1005–16. doi:[10.1006/jmbi.2000.3903](https://doi.org/10.1006/jmbi.2000.3903).
 
 Finn, Robert D., Jody Clements, and Sean R. Eddy. 2011. “HMMER Web Server: Interactive Sequence Similarity Searching.” *Nucleic Acids Research* 39 (Web Server issue): W29–W37. doi:[10.1093/nar/gkr367](https://doi.org/10.1093/nar/gkr367).
+
+Hopp, T. P., and K. R. Woods. 1981. “Prediction of Protein Antigenic Determinants from Amino Acid Sequences.” *Proceedings of the National Academy of Sciences of the United States of America* 78 (6): 3824–8.
 
 Johnson, Kim L., Andrew M. Cassin, Andrew Lonsdale, Antony Bacic, Monika S. Doblin, and Carolyn J. Schultz. 2017. “Pipeline to Identify Hydroxyproline-Rich Glycoproteins.” *Plant Physiology* 174 (2): 886–903. doi:[10.1104/pp.17.00294](https://doi.org/10.1104/pp.17.00294).
 
