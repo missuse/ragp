@@ -17,31 +17,105 @@ You can install ragp from github with:
 devtools::install_github("missuse/ragp")
 ```
 
-Example
--------
+Usage
+-----
 
-This is a basic example which shows you how to fetch [SignalP](http://www.cbs.dtu.dk/services/SignalP/) predictions:
+`ragp` functions require single letter protein sequences and the corresponding identifiers as input. These can be provided in the form of basic `R` data types such as vectors or data frames. Additionally `ragp` imports the [`seqinr`](https://cran.r-project.org/web/packages/seqinr/index.html) package for the manipulation of `.FASTA` files, so the input objects can be a list of `SeqFastaAA` objects returned by the [`seqinr`](https://cran.r-project.org/web/packages/seqinr/index.html) function `read.fasta`. The location of a `.FASTA` file is also possible as a type of input.
+
+Example: I/O
+------------
+
+Input options will be illustrated using `scan_ag` function:
+
+``` r
+library(ragp)
+input1 <- scan_ag(sequence = At_seq$sequence,
+                  id = At_seq$id) 
+```
+
+equivalent to:
+
+``` r
+input2 <- scan_ag(data = At_seq,
+                  sequence = "sequence",
+                  id = "id") 
+```
+
+same as without quotation:
+
+``` r
+input3 <- scan_ag(data = At_seq,
+                  sequence = sequence,
+                  id = id) 
+```
+
+A list of `SeqFastaAA` objects is also a viable input:
 
 ``` r
 library(seqinr) #to create a fasta file with protein sequences
-library(ragp)
 data(at_nsp) #a data frame of 2700 Arabidopsis protein sequences 
 
-#produce a fasta file from at_nsp data abailible in ragp:
+#write a FASTA file
 seqinr::write.fasta(sequence = strsplit(at_nsp$sequence, ""),
                     name = at_nsp$Transcript.id, file = "at_nsp.fasta")
 
-file_list <- split_fasta(path_in = "at_nsp.fasta", #path to the FASTA formated file`
-                         path_out = "splited_at_nsp", #path to the splited files on which integers and file type will be apended automatically
-                         num_seq = 1000) #number of sequences in destination files, usually this will be 10 - 20k
+#read a FASTA file
+At_seq_fas <- read.fasta("at_nsp.fasta",
+                         seqtype =  "AA", 
+                         as.string = TRUE) 
 
-#get the SignalP predictions
-signalp_pred_1 <- get_signalp_file(file = file_list[1])
+input4 <- scan_ag(data = At_seq_fas) 
 ```
 
-First at\_nsp.fasta file was generated from the protein sequences using the library seqinr. This file was then split into smaller fasta files each containing a 1000 sequences using the ragp function split\_fasta. This is for illustration purposes - generally big fasta files should be split to smaller ones containing 10 - 20 thousand sequences. And finally SignalP predictions were obtained using the function get\_signalp\_file. Similarly [Phobius](http://phobius.sbc.su.se/) and [TargetP](http://www.cbs.dtu.dk/services/TargetP/) can be accessed by the functions get\_phobius\_file and get\_targetp\_file.
+and lastly the location of a `.FASTA` file to be analyzed as string:
 
-To fetch the GPI modification site predictions from [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) the function get\_big\_pi can be used:
+``` r
+At_hyp <- scan_ag(data = "at_nsp.fasta") 
+```
+
+Example: query N-sp
+-------------------
+
+HRGPs are secreted proteins, therefore they are expected to contain a secretory signal sequence on the N-terminus (N-sp). `ragp` incorporates N-sp prediction by querying [SignalP](http://www.cbs.dtu.dk/services/SignalP/), [TargetP](http://www.cbs.dtu.dk/services/TargetP/) (Emanuelsson et al. 2000) and [Phobius](http://phobius.sbc.su.se/) (Käll, Krogh, and Sonnhammer 2007) in an efficient manner via the functions: `get_signalp`, `get_targetp` and `get_phobius` (deprecated but available are the previous versions: `get_signalp_file`, `get_targetp_file` and `get_phobius_file`)
+
+To query [SignalP](http://www.cbs.dtu.dk/services/SignalP/) predictions:
+
+``` r
+nsp_signalp <- get_signalp(at_nsp,
+                           sequence,
+                           Transcript.id)
+```
+
+The predictions for the 2700 sequences contained in `at_nsp` data frame should be available in around 1 minute. When handling large FASTA files with many sequences it is recommended to split them into smaller files each containing around 10000 sequences, using the `ragp` function `split_fasta` and to obtain predictions in a loop. The returned object `nsp_signalp` is a data frame resembling the web servers output:
+
+``` r
+knitr::kable(head(nsp_signalp))
+```
+
+| id          | Cmax  | Cmax.pos | Ymax  | Ymax.pos | Smax  | Smax.pos | Smean | Dmean | is.sp | Dmaxcut | Networks.used | is.signalp |
+|:------------|:------|:---------|:------|:---------|:------|:---------|:------|:------|:------|:--------|:--------------|:-----------|
+| ATCG00660.1 | 0.210 | 30       | 0.162 | 30       | 0.260 | 2        | 0.146 | 0.154 | N     | 0.450   | SignalP-noTM  | FALSE      |
+| AT2G43600.1 | 0.860 | 23       | 0.894 | 23       | 0.984 | 13       | 0.930 | 0.913 | Y     | 0.450   | SignalP-noTM  | TRUE       |
+| AT2G28410.1 | 0.779 | 23       | 0.826 | 23       | 0.940 | 15       | 0.877 | 0.853 | Y     | 0.450   | SignalP-noTM  | TRUE       |
+| AT2G22960.1 | 0.701 | 23       | 0.790 | 23       | 0.948 | 15       | 0.891 | 0.844 | Y     | 0.450   | SignalP-noTM  | TRUE       |
+| AT2G19580.1 | 0.422 | 26       | 0.586 | 26       | 0.885 | 17       | 0.798 | 0.671 | Y     | 0.500   | SignalP-TM    | TRUE       |
+| AT2G19690.2 | 0.797 | 29       | 0.870 | 29       | 0.987 | 18       | 0.952 | 0.914 | Y     | 0.450   | SignalP-noTM  | TRUE       |
+
+Similarly [Phobius](http://phobius.sbc.su.se/) and [TargetP](http://www.cbs.dtu.dk/services/TargetP/) can be accessed by the functions `get_phobius` and `get_targetp`.
+
+When a more in depth look at SignalP predictions is needed the function `plot_signalp` can be used. This function accepts a single protein sequence as input:
+
+``` r
+pred <- plot_signalp(sequence = at_nsp$sequence[5],
+                     id = at_nsp$Transcript.id[5])
+```
+
+![](README-SignalP3-1.png)
+
+Example: query GPI and hmm
+--------------------------
+
+To fetch the GPI modification site predictions from [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) the function `get_big_pi` can be used:
 
 ``` r
 ind <- c(145, 147, 160, 170,
@@ -80,22 +154,30 @@ first 10 rows of the GO result with selected columns:
 | AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
 | AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitin> catabolic process                  | <GO:0006032> |
 
-Perform motif and amino acid bias classification of HRGP's:
+Example: MAAB
+-------------
+
+The MAAB pipeline is explained in detail in Johnson et al. (2017). The `ragp` function `maab` performs motif and amino acid bias classification of HRGPs:
 
 ``` r
-PAST_bias <- maab(sequence = at_nsp$sequence, #a vector of protein sequences as strings
-                  id = at_nsp$Transcript.id) #a vector of protein identifiers as strings
+PAST_bias <- maab(at_nsp,
+                  sequence,
+                  Transcript.id) 
                  
 ```
 
-Predict hydroxyproline sites in sequences:
+Example: hydroxyproline prediction
+----------------------------------
+
+The key feature of HRGPs is the presence of hydroxyprolines (Hyp, O) which represent glycosylation sites. While many HRGPs can be found based on biased amino acid composition, or the presence of certain amino acid motifs, there exists an abundance of chimeric proteins comprised from specific domains and HRGP motifs which are much harder to identify based on the mentioned features. In an attempt to identify these types of sequences `ragp` incorporates a model specifically built to predict the probability of proline hydroxylation in plant proteins:
 
 ``` r
-hyp_pred <- predict_hyp(sequence = at_nsp$sequence,
-                        id = at_nsp$Transcript.id)
+hyp_pred <- predict_hyp(at_nsp,
+                        sequence,
+                        Transcript.id)
 ```
 
-Output is a list of two elements. The first element "prediction"" is a data frame. First 10 rows:
+Output is a list of two elements. The first element `prediction` is a data frame. First 10 rows:
 
 | id          | substr                |  P\_pos|  prob| HYP |
 |:------------|:----------------------|-------:|-----:|:----|
@@ -110,19 +192,23 @@ Output is a list of two elements. The first element "prediction"" is a data fram
 | AT2G43600.1 | AMWFWNRNVRPALYLGFGEIT |     223|  0.02| No  |
 | AT2G43600.1 | EMLGVTPDQGLDC         |     267|  0.00| No  |
 
-predict\_hyp is also availible as a [shiny app](https://profenicolalac.shinyapps.io/HYPpredict_Shiny/). Details on how hydroxyproline sites are predicted will be availible soon.
+`predict_hyp` is also available as a [shiny app](https://profenicolalac.shinyapps.io/HYPpredict_Shiny/). Details on how hydroxyproline sites are predicted will be available soon.
 
-AGPs are characterized by the presence of so called AGII glycomodules - amino acid dimers: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other. Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. scan\_ag function attempts to find the mentioned dimers according to user specified rules. Example:
+Example: scan AG glycomodules
+-----------------------------
+
+AGPs are characterized by the presence of so called AG glycomodules - amino acid dipeptides: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other. Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. `scan_ag` function attempts to find the mentioned dipeptides according to user specified rules. Example:
 
 ``` r
-at_nsp_ag <- scan_ag(sequence = at_nsp$sequence,
-                     id = at_nsp$Transcript.id,
+at_nsp_ag <- scan_ag(at_nsp,
+                     sequence,
+                     Transcript.id,
                      dim = 3, #at least 3 dimers must be present
                      div = 10, #no more than 10 amino acids apart
                      type = "conservative") #dimers will be defined as: PA, PS, PT, AP, SP, TP
 ```
 
-List several sequences. possible AGII glycomodules are in caps:
+List several sequences. possible AG glycomodules are in caps:
 
 ``` r
 ind <- c(145, 147, 160, 170,
@@ -138,11 +224,12 @@ at_nsp_ag$sequence[ind]
 #> [8] "marsfaiavicivliagvtgqAPTSPPTaTPAPPTPTTPpPAaTPppvsAPppvttSPppvttAPpPAnppppvsSPpPASPpPATPppvaSPpppvaSPpPATPppvaTPpPAPlaSPPAqvPAPAPTtkpdSPSPSPSsSPplPSsdAPgPStdsiSPAPSPTdvndqngaskmvsslvfgsvlvwfmi"
 ```
 
-Before I wrote OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) are AGII glycomodules but the above output considers P instead of O since most of the time the positions of O are unknown. However if the sequence argument to scan\_ag contains O's at some positions, scan\_ag will consider only them. To do this the sequence output of predict\_hyp function can be used. Example:
+Before I wrote OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) are AG glycomodules but the above output considers P instead of O since most of the time the positions of O are unknown. However if the sequence argument to `scan_ag` contains O's at some positions, `scan_ag` will consider only them. To do this the sequence output of `predict_hyp` function can be used. Example:
 
 ``` r
-at_nsp_ag <- scan_ag(sequence = hyp_pred$sequence, #hyp_pred was created a little bit back
-                     id = at_nsp$Transcript.id,
+at_nsp_ag <- scan_ag(data = hyp_pred$sequence, #hyp_pred was created a little bit back
+                     sequence = sequence, 
+                     id = id,
                      dim = 3, #at least 3 dimers must be present
                      div = 10, #no more than 10 amino acids apart
                      type = "conservative")
@@ -159,11 +246,12 @@ at_nsp_ag$sequence[ind]
 #> [8] "marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTTOoOAaTOoovsAOoovttSOoovttAOoOAnoooovsSOoOASOoOATOoovaSOooovaSOoOATOoovaTOoOAOlaSOOAqvOAOAOTtkodSOSOSOSsSOolOSsdAOgOStdsiSOAOSOTdvndqngaskmvsslvfgsvlvwfmi"
 ```
 
-Extensin motifs in the form of SPPP+ are also detected by scan\_ag if in correct context, to avoid this add exclude\_ext = "yes" as an argument:
+Extensin motifs in the form of SPPP+ are also detected by `scan_ag` if in correct context, to avoid this add `exclude_ext = "yes"` as an argument:
 
 ``` r
-at_nsp_ag <- scan_ag(sequence = hyp_pred$sequence, 
-                     id = at_nsp$Transcript.id,
+at_nsp_ag <- scan_ag(hyp_pred$sequence,
+                     sequence, 
+                     id,
                      dim = 3, #at least 3 dimers must be present
                      div = 10, #no more than 10 amino acids apart
                      type = "conservative",
@@ -181,11 +269,12 @@ at_nsp_ag$sequence[ind]
 #> [8] "marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTTOoOAaTOoovsAOoovttsooovttaoooanoooovssoooasoooatooovasoooovasoooaTOoovaTOoOAOlaSOOAqvOAOAOTtkodSOSOSOSsSOolOSsdAOgOStdsiSOAOSOTdvndqngaskmvsslvfgsvlvwfmi"
 ```
 
-to switch of all PPP+ from beeing detected:
+to switch of all PPP+ from being detected:
 
 ``` r
-at_nsp_ag <- scan_ag(sequence = hyp_pred$sequence,
-                     id = at_nsp$Transcript.id,
+at_nsp_ag <- scan_ag(hyp_pred$sequence,
+                     sequence, 
+                     id,
                      dim = 3, #at least 3 dimers must be present
                      div = 10, #no more than 10 amino acids apart
                      type = "conservative",
@@ -202,3 +291,9 @@ at_nsp_ag$sequence[ind]
 #> [7] "maliknnifftsllifvtlfgvavggtvhkvgntkgwtmiggdyeawassrvfqvgdtlvfaynkdyhdvtevthndfemcesskplrryktgsdsisltkpglqhficgvpghckkgqklqihvlpaslghvavovogovrsqssssSOSOSOlvdpovnnapqyqmgotoashsaasadfiftfsfdltlidlctffilffilv"                                                                                                                                                                  
 #> [8] "marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTtoooaatooovsaooovttsooovttaoooanoooovssoooasoooatooovasoooovasoooatooovatoooAOlaSOOAqvOAOAOTtkodSOSOSOSsSOolOSsdAOgOStdsiSOAOSOTdvndqngaskmvsslvfgsvlvwfmi"
 ```
+
+Emanuelsson, O., H. Nielsen, S. Brunak, and G. von Heijne. 2000. “Predicting Subcellular Localization of Proteins Based on Their N-Terminal Amino Acid Sequence.” *Journal of Molecular Biology* 300 (4): 1005–16. doi:[10.1006/jmbi.2000.3903](https://doi.org/10.1006/jmbi.2000.3903).
+
+Johnson, Kim L., Andrew M. Cassin, Andrew Lonsdale, Antony Bacic, Monika S. Doblin, and Carolyn J. Schultz. 2017. “Pipeline to Identify Hydroxyproline-Rich Glycoproteins.” *Plant Physiology* 174 (2): 886–903. doi:[10.1104/pp.17.00294](https://doi.org/10.1104/pp.17.00294).
+
+Käll, Lukas, Anders Krogh, and Erik L. L. Sonnhammer. 2007. “Advantages of Combined Transmembrane Topology and Signal Peptide Prediction–the Phobius Web Server.” *Nucleic Acids Research* 35 (Web Server issue): W429–432. doi:[10.1093/nar/gkm256](https://doi.org/10.1093/nar/gkm256).
