@@ -5,7 +5,7 @@ ragp
 
 [![Build Status](https://travis-ci.org/missuse/ragp.svg?branch=master)](https://travis-ci.org/missuse/ragp)
 
-The goal of ragp is to facilitate mining of plant hydroxyproline rich glycoproteins (HGRPs), and especially arabinogalactan protein sequences (AGPs) from NGS data. The functions in the package consist of two groups: 1. web server prediction scraping and 2. sequence analyses. Functions in group 2 were made with HGRPs in mind and will be of limited use out of this scope while functions in group 1 are available for a wide range of annotation applications such as domain prediction, cellular localization, presence of trans-membrane regions and GO annotation. All of ragp functions expect protein sequences in single letter code.
+The goal of ragp is to facilitate mining of plant hydroxyproline rich glycoproteins (HGRPs), and especially arabinogalactan protein sequences (AGPs). The functions in the package consist of two groups: 1. web server prediction scraping and 2. sequence analyses. Functions in group 2 were made with HGRPs in mind and will be of limited use out of this scope while functions in group 1 are available for a wide range of annotation applications such as domain prediction, cellular localization, presence of trans-membrane regions and GO annotation. All of ragp functions expect protein sequences in single letter code.
 
 Installation
 ------------
@@ -117,7 +117,7 @@ pred <- plot_signalp(sequence = at_nsp$sequence[5],
 Example: query GPI and hmm
 --------------------------
 
-To fetch the GPI modification site predictions from [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) the function `get_big_pi` can be used:
+HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor (Ellis et al. 2010). To fetch the GPI modification site predictions from [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) the function `get_big_pi` can be used:
 
 ``` r
 ind <- c(145, 147, 160, 170,
@@ -293,6 +293,19 @@ at_nsp_ag$sequence[ind]
 #> [7] "maliknnifftsllifvtlfgvavggtvhkvgntkgwtmiggdyeawassrvfqvgdtlvfaynkdyhdvtevthndfemcesskplrryktgsdsisltkpglqhficgvpghckkgqklqihvlpaslghvavovogovrsqssssSOSOSOlvdpovnnapqyqmgotoashsaasadfiftfsfdltlidlctffilffilv"                                                                                                                                                                  
 #> [8] "marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTtoooaatooovsaooovttsooovttaoooanoooovssoooasoooatooovasoooovasoooatooovatoooAOlaSOOAqvOAOAOTtkodSOSOSOSsSOolOSsdAOgOStdsiSOAOSOTdvndqngaskmvsslvfgsvlvwfmi"
 ```
+
+Example: scan motifs for N-glycosylation
+----------------------------------------
+
+N-glycosylation is frequent in secreted proteins. To scan the amino acid motifs for N-glycosylation the function `scan_nglc` can be used. Detection is based on [PROSITE pattern PS00001](https://prosite.expasy.org/PDOC00001). Mean local hydrophilicity \[hopp\_prediction\_1981\] is used to assess if the asparagines are buried:
+
+``` r
+at_nglc <- scan_nglc(at_nsp,
+                     sequence, 
+                     Transcript.id)
+```
+
+Ellis, Miriam, Jack Egelund, Carolyn J. Schultz, and Antony Bacic. 2010. “Arabinogalactan-Proteins: Key Regulators at the Cell Surface?” *Plant Physiology* 153 (2): 403–19. doi:[10.1104/pp.110.156000](https://doi.org/10.1104/pp.110.156000).
 
 Emanuelsson, O., H. Nielsen, S. Brunak, and G. von Heijne. 2000. “Predicting Subcellular Localization of Proteins Based on Their N-Terminal Amino Acid Sequence.” *Journal of Molecular Biology* 300 (4): 1005–16. doi:[10.1006/jmbi.2000.3903](https://doi.org/10.1006/jmbi.2000.3903).
 
