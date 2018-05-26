@@ -305,6 +305,9 @@ at_nglc <- scan_nglc(at_nsp,
                      Transcript.id)
 ```
 
+References:
+-----------
+
 Eisenhaber, Birgit, Michael Wildpaner, Carolyn J. Schultz, Georg H. H. Borner, Paul Dupree, and Frank Eisenhaber. 2003. “Glycosylphosphatidylinositol Lipid Anchoring of Plant Proteins. Sensitive Prediction from Sequence- and Genome-Wide Studies for Arabidopsis and Rice.” *Plant Physiology* 133 (4): 1691–1701. doi:[10.1104/pp.103.023580](https://doi.org/10.1104/pp.103.023580).
 
 Ellis, Miriam, Jack Egelund, Carolyn J. Schultz, and Antony Bacic. 2010. “Arabinogalactan-Proteins: Key Regulators at the Cell Surface?” *Plant Physiology* 153 (2): 403–19. doi:[10.1104/pp.110.156000](https://doi.org/10.1104/pp.110.156000).
