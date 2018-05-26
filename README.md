@@ -117,7 +117,7 @@ pred <- plot_signalp(sequence = at_nsp$sequence[5],
 Example: query GPI and hmm
 --------------------------
 
-HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor (Ellis et al. 2010). To fetch the GPI modification site predictions from [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) the function `get_big_pi` can be used:
+HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor (Ellis et al. 2010). To fetch the GPI modification site predictions from [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) (B. Eisenhaber et al. 2003) the function `get_big_pi` can be used:
 
 ``` r
 ind <- c(145, 147, 160, 170,
@@ -127,7 +127,7 @@ big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
                           verbose = FALSE)
 ```
 
-Similarly, domains can be identified by [hmmscan](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) using get\_hmm function:
+Similarly, domains can be identified by [hmmscan](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) (Finn, Clements, and Eddy 2011) using `get_hmm` function:
 
 ``` r
 pfam_pred <- get_hmm(sequence = at_nsp$sequence[1:20], #a vector of protein sequences as strings
@@ -305,9 +305,13 @@ at_nglc <- scan_nglc(at_nsp,
                      Transcript.id)
 ```
 
+Eisenhaber, Birgit, Michael Wildpaner, Carolyn J. Schultz, Georg H. H. Borner, Paul Dupree, and Frank Eisenhaber. 2003. “Glycosylphosphatidylinositol Lipid Anchoring of Plant Proteins. Sensitive Prediction from Sequence- and Genome-Wide Studies for Arabidopsis and Rice.” *Plant Physiology* 133 (4): 1691–1701. doi:[10.1104/pp.103.023580](https://doi.org/10.1104/pp.103.023580).
+
 Ellis, Miriam, Jack Egelund, Carolyn J. Schultz, and Antony Bacic. 2010. “Arabinogalactan-Proteins: Key Regulators at the Cell Surface?” *Plant Physiology* 153 (2): 403–19. doi:[10.1104/pp.110.156000](https://doi.org/10.1104/pp.110.156000).
 
 Emanuelsson, O., H. Nielsen, S. Brunak, and G. von Heijne. 2000. “Predicting Subcellular Localization of Proteins Based on Their N-Terminal Amino Acid Sequence.” *Journal of Molecular Biology* 300 (4): 1005–16. doi:[10.1006/jmbi.2000.3903](https://doi.org/10.1006/jmbi.2000.3903).
+
+Finn, Robert D., Jody Clements, and Sean R. Eddy. 2011. “HMMER Web Server: Interactive Sequence Similarity Searching.” *Nucleic Acids Research* 39 (Web Server issue): W29–W37. doi:[10.1093/nar/gkr367](https://doi.org/10.1093/nar/gkr367).
 
 Johnson, Kim L., Andrew M. Cassin, Andrew Lonsdale, Antony Bacic, Monika S. Doblin, and Carolyn J. Schultz. 2017. “Pipeline to Identify Hydroxyproline-Rich Glycoproteins.” *Plant Physiology* 174 (2): 886–903. doi:[10.1104/pp.17.00294](https://doi.org/10.1104/pp.17.00294).
 
