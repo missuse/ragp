@@ -22,8 +22,8 @@ Usage
 
 `ragp` functions require single letter protein sequences and the corresponding identifiers as input. These can be provided in the form of basic `R` data types such as vectors or data frames. Additionally `ragp` imports the [`seqinr`](https://cran.r-project.org/web/packages/seqinr/index.html) package for the manipulation of `.FASTA` files, so the input objects can be a list of `SeqFastaAA` objects returned by the [`seqinr`](https://cran.r-project.org/web/packages/seqinr/index.html) function `read.fasta`. The location of a `.FASTA` file is also possible as a type of input.
 
-Example: I/O
-------------
+Input
+-----
 
 Input options will be illustrated using `scan_ag` function:
 
@@ -70,11 +70,11 @@ input4 <- scan_ag(data = At_seq_fas)
 and lastly the location of a `.FASTA` file to be analyzed as string:
 
 ``` r
-At_hyp <- scan_ag(data = "at_nsp.fasta") 
+input5 <- scan_ag(data = "at_nsp.fasta") 
 ```
 
-Example: query N-sp
--------------------
+N-sp query
+----------
 
 HRGPs are secreted proteins, therefore they are expected to contain a secretory signal sequence on the N-terminus (N-sp). `ragp` incorporates N-sp prediction by querying [SignalP](http://www.cbs.dtu.dk/services/SignalP/), [TargetP](http://www.cbs.dtu.dk/services/TargetP/) (Emanuelsson et al. 2000) and [Phobius](http://phobius.sbc.su.se/) (Käll, Krogh, and Sonnhammer 2007) in an efficient manner via the functions: `get_signalp`, `get_targetp` and `get_phobius` (deprecated but available are the previous versions: `get_signalp_file`, `get_targetp_file` and `get_phobius_file`)
 
@@ -114,8 +114,8 @@ pred <- plot_signalp(sequence = at_nsp$sequence[5],
 
 ![alt text](/man/figures/README-SignalP3-1.png)
 
-Example: query GPI and hmm
---------------------------
+GPI and hmm query
+-----------------
 
 HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor (Ellis et al. 2010). To fetch the GPI modification site predictions from [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) (B. Eisenhaber et al. 2003) the function `get_big_pi` can be used:
 
@@ -156,8 +156,8 @@ first 10 rows of the GO result with selected columns:
 | AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
 | AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitin> catabolic process                  | <GO:0006032> |
 
-Example: MAAB
--------------
+MAAB classification
+-------------------
 
 The MAAB pipeline is explained in detail in Johnson et al. (2017). The `ragp` function `maab` performs motif and amino acid bias classification of HRGPs:
 
@@ -168,8 +168,8 @@ PAST_bias <- maab(at_nsp,
                  
 ```
 
-Example: hydroxyproline prediction
-----------------------------------
+hydroxyproline prediction
+-------------------------
 
 The key feature of HRGPs is the presence of hydroxyprolines (Hyp, O) which represent glycosylation sites. While many HRGPs can be found based on biased amino acid composition, or the presence of certain amino acid motifs, there exists an abundance of chimeric proteins comprised from specific domains and HRGP motifs which are much harder to identify based on the mentioned features. In an attempt to identify these types of sequences `ragp` incorporates a model specifically built to predict the probability of proline hydroxylation in plant proteins:
 
@@ -196,8 +196,8 @@ Output is a list of two elements. The first element `prediction` is a data frame
 
 `predict_hyp` is also available as a [shiny app](https://profenicolalac.shinyapps.io/HYPpredict_Shiny/). Details on how hydroxyproline sites are predicted will be available soon.
 
-Example: scan AG glycomodules
------------------------------
+scan AG glycomodules
+--------------------
 
 AGPs are characterized by the presence of so called AG glycomodules - amino acid dipeptides: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other. Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. `scan_ag` function attempts to find the mentioned dipeptides according to user specified rules. Example:
 
@@ -294,8 +294,8 @@ at_nsp_ag$sequence[ind]
 #> [8] "marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTtoooaatooovsaooovttsooovttaoooanoooovssoooasoooatooovasoooovasoooatooovatoooAOlaSOOAqvOAOAOTtkodSOSOSOSsSOolOSsdAOgOStdsiSOAOSOTdvndqngaskmvsslvfgsvlvwfmi"
 ```
 
-Example: scan motifs for N-glycosylation
-----------------------------------------
+scan motifs for N-glycosylation
+-------------------------------
 
 N-glycosylation is frequent in secreted proteins. To scan the amino acid motifs for N-glycosylation the function `scan_nglc` can be used. Detection is based on [PROSITE pattern PS00001](https://prosite.expasy.org/PDOC00001). Mean local hydrophilicity (Hopp and Woods 1981) is used to assess if the asparagines are buried:
 
