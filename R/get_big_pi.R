@@ -5,9 +5,9 @@
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
-#' @param simplify A bolean indicating the type of returned object, defaults to TRUE
-#' @param sleep A numeric indicating the pause in seconds between server calls, at default set to 1
-#' @param verbose Bolean whether to print out the total score for each sequence, defaults to TRUE
+#' @param simplify A bolean indicating the type of returned object, defaults to TRUE.
+#' @param sleep A numeric indicating the pause in seconds between server calls, at default set to 1.
+#' 
 #' @return If simplify == TRUE:
 #' A data frame with columns:
 #' \describe{
@@ -47,8 +47,7 @@
 #'@export
 
 
-
-get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1, verbose = TRUE){
+get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
   if (missing(simplify)){
     simplify <- TRUE
   }
@@ -78,21 +77,6 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1, ve
   if (is.na(sleep)){
     sleep <- 1
     warning("sleep was set to NA, setting to default: sleep = 1")
-  }
-  if (missing(verbose)){
-    verbose <- TRUE
-  }
-  if (length(verbose) > 1){
-    verbose <- TRUE
-    warning("verbose should be of length 1, setting to default: verbose = TRUE")
-  }
-  if (!is.logical(verbose)){
-    verbose <- as.logical(verbose)
-    warning("verbose is not logical, converting using 'as.logical'")
-  }
-  if (is.na(verbose)){
-    verbose <- TRUE
-    warning("verbose was set to NA, setting to default: verbose = TRUE")
   }
   if(missing(data)){
     if (missing(sequence)){
@@ -153,16 +137,7 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1, ve
     }
   }
   sequence <- sub("\\*$", "", sequence)
-  url <- "http://mendel.imp.ac.at/gpi/plant_server.html"
-  session <- rvest::html_session(url)
-  form <- rvest::html_form(session)[[2]]
-  n <- length(sequence)
-  sequence <- as.character(sequence)
-  aa_regex <- "[^ARNDCQEGHILKMFPSTWYVarndcqeghilkmfpstwyv]"
-  crop_1 <- ".*Use of the prediction function for VIRIDIPLANTAE"
-  site_1 <- "Potential GPI-modification site was found"
-  site_2 <- "Potential alternative GPI-modification site was found"
-  num_reg <- "[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?"
+  id_sort <- id
   Terms <- c("Total Score",
              "Profile Score",
              "Term  0",
@@ -197,20 +172,119 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1, ve
     res <- as.numeric(res)
     return(res)
   }
-  big_pi_list  <-  vector("list", n)
-  for (i in 1:n){
-    if (grepl(aa_regex, sequence[i])){
-      warning(paste("sequence",
-                    "[", id[i], "]",
-                    " contains symbols not corresponding to amino acids",
-                    sep = ""), call. = FALSE)
+  aa_regex <- "[^ARNDCQEGHILKMFPSTWYVarndcqeghilkmfpstwyv]"
+  if (any(grepl(aa_regex, sequence))){
+    warning(paste("sequences: ", paste(id[grepl(aa_regex, sequence)], collapse = ", "), 
+                  " contain symbols not corresponding to amino acids",
+                  sep = ""), call. = FALSE)
+  }
+  crop_1 <- ".*Use of the prediction function for VIRIDIPLANTAE"
+  site_1 <- "Potential GPI-modification site was found"
+  site_2 <- "Potential alternative GPI-modification site was found"
+  num_reg <- "[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?"
+  
+  short_seq <- which(nchar(sequence) <= 55)
+  bad_seq <- grep(aa_regex, sequence)
+  
+  if (length(bad_seq) != 0){
+    Best <- rep(NA, length(Terms))
+    Alternative <- rep(NA, length(Terms))
+    total_score <- NA
+    pred_bad <- data.frame(omega_site = rep("invalid character", 2), 
+                           Quality = rep("None", 2),
+                           PValue =  rep(NA, 2),
+                           stringsAsFactors = FALSE)
+    calc <- data.frame(Terms,
+                       Best,
+                       Alternative,
+                       stringsAsFactors = FALSE)
+    res_bad <- list(prediction = pred_bad,
+                    calculation = calc)
+    res_bad <- rep(list(res_bad), length(bad_seq))
+    names(res_bad) <- id[bad_seq]
+  }
+  if (length(short_seq) != 0){
+    Best <- rep(NA, length(Terms))
+    Alternative <- rep(NA, length(Terms))
+    total_score <- NA
+    pred_short <- data.frame(omega_site = rep("short sequence", 2), 
+                             Quality = rep("None", 2),
+                             PValue =  rep(NA, 2),
+                             stringsAsFactors = FALSE)
+    res_short <- list(prediction = pred_short,
+                      calculation = calc)
+    res_short <- rep(list(res_short), length(bad_seq))
+    names(res_short) <- id[short_seq]
+  }
+  
+  if (length(c(short_seq, bad_seq)) != 0) {
+    id_else <- id[-sort(c(bad_seq, short_seq))]
+    sequence_else <- sequence[-sort(c(bad_seq, short_seq))]
+  } else {
+    id_else <- id
+    sequence_else <- sequence
+  }
+  mat <- data.frame(id = id_else,
+                    sequence =  sequence_else)
+  splt <- 0:(nrow(mat)-1) %/% 100
+  mat_split <- split(mat, splt)
+  sleep <- 2
+  url <- "http://mendel.imp.ac.at/gpi/plant_server.html"
+  session <- rvest::html_session(url)
+  form <- rvest::html_form(session)[[2]]
+  
+  tot <- length(mat_split)
+  pb <- utils::txtProgressBar(min = 0,
+                              max = tot,
+                              style = 3)
+  res_good <- lapply(seq_along(mat_split), function(i){
+    mat <- mat_split[[i]]
+    up <- paste(">",
+                mat$id,
+                "\n", mat$sequence,
+                "\n", collapse = "",
+                sep = "")
+    form <- rvest::set_values(form, Sequence = up)
+    form_res <- suppressMessages(rvest::submit_form(session, form))
+    resulti <- rvest::html_text(rvest::html_nodes(form_res, "pre"))
+    out <- lapply(strsplit(resulti, "Query sequence")[[1]], function(x){
+      unlist(strsplit(x, "\\\n"))
+    })
+    Sys.sleep(sleep)
+    utils::setTxtProgressBar(pb, i)
+    return(out)
+  })
+  
+  res_good <- unlist(res_good, recursive = FALSE)
+  
+  res_good <- res_good[which(grepl(crop_1, 
+                                   res_good))]
+  
+  res_out <- lapply(res_good, function(resulti){
+    impro <- unlist(strsplit(resulti, "\\\n"))
+    impro <- impro[grep(crop_1, impro):length(impro)]
+    if (length(grep(site_1, impro)) > 0 &
+        length(grep(site_2, impro)) > 0){
+      Best <- unlist(lapply(seq_along(Term_pos), function(x){
+        extract_val(x = Terms[x], y = impro)[Term_pos[x]]
+      }))
+      Alternative <- unlist(lapply(seq_along(Term_pos), function(x){
+        extract_val(x = Terms[x], y = impro)[Term_pos[x]+1]
+      }))
       
-      Best <- rep(NA, length(Terms))
-      Alternative <- rep(NA, length(Terms))
-      total_score <- NA
-      pred <- data.frame(omega_site = rep("invalid character", 2), 
-                         Quality = rep("None", 2),
-                         PValue =  rep(NA, 2),
+      position_gpi <- extract_val("Sequence position of the omega-site",
+                                  impro)
+      total_score <- extract_val("Total Score\\.",
+                                 impro)[1]
+      best_p <- extract_val("PValue = ", impro)[2]
+      alt_p <- extract_val("PValue = ", impro)[4]
+      
+      site_q <- unlist(strsplit(impro[grep("Quality of the site", impro)],
+                                " {2,}", perl = TRUE))[c(2, 4)]
+      
+      pred <- data.frame(omega_site = position_gpi, 
+                         Quality = site_q ,
+                         PValue =  c(best_p, alt_p),
                          stringsAsFactors = FALSE)
       
       calc <- data.frame(Terms,
@@ -220,127 +294,77 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1, ve
       res <- list(prediction = pred,
                   calculation = calc)
     } else {
-      if (nchar(sequence[i]) <= 55){
-        Best <- rep(NA, length(Terms))
+      if (length(grep(site_1, impro)) > 0 &
+          length(grep(site_2, impro)) == 0){
+        Best <- unlist(lapply(seq_along(Term_pos), function(x){
+          extract_val(x = Terms[x], y = impro)[Term_pos[x]]
+        }))
         Alternative <- rep(NA, length(Terms))
-        total_score <- NA
-        pred <- data.frame(omega_site = rep("short sequence", 2), 
-                           Quality = rep("None", 2),
-                           PValue =  rep(NA, 2),
-                           stringsAsFactors = FALSE)
+        position_gpi <- extract_val("Sequence position of the omega-site",
+                                    impro)
+        total_score <- extract_val("Total Score\\.",
+                                   impro)[1]
+        best_p <- extract_val("PValue = ", impro)[2]
+        site_q <- unlist(strsplit(impro[grep("Quality of the site", impro)],
+                                  " {2,}", perl = TRUE))[2]
         
+        pred <- data.frame(omega_site = c(position_gpi[1], NA), 
+                           Quality = c(site_q[1], NA) ,
+                           PValue =  c(best_p, NA),
+                           stringsAsFactors = FALSE)
         calc <- data.frame(Terms,
                            Best,
                            Alternative,
                            stringsAsFactors = FALSE)
         res <- list(prediction = pred,
                     calculation = calc)
-   
       } else {
-        form <- rvest::set_values(form, Sequence = sequence[i])
-        form_res <- suppressMessages(rvest::submit_form(session, form))
-        resulti <- rvest::html_text(rvest::html_nodes(form_res, "pre"))
-        impro <- unlist(strsplit(resulti, "\\\n"))
-        impro <- impro[grep(crop_1, impro):length(impro)]
-        if (length(grep(site_1, impro)) > 0 &
-            length(grep(site_2, impro)) > 0){
-          Best <- unlist(lapply(seq_along(Term_pos), function(x){
-            extract_val(x = Terms[x], y = impro)[Term_pos[x]]
-          }))
-          Alternative <- unlist(lapply(seq_along(Term_pos), function(x){
-            extract_val(x = Terms[x], y = impro)[Term_pos[x]+1]
-          }))
-          
-          position_gpi <- extract_val("Sequence position of the omega-site",
-                                      impro)
-          total_score <- extract_val("Total Score\\.",
-                                     impro)[1]
-          best_p <- extract_val("PValue = ", impro)[2]
-          alt_p <- extract_val("PValue = ", impro)[4]
-          
-          site_q <- unlist(strsplit(impro[grep("Quality of the site", impro)],
-                                    " {2,}", perl = TRUE))[c(2, 4)]
-          
-          pred <- data.frame(omega_site = position_gpi, 
-                             Quality = site_q ,
-                             PValue =  c(best_p, alt_p),
-                             stringsAsFactors = FALSE)
-          
-          calc <- data.frame(Terms,
-                             Best,
-                             Alternative,
-                             stringsAsFactors = FALSE)
-          res <- list(prediction = pred,
-                      calculation = calc)
-        } else {
-          if (length(grep(site_1, impro)) > 0 &
-              length(grep(site_2, impro)) == 0){
-            Best <- unlist(lapply(seq_along(Term_pos), function(x){
-              extract_val(x = Terms[x], y = impro)[Term_pos[x]]
-            }))
-            Alternative <- rep(NA, length(Terms))
-            position_gpi <- extract_val("Sequence position of the omega-site",
-                                        impro)
-            total_score <- extract_val("Total Score\\.",
-                                       impro)[1]
-            best_p <- extract_val("PValue = ", impro)[2]
-            site_q <- unlist(strsplit(impro[grep("Quality of the site", impro)],
-                                      " {2,}", perl = TRUE))[2]
-            
-            pred <- data.frame(omega_site = c(position_gpi[1], NA), 
-                               Quality = c(site_q[1], NA) ,
-                               PValue =  c(best_p, NA),
-                               stringsAsFactors = FALSE)
-            calc <- data.frame(Terms,
-                               Best,
-                               Alternative,
-                               stringsAsFactors = FALSE)
-            res <- list(prediction = pred,
-                        calculation = calc)
-          } else {
-            Best <- unlist(lapply(seq_along(Term_pos), function(x){
-              extract_val(x = Terms[x], y = impro)[Term_pos[x]]
-            }))
-            Alternative <- rep(NA, length(Terms))
-            best_p <- extract_val("PValue = ", impro)[2]
-            position_gpi <- extract_val("Among all positions checked",
-                                        impro)
-            total_score <- extract_val("Total Score\\.",
-                                       impro)[1]
-            
-            pred <- data.frame(omega_site = c(position_gpi[1], NA), 
-                               Quality = c("None", NA) ,
-                               PValue =  c(best_p, NA),
-                               stringsAsFactors = FALSE)
-            calc <- data.frame(Terms,
-                               Best,
-                               Alternative,
-                               stringsAsFactors = FALSE)
-            res <- list(prediction = pred,
-                        calculation = calc)
-
-          }
-        }
+        Best <- unlist(lapply(seq_along(Term_pos), function(x){
+          extract_val(x = Terms[x], y = impro)[Term_pos[x]]
+        }))
+        Alternative <- rep(NA, length(Terms))
+        best_p <- extract_val("PValue = ", impro)[2]
+        position_gpi <- extract_val("Among all positions checked",
+                                    impro)
+        total_score <- extract_val("Total Score\\.",
+                                   impro)[1]
+        
+        pred <- data.frame(omega_site = c(position_gpi[1], NA), 
+                           Quality = c("None", NA) ,
+                           PValue =  c(best_p, NA),
+                           stringsAsFactors = FALSE)
+        calc <- data.frame(Terms,
+                           Best,
+                           Alternative,
+                           stringsAsFactors = FALSE)
+        res <- list(prediction = pred,
+                    calculation = calc)
+        
       }
     }
-    big_pi_list[[i]] <- res
-    if (verbose == TRUE){
-      cat(paste(paste0(id[i], ":"), " Total Score:", total_score, "\n"))
-      utils::flush.console()
-      }
-    Sys.sleep(sleep)
   }
-  if(simplify){
-    big_pi_list <- lapply(big_pi_list, function(x){
-      return(x$pred[1,])
-    })
-    big_pi_list <- do.call(rbind, big_pi_list)
-    big_pi_list$id <- id
-    big_pi_list$is.bigpi <- big_pi_list$Quality != "None"
-  } else {
-    (names(big_pi_list) <- id)
+  )
+  close(pb)
+  names(res_out) <- id_else
+  
+  if (length(short_seq) != 0){
+    res_out <- c(res_out,
+                 res_short)
   }
   
-  return(big_pi_list)
+  if (length(bad_seq) != 0){
+    res_out <- c(res_out,
+                 res_bad)
   }
-         
+  
+  res_out <- res_out[id_sort]
+  if(simplify){
+    res_out <- lapply(res_out, function(x){
+      return(x$pred[1,])
+    })
+    res_out <- do.call(rbind, res_out)
+    res_out$id <- id
+    res_out$is.bigpi <- res_out$Quality != "None"
+  } 
+  return(res_out)
+}

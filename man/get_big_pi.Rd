@@ -7,8 +7,7 @@
 \url{http://mendel.imp.ac.at/gpi/plant_server.html}
 }
 \usage{
-get_big_pi(data = NULL, sequence, id, simplify = TRUE, sleep = 1,
-  verbose = TRUE)
+get_big_pi(data = NULL, sequence, id, simplify = TRUE, sleep = 1)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
@@ -17,11 +16,9 @@ get_big_pi(data = NULL, sequence, id, simplify = TRUE, sleep = 1,
 
 \item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{simplify}{A bolean indicating the type of returned object, defaults to TRUE}
+\item{simplify}{A bolean indicating the type of returned object, defaults to TRUE.}
 
-\item{sleep}{A numeric indicating the pause in seconds between server calls, at default set to 1}
-
-\item{verbose}{Bolean whether to print out the total score for each sequence, defaults to TRUE}
+\item{sleep}{A numeric indicating the pause in seconds between server calls, at default set to 1.}
 }
 \value{
 If simplify == TRUE:
