@@ -14,7 +14,7 @@
 #' @param y.score.col Plotting color of the Y-score line. At default set to: '#728fcc'.
 #' @param t.col Plotting color of the threshold line. At default set to: '#551a8b'.
 #' @param main Title of the plot.
-#' @param sleep A numeric indicating the pause in seconds between POST and GET server calls, at default set to 1s. Decreasing is not recommended.
+#' @param sleep A numeric indicating the pause in seconds between POST and GET server calls, at default set to 5s. Decreasing is not recommended.
 #' @return A list with two elements:
 #' \describe{
 #'   \item{prediction}{Data frame with the prediction results.}
@@ -45,20 +45,20 @@ plot_signalp <- function(sequence,
                          y.score.col = "#728fcc",
                          t.col = "#551a8b",
                          main = NULL,
-                         sleep = 3L){
+                         sleep = 5L){
   if (missing(sleep)) {
-    sleep <- 3
+    sleep <- 5
   }
   if (length(sleep) > 1){
-    sleep <- 3
-    warning("sleep should be of length 1, setting to default: sleep = 3")
+    sleep <- 5
+    warning("sleep should be of length 1, setting to default: sleep = 5")
   }
   if (!is.numeric(sleep)){
     sleep <- as.numeric(sleep)
     warning("sleep is not numeric, converting using 'as.numeric'")
   }
   if (is.na(sleep)){
-    sleep <- 3
+    sleep <- 5
     warning("sleep was set to NA, setting to default: sleep = 3")
   }
   if (sleep < 2){

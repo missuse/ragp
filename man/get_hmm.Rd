@@ -7,7 +7,8 @@
 \url{https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan}
 }
 \usage{
-get_hmm(data = NULL, sequence, id, verbose = TRUE, sleep = 1)
+get_hmm(data = NULL, sequence, id, verbose = TRUE, sleep = 1,
+  attempts = 2L, timeout = 10)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
@@ -16,9 +17,13 @@ get_hmm(data = NULL, sequence, id, verbose = TRUE, sleep = 1)
 
 \item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{verbose}{Bolean, whether to print out the output for each sequence, defaults to T}
+\item{verbose}{Bolean, whether to print out the output for each sequence, defaults to TRUE.}
 
-\item{sleep}{Numeric indicating the pause in seconds between server calls, at default set to 1}
+\item{sleep}{Numeric indicating the pause in seconds between server calls, at default set to 1.}
+
+\item{attempts}{Integer, number of attempts if server unresponsive, at default set to 2.}
+
+\item{timeout}{Numeric, time in seconds to wait for server response.}
 }
 \value{
 A data frame with columns:
@@ -44,8 +49,11 @@ of a protein sequence vs a profile-HMM database (Pfam-A).
 }
 \examples{
 
-pfam_pred <- get_hmm(sequence = at_nsp$sequence[1],
-                    id = at_nsp$Transcript.id[1])
+pfam_pred <- get_hmm(data = at_nsp[1:5,],
+                    sequence = sequence,
+                    id = Transcript.id,
+                    verbose = FALSE,
+                    sleep = 0)
 
 }
 \seealso{

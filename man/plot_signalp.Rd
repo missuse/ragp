@@ -11,7 +11,7 @@ plot_signalp(sequence, id, org_type = c("euk", "gram-", "gram+"),
   Dcut_type = c("default", "sensitive", "user"), Dcut_noTM = 0.45,
   Dcut_TM = 0.5, method = c("best", "notm"), c.score.col = "#ff0000",
   s.score.col = "#59a454", y.score.col = "#728fcc", t.col = "#551a8b",
-  main = NULL, sleep = 3L)
+  main = NULL, sleep = 5L)
 }
 \arguments{
 \item{sequence}{String representing a protein amino acid sequence.}
@@ -38,7 +38,7 @@ plot_signalp(sequence, id, org_type = c("euk", "gram-", "gram+"),
 
 \item{main}{Title of the plot.}
 
-\item{sleep}{A numeric indicating the pause in seconds between POST and GET server calls, at default set to 1s. Decreasing is not recommended.}
+\item{sleep}{A numeric indicating the pause in seconds between POST and GET server calls, at default set to 5s. Decreasing is not recommended.}
 }
 \value{
 A list with two elements:
