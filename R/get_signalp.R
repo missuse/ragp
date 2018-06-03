@@ -53,14 +53,14 @@ get_signalp <- function(data = NULL,
                         Dcut_TM = 0.5,
                         method = c("best", "notm"),
                         minlen = NULL,
-                        trunc = NULL,
-                        splitter = 500,
+                        trunc = 70L,
+                        splitter = 500L,
                         sleep = 3){
   if (missing(splitter)) {
-    splitter <- 500
+    splitter <- 500L
   }
   if (length(splitter) > 1){
-    splitter <- 500
+    splitter <- 500L
     warning("splitter should be of length 1, setting to default: splitter = 500")
   }
   if (!is.numeric(splitter)){
@@ -68,15 +68,35 @@ get_signalp <- function(data = NULL,
     warning("splitter is not numeric, converting using 'as.numeric'")
   }
   if (is.na(splitter)){
-    splitter <- 500
+    splitter <- 500L
     warning("splitter was set to NA, setting to default: splitter = 500")
   }
   if (is.numeric(splitter)) {
     splitter <- floor(splitter)
   }
   if (!(splitter %in% 1:2000)) {
-    splitter <- 500
+    splitter <- 500L
     warning(paste("Illegal splitter input, splitter will be set to 500"))
+  }
+  if (!missing(trunc)){
+    if (length(trunc) > 1){
+      stop("trunc should be of length 1.")
+    }
+    if (!is.numeric(trunc)){
+      stop("trunc is not numeric.")
+    }
+    if (is.na(trunc)){
+      stop("trunc was set to NA.")
+    }
+    if (is.numeric(trunc)){
+      trunc <- floor(trunc)
+    }
+    if (trunc < 0){
+      stop("trunc was set to a negative number.")
+    }
+    if (trunc == 0){
+      trunc <- 1000000L
+    }
   }
   if (missing(sleep)) {
     sleep <- 3
@@ -174,11 +194,7 @@ get_signalp <- function(data = NULL,
   }  else {
     minlen <- as.character(minlen)[1]
   }
-  if (missing(trunc)) {
-    trunc <- ""
-  }  else {
-    trunc <- as.character(trunc)[1]
-  }
+
   tmr <- paste("temp_",
                gsub("^X",
                     "",
@@ -198,6 +214,7 @@ get_signalp <- function(data = NULL,
       stop("id and sequence vectors are not of same length")
     }
     sequence <- sub("\\*$", "", sequence)
+    sequence <- substr(sequence, start = 1, stop = trunc)
     file_name <- tmr
     seqinr::write.fasta(sequence = strsplit(sequence, ""),
                         name = id, file = file_name)
@@ -207,6 +224,7 @@ get_signalp <- function(data = NULL,
     id <- names(dat)
     sequence <- toupper(as.character(unlist(dat)))
     sequence <- sub("\\*$", "", sequence)
+    sequence <- substr(sequence, start = 1, stop = trunc)
     file_name <- tmr
     seqinr::write.fasta(sequence = strsplit(sequence, ""),
                         name = id, file = file_name)
@@ -239,6 +257,7 @@ get_signalp <- function(data = NULL,
     }
     sequence <- toupper(as.character(sequence))
     sequence <- sub("\\*$", "", sequence)
+    sequence <- substr(sequence, start = 1, stop = trunc)
     file_name <- tmr
     seqinr::write.fasta(sequence = strsplit(sequence, ""),
                         name = id, file = file_name)
@@ -253,26 +272,41 @@ get_signalp <- function(data = NULL,
   url <- "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi"
   file_list <- ragp::split_fasta(path_in = file_name,
                                  path_out = "temp_signalp_",
-                                 num_seq = splitter)
-  jobid <- vector("character", length(file_list))
-  for (i in 1:length(file_list)) {
-    file_up <- httr::upload_file(file_list[i])
-    res <- httr::POST(url = url, encode = "multipart", body = list(configfile = "/usr/opt/www/pub/CBS/services/SignalP-4.1/SignalP.cf",
-                                                                   SEQSUB = file_up, orgtype = org_type, `Dcut-type` = Dcut_type,
-                                                                   `Dcut-noTM` = Dcut_noTM, `Dcut-TM` = Dcut_TM, graphmode = NULL,
-                                                                   format = "short", minlen = minlen, method = method,
-                                                                   trunc = trunc))
-    res <- httr::content(res, as = "parsed")
-    res <- rvest::html_nodes(res, "input[name='jobid']")
-    jobid[i] <- rvest::html_attr(res, "value")
-    Sys.sleep(3)
-  }
-  for (i in 1:length(file_list)) {
-    unlink(file_list[i])
-  }
-  collected_res = vector("list", length(jobid))
-  for (i in 1:length(jobid)) {
-    repeat {
+                                 num_seq = splitter,
+                                 trunc = trunc)
+  splt <- (seq_along(file_list) - 1) %/% 10
+  file_list <- split(file_list, splt)
+  res <- lapply(file_list, function(x){
+    jobid <- vector("character", 10)
+    for (i in seq_along(x)) {
+      file_up <- httr::upload_file(x[i])
+      if (trunc == 1000000L){
+        trunc <- ""
+      }
+      res <- httr::POST(url = url,
+                        encode = "multipart",
+                        body = list(configfile = "/usr/opt/www/pub/CBS/services/SignalP-4.1/SignalP.cf",
+                                    SEQSUB = file_up,
+                                    orgtype = org_type,
+                                    `Dcut-type` = Dcut_type,
+                                    `Dcut-noTM` = Dcut_noTM,
+                                    `Dcut-TM` = Dcut_TM,
+                                    graphmode = NULL,
+                                    format = "short",
+                                    minlen = minlen,
+                                    method = method,
+                                    trunc = as.character(trunc)))
+      res <- httr::content(res, as = "parsed")
+      res <- rvest::html_nodes(res, "input[name='jobid']")
+      jobid[i] <- rvest::html_attr(res, "value")
+      Sys.sleep(3)
+      }
+    for (i in seq_along(x)) {
+      unlink(x[i])
+      }
+    collected_res <- vector("list", length(x))
+    for (i in seq_along(x)) {
+      repeat {
       res2 <- httr::GET(url = url,
                         query = list(jobid = jobid[i],
                                      wait = "20"))
@@ -283,7 +317,7 @@ get_signalp <- function(data = NULL,
                                                               as = "parsed"), "//li"))
         stop(paste0(prt, ". Problem in file: ", "temp_",
                     i, ".fa"))
-      }
+        }
       res2 <- as.character(rvest::html_node(httr::content(res2,
                                                           as = "parsed"), "pre"))
       res2_split <- unlist(strsplit(res2, "\n"))
@@ -291,8 +325,8 @@ get_signalp <- function(data = NULL,
         break
       }
     }
-    res2_split = res2_split[(which(grepl("name", res2_split))[1] +
-                               1):(which(grepl("/pre", res2_split ))[1] - 1)]
+    res2_split <- res2_split[(which(grepl("name", res2_split))[1] +
+                                1):(which(grepl("/pre", res2_split ))[1] - 1)]
     if(any(grepl("hr", res2_split))){
       res2_split = res2_split[1:(which(grepl("<hr>", res2_split))[1] - 1)]
     }
@@ -313,3 +347,8 @@ get_signalp <- function(data = NULL,
   collected_res$is.signalp <- collected_res$is.sp == "Y"
   return(collected_res)
   }
+  )
+  res <- do.call(rbind, res)
+  return(res)
+}
+

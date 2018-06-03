@@ -6,8 +6,9 @@
 #' @param path_out A path where the resulting .FASTA formatted files should be stored. The path should also contain the prefix name of the fasta files on which _n (integer from 1 to number of fasta files generated) will be appended along with the extension ".fa"
 #' @param num_seq Integer defining the number of sequences to be in each resulting .fasta file. Defaults to 20000.
 #' @param trim Logical, should the sequences be trimmed to 4000 amino acids to bypass the CBS server restrictions. Defaults to FALSE.
+#' @param trunc Integer, truncate the sequences to this length. First 1:trunc amino acids will be kept. 
 #'
-#' @return  A Character vector of the paths to the resulting .FASTA formatted files
+#' @return  A Character vector of the paths to the resulting .FASTA formatted files.
 #'
 #' @examples
 #' \dontrun{
@@ -27,7 +28,7 @@
 #' 
 #' @export
 
-split_fasta <- function(path_in, path_out, num_seq = 20000, trim = FALSE){
+split_fasta <- function(path_in, path_out, num_seq = 20000, trim = FALSE, trunc = NULL){
   if (!requireNamespace("seqinr", quietly = TRUE)) {
     stop("seqinr needed for this function to work. Please install it.",
          call. = FALSE)
@@ -53,6 +54,26 @@ split_fasta <- function(path_in, path_out, num_seq = 20000, trim = FALSE){
   if (is.numeric(num_seq)){
     num_seq <- floor(num_seq)
   }
+  if (!missing(trunc)){
+    if (length(trunc) > 1){
+      stop("trunc should be of length 1.")
+      }
+    if (!is.numeric(trunc)){
+      stop("trunc is not numeric.")
+      }
+    if (is.na(trunc)){
+      stop("trunc was set to NA.")
+      }
+    if (is.numeric(trunc)){
+      trunc <- floor(trunc)
+    }
+    if (trunc < 0){
+      stop("trunc was set to a negative number.")
+    }
+    if (trunc == 0){
+      trunc <- 1000000L
+    }
+  }
   if (missing(trim)){
     trim <- FALSE
   }
@@ -69,13 +90,25 @@ split_fasta <- function(path_in, path_out, num_seq = 20000, trim = FALSE){
     warning("trim was set to NA, setting to default: trim = FALSE")
   }
   temp_file <- seqinr::read.fasta(file = path_in, seqtype = "AA")
-  if (trim == TRUE){
-    temp_file = lapply(temp_file, function(x){
-      len = length(x)
-      if (len > 4000){
-        out = x[1:4000]
+  if (!missing(trunc)){
+    temp_file <- lapply(temp_file, function(x){
+      len <- length(x)
+      if (len > trunc){
+        out <- x[1:trunc]
       } else {
-        out = x
+        out <- x
+      }
+      return(out)
+    }
+    )
+  }
+  if (trim == TRUE && missing(trunc)){
+    temp_file <- lapply(temp_file, function(x){
+      len <- length(x)
+      if (len > 4000){
+        out <- x[1:4000]
+      } else {
+        out <- x
       }
       return(out)
     }
@@ -94,3 +127,5 @@ split_fasta <- function(path_in, path_out, num_seq = 20000, trim = FALSE){
   }
   return(file_list)
 }
+
+

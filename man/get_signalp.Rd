@@ -9,8 +9,8 @@
 \usage{
 get_signalp(data = NULL, sequence, id, org_type = c("euk", "gram-",
   "gram+"), Dcut_type = c("default", "sensitive", "user"), Dcut_noTM = 0.45,
-  Dcut_TM = 0.5, method = c("best", "notm"), minlen = NULL,
-  trunc = NULL, splitter = 500, sleep = 3)
+  Dcut_TM = 0.5, method = c("best", "notm"), minlen = NULL, trunc = 70L,
+  splitter = 500L, sleep = 3)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
