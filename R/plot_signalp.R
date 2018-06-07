@@ -212,22 +212,29 @@ plot_signalp <- function(sequence,
   jobid <-  rvest::html_attr(res,
                              "value")
   Sys.sleep(sleep)
-  res2 <- httr::GET(
-    url = "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi",
-    query = list(
-      jobid = jobid,
-      wait = "20"
-    ))
-  res2 <- httr::content(res2,
-                           as = "parsed")
+  repeat {
+    res2 <- httr::GET(
+      url = "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi",
+      query = list(
+        jobid = jobid,
+        wait = "20"
+        ))
+    
+    res2 <- httr::content(res2,
+                          as = "parsed")
+    
+    res2 <- rvest::html_node(res2,
+                             "pre")
+    
+    res2 <- as.character(res2)
+    
+    res2 <- unlist(strsplit(res2,
+                            "\n"))
+    if (any(grepl("Length", res2))) {
+      break
+    }
+  }
 
-  res2 <- rvest::html_node(res2,
-                           "pre")
-  
-  res2 <- as.character(res2)
- 
-  res2 <- unlist(strsplit(res2,
-                          "\n"))
   tit <- res2[grep("SignalP-4.1",
                    res2)[1]]
   tit <- gsub("#", "", tit)
@@ -264,7 +271,11 @@ plot_signalp <- function(sequence,
   colnames(res2_out) <- c("Measure",
                           "Position",
                           "value")
-  res2_out$Measure <- c("max.C", "max.Y", "max.S", "mean.S", "D")
+  res2_out$Measure <- c("max.C",
+                        "max.Y",
+                        "max.S",
+                        "mean.S",
+                        "D")
   res2_out$value <- as.numeric(as.character(res2_out$value))
   res2_out$Cutoff <- c(rep("", 4),
                        rev(last_line)[2])

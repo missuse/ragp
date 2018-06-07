@@ -281,6 +281,7 @@ get_hmm <- function(data = NULL, sequence, id, verbose = TRUE, sleep = 1, attemp
     utils::setTxtProgressBar(pb, i)
     Sys.sleep(sleep)
   }
+  close(pb)
   idi <- rep(id, times = unlist(lapply(pfam, function(x) nrow(x))))
   pfam <- suppressWarnings(do.call(rbind, pfam))
   pfam <- data.frame(id = idi, pfam)
