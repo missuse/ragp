@@ -109,6 +109,14 @@ get_phobius <- function(data = NULL, sequence, id){
                                 path_out = "temp_phob_",
                                 num_seq = 500)
   len = length(file_list)
+  if(class(data) != "character"){
+    if(file_name == tmr){
+      unlink(file_name)
+    }
+  }
+  pb <- utils::txtProgressBar(min = 0,
+                              max = len,
+                              style = 3)
   url <- "http://phobius.binf.ku.dk/cgi-bin/predict.pl"
   collected_res = vector("list", len)
   for (i in 1 : len){
@@ -127,12 +135,9 @@ get_phobius <- function(data = NULL, sequence, id){
     colnames(res) <- c("Name", "tm", "sp", "prediction")
     collected_res[[i]] <- res
     unlink(file_list[i])
+    utils::setTxtProgressBar(pb, i)
   }
-  if(class(data) != "character"){
-    if(file_name == tmr){
-      unlink(file_name)
-    }
-  }
+  close(pb)
   collected_res <- do.call(rbind, collected_res)
   collected_res$cut_site <- stringr::str_extract(collected_res$prediction,
                                                  "(?<=/)\\d+")
