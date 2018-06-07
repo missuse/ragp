@@ -308,7 +308,7 @@ at_nglc <- scan_nglc(at_nsp,
 create a protein structure diagram
 ----------------------------------
 
-Using the above mentioned functions several protein features can obtained. To visualize them the function `plot_prot` can be used. Domains (`get_hmm`), N-terminal signal peptides (`get_signalp`), transmembrane regions, extracellular and intracellular protein regions (`get_phobius`), AG glycomodul spans (`scan_ag`) and hydroxyproline positions (`predict_hyp`) can be shown (all on by default).
+Using the above mentioned functions several protein features can obtained. To visualize them the function `plot_prot` can be used. Domains (`get_hmm`), N-terminal signal peptides (`get_signalp`), transmembrane regions, extracellular and intracellular protein regions (`get_phobius`), GPI attachment sites (`get_big_pi`), AG glycomodul spans (`scan_ag`) and hydroxyproline positions (`predict_hyp`) can be shown (all on by default).
 
 ``` r
 ind <- c(23, 24, 5, 80, 81, 120, 230, 334, 345, 1000)
