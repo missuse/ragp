@@ -24,10 +24,10 @@ Imports: xgboost (>= 0.6),
     xml2 (>= 1.1.1),
     seqinr(>= 3.3),
     utils (>= 3.3),
-    graphics (>= 3.3)
+    graphics (>= 3.3),
+    ggplot2 (>= 2.2.1)    
 RoxygenNote: 6.0.1
 Suggests: 
-    signalHsmm,
     protr
 URL: https://github.com/missuse/ragp
 BugReports: https://github.com/missuse/ragp/issues
