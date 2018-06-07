@@ -29,31 +29,31 @@ Input options will be illustrated using `scan_ag` function:
 
 ``` r
 library(ragp)
-input1 <- scan_ag(sequence = At_seq$sequence,
-                  id = At_seq$id) 
+data(at_nsp) #a data frame of 2700 Arabidopsis protein sequences 
+input1 <- scan_ag(sequence = at_nsp$sequence,
+                  id = at_nsp$Transcript.id) 
 ```
 
 equivalent to:
 
 ``` r
-input2 <- scan_ag(data = At_seq,
+input2 <- scan_ag(data = at_nsp,
                   sequence = "sequence",
-                  id = "id") 
+                  id = "Transcript.id") 
 ```
 
 same as without quotation:
 
 ``` r
-input3 <- scan_ag(data = At_seq,
+input3 <- scan_ag(data = at_nsp,
                   sequence = sequence,
-                  id = id) 
+                  id = Transcript.id) 
 ```
 
 A list of `SeqFastaAA` objects is also a viable input:
 
 ``` r
 library(seqinr) #to create a fasta file with protein sequences
-data(at_nsp) #a data frame of 2700 Arabidopsis protein sequences 
 
 #write a FASTA file
 seqinr::write.fasta(sequence = strsplit(at_nsp$sequence, ""),
@@ -304,6 +304,21 @@ at_nglc <- scan_nglc(at_nsp,
                      sequence, 
                      Transcript.id)
 ```
+
+create a protein structure diagram
+----------------------------------
+
+Using the above mentioned functions several protein features can obtained. To visualise them the function `plot_prot` can be used.
+
+``` r
+ind <- c(23, 24, 5, 80, 81, 120, 230, 334, 345, 1000)
+pred <- plot_prot(sequence = at_nsp$sequence[ind],
+                  id = at_nsp$Transcript.id[ind])
+
+pred
+```
+
+![alt text](/man/figures/README-plot_prot-1.png)
 
 References:
 -----------
