@@ -5,7 +5,7 @@
 \title{MAAB classification of Hydroxyproline‐rich Glycoproteins}
 \usage{
 maab(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"),
-  gpi = NULL)
+  gpi = NULL, get_gpi = FALSE)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
@@ -17,6 +17,8 @@ maab(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"),
 \item{order}{Order of motif counting, the default is as in Johnson et al. (2017).}
 
 \item{gpi}{A Boolean vector indicating if the corresponding id contains a GPI or not. Can be the 'is.bigpi' column from the output of get_big_pi.}
+
+\item{get_gpi}{A Boolean indicating if \code{\link[ragp]{get_big_pi}} will be called on sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge. At default set to FALSE.}
 }
 \value{
 A data frame with columns:

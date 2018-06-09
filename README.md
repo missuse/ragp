@@ -123,8 +123,7 @@ HRGPs, and especially AGPs are often linked to the membrane by a glycosylphospha
 ind <- c(145, 147, 160, 170,
          189, 203, 214, 224) #some indexes
 big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
-                          id = at_nsp$Transcript.id[ind],
-                          verbose = FALSE)
+                          id = at_nsp$Transcript.id[ind])
 ```
 
 Similarly, domains can be identified by [hmmscan](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) (Finn, Clements, and Eddy 2011) using `get_hmm` function:

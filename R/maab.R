@@ -7,6 +7,7 @@
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param order Order of motif counting, the default is as in Johnson et al. (2017).
 #' @param gpi A Boolean vector indicating if the corresponding id contains a GPI or not. Can be the 'is.bigpi' column from the output of get_big_pi.
+#' @param get_gpi A Boolean indicating if \code{\link[ragp]{get_big_pi}} will be called on sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge. At default set to FALSE.
 #'    
 #' @return A data frame with columns:
 #' \enumerate{
@@ -40,7 +41,12 @@
 #' @export                  
 
 
-maab <- function(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"), gpi = NULL){
+maab <- function(data = NULL,
+                 sequence,
+                 id,
+                 order = c("ext", "tyr", "prp", "agp"),
+                 gpi = NULL,
+                 get_gpi = FALSE){
   if(missing(order)) order <- c("ext", "tyr", "prp", "agp")
   if(!is.character(order)){
     stop("order should be a character vector containing four elements:
@@ -53,6 +59,18 @@ maab <- function(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"
   if(sum(order %in% c("ext", "tyr", "prp", "agp")) != 4){
     stop("order should contain only elements:
          'ext', 'tyr', 'prp', 'agp'")
+  }
+  if (length(get_gpi) > 1){
+    get_gpi <- FALSE
+    warning("get_gpi should be of length 1, setting to default: get_gpi = FALSE")
+  }
+  if (!is.logical(get_gpi)){
+    get_gpi <- as.logical(get_gpi)
+    warning("get_gpi is not logical, converting using 'as.logical'")
+  }
+  if (is.na(get_gpi)){
+    get_gpi <- FALSE
+    warning("get_gpi was set to NA, setting to default: get_gpi = FALSE")
   }
   if(missing(data)){
     if (missing(sequence)){
@@ -310,8 +328,32 @@ maab <- function(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"
 
   out <- data.frame(id = id, 
                     counts2,
-                    maab_class = as.factor(maab_class),
+                    maab_class = factor(maab_class),
                     stringsAsFactors = FALSE)
+  if(get_gpi){
+    if(!missing(gpi)){
+      warning("get_gpi will override the gpi argument with big Pi predictions")
+    }
+    out_gpi <- out[out$maab_class != "0",]
+    seq_gpi <- sequence[out$maab_class != "0"]
+    id_gpi <- id[out$maab_class != "0"]
+    print("querying big Pi")
+    gpi_big_pi <- ragp::get_big_pi(sequence = seq_gpi,
+                                   id = id_gpi,
+                                   simplify = TRUE)
+    gpi_big_pi <- gpi_big_pi$is.bigpi
+    out2 <- ragp::maab(sequence = seq_gpi,
+                       id = id_gpi,
+                       order = order,
+                       gpi = gpi_big_pi,
+                       get_gpi = FALSE)
+    out3 <- out[!out$id %in% out2$id,]
+    out <- rbind(out3, out2)
+    out <- merge(data.frame(id = id, stringsAsFactors = FALSE),
+                 out,
+                 all.x = TRUE,
+                 sort = FALSE)
+    out$maab_class <- factor(out$maab_class)
+    }
   return(out)
 }
-
