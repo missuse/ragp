@@ -338,65 +338,80 @@ get_targetp <- function(data = NULL,
   }
   file_list <- ragp::split_fasta(path_in = file_name,
                                  path_out = "temp_targetp_",
-                                 num_seq = splitter)
-  jobid <- vector("character", length(file_list))
-  for (i in 1:length(file_list)){
-    file_up <-  httr::upload_file(file_list[i])
-    res <- httr::POST(
-      url = "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?",
-      encode = "multipart",
-      body = list(
-        `configfile` = "/usr/opt/www/pub/CBS/services/TargetP-1.1/TargetP.cf",
-        `SEQSUB` =  file_up,
-        `orgtype` = org_type,
-        `cleavsite` = "on",
-        `spec` = spec,
-        `tcut` = tcut,
-        `pcut` = pcut,
-        `scut` = scut,
-        `ocut` = ocut
-      ))
-    res <- httr::content(res, as="parsed")
-    res <- rvest::html_nodes(res, "input[name='jobid']")
-    jobid[i] <-  rvest::html_attr(res, "value")
-    Sys.sleep(sleep)
-  }
-  for (i in 1:length(file_list)){
-    unlink(file_list[i])
-  }
-  collected_res = vector("list", length(jobid))
-  for (i in 1:length(jobid)){
-    repeat {
-      res2 <- httr::GET(
-        url = "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?",
-        query = list(
-          jobid = jobid[i],
-          wait = "20"
-        ))
-      bad = xml2::xml_text(xml2::xml_find_all(httr::content(res2, as="parsed"), "//head"))
-      if (grepl("Illegal", bad)){
-        prt = xml2::xml_text(xml2::xml_find_all(httr::content(res2, as="parsed"), "//li"))
-        stop(paste0(prt, ". Problem in file: ", "temp_", i, ".fa"))
-      }
-      res2 <- as.character(rvest::html_node(httr::content(res2, as="parsed"), "pre"))
-      res2_split <- unlist(strsplit(res2, "\n"))
-      if (any(grepl("cTP", res2_split))){
-        break
-      }
-    }
-    res2_split <- res2_split[(which(grepl("cTP", res2_split))[1]+2):(which(grepl("cutoff", res2_split))[1] - 2)]
-    res2_split <- strsplit(res2_split, " +")
-    res2_split <- do.call(rbind, res2_split)
-    res2_split <- as.data.frame(res2_split, stringsAsFactors = F)
-    colnames(res2_split) <- c("Name", "Len", "cTP", "mTP", "SP", "other", "Loc", "RC", "TPlen")
-    collected_res[[i]] <- res2_split
-  }
+                                 num_seq = splitter,
+                                 trim = TRUE)
   if(class(data) != "character"){
     if(file_name == tmr){
       unlink(file_name)
     }
   }
-  collected_res <- do.call(rbind, collected_res)
-  collected_res$is.targetp <- collected_res$Loc == "S"
-  return(collected_res)
+  for_pb <- length(file_list)
+  pb <- utils::txtProgressBar(min = 0,
+                              max = for_pb,
+                              style = 3)
+  splt <- (seq_along(file_list) - 1) %/% 10
+  file_list <- split(file_list, splt)
+  res <- lapply(seq_along(file_list), function(k){
+    x <- file_list[[k]]
+    jobid <- vector("character", 10)
+    for (i in seq_along(x)){
+      file_up <-  httr::upload_file(x[i])
+      res <- httr::POST(
+        url = "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?",
+        encode = "multipart",
+        body = list(
+          `configfile` = "/usr/opt/www/pub/CBS/services/TargetP-1.1/TargetP.cf",
+          `SEQSUB` =  file_up,
+          `orgtype` = org_type,
+          `cleavsite` = "on",
+          `spec` = spec,
+          `tcut` = tcut,
+          `pcut` = pcut,
+          `scut` = scut,
+          `ocut` = ocut
+        ))
+      res <- httr::content(res, as="parsed")
+      res <- rvest::html_nodes(res, "input[name='jobid']")
+      jobid[i] <-  rvest::html_attr(res, "value")
+      unlink(x[i])
+      utils::setTxtProgressBar(pb, floor(i/2) + (10 * (k - 1)))
+      Sys.sleep(sleep)
+    }
+    collected_res = vector("list", length(jobid))
+    for (i in seq_along(x)){
+      repeat {
+        res2 <- httr::GET(
+          url = "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?",
+          query = list(
+            jobid = jobid[i],
+            wait = "20"
+          ))
+        bad = xml2::xml_text(xml2::xml_find_all(httr::content(res2, as="parsed"), "//head"))
+        if (grepl("Illegal", bad)){
+          prt = xml2::xml_text(xml2::xml_find_all(httr::content(res2, as="parsed"), "//li"))
+          stop(paste0(prt, ". Problem in file: ", "temp_", i, ".fa"))
+        }
+        res2 <- as.character(rvest::html_node(httr::content(res2, as="parsed"), "pre"))
+        res2_split <- unlist(strsplit(res2, "\n"))
+        if (any(grepl("cTP", res2_split))){
+          break
+        }
+      }
+      res2_split <- res2_split[(which(grepl("cTP", res2_split))[1]+2):(which(grepl("cutoff", res2_split))[1] - 2)]
+      res2_split <- strsplit(res2_split, " +")
+      res2_split <- do.call(rbind, res2_split)
+      res2_split <- as.data.frame(res2_split, stringsAsFactors = F)
+      colnames(res2_split) <- c("Name", "Len", "cTP", "mTP", "SP", "other", "Loc", "RC", "TPlen")
+      utils::setTxtProgressBar(pb, floor(i/2) + 5 + (10 * (k - 1)))
+      collected_res[[i]] <- res2_split
+    }
+    collected_res <- do.call(rbind, collected_res)
+    collected_res$is.targetp <- collected_res$Loc == "S"
+    return(collected_res)
+  }
+  )
+  utils::setTxtProgressBar(pb, for_pb)
+  close(pb)
+  res <- do.call(rbind, res)
+  return(res)
 }

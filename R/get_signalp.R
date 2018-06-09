@@ -274,9 +274,19 @@ get_signalp <- function(data = NULL,
                                  path_out = "temp_signalp_",
                                  num_seq = splitter,
                                  trunc = trunc)
+  if(class(data) != "character"){
+    if(file_name == tmr){
+      unlink(file_name)
+    }
+  }
+  for_pb <- length(file_list)
+  pb <- utils::txtProgressBar(min = 0,
+                              max = for_pb,
+                              style = 3)
   splt <- (seq_along(file_list) - 1) %/% 10
   file_list <- split(file_list, splt)
-  res <- lapply(file_list, function(x){
+  res <- lapply(seq_along(file_list), function(k){
+    x <- file_list[[k]]
     jobid <- vector("character", 10)
     for (i in seq_along(x)) {
       file_up <- httr::upload_file(x[i])
@@ -299,11 +309,11 @@ get_signalp <- function(data = NULL,
       res <- httr::content(res, as = "parsed")
       res <- rvest::html_nodes(res, "input[name='jobid']")
       jobid[i] <- rvest::html_attr(res, "value")
-      Sys.sleep(3)
-      }
-    for (i in seq_along(x)) {
       unlink(x[i])
-      }
+      utils::setTxtProgressBar(pb, floor(i/2) + (10 * (k - 1)))
+      Sys.sleep(sleep)
+    }
+    
     collected_res <- vector("list", length(x))
     for (i in seq_along(x)) {
       repeat {
@@ -336,12 +346,8 @@ get_signalp <- function(data = NULL,
     colnames(res2_split) <- c("id", "Cmax", "Cmax.pos", "Ymax",
                               "Ymax.pos", "Smax", "Smax.pos", "Smean", "Dmean",
                               "is.sp", "Dmaxcut", "Networks.used")
+    utils::setTxtProgressBar(pb, floor(i/2) + 5 + (10 * (k - 1)))
     collected_res[[i]] <- res2_split
-  }
-  if(class(data) != "character"){
-    if(file_name == tmr){
-      unlink(file_name)
-    }
   }
   collected_res <- do.call(rbind, collected_res)
   collected_res$is.signalp <- collected_res$is.sp == "Y"
@@ -349,6 +355,7 @@ get_signalp <- function(data = NULL,
   }
   )
   res <- do.call(rbind, res)
+  utils::setTxtProgressBar(pb, for_pb)
+  close(pb)
   return(res)
 }
-
