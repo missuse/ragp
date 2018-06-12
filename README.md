@@ -17,6 +17,20 @@ You can install ragp from github with:
 devtools::install_github("missuse/ragp")
 ```
 
+Or alternatively
+
+``` r
+# install.packages("devtools")
+devtools::install_github("missuse/ragp",
+                         build_vignettes = TRUE)
+```
+
+to build vignettes which can be viewed by:
+
+``` r
+browseVignettes("ragp")
+```
+
 Usage
 -----
 
