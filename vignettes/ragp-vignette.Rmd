@@ -45,23 +45,16 @@ knitr::include_graphics("ragp_flow_chart.svg")
 * find localized clusters of AG glycomodules to identify potential AGPs.  
 * perform motif and amino acid bias (MAAB, Johnson *et al*., 2017) classification scheme.  
 
-##Installation and data import
+##Data import
 
 To proceed with this guide the following `R` packages are required:  
 
 ```{r libraries}
-library(devtools)
 library(dplyr)
 library(seqinr)
 library(eulerr)
 library(ragp)
 library(ggplot2)
-```
-
-to install `ragp`:
-```{r install ragp, message = FALSE, warning = FALSE}
-# install.packages("devtools")
-devtools::install_github("missuse/ragp")
 ```
 
 The analysis will be performed on a set of 2706 *Arabidopsis* protein sequences included in `ragp` package as the `at_nsp` data frame which contains four columns:  
