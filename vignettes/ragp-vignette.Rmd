@@ -409,7 +409,8 @@ All of the above mentioned protein features can be visualized using the function
 ```{r plot_prot1, eval = FALSE}
 ind <- c(20, 23, 34, 52, 80, 127, 345) #some sequences
 p1 <- plot_prot(sequence = at_nsp$sequence[ind],
-                id = at_nsp$Transcript.id[ind])
+                id = at_nsp$Transcript.id[ind],
+                dom_sort = "ievalue") #to plot domains by independent e-value (lower on top)
 
 p1
 ```
@@ -450,7 +451,8 @@ To change feature colors set them as arguments (`hyp_col`, `gpi_col`, `nsp_col`,
 p3 <- plot_prot(sequence = at_nsp$sequence[ind],
                 id = at_nsp$Transcript.id[ind],
                 hyp_col = "brown",
-                ag_col = "orange")
+                ag_col = "orange",
+                dom_sort = "ievalue")
 p3
 ```
 
@@ -475,7 +477,8 @@ Choose which features to plot when calling `plot_prot`:
 p2 <- plot_prot(sequence = at_nsp$sequence[ind],
                 id = at_nsp$Transcript.id[ind],
                 hyp = FALSE,
-                ag = FALSE)
+                ag = FALSE,
+                dom_sort = "ievalue")
 p2
 ```
 ```{r echo = FALSE, out.width = "100%", fig.align = "center"}
