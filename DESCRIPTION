@@ -3,12 +3,12 @@ Type: Package
 Title: Mining for Hydroxyproline rich glycoprotein sequences
 Version: 0.1.0.0000
 Authors@R: c(
-  person("Milan", "Dragićević", email = "mdragicevic@ibiss.bg.ac.rs",
+  person("Milan", "Dragicevic", email = "mdragicevic@ibiss.bg.ac.rs",
          role = c("aut", "cre")),
-  person("Danijela", "Paunović", role = "aut"),
-  person("Milica", "Bogdanović", role = "ctb"),
-  person("Ana", "Simonović", role = "ctb"),
-  person("Slađana", "Todorović", role = "ctb")
+  person("Danijela", "Paunovic", role = "aut"),
+  person("Milica", "Bogdanovic", role = "ctb"),
+  person("Ana", "Simonovic", role = "ctb"),
+  person("Sladana", "Todorovic", role = "ctb")
   )
 Description: Identification of plant hydroxyproline rich glycoprotein sequences
     by performing sequence bias and motif search, prediction of
@@ -27,8 +27,13 @@ Imports: xgboost (>= 0.6),
     graphics (>= 3.3),
     ggplot2 (>= 2.2.1)    
 RoxygenNote: 6.0.1
-Suggests: 
-    protr
+Suggests:
+    protr,
+    knitr,
+    rmarkdown,
+    dplyr,
+    eulerr
 URL: https://github.com/missuse/ragp
 BugReports: https://github.com/missuse/ragp/issues
 Encoding: UTF-8
+VignetteBuilder: knitr
