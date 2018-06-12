@@ -2,8 +2,8 @@
 title: "ragp vignette"
 author: 
   - Milan Dragićević
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+abstract: "This vignette provides an introduction into the functions and workflow in `ragp` R package. `ragp` is designed for mining and analysis of plant Hydroxyproline rich glycoproteins but it can also be used for arbitrary protein annotation and for predicting various protein features based on sequence."
 bibliography: bibtex.bib
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
@@ -32,6 +32,7 @@ options(width = 120)
 ##Introduction
 
 Hydroxyproline rich glycoproteins (HRGPs) are one of the most complex families of macromolecules found in plants, due to the diversity of glycans decorating the protein backbone, as well as the heterogeneity of the protein backbones. While this diversity is responsible for the wide array of physiological functions associated with HRGPs, it hinders attempts for homology based identification. Current approaches, based on identifying sequences with characteristic motifs and biased amino acid composition, are limited to prototypical sequences.  
+
 `ragp` is an R package for mining and analyses of HRGPs, with emphasis on arabinogalactan protein sequences (AGPs). The `ragp` filtering pipeline exploits one of the HRGPs key features, the presence of hydroxyprolines which represent glycosylation sites. Main package features include prediction of proline hydroxylation sites, amino acid motif and bias analyses, efficient communication with web servers for prediction of N-terminal signal peptides and glycosylphosphatidylinositol modification sites, and the ability to annotate sequences through hmmscan and subsequent GO enrichment, based on predicted pfam domains.
 
 The workflow in `ragp` is illustrated with the following diagram (`ragp` functions to be used for each of the tasks are boxed grey):  
@@ -248,7 +249,9 @@ head(at_gpi)
 
 ##Arabinogalactan identification
 
-To check which of the filtered sequences are potential arabinogalactans the function `scan_ag` can be used. This function scans the protein sequences for AG glycomodule clusters, by constructing regular expressions based on user input. By default `scan_ag` searches for at least three dipeptides PA, PS, PT, PG, PV, AP, SP, TP, GP and VP which are separated by maximally 10 amino acids. The minimal number of dipeptides to be considered can be changed by the argument `dim` while the maximum number of separating amino acids can be tweaked using the argument `div`. To consider only PA, PS, PT, AP, SP and TP dipeptides the `type` argument can be changed to `"conservative"`. In cases when the dipeptides are ambiguous, such as SPT, PTP etc. all three amino acids will be counted as one dipeptide, while cases such as PTPA are considered as two dipeptides separated by zero amino acids. When the `sequence` object from `predict_hyp` function is passed to `scan_ag` only prolines predicted to be hydroxylated are considered when searching for dipeptides:  
+To check which of the filtered sequences are potential arabinogalactans the function `scan_ag` can be used. This function scans the protein sequences for AG glycomodule clusters, by constructing regular expressions based on user input. 
+
+By default `scan_ag` searches for at least three dipeptides PA, PS, PT, PG, PV, AP, SP, TP, GP and VP which are separated by maximally 10 amino acids. The minimal number of dipeptides to be considered can be changed by the argument `dim` while the maximum number of separating amino acids can be tweaked using the argument `div`. To consider only PA, PS, PT, AP, SP and TP dipeptides the `type` argument can be changed to `"conservative"`. In cases when the dipeptides are ambiguous, such as SPT, PTP etc. all three amino acids will be counted as one dipeptide, while cases such as PTPA are considered as two dipeptides separated by zero amino acids. When the `sequence` object from `predict_hyp` function is passed to `scan_ag` only prolines predicted to be hydroxylated are considered when searching for dipeptides:  
 
 ```{r scan_ag}
 scaned_at <- scan_ag(data = at_nsp_3hyp,
@@ -266,7 +269,8 @@ scaned_at  %>%
 ```  
 
 The column "sequence" contains the input sequence where only the amino acids in potential AG glycomodules are in uppercase while all other are in lower case.  The column "AG_aa" contains the amino acid count found in potential AG glycomodules, while columns "total_length" and "longest" correspond to the matched sequence spans.  
-True AG glycomodules contain hydroxyproline instead of proline in the dipeptides: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) but the above output considers P instead of O since most of the time the positions of O are unknown. However if the sequence argument to `scan_ag` contains O's at some positions, `scan_ag` will consider only them. To do this the `sequence` output of `predict_hyp` function can be used:  
+
+True AG glycomodules contain hydroxyproline instead of proline in the dipeptides: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) but the above output considers P instead of O since most of the time the positions of O are unknown. However if the sequence argument to `scan_ag` contains O's at some positions, `scan_ag` will consider only them. To do this the `sequence` element of `predict_hyp` function output can be used:  
 
 ```{r scan_ag3}
 scaned_at <- scan_ag(data = at_hyp$sequence,
@@ -416,7 +420,14 @@ p1
 knitr::include_graphics("p1.svg")
 ```   
 
-Trans membrane regions (TM) are shown in yellow, extracellular regions are indicated by the dashed line above the sequences while intracellular regions are indicated by the dashed line bellow the sequence (as predicted by Phobius). Signal peptides (as predicted by SignalP) are indicated by the thick red line on the N-terminal side. Signal peptides (as predicted by Phobius) can be deduced by the start of the dashed lines. GPI attachment sites (as predicted by Big Pi) are indicated by blue rhomboids. Hydroxyprolines (as predicted by `predict_hyp`) are indicated by vertical dark gray lines while AG glycomodul spans are indicated by the light grey background. Domains (as predicted by hmmscan) are indicated by rectangles with an appropriate fill as indicated in the legend.
+The diagram contains the following elements:  
+
+* Trans membrane regions (TM) are shown in yellow, extracellular regions are indicated by the dashed line above the sequences while intracellular   regions are indicated by the dashed line bellow the sequence (as predicted by Phobius).
+* Signal peptides (as predicted by SignalP) are indicated by the thick red line on the N-terminal side. Signal peptides (as predicted by Phobius)   can be deduced by the start of the dashed lines.
+* GPI attachment sites (as predicted by Big Pi) are indicated by blue rhomboids.
+* Hydroxyprolines (as predicted by `predict_hyp`) are indicated by vertical dark gray lines.
+* AG glycomodul spans are indicated by the light grey background.
+* Domains (as predicted by hmmscan) are indicated by rectangles with an appropriate fill as indicated in the legend.
 
 To change the axis ratio:
 ```{r plot_prot3, eval = FALSE}
