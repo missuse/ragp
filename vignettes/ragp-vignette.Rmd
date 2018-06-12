@@ -29,6 +29,8 @@ knitr::knit_theme$set("edit-matlab")
 options(width = 120)
 ```
 
+##Introduction
+
 Hydroxyproline rich glycoproteins (HRGPs) are one of the most complex families of macromolecules found in plants, due to the diversity of glycans decorating the protein backbone, as well as the heterogeneity of the protein backbones. While this diversity is responsible for the wide array of physiological functions associated with HRGPs, it hinders attempts for homology based identification. Current approaches, based on identifying sequences with characteristic motifs and biased amino acid composition, are limited to prototypical sequences.  
 `ragp` is an R package for mining and analyses of HRGPs, with emphasis on arabinogalactan protein sequences (AGPs). The `ragp` filtering pipeline exploits one of the HRGPs key features, the presence of hydroxyprolines which represent glycosylation sites. Main package features include prediction of proline hydroxylation sites, amino acid motif and bias analyses, efficient communication with web servers for prediction of N-terminal signal peptides and glycosylphosphatidylinositol modification sites, and the ability to annotate sequences through hmmscan and subsequent GO enrichment, based on predicted pfam domains.
 
@@ -473,4 +475,4 @@ knitr::include_graphics("p2.svg")
 ```  
 
 
-#References  
+##References  
