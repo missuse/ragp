@@ -112,9 +112,6 @@ id_nsp <- vigfiles$id_nsp
 at_hmm <- vigfiles$at_hmm
 nsp_signalp <- vigfiles$nsp_signalp
 at_gpi <- vigfiles$at_gpi
-p1 <- vigfiles$p1
-p2 <- vigfiles$p2
-p3 <- vigfiles$p3
 at_nsp2 <- dplyr::filter(at_nsp, Transcript.id %in% id_nsp)
 
 ```
@@ -485,5 +482,23 @@ p2
 knitr::include_graphics("p2.svg")
 ```  
 
+Add annotations to the plot (y axis is continuous):  
+
+```{r plot_prot9, eval = FALSE}
+p1 +
+  annotate(geom = "text",
+           y = 6,
+           x = 100,
+           label = "look at all these TMs") +
+  annotate(geom = "point",
+           y = 4,
+           x = c(237, 240, 298),
+           shape = 21,
+           fill = "dodgerblue",
+           size = 3)
+``` 
+```{r echo = FALSE, out.width = "100%", fig.align = "center"}
+knitr::include_graphics("p1_anno.svg")
+```  
 
 ##References  
