@@ -9,7 +9,7 @@ ragp
 
 **Would you like to have a function which takes protein sequences as input and outputs:**
 
-![alt text](/man/figures/README-plot_prot-2.svg)
+![alt text](/man/figures/README-plot_prot-2.png)
 
 **If the answer to both questions is yes, read on.**
 
