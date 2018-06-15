@@ -5,14 +5,6 @@ ragp
 
 [![Build Status](https://travis-ci.org/missuse/ragp.svg?branch=master)](https://travis-ci.org/missuse/ragp)
 
-**Do you work|play with protein sequences?**
-
-**Would you like to have a function which takes protein sequences as input and outputs:**
-
-![alt text](/man/figures/README-plot_prot-2.png)
-
-**If the answer to both questions is yes, read on.**
-
 The goal of ragp is to facilitate mining of plant hydroxyproline rich glycoproteins (HGRPs), and especially arabinogalactan protein sequences (AGPs). The functions in the package consist of two groups: 1. web server prediction scraping and 2. sequence analyses. Functions in group 2 were made with HGRPs in mind and will be of limited use out of this scope while functions in group 1 are available for a wide range of annotation applications such as domain prediction, cellular localization, presence of trans-membrane regions and GO annotation. All of ragp functions expect protein sequences in single letter code.
 
 Installation
