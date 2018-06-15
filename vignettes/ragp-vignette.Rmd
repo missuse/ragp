@@ -410,7 +410,7 @@ All of the above mentioned protein features can be visualized using the function
 ind <- c(20, 23, 34, 52, 80, 127, 345) #some sequences
 p1 <- plot_prot(sequence = at_nsp$sequence[ind],
                 id = at_nsp$Transcript.id[ind],
-                dom_sort = "evalue") #to plot domains by independent e-value (lower on top)
+                dom_sort = "ievalue") #to plot domains by independent e-value (lower on top)
 
 p1
 ```
