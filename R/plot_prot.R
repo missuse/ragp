@@ -267,8 +267,12 @@ plot_prot <- function(sequence,
                                    ") ",
                                    sep = ""))
       if (dom_sort == "ievalue"){
-        seq_hmm <- seq_hmm[with(seq_hmm, order(id_num, as.numeric(ievalue))),]
+        seq_hmm <- seq_hmm[with(seq_hmm, order(id_num,
+                                               as.numeric(ievalue),
+                                               decreasing = c(FALSE, TRUE),
+                                               method="radix")),]
       }
+      
       if (dom_sort == "abc"){
         seq_hmm <- seq_hmm[with(seq_hmm, order(id_num, name)),]
       }
@@ -491,6 +495,9 @@ plot_prot <- function(sequence,
     vals <- NA
     labs <- NULL
   }
+  rat <- max(nchar(sequence))
+  rat <- round(rat/100, 0)*100
+  rat <- rat/20
   
   p <- ggplot2::ggplot(for_plot)+
     ggplot2::geom_segment(ggplot2::aes_(y = ~id_num,
@@ -507,7 +514,7 @@ plot_prot <- function(sequence,
                    panel.border = ggplot2::element_blank(),
                    axis.ticks.y = ggplot2::element_blank(),
                    axis.line.x = ggplot2::element_line()) +
-    ggplot2::coord_equal(ratio = 20,
+    ggplot2::coord_equal(ratio = rat,
                          expand = FALSE)
   
   if(!is.null(phobius_seq)){

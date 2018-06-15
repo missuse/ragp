@@ -10,6 +10,7 @@
 #' @param sleep Numeric indicating the pause in seconds between server calls, at default set to 1.
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
 #' @param timeout Numeric, time in seconds to wait for server response.
+#' @param progress Bolean, whether to show the progress bar, at default set to TRUE
 #'
 #' @return A data frame with columns:
 #' \describe{
@@ -28,22 +29,31 @@
 #'   \item{reported}{Logical, is the result reported on the hmmer site. The hmmer web server outputs more hmm profile matches than it presents to the user. Results below a certain threshold are not reported (hidden) on the site.}
 #' }
 #'
-#'@source \url{https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan}
+#' @note hmmscan does not handle sequences longer than 1000 amino acids. get_hmm splits these sequences into shorter substrings which overlap by 300 amino acids and queries hmmscan. Some results might be redundant or partially overlapping in this case. When this is an issue it is advisable to provide a subsequence of appropriate length as get_hmm input.
 #'
-#'@seealso \code{\link[ragp]{pfam2go}}
+#' @source \url{https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan}
 #'
-#'@examples
+#' @seealso \code{\link[ragp]{pfam2go}}
 #'
-#'pfam_pred <- get_hmm(data = at_nsp[1:5,],
+#' @examples
+#'
+#' pfam_pred <- get_hmm(data = at_nsp[1:5,],
 #'                     sequence = sequence,
 #'                     id = Transcript.id,
 #'                     verbose = FALSE,
 #'                     sleep = 0)
 #'
-#'@export
+#' @export
 
 
-get_hmm <- function(data = NULL, sequence, id, verbose = TRUE, sleep = 1, attempts = 2L, timeout = 10){
+get_hmm <- function(data = NULL,
+                    sequence,
+                    id,
+                    verbose = TRUE,
+                    sleep = 1,
+                    attempts = 2L,
+                    timeout = 10,
+                    progress = TRUE){
   if (missing(verbose)) {
     verbose <- TRUE
   }
@@ -58,6 +68,21 @@ get_hmm <- function(data = NULL, sequence, id, verbose = TRUE, sleep = 1, attemp
   if (is.na(verbose)){
     verbose <- TRUE
     warning("verbose was set to NA, setting to default: verbose = TRUE")
+  }
+  if (missing(progress)) {
+    progress <- TRUE
+  }
+  if (length(progress) > 1){
+    progress <- TRUE
+    warning("progress should be of length 1, setting to default: progress = TRUE")
+  }
+  if (!is.logical(progress)){
+    progress <- as.logical(progress)
+    warning("progress is not logical, converting using 'as.logical'")
+  }
+  if (is.na(progress)){
+    progress <- TRUE
+    warning("progress was set to NA, setting to default: progress = TRUE")
   }
   if (missing(sleep)) {
     sleep <- 1
@@ -174,117 +199,178 @@ get_hmm <- function(data = NULL, sequence, id, verbose = TRUE, sleep = 1, attemp
   n <- length(sequence)
   url <- "https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan"
   pfam <- list()
-  pb <- utils::txtProgressBar(min = 0,
-                              max = n,
-                              style = 3)
+  if(progress){
+    pb <- utils::txtProgressBar(min = 0,
+                                max = n,
+                                style = 3)
+  }
   for (i in 1:n) {
     seqi <- sequence[i]
-    res <- NULL
-    attempt <- 0
-    while( is.null(res) && attempt <= attempts ) {
-      attempt <- attempt + 1
-      try(
-        res <- httr::POST(url = url,
-                          encode = "form",
-                          body = list(isajax = "1",
-                                      seq = seqi,
-                                      hmmdb = "pfam",
-                                      alt = "Paste",
-                                      threshold = "cut_ga"),
-                          httr::timeout(timeout)),
-        silent = TRUE
-      )
-      if(!is.null(res)) {
-        break
+    seqi_id <- id[i]
+    nc <- nchar(seqi)
+    if(nc > 1000){
+      message(cat("\n",
+                  "sequence",
+                  seqi_id,
+                  "is longer than the permitted hmmscan length",
+                  "\n",
+                  "processing in chunks"))
+      star <- c(1, seq(from = 701,
+                       to = nc,
+                       by = 700))
+      end <- unique(c(seq(from = 1000,
+                          to = nc,
+                          by = 700),
+                      nc))
+      if(length(star) > length(end)){
+        star <- star[-length(star)]
       }
-    }
-    if(i == 1){
-      if (attempt > attempts) {
-        stop("server was unresponsive, consdier increasing timeout and attempts arguments")
-      }
-    } else {
-      if (attempt > attempts){
-        idi <- rep(id[1:(i-1)], times = unlist(lapply(pfam, function(x) nrow(x))))
-        pfam <- suppressWarnings(do.call(rbind, pfam))
-        pfam <- data.frame(id = idi, pfam)
-        rownames(pfam) <- 1:nrow(pfam)
-        pfam$id <- as.character(pfam$id)
-        pfam$name <- as.character(pfam$name)
-        pfam$acc <- as.character(pfam$acc)
-        pfam$desc <- as.character(pfam$desc)
-        pfam$clan <- as.character(pfam$clan)
-        pfam$align_start <- as.numeric(as.character(pfam$align_start))
-        pfam$align_end <- as.numeric(as.character(pfam$align_end))
-        pfam$model_start <- as.numeric(as.character(pfam$model_start))
-        pfam$model_end <- as.numeric(as.character(pfam$model_end))
-        pfam$ievalue <- as.numeric(as.character(pfam$ievalue))
-        pfam$cevalue <- as.numeric(as.character(pfam$cevalue))
-        pfam$bitscore <- as.numeric(as.character(pfam$bitscore))
-        pfam$reported <- as.logical(as.integer(pfam$reported))
-        warning(paste("maximum attempts reached at", id[i], "returning finished queries"))
-        return(pfam)
-      }
-    }
-    res <- httr::content(res, as = "parsed")
-    hits <- res$results$hits
-    if (length(hits) != 0) {
-      hitx <- lapply(hits, function(y) {
-        dom <- y$domains
-        doms <- lapply(dom, function(x) {
-          resi <- data.frame(name = x$alihmmname,
-                             acc = x$alihmmacc,
-                             desc = x$alihmmdesc,
-                             clan = ifelse(is.null(x$clan),
-                                           NA, as.character(x$clan)),
-                             align_start = x$alisqfrom,
-                             align_end = x$alisqto,
-                             model_start = x$alihmmfrom,
-                             model_end = x$alihmmto,
-                             ievalue = x$ievalue,
-                             cevalue = x$cevalue,
-                             bitscore = x$bitscore,
-                             reported = x$is_included,
-                             stringsAsFactors = F)
-          return(resi)
-        })
-        domx <- data.frame(do.call(rbind, doms))
-        return(domx)
-      })
-      hitx <- do.call(rbind, hitx)
-      hitx <- as.data.frame(hitx, stringsAsFactors = F)
-      pfam[[i]] <- hitx
+      seqas <- data.frame(seqas = substring(seqi,
+                                            first = star,
+                                            last = end),
+                          star = star,
+                          end = end,
+                          id = paste(seqi_id,
+                                     star,
+                                     sep = "_xx_"))
+      resis <- ragp::get_hmm(sequence = seqas$seqas,
+                             id = seqas$id,
+                             progress = FALSE,
+                             verbose = FALSE,
+                             attempts = attempts,
+                             timeout = timeout,
+                             sleep = sleep)
+      st <- unlist(lapply(strsplit(resis$id,
+                                   "_xx_"),
+                          function(x)
+                            as.numeric(x[2])))-1
+      resis$align_start <- resis$align_start + st
+      resis$align_end <- resis$align_end + st
+      resis$id <- seqi_id
+      resis <- resis[!duplicated(resis[,-11]),]
       if (verbose == T) {
         print(i, quote = FALSE)
-        print(hitx[, 1:11])
+        print(resis[, 1:11])
         utils::flush.console()
       }
-    }
-    else {
-      hitx <- data.frame(name = NA,
-                         acc = NA,
-                         desc = NA,
-                         clan = NA,
-                         align_start = NA,
-                         align_end = NA,
-                         model_start = NA,
-                         model_end = NA,
-                         ievalue = NA,
-                         cevalue = NA,
-                         bitscore = NA,
-                         reported = 0)
-      pfam[[i]] <- hitx
-      if (verbose == T) {
-        print(hitx[, 1:11])
-        utils::flush.console()
+      pfam[[i]] <- resis
+    } else {
+      res <- NULL
+      attempt <- 0
+      while (is.null(res) && attempt <= attempts) {
+        attempt <- attempt + 1
+        try(res <- httr::POST(url = url,
+                              encode = "form", 
+                              body = list(isajax = "1",
+                                          seq = seqi,
+                                          hmmdb = "pfam", 
+                                          alt = "Paste",
+                                          threshold = "cut_ga"),
+                              httr::timeout(timeout)), 
+            silent = TRUE)
+        if (!is.null(res)) {
+          break
+        }
+      }
+      if (i == 1) {
+        if (attempt > attempts) {
+          stop("server was unresponsive, consdier increasing timeout and attempts arguments")
+        }
+      }
+      else {
+        if (attempt > attempts) {
+          pfam <- suppressWarnings(do.call(rbind, pfam))
+          pfam <- as.data.frame(pfam)
+          rownames(pfam) <- 1:nrow(pfam)
+          pfam$id <- as.character(pfam$id)
+          pfam$name <- as.character(pfam$name)
+          pfam$acc <- as.character(pfam$acc)
+          pfam$desc <- as.character(pfam$desc)
+          pfam$clan <- as.character(pfam$clan)
+          pfam$align_start <- as.numeric(as.character(pfam$align_start))
+          pfam$align_end <- as.numeric(as.character(pfam$align_end))
+          pfam$model_start <- as.numeric(as.character(pfam$model_start))
+          pfam$model_end <- as.numeric(as.character(pfam$model_end))
+          pfam$ievalue <- as.numeric(as.character(pfam$ievalue))
+          pfam$cevalue <- as.numeric(as.character(pfam$cevalue))
+          pfam$bitscore <- as.numeric(as.character(pfam$bitscore))
+          pfam$reported <- as.logical(as.integer(pfam$reported))
+          warning(paste("maximum attempts reached at", 
+                        id[i], "returning finished queries"))
+          return(pfam)
+        }
+      }
+      res <- httr::content(res, as = "parsed")
+      hits <- res$results$hits
+      if (length(hits) != 0) {
+        hitx <- lapply(hits, function(y) {
+          dom <- y$domains
+          doms <- lapply(dom, function(x) {
+            resi <- data.frame(id = seqi_id,
+                               name = x$alihmmname,
+                               acc = x$alihmmacc, 
+                               desc = x$alihmmdesc,
+                               clan = ifelse(is.null(x$clan),
+                                             NA,
+                                             as.character(x$clan)),
+                               align_start = x$alisqfrom, 
+                               align_end = x$alisqto,
+                               model_start = x$alihmmfrom, 
+                               model_end = x$alihmmto,
+                               ievalue = x$ievalue, 
+                               cevalue = x$cevalue,
+                               bitscore = x$bitscore, 
+                               reported = as.logical(
+                                 as.integer(
+                                   x$is_included)),
+                               stringsAsFactors = F)
+            return(resi)
+          })
+          domx <- data.frame(do.call(rbind, doms))
+          return(domx)
+        })
+        hitx <- do.call(rbind, hitx)
+        hitx <- as.data.frame(hitx,
+                              stringsAsFactors = F)
+        pfam[[i]] <- hitx
+        if (verbose == T) {
+          print(i, quote = FALSE)
+          print(hitx[, 1:11])
+          utils::flush.console()
+        }
+      }
+      else {
+        hitx <- data.frame(id = seqi_id,
+                           name = NA,
+                           acc = NA,
+                           desc = NA, 
+                           clan = NA,
+                           align_start = NA,
+                           align_end = NA, 
+                           model_start = NA,
+                           model_end = NA,
+                           ievalue = NA, 
+                           cevalue = NA,
+                           bitscore = NA,
+                           reported = FALSE)
+        pfam[[i]] <- hitx
+        if (verbose == T) {
+          print(hitx[, 1:11])
+          utils::flush.console()
+        }
       }
     }
-    utils::setTxtProgressBar(pb, i)
+    if(progress){
+      utils::setTxtProgressBar(pb, i)
+    }
     Sys.sleep(sleep)
   }
-  close(pb)
-  idi <- rep(id, times = unlist(lapply(pfam, function(x) nrow(x))))
+  if(progress){
+    close(pb)
+  }
+  
   pfam <- suppressWarnings(do.call(rbind, pfam))
-  pfam <- data.frame(id = idi, pfam)
+  pfam <- as.data.frame(pfam)
   rownames(pfam) <- 1:nrow(pfam)
   pfam$id <- as.character(pfam$id)
   pfam$name <- as.character(pfam$name)
@@ -301,3 +387,4 @@ get_hmm <- function(data = NULL, sequence, id, verbose = TRUE, sleep = 1, attemp
   pfam$reported <- as.logical(as.integer(pfam$reported))
   return(pfam)
 }
+

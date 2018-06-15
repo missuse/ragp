@@ -3,10 +3,22 @@ NEWS
 
 version 0.1.0.0001
 -----------------------------
-
 NEW FEATURES
 
 * Added vignette. 
+
+BUG FIXES AND IMPROVEMENTS
+
+* When using plot_prot with argument dom_sort = "ievalue" the domains with the
+  lowest independent e-value will now be correctly plotted on top.
+  
+* The ratio of x and y axes in plot_prot output is now calculated based on sequence
+  length and should provide more consistent diagrams.
+  
+* get_hmm can now handle protein sequences of arbitrary length by splitting them
+  into several shorter overlapping sequences and querying hmmscan. 
+ 
+
 
 version 0.1.0.0000
 -----------------------------

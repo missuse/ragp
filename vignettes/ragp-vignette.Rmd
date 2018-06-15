@@ -60,7 +60,7 @@ library(ragp)
 library(ggplot2)
 ```
 
-The analysis will be performed on a set of 2706 *Arabidopsis* protein sequences included in `ragp` package as the `at_nsp` data frame which contains four columns:  
+The examples will be performed on a set of 2706 *Arabidopsis* protein sequences included in `ragp` package as the `at_nsp` data frame which contains four columns:  
 ```{r data}
 library(ragp)
 data(at_nsp)
@@ -343,7 +343,7 @@ scaned_at_nsp2 <- scan_ag(data = at_nsp2,
 sum(scaned_at_nsp2$total_length != 0)
 ```  
 
-Thus the prediction of hydroxyprolines greatly reduced the pull of potential arabinogalactans.  
+Thus the prediction of hydroxyprolines greatly reduced the pool of potential arabinogalactans.  
 `scan_ag` is capable of identifying potential chimeric and short AGPs without pronounced amino acid bias and with few characteristic motifs. In combination with `predict_hyp` the specificity of the found sequences is greatly increased since the majority of sequences unlikely to contain hydroxyprolines are excluded. 
 
 ##Motif and amino acid bias classification - MAAB
@@ -410,12 +410,12 @@ All of the above mentioned protein features can be visualized using the function
 ind <- c(20, 23, 34, 52, 80, 127, 345) #some sequences
 p1 <- plot_prot(sequence = at_nsp$sequence[ind],
                 id = at_nsp$Transcript.id[ind],
-                dom_sort = "ievalue") #to plot domains by independent e-value (lower on top)
+                dom_sort = "evalue") #to plot domains by independent e-value (lower on top)
 
 p1
 ```
 ```{r echo = FALSE, out.width = "100%", fig.align = "center"}
-knitr::include_graphics("p1.svg")
+knitr::include_graphics("p1_evalue.svg")
 ```   
 
 The diagram contains the following elements:  
@@ -426,6 +426,19 @@ The diagram contains the following elements:
 * Hydroxyprolines (as predicted by `predict_hyp`) are indicated by vertical dark gray lines.
 * AG glycomodul spans are indicated by the light grey background.
 * Domains (as predicted by hmmscan) are indicated by rectangles with an appropriate fill as indicated in the legend.
+
+To change the order of domain plotting:
+
+```{r plot_prot2, eval = FALSE}
+p1 <- plot_prot(sequence = at_nsp$sequence[ind],
+                id = at_nsp$Transcript.id[ind],
+                dom_sort = "cba") #to plot domains by name, first on top, also check "abc"
+
+p1
+```
+```{r echo = FALSE, out.width = "100%", fig.align = "center"}
+knitr::include_graphics("p1.svg")
+```   
 
 To change the axis ratio:
 ```{r plot_prot3, eval = FALSE}
@@ -452,7 +465,7 @@ p3 <- plot_prot(sequence = at_nsp$sequence[ind],
                 id = at_nsp$Transcript.id[ind],
                 hyp_col = "brown",
                 ag_col = "orange",
-                dom_sort = "ievalue")
+                dom_sort = "cba")
 p3
 ```
 
@@ -478,7 +491,7 @@ p2 <- plot_prot(sequence = at_nsp$sequence[ind],
                 id = at_nsp$Transcript.id[ind],
                 hyp = FALSE,
                 ag = FALSE,
-                dom_sort = "ievalue")
+                dom_sort = "cba")
 p2
 ```
 ```{r echo = FALSE, out.width = "100%", fig.align = "center"}

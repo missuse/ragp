@@ -8,7 +8,7 @@
 }
 \usage{
 get_hmm(data = NULL, sequence, id, verbose = TRUE, sleep = 1,
-  attempts = 2L, timeout = 10)
+  attempts = 2L, timeout = 10, progress = TRUE)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
@@ -24,6 +24,8 @@ get_hmm(data = NULL, sequence, id, verbose = TRUE, sleep = 1,
 \item{attempts}{Integer, number of attempts if server unresponsive, at default set to 2.}
 
 \item{timeout}{Numeric, time in seconds to wait for server response.}
+
+\item{progress}{Bolean, whether to show the progress bar, at default set to TRUE}
 }
 \value{
 A data frame with columns:
@@ -46,6 +48,9 @@ A data frame with columns:
 \description{
 hmmer web server offers biosequence analysis using profile hidden Markov Models. This function allows searching
 of a protein sequence vs a profile-HMM database (Pfam-A).
+}
+\note{
+hmmscan does not handle sequences longer than 1000 amino acids. get_hmm splits these sequences into shorter substrings which overlap by 300 amino acids and queries hmmscan. Some results might be redundant or partially overlapping in this case. When this is an issue it is advisable to provide a subsequence of appropriate length as get_hmm input.
 }
 \examples{
 
