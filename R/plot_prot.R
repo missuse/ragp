@@ -325,11 +325,19 @@ plot_prot <- function(sequence,
                          sort = FALSE)
     
     phobius_seq_pred <- unlist(
-      lapply(strsplit(phobius_seq$prediction,
-                      "/"),
-             function(x) x[2])
-    )
-    
+      lapply(
+        strsplit(
+          phobius_seq$prediction,
+          "/"),
+        function(x){
+          if (length(x) == 2) {
+            x[2]
+            } else {
+              x[1]
+            }
+          }
+        )
+      )
     phobius_seq <- data.frame(id = phobius_seq$id, 
                               id_num = phobius_seq$id_num,
                               pred = phobius_seq_pred,
@@ -343,35 +351,52 @@ plot_prot <- function(sequence,
     if (nrow(phobius_seq) == 0){
       phobius_seq <- NULL
     } else {
-      tm <- stringr::str_extract_all(phobius_seq$pred, "\\d+-\\d+")
+      tm <- stringr::str_extract_all(phobius_seq$pred, 
+                                     "\\d+-\\d+")
       names(tm) <- phobius_seq$id
-      
       tm <- lapply(tm, cbind)
       id_tm <- rep(phobius_seq$id_num, sapply(tm, nrow))
       tm <- do.call(rbind, tm)
       tm <- data.frame(tm, id_tm)
-      tm$tm_start <- as.numeric(stringr::str_extract(tm$tm, "\\d+(?=-)"))
-      tm$tm_end <- as.numeric(stringr::str_extract(tm$tm, "(?<=-)\\d+"))
-      
-      out <- stringr::str_extract_all(phobius_seq$pred, "\\d+o\\d+|\\d+o")
+      tm$tm_start <- as.numeric(stringr::str_extract(tm$tm, 
+                                                     "\\d+(?=-)"))
+      tm$tm_end <- as.numeric(stringr::str_extract(tm$tm, 
+                                                   "(?<=-)\\d+"))
+      out <- stringr::str_extract_all(phobius_seq$pred, 
+                                      "\\d+o\\d+|\\d+o|o\\d+")
       out <- lapply(out, cbind)
       id_out <- rep(phobius_seq$id_num, sapply(out, nrow))
-      seq_out <- nchar(rep(phobius_seq$seq, sapply(out, nrow)))
+      seq_out <- nchar(rep(phobius_seq$seq, sapply(out, 
+                                                   nrow)))
       out <- do.call(rbind, out)
       out <- data.frame(out, id_out)
-      out$out_start <- as.numeric(stringr::str_extract(out$out, "\\d+(?=o)"))
-      out$out_end <- as.numeric(stringr::str_extract(out$out, "(?<=o)\\d+"))
-      out$out_end <- ifelse(is.na(out$out_end), seq_out, out$out_end)
-      
-      inside <- stringr::str_extract_all(phobius_seq$pred, "\\d+i\\d+|\\d+i")
+      out$out_start <- as.numeric(stringr::str_extract(out$out, 
+                                                       "\\d+(?=o)"))
+      out$out_start <- ifelse(is.na(out$out_start), 0, 
+                              out$out_start)
+      out$out_end <- as.numeric(stringr::str_extract(out$out, 
+                                                     "(?<=o)\\d+"))
+      out$out_end <- ifelse(is.na(out$out_end), seq_out, 
+                            out$out_end)
+      inside <- stringr::str_extract_all(phobius_seq$pred, 
+                                         "\\d+i\\d+|\\d+i|i\\d+")
       inside <- lapply(inside, cbind)
-      id_inside <- rep(phobius_seq$id_num, sapply(inside, nrow))
-      seq_inside <- nchar(rep(phobius_seq$seq, sapply(inside, nrow)))
+      id_inside <- rep(phobius_seq$id_num, sapply(inside, 
+                                                  nrow))
+      seq_inside <- nchar(rep(phobius_seq$seq, sapply(inside, 
+                                                      nrow)))
       inside <- do.call(rbind, inside)
       inside <- data.frame(inside, id_inside)
-      inside$inside_start <- as.numeric(stringr::str_extract(inside$inside, "\\d+(?=i)"))
-      inside$inside_end <- as.numeric(stringr::str_extract(inside$inside, "(?<=i)\\d+"))
-      inside$inside_end <- ifelse(is.na(inside$inside_end), seq_inside, inside$inside_end)
+      inside$inside_start <- as.numeric(stringr::str_extract(inside$inside, 
+                                                             "\\d+(?=i)"))
+      inside$inside_start <- ifelse(is.na(inside$inside_start), 
+                                    1, inside$inside_start)
+      
+      inside$inside_end <- as.numeric(stringr::str_extract(inside$inside, 
+                                                           "(?<=i)\\d+"))
+      inside$inside_end <- ifelse(is.na(inside$inside_end), 
+                                  seq_inside,
+                                  inside$inside_end)
     }
   } else {
     phobius_seq <- NULL
