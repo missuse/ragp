@@ -338,6 +338,7 @@ plot_prot <- function(sequence,
           }
         )
       )
+    
     phobius_seq <- data.frame(id = phobius_seq$id, 
                               id_num = phobius_seq$id_num,
                               pred = phobius_seq_pred,
