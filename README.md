@@ -5,7 +5,9 @@ ragp
 
 [![Build Status](https://travis-ci.org/missuse/ragp.svg?branch=master)](https://travis-ci.org/missuse/ragp)
 
-**Would you like to have a function which takes protein sequences as input and outputs:**
+**Do you work|play with protein sequences?**
+
+**Do you need a function which takes protein sequences as input and outputs a ggplot2 protein structure diagram?**
 
 ![alt text](/man/figures/README-plot_prot-2.svg)
 
