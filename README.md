@@ -3,6 +3,8 @@
 ragp
 ====
 
+[![Build Status](https://travis-ci.org/missuse/ragp.svg?branch=master)](https://travis-ci.org/missuse/ragp)
+
 `ragp` is designed for mining and analysis of plant Hydroxyproline rich glycoproteins but it can also be used for protein annotation and for predicting several protein features based on sequence (secretory signals, transmembrane regions, domains and glycosylphosphatidylinositol attachment sites). Additionally ragp provides tools for visualization of the mentioned attributes.
 
 Short example:
