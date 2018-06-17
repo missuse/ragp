@@ -3,17 +3,28 @@
 ragp
 ====
 
-[![Build Status](https://travis-ci.org/missuse/ragp.svg?branch=master)](https://travis-ci.org/missuse/ragp)
+`ragp` is designed for mining and analysis of plant Hydroxyproline rich glycoproteins but it can also be used for protein annotation and for predicting several protein features based on sequence (secretory signals, transmembrane regions, domains and glycosylphosphatidylinositol attachment sites). Additionally ragp provides tools for visualization of the mentioned attributes.
 
-**Do you work|play with protein sequences?**
+Short example:
 
-**Do you need a function which takes protein sequences as input and outputs a ggplot2 protein structure diagram?**
+``` r
+library(ragp)
+ids <- c("Q9FLL2", #several uniprot accessions
+         "Q9LS14",
+         "Q9S7I8",
+         "Q9M2Z2",
+         "Q9FIN5")
+
+seqs <- unlist(protr::getUniProt(ids)) #download sequences 
+
+p1 <- plot_prot(seqs, #plot sequence features
+                ids,
+                hyp = FALSE, #do not plot hydroxyprolines
+                ag = FALSE) #do not plot ag spans
+p1
+```
 
 ![alt text](/man/figures/README-plot_prot-2.svg)
-
-**If the answer to both questions is yes, read on.**
-
-The goal of ragp is to facilitate mining of plant hydroxyproline rich glycoproteins (HGRPs), and especially arabinogalactan protein sequences (AGPs). The functions in the package consist of two groups: 1. web server prediction scraping and 2. sequence analyses. Functions in group 2 were made with HGRPs in mind and will be of limited use out of this scope while functions in group 1 are available for a wide range of annotation applications such as domain prediction, cellular localization, presence of trans-membrane regions and GO annotation. All of ragp functions expect protein sequences in single letter code.
 
 Installation
 ------------
@@ -51,7 +62,7 @@ Input options will be illustrated using `scan_ag` function:
 
 ``` r
 library(ragp)
-data(at_nsp) #a data frame of 2700 Arabidopsis protein sequences 
+data(at_nsp) #a data frame of 2700 Arabidopsis sequences
 input1 <- scan_ag(sequence = at_nsp$sequence,
                   id = at_nsp$Transcript.id) 
 ```
