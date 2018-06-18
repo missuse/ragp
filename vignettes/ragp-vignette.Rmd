@@ -3,7 +3,7 @@ title: "ragp vignette"
 author: 
   - Milan Dragićević
 output: rmarkdown::html_vignette
-abstract: "This vignette provides an introduction into the functions and workflow in `ragp` R package. `ragp` is designed for mining and analysis of plant Hydroxyproline rich glycoproteins but it can also be used for protein annotation and for predicting several protein features based on sequence (secretory signals, transmembrane regions, domains and glycosylphosphatidylinositol attachment sites). Additionally `ragp` provides tools for visualization of the mentioned attributes."
+abstract: "This vignette provides an introduction into the functions and workflow in `ragp` R package. `ragp` is designed for mining and analysis of plant Hydroxyproline rich glycoproteins but it can also be used for protein annotation and for obtaining predictions for several protein features based on sequence (secretory signals, transmembrane regions, domains and glycosylphosphatidylinositol attachment sites). Additionally `ragp` provides tools for visualization of the mentioned attributes."
 bibliography: bibtex.bib
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
