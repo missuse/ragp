@@ -27,6 +27,8 @@
 #'   \item{is.signalp}{Logical, did TargetP predict the presence of a signal peptide}
 #'   }
 #'
+#' @note This function creates temporary files in the working directory.
+#'
 #' @source \url{http://www.cbs.dtu.dk/services/TargetP/}
 #' @references Emanuelsson O, Nielsen H, Brunak S,von Heijne G. (2000) Predicting subcellular localization of proteins based on their N-terminal amino acid sequence. J. Mol. Biol.300: 1005-1016
 #'
@@ -350,7 +352,8 @@ get_targetp <- function(data = NULL,
                               max = for_pb,
                               style = 3)
   splt <- (seq_along(file_list) - 1) %/% 10
-  file_list <- split(file_list, splt)
+  file_list <- split(file_list,
+                     splt)
   res <- lapply(seq_along(file_list), function(k){
     x <- file_list[[k]]
     jobid <- vector("character", 10)
@@ -370,14 +373,19 @@ get_targetp <- function(data = NULL,
           `scut` = scut,
           `ocut` = ocut
         ))
-      res <- httr::content(res, as="parsed")
-      res <- rvest::html_nodes(res, "input[name='jobid']")
-      jobid[i] <-  rvest::html_attr(res, "value")
+      res <- httr::content(res,
+                           as="parsed")
+      res <- xml2::xml_find_all(res,
+                                ".//input[@name='jobid']")
+      jobid[i] <- xml2::xml_attr(res,
+                                 "value")
       unlink(x[i])
-      utils::setTxtProgressBar(pb, floor(i/2) + (10 * (k - 1)))
+      utils::setTxtProgressBar(pb,
+                               floor(i/2) + (10 * (k - 1)))
       Sys.sleep(sleep)
     }
-    collected_res = vector("list", length(jobid))
+    collected_res = vector("list",
+                           length(jobid))
     for (i in seq_along(x)){
       repeat {
         res2 <- httr::GET(
@@ -386,32 +394,69 @@ get_targetp <- function(data = NULL,
             jobid = jobid[i],
             wait = "20"
           ))
-        bad = xml2::xml_text(xml2::xml_find_all(httr::content(res2, as="parsed"), "//head"))
+        bad <- xml2::xml_text(
+          xml2::xml_find_all(
+            httr::content(res2,
+                          as = "parsed"),
+            "//head")
+          )
         if (grepl("Illegal", bad)){
-          prt = xml2::xml_text(xml2::xml_find_all(httr::content(res2, as="parsed"), "//li"))
-          stop(paste0(prt, ". Problem in file: ", "temp_", i, ".fa"))
+          prt <- xml2::xml_text(
+            xml2::xml_find_all(
+              httr::content(res2,
+                            as = "parsed"),
+              "//li")
+            )
+          stop(paste0(prt,
+                      ". Problem in file: ",
+                      "temp_",
+                      i,
+                      ".fa"))
         }
-        res2 <- as.character(rvest::html_node(httr::content(res2, as="parsed"), "pre"))
-        res2_split <- unlist(strsplit(res2, "\n"))
+        res2 <- as.character(
+          xml2::xml_find_all(
+            httr::content(res2,
+                          as = "parsed"),
+            ".//pre")
+        )
+        res2_split <- unlist(strsplit(res2,
+                                      "\n"))
         if (any(grepl("cTP", res2_split))){
           break
         }
       }
-      res2_split <- res2_split[(which(grepl("cTP", res2_split))[1]+2):(which(grepl("cutoff", res2_split))[1] - 2)]
-      res2_split <- strsplit(res2_split, " +")
-      res2_split <- do.call(rbind, res2_split)
-      res2_split <- as.data.frame(res2_split, stringsAsFactors = F)
-      colnames(res2_split) <- c("Name", "Len", "cTP", "mTP", "SP", "other", "Loc", "RC", "TPlen")
-      utils::setTxtProgressBar(pb, floor(i/2) + 5 + (10 * (k - 1)))
+      res2_split <- res2_split[(which(grepl("cTP",
+                                            res2_split))[1]+2):(which(grepl("cutoff",
+                                                                            res2_split))[1] - 2)]
+      res2_split <- strsplit(res2_split,
+                             " +")
+      res2_split <- do.call(rbind,
+                            res2_split)
+      res2_split <- as.data.frame(res2_split,
+                                  stringsAsFactors = FALSE)
+      colnames(res2_split) <- c("Name",
+                                "Len",
+                                "cTP",
+                                "mTP",
+                                "SP",
+                                "other",
+                                "Loc",
+                                "RC",
+                                "TPlen")
+      utils::setTxtProgressBar(pb,
+                               floor(i/2) + 5 + (10 * (k - 1)))
       collected_res[[i]] <- res2_split
     }
-    collected_res <- do.call(rbind, collected_res)
+    collected_res <- do.call(rbind,
+                             collected_res)
     collected_res$is.targetp <- collected_res$Loc == "S"
     return(collected_res)
   }
   )
-  utils::setTxtProgressBar(pb, for_pb)
+  utils::setTxtProgressBar(pb,
+                           for_pb)
   close(pb)
-  res <- do.call(rbind, res)
+  res <- do.call(rbind,
+                 res)
   return(res)
 }

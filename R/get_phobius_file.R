@@ -38,6 +38,7 @@
 
 
 get_phobius_file = function(file){
+  message("This function has been deprecated, please use get_phobius")
   if (!file.exists(file)){
     stop("cannot find file in the specified path")
   }

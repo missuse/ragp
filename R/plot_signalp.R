@@ -206,10 +206,11 @@ plot_signalp <- function(sequence,
       `method` = method,
       `trunc` = ""
     ))
-  res <- httr::content(res, as = "parsed")
-  res <- rvest::html_nodes(res,
-                           "input[name='jobid']")
-  jobid <-  rvest::html_attr(res,
+  res <- httr::content(res,
+                       as = "parsed")
+  res <- xml2::xml_find_all(res,
+                            ".//input[@name='jobid']")
+  jobid <- xml2::xml_attr(res,
                              "value")
   Sys.sleep(sleep)
   repeat {
@@ -220,13 +221,12 @@ plot_signalp <- function(sequence,
         wait = "20"
         ))
     
-    res2 <- httr::content(res2,
-                          as = "parsed")
-    
-    res2 <- rvest::html_node(res2,
-                             "pre")
-    
-    res2 <- as.character(res2)
+    res2 <- as.character(
+      xml2::xml_find_all(
+        httr::content(res2,
+                      as = "parsed"),
+        ".//pre")
+    )
     
     res2 <- unlist(strsplit(res2,
                             "\n"))

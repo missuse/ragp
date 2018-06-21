@@ -44,6 +44,7 @@
 get_targetp_file = function(file, org_type = c("non_plant", "plant"),
                             cutoffs = c("winner_takes_all", "spec95", "spec90", "custom"), tcut = NULL, pcut = NULL, scut = NULL,
                             ocut = NULL, splitter = 500, sleep = 3){
+  message("This function has been deprecated, please use get_targetp")
   if (!requireNamespace("seqinr", quietly = TRUE)) {
     stop("seqinr needed for this function to work. Please install it.",
          call. = FALSE)
@@ -285,8 +286,10 @@ get_targetp_file = function(file, org_type = c("non_plant", "plant"),
       `ocut` = ocut
     ))
   res <- httr::content(res, as="parsed")
-  res <- rvest::html_nodes(res, "input[name='jobid']")
-  jobid[i] <-  rvest::html_attr(res, "value")
+  res <- xml2::xml_find_all(res,
+                            ".//input[@name='jobid']")
+  jobid[i] <- xml2::xml_attr(res,
+                             "value")
   Sys.sleep(sleep)
   }
   for (i in 1:length(file_list)){
@@ -306,7 +309,12 @@ get_targetp_file = function(file, org_type = c("non_plant", "plant"),
         prt = xml2::xml_text(xml2::xml_find_all(httr::content(res2, as="parsed"), "//li"))
         stop(paste0(prt, ". Problem in file: ", "temp_", i, ".fa"))
       }
-      res2 <- as.character(rvest::html_node(httr::content(res2, as="parsed"), "pre"))
+      res2 <- as.character(
+        xml2::xml_find_all(
+          httr::content(res2,
+                        as = "parsed"),
+          ".//pre")
+      )
       res2_split <- unlist(strsplit(res2, "\n"))
       if (any(grepl("cTP", res2_split))){
         break

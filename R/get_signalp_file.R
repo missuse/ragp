@@ -49,6 +49,7 @@ get_signalp_file = function (file, org_type = c("euk", "gram-", "gram+"), Dcut_t
                                                                                         "sensitive", "user"), Dcut_noTM = 0.45, Dcut_TM = 0.5, method = c("best",
                                                                                                                                                            "notm"), minlen = NULL, trunc = NULL, splitter = 500, sleep = 3)
 {
+  message("This function has been deprecated, please use get_signalp")
   if (!requireNamespace("seqinr", quietly = TRUE)) {
     stop("seqinr needed for this function to work. Please install it.",
          call. = FALSE)
@@ -192,8 +193,10 @@ get_signalp_file = function (file, org_type = c("euk", "gram-", "gram+"), Dcut_t
                                                                    format = "short", minlen = minlen, method = method,
                                                                    trunc = trunc))
     res <- httr::content(res, as = "parsed")
-    res <- rvest::html_nodes(res, "input[name='jobid']")
-    jobid[i] <- rvest::html_attr(res, "value")
+    res <- xml2::xml_find_all(res,
+                               ".//input[@name='jobid']")
+    jobid[i] <- xml2::xml_attr(res,
+                               "value")
     Sys.sleep(3)
   }
   for (i in 1:length(file_list)) {
@@ -213,8 +216,12 @@ get_signalp_file = function (file, org_type = c("euk", "gram-", "gram+"), Dcut_t
         stop(paste0(prt, ". Problem in file: ", "temp_",
                     i, ".fa"))
       }
-      res2 <- as.character(rvest::html_node(httr::content(res2,
-                                                          as = "parsed"), "pre"))
+      res2 <- as.character(
+        xml2::xml_find_all(
+          httr::content(res2,
+                        as = "parsed"),
+          ".//pre")
+      )
       res2_split <- unlist(strsplit(res2, "\n"))
       if (any(grepl("Cmax", res2_split))) {
         break

@@ -31,6 +31,8 @@
 #'   \item{is.signalp}{Logical, did SignalP predict the presence of a signal peptide}
 #'   }
 #'
+#' @note This function creates temporary files in the working directory.
+#' 
 #' @source \url{http://www.cbs.dtu.dk/services/SignalP-4.1/}
 #' @references Petersen TN. Brunak S. Heijne G. Nielsen H. (2011) SignalP 4.0: discriminating signal peptides from transmembrane regions. Nature Methods 8: 785-786
 #'
@@ -214,20 +216,28 @@ get_signalp <- function(data = NULL,
       stop("id and sequence vectors are not of same length")
     }
     sequence <- sub("\\*$", "", sequence)
-    sequence <- substr(sequence, start = 1, stop = trunc)
+    sequence <- substr(sequence,
+                       start = 1,
+                       stop = trunc)
     file_name <- tmr
     seqinr::write.fasta(sequence = strsplit(sequence, ""),
-                        name = id, file = file_name)
+                        name = id,
+                        file = file_name)
   }
   if(class(data[[1]]) ==  "SeqFastaAA"){
-    dat <- lapply(data, paste0, collapse ="")
+    dat <- lapply(data,
+                  paste0,
+                  collapse ="")
     id <- names(dat)
     sequence <- toupper(as.character(unlist(dat)))
     sequence <- sub("\\*$", "", sequence)
-    sequence <- substr(sequence, start = 1, stop = trunc)
+    sequence <- substr(sequence,
+                       start = 1,
+                       stop = trunc)
     file_name <- tmr
     seqinr::write.fasta(sequence = strsplit(sequence, ""),
-                        name = id, file = file_name)
+                        name = id,
+                        file = file_name)
   }
   if(class(data) == "data.frame"){
     if(missing(sequence)){
@@ -257,10 +267,13 @@ get_signalp <- function(data = NULL,
     }
     sequence <- toupper(as.character(sequence))
     sequence <- sub("\\*$", "", sequence)
-    sequence <- substr(sequence, start = 1, stop = trunc)
+    sequence <- substr(sequence,
+                       start = 1,
+                       stop = trunc)
     file_name <- tmr
     seqinr::write.fasta(sequence = strsplit(sequence, ""),
-                        name = id, file = file_name)
+                        name = id,
+                        file = file_name)
   }
   if(class(data) == "character"){
     if (file.exists(data)){
@@ -284,7 +297,8 @@ get_signalp <- function(data = NULL,
                               max = for_pb,
                               style = 3)
   splt <- (seq_along(file_list) - 1) %/% 10
-  file_list <- split(file_list, splt)
+  file_list <- split(file_list,
+                     splt)
   res <- lapply(seq_along(file_list), function(k){
     x <- file_list[[k]]
     jobid <- vector("character", 10)
@@ -306,11 +320,15 @@ get_signalp <- function(data = NULL,
                                     minlen = minlen,
                                     method = method,
                                     trunc = as.character(trunc)))
-      res <- httr::content(res, as = "parsed")
-      res <- rvest::html_nodes(res, "input[name='jobid']")
-      jobid[i] <- rvest::html_attr(res, "value")
+      res <- httr::content(res,
+                           as = "parsed")
+      res <- xml2::xml_find_all(res,
+                                ".//input[@name='jobid']")
+      jobid[i] <- xml2::xml_attr(res,
+                                 "value")
       unlink(x[i])
-      utils::setTxtProgressBar(pb, floor(i/2) + (10 * (k - 1)))
+      utils::setTxtProgressBar(pb,
+                               floor(i/2) + (10 * (k - 1)))
       Sys.sleep(sleep)
     }
     
@@ -320,17 +338,30 @@ get_signalp <- function(data = NULL,
       res2 <- httr::GET(url = url,
                         query = list(jobid = jobid[i],
                                      wait = "20"))
-      bad = xml2::xml_text(xml2::xml_find_all(httr::content(res2,
-                                                            as = "parsed"), "//head"))
+      bad <- xml2::xml_text(
+        xml2::xml_find_all(
+          httr::content(res2,
+                        as = "parsed"),
+          "//head")
+      )
       if (grepl("Illegal", bad)) {
-        prt = xml2::xml_text(xml2::xml_find_all(httr::content(res2,
-                                                              as = "parsed"), "//li"))
+        prt <- xml2::xml_text(
+          xml2::xml_find_all(
+            httr::content(res2,
+                          as = "parsed"),
+            "//li")
+          )
         stop(paste0(prt, ". Problem in file: ", "temp_",
                     i, ".fa"))
         }
-      res2 <- as.character(rvest::html_node(httr::content(res2,
-                                                          as = "parsed"), "pre"))
-      res2_split <- unlist(strsplit(res2, "\n"))
+      res2 <- as.character(
+        xml2::xml_find_all(
+          httr::content(res2,
+                        as = "parsed"),
+          ".//pre")
+      )
+      res2_split <- unlist(strsplit(res2,
+                                    "\n"))
       if (any(grepl("Cmax", res2_split))) {
         break
       }
@@ -338,24 +369,37 @@ get_signalp <- function(data = NULL,
     res2_split <- res2_split[(which(grepl("name", res2_split))[1] +
                                 1):(which(grepl("/pre", res2_split ))[1] - 1)]
     if(any(grepl("hr", res2_split))){
-      res2_split = res2_split[1:(which(grepl("<hr>", res2_split))[1] - 1)]
+      res2_split <- res2_split[1:(which(grepl("<hr>", res2_split))[1] - 1)]
     }
     res2_split <- strsplit(res2_split, " +")
     res2_split <- do.call(rbind, res2_split)
     res2_split <- as.data.frame(res2_split, stringsAsFactors = F)
-    colnames(res2_split) <- c("id", "Cmax", "Cmax.pos", "Ymax",
-                              "Ymax.pos", "Smax", "Smax.pos", "Smean", "Dmean",
-                              "is.sp", "Dmaxcut", "Networks.used")
-    utils::setTxtProgressBar(pb, floor(i/2) + 5 + (10 * (k - 1)))
+    colnames(res2_split) <- c("id",
+                              "Cmax",
+                              "Cmax.pos",
+                              "Ymax",
+                              "Ymax.pos",
+                              "Smax",
+                              "Smax.pos",
+                              "Smean",
+                              "Dmean",
+                              "is.sp",
+                              "Dmaxcut",
+                              "Networks.used")
+    utils::setTxtProgressBar(pb,
+                             floor(i/2) + 5 + (10 * (k - 1)))
     collected_res[[i]] <- res2_split
   }
-  collected_res <- do.call(rbind, collected_res)
+  collected_res <- do.call(rbind,
+                           collected_res)
   collected_res$is.signalp <- collected_res$is.sp == "Y"
   return(collected_res)
   }
   )
-  res <- do.call(rbind, res)
-  utils::setTxtProgressBar(pb, for_pb)
+  res <- do.call(rbind,
+                 res)
+  utils::setTxtProgressBar(pb,
+                           for_pb)
   close(pb)
   return(res)
 }

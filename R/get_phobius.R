@@ -18,6 +18,8 @@
 #'
 #' @details
 #' The topology (prediction column of the result) is given as the position of the transmembrane helices separated by 'i' if the loop is on the cytoplasmic or 'o' if it is on the non-cytoplasmic side. A signal peptide is given by the position of its h-region separated by a n and a c, and the position of the last amino acid in the signal peptide and the first of the mature protein separated by a /.
+#' 
+#' @note This function creates temporary files in the working directory.
 #'
 #' @source \url{http://phobius.sbc.su.se/}
 #'

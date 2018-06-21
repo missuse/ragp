@@ -1,6 +1,12 @@
 NEWS
 -----------------------------
 
+version 0.1.0.0002
+-----------------------------
+BUG FIXES AND IMPROVEMENTS
+
+* Removed rvest dependency
+
 version 0.1.0.0001
 -----------------------------
 NEW FEATURES

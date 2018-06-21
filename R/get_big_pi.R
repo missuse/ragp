@@ -229,9 +229,7 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
   splt <- 0:(nrow(mat)-1) %/% 100
   mat_split <- split(mat, splt)
   sleep <- 2
-  url <- "http://mendel.imp.ac.at/gpi/plant_server.html"
-  session <- rvest::html_session(url)
-  form <- rvest::html_form(session)[[2]]
+  url <- "http://mendel.imp.ac.at/gpi/cgi-bin/gpi_pred_plants.cgi"
   
   tot <- length(mat_split)
   pb <- utils::txtProgressBar(min = 0,
@@ -244,9 +242,16 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
                 "\n", mat$sequence,
                 "\n", collapse = "",
                 sep = "")
-    form <- rvest::set_values(form, Sequence = up)
-    form_res <- suppressMessages(rvest::submit_form(session, form))
-    resulti <- rvest::html_text(rvest::html_nodes(form_res, "pre"))
+    res <- httr::POST(url = url,
+                      encode = "form",
+                      body = list(Sequence = up)
+    )
+    res <- httr::content(res,
+                         as = "parsed",
+                         encoding = "UTF-8")
+    res <- xml2::xml_find_all(res,
+                              xpath = ".//pre")
+    resulti <- xml2::xml_text(res)
     out <- lapply(strsplit(resulti, "Query sequence")[[1]], function(x){
       unlist(strsplit(x, "\\\n"))
     })

@@ -58,6 +58,9 @@ A data frame with columns:
 \description{
 SignalP 4.1 server predicts the presence and location of signal peptide cleavage sites in amino acid sequences from different organisms: Gram-positive prokaryotes, Gram-negative prokaryotes, and eukaryotes. The method incorporates a prediction of cleavage sites and a signal peptide/non-signal peptide prediction based on a combination of several artificial neural networks.
 }
+\note{
+This function creates temporary files in the working directory.
+}
 \examples{
 library(ragp)
 signalp_pred <- get_signalp(data = at_nsp[1:10,],
