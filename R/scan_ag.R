@@ -50,7 +50,7 @@
 #' @note The function can be supplied with the sequences resulting from predict_hyp in which case only AG glycomodules containing O instead of P will be considered.
 #'
 #' @references Tan L, Leykam JF, Kieliszewski MJ. (2003) Glycosylation motifs that direct arabinogalactan addition to arabinogalactan proteins. Plant Physiol 132: 1362-136
-#' @seealso \code{\link[ragp]{maab} \link[ragp]{predict_hyp}}
+#' @seealso \code{\link[ragp]{maab}} \code{\link[ragp]{predict_hyp}}
 #'
 #' @examples
 #' data(at_nsp)

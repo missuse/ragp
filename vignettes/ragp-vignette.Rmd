@@ -112,6 +112,7 @@ id_nsp <- vigfiles$id_nsp
 at_hmm <- vigfiles$at_hmm
 nsp_signalp <- vigfiles$nsp_signalp
 at_gpi <- vigfiles$at_gpi
+at_gpi_pred <- vigfiles$at_gpi_pred
 at_nsp2 <- dplyr::filter(at_nsp, Transcript.id %in% id_nsp)
 
 ```
@@ -230,7 +231,9 @@ The resulting data frame resembles the web server's output, or for those familia
 head(at_hmm[,-c(4, 5, 8, 9, 11:13)])
 ```
 
-HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor [@ellis_arabinogalactan-proteins:_2010]. Attachment of the GPI moiety to the carboxyl terminus (omega-site) of the polypeptide occurs after proteolytic cleavage of a C-terminal propeptide. In order to predict the presence of the omega sites in the filtered sequences the function `get_big_pi` can be utilized which queries the [big-PI Plant Predictor](http://mendel.imp.ac.at/gpi/plant_server.html) [@eisenhaber_glycosylphosphatidylinositol_2003]. 
+HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor [@ellis_arabinogalactan-proteins:_2010]. Attachment of the GPI moiety to the carboxyl terminus (omega-site) of the polypeptide occurs after proteolytic cleavage of a C-terminal propeptide. In order to predict the presence of the omega sites in the filtered sequences two functions are availible: `get_big_pi` which queries the [big-PI Plant Predictor](http://mendel.imp.ac.at/gpi/plant_server.html) [@eisenhaber_glycosylphosphatidylinositol_2003] server and `get_pred_gpi` which queries the [PredGPI](http://gpcr.biocomp.unibo.it/predgpi/) [@pierleoni_predgpi_2011] server. 
+
+To query [big-PI Plant Predictor](http://mendel.imp.ac.at/gpi/plant_server.html):  
 
 ```{r big_pi, eval = FALSE}
 at_gpi <- get_big_pi(at_nsp_3hyp,
@@ -243,6 +246,19 @@ This function provides detailed per sequence output when the argument `simplify`
 ```{r big_pi 2}
 head(at_gpi)
 ```
+
+similarly to query [PredGPI](http://gpcr.biocomp.unibo.it/predgpi/):  
+
+```{r pred_gpi, eval = FALSE}
+at_gpi_pred <- get_pred_gpi(at_nsp_3hyp,
+                            sequence,
+                            Transcript.id)
+```
+
+```{r pred_gpi 2}
+head(at_gpi_pred)
+```
+
 
 ##Arabinogalactan identification
 
@@ -371,7 +387,7 @@ maab_at %>%
   head 
 ```
 
-Since the function was not provided knowledge on the GPI presence, both possible classes are indicated as in: "1/4" or "2/9". GPI presence can be indicated with the argument `gpi` which accepts a Boolean vector of the same length as the sequences, like the `is.bigpi` column from the output of `get_big_pi` function:   
+Since the function was not provided knowledge on the GPI presence, both possible classes are indicated as in: "1/4" or "2/9". GPI presence can be indicated with the argument `gpi` which accepts a Boolean vector of the same length as the sequences, like the `is.bigpi`/`is.gpi` columns from the outputs of `get_big_pi`/`get_pred_gpi` functions:   
 
 ```{r maab 3}
 maab_at <- maab(at_nsp_3hyp,
@@ -385,13 +401,13 @@ maab_at %>%
   head 
 ```
 
-A faster way to remove ambiguities in classes if GPI presence is unknown is to set `get_gpi` argument to `TRUE`:
+A faster way to remove ambiguities in classes if GPI presence is unknown is to set `get_gpi` argument to `"bigpi"` or `"predgpi"`:
 
 ```{r maab 4, results ="hide", eval = FALSE}
 maab_at <- maab(at_nsp_3hyp,
                 sequence,
                 Transcript.id,
-                get_gpi = TRUE)
+                get_gpi = "bigpi")
 ```
 ```{r maab 5}
 maab_at %>%
@@ -400,7 +416,7 @@ maab_at %>%
   head 
 ```
 
-This will run `get_big_pi` only on the sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge.
+This will run `get_big_pi` or `get_pred_gpi` only on the sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge.
 
 ##Protein structure diagram
 
@@ -422,7 +438,7 @@ The diagram contains the following elements:
 
 * Transmembrane regions (TM) are shown in yellow, extracellular regions are indicated by the dashed line above the sequences while intracellular   regions are indicated by the dashed line bellow the sequence (as predicted by Phobius).
 * Signal peptides (as predicted by SignalP) are indicated by the thick red line on the N-terminal side. Signal peptides (as predicted by Phobius)   can be deduced by the start of the dashed lines.
-* GPI attachment sites (as predicted by Big Pi) are indicated by blue rhomboids.
+* GPI attachment sites (as predicted by Big Pi or PredGPI depending on the argument `gpi`) are indicated by blue rhomboids.
 * Hydroxyprolines (as predicted by `predict_hyp`) are indicated by vertical dark gray lines.
 * AG glycomodul spans are indicated by the light grey background.
 * Domains (as predicted by hmmscan) are indicated by rectangles with an appropriate fill as indicated in the legend.

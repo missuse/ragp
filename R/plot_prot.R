@@ -10,7 +10,7 @@
 #' @param ag_col Plotting color of the AG glycomodul spans. At default set to: '#E5E5E5FF'.
 #' @param tm_col Plotting color of the transmembrane regions. At default set to: '#EFC000FF'.
 #' @param hyp Bolean, should hydroxyprolines be plotted.
-#' @param gpi Bolean, should the omega site be plotted.
+#' @param gpi A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi") or \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi".
 #' @param nsp Bolean, should the N-terminal signal peptide be plotted.
 #' @param ag Bolean, should the AG glycomodul spans be plotted.
 #' @param tm Bolean, should the transmembrane regions be plotted. 
@@ -39,7 +39,7 @@ plot_prot <- function(sequence,
                       ag_col = "#E5E5E5FF",
                       tm_col = "#EFC000FF",
                       hyp = TRUE,
-                      gpi = TRUE,
+                      gpi = c("bigpi", "predgpi", "none"),
                       nsp = TRUE,
                       ag = TRUE,
                       tm = TRUE,
@@ -74,7 +74,7 @@ plot_prot <- function(sequence,
   if (!dom_sort %in% c("ievalue", "abc", "cba")) {
     stop("dom_sort should be one of: 'ievalue', 'abc', 'cba")
   }
-  
+
   areColors <- function(x) {
     sapply(x, function(X) {
       tryCatch(is.matrix(grDevices::col2rgb(X)), 
@@ -212,20 +212,18 @@ plot_prot <- function(sequence,
     warning("domain was set to NA, setting to default: domain = TRUE")
   }
   
-  if (missing(gpi)){
-    gpi <- TRUE
+  if(missing(gpi)){
+    gpi <- 'bigpi'
+  }
+  if(!gpi %in% c("bigpi", "predgpi", "none")){
+    gpi <- 'bigpi'
+    warning(paste("gpi should be one of",
+                  "'bigpi', 'predgpi', 'none',",
+                  "setting to default: gpi = 'bigpi'"))
   }
   if (length(gpi) > 1){
-    gpi <- TRUE
-    warning("gpi should be of length 1, setting to default: gpi = TRUE")
-  }
-  if (!is.logical(gpi)){
-    gpi <- as.logical(gpi)
-    warning("gpi is not logical, converting using 'as.logical'")
-  }
-  if (is.na(gpi)){
-    gpi <- TRUE
-    warning("gpi was set to NA, setting to default: gpi = TRUE")
+    gpi <- 'bigpi'
+    warning("gpi should be of length 1, setting to default: gpi = 'bigpi'")
   }
   args_signalp <- names(formals(ragp::get_signalp))[4:10]
   args_scanag <- names(formals(ragp::scan_ag))[4:7]
@@ -403,13 +401,29 @@ plot_prot <- function(sequence,
     phobius_seq <- NULL
   }
 
-  if (gpi) {
+  if (gpi == 'bigpi') {
     print("querying big pi")
     seq_gpi <- ragp::get_big_pi(dat,
                                 "sequence",
                                 "id")
     
     seq_gpi <- seq_gpi[seq_gpi$is.bigpi,]
+    
+    
+    if (nrow(seq_gpi) == 0) {
+      seq_gpi <- NULL
+    }
+  } else {
+    seq_gpi <- NULL
+  }
+  
+  if (gpi == 'predgpi') {
+    print("querying predGPI")
+    seq_gpi <- ragp::get_pred_gpi(dat,
+                                  "sequence",
+                                  "id")
+    
+    seq_gpi <- seq_gpi[seq_gpi$is.gpi,]
     
     
     if (nrow(seq_gpi) == 0) {

@@ -5,7 +5,7 @@
 \title{MAAB classification of Hydroxyproline‐rich Glycoproteins}
 \usage{
 maab(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"),
-  gpi = NULL, get_gpi = FALSE)
+  gpi = NULL, get_gpi = c("bigpi", "predgpi", "none"), spec = 0.99)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
@@ -18,7 +18,9 @@ maab(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"),
 
 \item{gpi}{A Boolean vector indicating if the corresponding id contains a GPI or not. Can be the 'is.bigpi' column from the output of get_big_pi.}
 
-\item{get_gpi}{A Boolean indicating if \code{\link[ragp]{get_big_pi}} will be called on sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge. At default set to FALSE.}
+\item{get_gpi}{A string indicating if \code{\link[ragp]{get_big_pi}} or \code{\link[ragp]{get_pred_gpi}} should be called on sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge. At default set to 'none'.}
+
+\item{spec}{Numeric in the 0-1 range, indicating the threshold specificity of \code{\link[ragp]{get_pred_gpi}}. Only valid if argument get_gpi = "predgpi".}
 }
 \value{
 A data frame with columns:

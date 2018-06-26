@@ -7,8 +7,8 @@
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param order Order of motif counting, the default is as in Johnson et al. (2017).
 #' @param gpi A Boolean vector indicating if the corresponding id contains a GPI or not. Can be the 'is.bigpi' column from the output of get_big_pi.
-#' @param get_gpi A Boolean indicating if \code{\link[ragp]{get_big_pi}} will be called on sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge. At default set to FALSE.
-#'    
+#' @param get_gpi A string indicating if \code{\link[ragp]{get_big_pi}} or \code{\link[ragp]{get_pred_gpi}} should be called on sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge. At default set to 'none'.
+#' @param spec Numeric in the 0-1 range, indicating the threshold specificity of \code{\link[ragp]{get_pred_gpi}}. Only valid if argument get_gpi = "predgpi".
 #' @return A data frame with columns:
 #' \enumerate{
 #' \item{id} {protein identifiers as from input}
@@ -46,7 +46,8 @@ maab <- function(data = NULL,
                  id,
                  order = c("ext", "tyr", "prp", "agp"),
                  gpi = NULL,
-                 get_gpi = FALSE){
+                 get_gpi = c("bigpi", "predgpi", "none"),
+                 spec = 0.99){
   if(missing(order)) order <- c("ext", "tyr", "prp", "agp")
   if(!is.character(order)){
     stop("order should be a character vector containing four elements:
@@ -60,17 +61,18 @@ maab <- function(data = NULL,
     stop("order should contain only elements:
          'ext', 'tyr', 'prp', 'agp'")
   }
+  if(missing(get_gpi)){
+    get_gpi <- 'none'
+  }
+  if(!get_gpi %in% c("bigpi", "predgpi", "none")){
+    get_gpi <- 'none'
+    warning(paste("get_gpi should be one of",
+                  "'bigpi', 'predgpi', 'none',",
+                  "setting to default: get_gpi = 'none'"))
+  }
   if (length(get_gpi) > 1){
-    get_gpi <- FALSE
-    warning("get_gpi should be of length 1, setting to default: get_gpi = FALSE")
-  }
-  if (!is.logical(get_gpi)){
-    get_gpi <- as.logical(get_gpi)
-    warning("get_gpi is not logical, converting using 'as.logical'")
-  }
-  if (is.na(get_gpi)){
-    get_gpi <- FALSE
-    warning("get_gpi was set to NA, setting to default: get_gpi = FALSE")
+    get_gpi <- 'none'
+    warning("get_gpi should be of length 1, setting to default: get_gpi = 'none'")
   }
   if(missing(data)){
     if (missing(sequence)){
@@ -330,7 +332,31 @@ maab <- function(data = NULL,
                     counts2,
                     maab_class = factor(maab_class),
                     stringsAsFactors = FALSE)
-  if(get_gpi){
+  if(get_gpi == "predgpi"){
+    if(!missing(gpi)){
+      warning("get_gpi will override the gpi argument with PredGPI predictions")
+    }
+    out_gpi <- out[out$maab_class != "0",]
+    seq_gpi <- sequence[out$maab_class != "0"]
+    id_gpi <- id[out$maab_class != "0"]
+    print("PredGPI")
+    gpi_predgpi <- ragp::get_pred_gpi(sequence = seq_gpi,
+                                      id = id_gpi,
+                                      spec = spec)
+    gpi_predgpi <- gpi_predgpi$is.gpi
+    out2 <- ragp::maab(sequence = seq_gpi,
+                       id = id_gpi,
+                       order = order,
+                       gpi = gpi_predgpi)
+    out3 <- out[!out$id %in% out2$id,]
+    out <- rbind(out3, out2)
+    out <- merge(data.frame(id = id, stringsAsFactors = FALSE),
+                 out,
+                 all.x = TRUE,
+                 sort = FALSE)
+    out$maab_class <- factor(out$maab_class)
+  }
+  if(get_gpi == "bigpi"){
     if(!missing(gpi)){
       warning("get_gpi will override the gpi argument with big Pi predictions")
     }
@@ -354,6 +380,6 @@ maab <- function(data = NULL,
                  all.x = TRUE,
                  sort = FALSE)
     out$maab_class <- factor(out$maab_class)
-    }
+  }
   return(out)
 }

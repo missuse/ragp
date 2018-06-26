@@ -1,11 +1,29 @@
 NEWS
 -----------------------------
+version 0.1.0.0003
+-----------------------------
+NEW FEATURES
 
+* Added `get_pred_gpi` function which queries PredGPI web server for 
+  predictions on GPI presence and omega site location.
+  
+BUG FIXES AND IMPROVEMENTS
+  
+* `maab` function argument `get_gpi` has been changed and now accepts strings
+  as input: `get_gpi = c("bigpi", "predgpi", "none")` which indicate whether
+  to query Big Pi or PredGPI server or not to resolve class ambiguities.
+   
+* `plot_prot` function argument `gpi` has been changed and now accepts strings
+  as input `gpi = c("bigpi", "predgpi", "none")` which indicate whether
+  to query Big Pi or PredGPI server or not to plot GPI positions.
+
+  
 version 0.1.0.0002
 -----------------------------
 BUG FIXES AND IMPROVEMENTS
 
 * Removed rvest dependency
+
 
 version 0.1.0.0001
 -----------------------------
@@ -24,8 +42,7 @@ BUG FIXES AND IMPROVEMENTS
 * get_hmm can now handle protein sequences of arbitrary length by splitting them
   into several shorter overlapping sequences and querying hmmscan. 
  
-
-
+ 
 version 0.1.0.0000
 -----------------------------
 

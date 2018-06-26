@@ -6,8 +6,9 @@
 \usage{
 plot_prot(sequence, id, hyp_col = "#868686FF", gpi_col = "#0073C2FF",
   nsp_col = "#CD534CFF", ag_col = "#E5E5E5FF", tm_col = "#EFC000FF",
-  hyp = TRUE, gpi = TRUE, nsp = TRUE, ag = TRUE, tm = TRUE,
-  domain = TRUE, dom_sort = c("ievalue", "abc", "cba"), ...)
+  hyp = TRUE, gpi = c("bigpi", "predgpi", "none"), nsp = TRUE,
+  ag = TRUE, tm = TRUE, domain = TRUE, dom_sort = c("ievalue", "abc",
+  "cba"), ...)
 }
 \arguments{
 \item{sequence}{String representing a protein amino acid sequence.}
@@ -26,7 +27,7 @@ plot_prot(sequence, id, hyp_col = "#868686FF", gpi_col = "#0073C2FF",
 
 \item{hyp}{Bolean, should hydroxyprolines be plotted.}
 
-\item{gpi}{Bolean, should the omega site be plotted.}
+\item{gpi}{A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi") or \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi".}
 
 \item{nsp}{Bolean, should the N-terminal signal peptide be plotted.}
 
