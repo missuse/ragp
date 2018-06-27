@@ -371,7 +371,7 @@ plot_prot <- function(sequence,
       out <- data.frame(out, id_out)
       out$out_start <- as.numeric(stringr::str_extract(out$out, 
                                                        "\\d+(?=o)"))
-      out$out_start <- ifelse(is.na(out$out_start), 0, 
+      out$out_start <- ifelse(is.na(out$out_start), 1, 
                               out$out_start)
       out$out_end <- as.numeric(stringr::str_extract(out$out, 
                                                      "(?<=o)\\d+"))
