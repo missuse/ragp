@@ -637,20 +637,19 @@ plot_prot <- function(sequence,
                           size = 4,
                           na.rm = TRUE) 
     } 
-  
-  p <- p +
+  if (any(subs)){
+    p <- p +
     ggplot2::scale_color_manual("feature",
                                 limits = lims,
                                 values = vals,
                                 labels = labs)
-  
-  p <- p + 
-    ggplot2::guides(color = ggplot2::guide_legend(keywidth = 1,
-                                                  keyheight = 1,
-                                                  override.aes = list(size = 5,
-                                                                      shape = 15,
-                                                                      linetype = 1)))
-  
+    p <- p + 
+      ggplot2::guides(color = ggplot2::guide_legend(keywidth = 1,
+                                                    keyheight = 1,
+                                                    override.aes = list(size = 5,
+                                                                        shape = 15,
+                                                                        linetype = 1)))
+  }
   
   return(p)
 }
