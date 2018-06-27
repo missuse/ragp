@@ -12,7 +12,7 @@ Authors@R: c(
   )
 Description: Identification of plant hydroxyproline rich glycoprotein sequences
     by performing sequence bias and motif search, prediction of
-    hydroxilated proline residues and scraping relevant data from
+    hydroxylated proline residues and scraping relevant data from
     web based prediction services.
 Depends: R (>= 3.3.0)
 License: file LICENSE
