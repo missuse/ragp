@@ -16,6 +16,12 @@ BUG FIXES AND IMPROVEMENTS
 * `plot_prot` function argument `gpi` has been changed and now accepts strings
   as input `gpi = c("bigpi", "predgpi", "none")` which indicate whether
   to query Big Pi or PredGPI server or not to plot GPI positions.
+  
+* fixed a bug in `plot_prot` which caused extracellular regions to start at 0
+  instead of 1.
+
+* fixed a bug in `get_big_pi` when shorter than 55 amino acid sequnces 
+  were provided.
 
   
 version 0.1.0.0002
