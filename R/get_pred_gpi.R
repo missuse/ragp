@@ -44,37 +44,45 @@ get_pred_gpi <- function(data = NULL,
                sep = "")
   if (!is.numeric(as.numeric(spec))){
     spec <- 0.99
-    warning("spec could not be converted to numeric, setting to default: spec = 0.99")
+    warning("spec could not be converted to numeric, setting to default: spec = 0.99",
+            call. = FALSE)
   }
   if (is.na(spec)){
     spec <- 0.99
-    warning("spec was set to NA, setting to default: spec = 0.99")
+    warning("spec was set to NA, setting to default: spec = 0.99",
+            call. = FALSE)
   }
   if(length(spec) > 1){
     spec <- spec[1]
-    warning("spec has more than one element, using spec[1]")
+    warning("spec has more than one element, using spec[1]",
+            call. = FALSE)
   }
   if (as.numeric(spec) > 1) {
     spec <- 0.99
     warning("spec must take values in the range 0 - 1,
-            it was set to the default: spec = 0.99")
+            it was set to the default: spec = 0.99",
+            call. = FALSE)
   }
   if (as.numeric(spec) < 0) {
     spec <- 0.99
     warning("spec must take values in the range 0 - 1,
-            it was set to the default: spec = 0.99")
+            it was set to the default: spec = 0.99",
+            call. = FALSE)
   }    
   if(missing(data)){
     if (missing(sequence)){
-      stop("protein sequence must be provided to obtain predictions")
+      stop("protein sequence must be provided to obtain predictions",
+           call. = FALSE)
     }
     if (missing(id)){
-      stop("protein id must be provided to obtain predictions")
+      stop("protein id must be provided to obtain predictions",
+           call. = FALSE)
     }
     id <- as.character(id)
     sequence <- toupper(as.character(sequence))
     if (length(sequence) != length(id)){
-      stop("id and sequence vectors are not of same length")
+      stop("id and sequence vectors are not of same length",
+           call. = FALSE)
     }
     sequence <- sub("\\*$", "", sequence)
     file_name <- tmr
@@ -92,29 +100,35 @@ get_pred_gpi <- function(data = NULL,
   }
   if(class(data) == "data.frame"){
     if(missing(sequence)){
-      stop("the column name with the sequences must be specified")
+      stop("the column name with the sequences must be specified",
+           call. = FALSE)
     }
     if(missing(id)){
-      stop("the column name with the sequence id's must be specified")
+      stop("the column name with the sequence id's must be specified",
+           call. = FALSE)
     }
     id <- as.character(substitute(id))
     sequence <- as.character(substitute(sequence))
     if (length(id) != 1L){
-      stop("only one column name for 'id' must be specifed")
+      stop("only one column name for 'id' must be specifed",
+           call. = FALSE)
     }
     if (length(sequence) != 1L){
-      stop("only one column name for 'sequence' must be specifed")
+      stop("only one column name for 'sequence' must be specifed",
+           call. = FALSE)
     }
     id <- if(id %in% colnames(data)){
       data[[id]]
     } else {
-      stop("specified 'id' not found in data")
+      stop("specified 'id' not found in data",
+           call. = FALSE)
     }
     id <- as.character(id)  
     sequence  <- if(sequence %in% colnames(data)){
       data[[sequence]]
     } else {
-      stop("specified 'sequence' not found in data")
+      stop("specified 'sequence' not found in data",
+           call. = FALSE)
     }
     sequence <- toupper(as.character(sequence))
     sequence <- sub("\\*$", "", sequence)
@@ -126,7 +140,8 @@ get_pred_gpi <- function(data = NULL,
     if (file.exists(data)){
       file_name <- data
     } else {
-      stop("cannot find file in the specified path")
+      stop("cannot find file in the specified path",
+           call. = FALSE)
     }
   }
   file_list = ragp::split_fasta(path_in = file_name,

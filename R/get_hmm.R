@@ -59,95 +59,115 @@ get_hmm <- function(data = NULL,
   }
   if (length(verbose) > 1){
     verbose <- TRUE
-    warning("verbose should be of length 1, setting to default: verbose = TRUE")
+    warning("verbose should be of length 1, setting to default: verbose = TRUE",
+            call. = FALSE)
   }
   if (!is.logical(verbose)){
     verbose <- as.logical(verbose)
-    warning("verbose is not logical, converting using 'as.logical'")
+    warning("verbose is not logical, converting using 'as.logical'",
+            call. = FALSE)
   }
   if (is.na(verbose)){
     verbose <- TRUE
-    warning("verbose was set to NA, setting to default: verbose = TRUE")
+    warning("verbose was set to NA, setting to default: verbose = TRUE",
+            call. = FALSE)
   }
   if (missing(progress)) {
     progress <- TRUE
   }
   if (length(progress) > 1){
     progress <- TRUE
-    warning("progress should be of length 1, setting to default: progress = TRUE")
+    warning("progress should be of length 1, setting to default: progress = TRUE",
+            call. = FALSE)
   }
   if (!is.logical(progress)){
     progress <- as.logical(progress)
-    warning("progress is not logical, converting using 'as.logical'")
+    warning("progress is not logical, converting using 'as.logical'",
+            call. = FALSE)
   }
   if (is.na(progress)){
     progress <- TRUE
-    warning("progress was set to NA, setting to default: progress = TRUE")
+    warning("progress was set to NA, setting to default: progress = TRUE",
+            call. = FALSE)
   }
   if (missing(sleep)) {
     sleep <- 1
   }
   if (length(sleep) > 1){
     sleep <- 1
-    warning("sleep should be of length 1, setting to default: sleep = 1")
+    warning("sleep should be of length 1, setting to default: sleep = 1",
+            call. = FALSE)
   }
   if (!is.numeric(sleep)){
     sleep <- as.numeric(sleep)
-    warning("sleep is not numeric, converting using 'as.numeric'")
+    warning("sleep is not numeric, converting using 'as.numeric'",
+            call. = FALSE)
   }
   if (is.na(sleep)){
     sleep <- 1
-    warning("sleep was set to NA, setting to default: sleep = 1")
+    warning("sleep was set to NA, setting to default: sleep = 1",
+            call. = FALSE)
   }
   if (length(attempts) > 1){
     attempts <- 2L
-    warning("attempts should be of length 1, setting to default: attempts = 2")
+    warning("attempts should be of length 1, setting to default: attempts = 2",
+            call. = FALSE)
   }
   if (!is.numeric(attempts)){
     attempts<- as.numeric(attempts)
-    warning("attempts is not numeric, converting using 'as.numeric'")
+    warning("attempts is not numeric, converting using 'as.numeric'",
+            call. = FALSE)
   }
   if (is.na(attempts)){
     attempts <- 2L
-    warning("attempts was set to NA, setting to default: attempts = 2")
+    warning("attempts was set to NA, setting to default: attempts = 2",
+            call. = FALSE)
   }
   if (is.numeric(attempts)) {
     attempts <- floor(attempts)
   }
   if (attempts < 1) {
     attempts <- 2L
-    warning("attempts was set to less then 1, setting to default: attempts = 2")
+    warning("attempts was set to less then 1, setting to default: attempts = 2",
+            call. = FALSE)
   }
   if (missing(timeout)) {
     timeout <- 10
   }
   if (length(timeout) > 1){
     timeout <- 10
-    warning("timeout should be of length 1, setting to default: timeout = 10")
+    warning("timeout should be of length 1, setting to default: timeout = 10",
+            call. = FALSE)
   }
   if (!is.numeric(timeout)){
     timeout <- as.numeric(timeout)
-    warning("timeout is not numeric, converting using 'as.numeric'")
+    warning("timeout is not numeric, converting using 'as.numeric'",
+            call. = FALSE)
   }
   if (is.na(timeout)){
     timeout <- 10
-    warning("timeout was set to NA, setting to default: timeout = 10")
+    warning("timeout was set to NA, setting to default: timeout = 10",
+            call. = FALSE)
   }
   if (timeout < 2){
     timeout <- 10
-    warning("timeout was set to less then 2, setting to default: timeout = 10")
+    warning("timeout was set to less then 2, setting to default: timeout = 10",
+            call. = FALSE)
   }
   if(missing(data)){
     if (missing(sequence)){
-      stop("protein sequence must be provided to obtain predictions")
+      stop("protein sequence must be provided to obtain predictions",
+           call. = FALSE)
     }
     if (missing(id)){
-      stop("protein id must be provided to obtain predictions")
+      stop("protein id must be provided to obtain predictions",
+           call. = FALSE)
     }
     id <- as.character(id)
     sequence <- toupper(as.character(sequence))
     if (length(sequence) != length(id)){
-      stop("id and sequence vectors are not of same length")
+      stop("id and sequence vectors are not of same length",
+           call. = FALSE)
     }
   }
   if(class(data[[1]]) ==  "SeqFastaAA"){
@@ -157,29 +177,35 @@ get_hmm <- function(data = NULL,
   }
   if(class(data) == "data.frame"){
     if(missing(sequence)){
-      stop("the column name with the sequences must be specified")
+      stop("the column name with the sequences must be specified",
+           call. = FALSE)
     }
     if(missing(id)){
-      stop("the column name with the sequence id's must be specified")
+      stop("the column name with the sequence id's must be specified",
+           call. = FALSE)
     }
     id <- as.character(substitute(id))
     sequence <- as.character(substitute(sequence))
     if (length(id) != 1L){
-      stop("only one column name for 'id' must be specifed")
+      stop("only one column name for 'id' must be specifed",
+           call. = FALSE)
     }
     if (length(sequence) != 1L){
-      stop("only one column name for 'sequence' must be specifed")
+      stop("only one column name for 'sequence' must be specifed",
+           call. = FALSE)
     }
     id <- if(id %in% colnames(data)){
       data[[id]]
     } else {
-      stop("specified 'id' not found in data")
+      stop("specified 'id' not found in data",
+           call. = FALSE)
     }
     id <- as.character(id)  
     sequence  <- if(sequence %in% colnames(data)){
       data[[sequence]]
     } else {
-      stop("specified 'sequence' not found in data")
+      stop("specified 'sequence' not found in data",
+           call. = FALSE)
     }
     sequence <- toupper(as.character(sequence))
   }
@@ -192,7 +218,8 @@ get_hmm <- function(data = NULL,
       id <- names(dat)
       sequence <- toupper(as.character(unlist(dat)))
     } else {
-      stop("cannot find file in the specified path")
+      stop("cannot find file in the specified path",
+           call. = FALSE)
     }
   }
   sequence <- sub("\\*$", "", sequence)
@@ -274,7 +301,8 @@ get_hmm <- function(data = NULL,
       }
       if (i == 1) {
         if (attempt > attempts) {
-          stop("server was unresponsive, consdier increasing timeout and attempts arguments")
+          stop("server was unresponsive, consdier increasing timeout and attempts arguments",
+               call. = FALSE)
         }
       }
       else {
@@ -296,7 +324,8 @@ get_hmm <- function(data = NULL,
           pfam$bitscore <- as.numeric(as.character(pfam$bitscore))
           pfam$reported <- as.logical(as.integer(pfam$reported))
           warning(paste("maximum attempts reached at", 
-                        id[i], "returning finished queries"))
+                        id[i], "returning finished queries"),
+                  call. = FALSE)
           return(pfam)
         }
       }

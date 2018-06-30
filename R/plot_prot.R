@@ -15,12 +15,13 @@
 #' @param ag Bolean, should the AG glycomodul spans be plotted.
 #' @param tm Bolean, should the transmembrane regions be plotted. 
 #' @param domain Bolean, should the domains be plotted. 
+#' @param disorder Bolean, should disordered regions be plotted. 
 #' @param dom_sort One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.
-#' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{predict_hyp}} and \code{\link[ragp]{scan_ag}}.
+#' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}} and \code{\link[ragp]{scan_ag}}.
 #'
 #' @return A ggplot2 plot object
 #'
-#' @seealso \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
+#' @seealso \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{get_espritz}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
 #'
 #' @examples
 #' library(ragp)
@@ -44,20 +45,24 @@ plot_prot <- function(sequence,
                       ag = TRUE,
                       tm = TRUE,
                       domain = TRUE,
+                      disorder = FALSE,
                       dom_sort = c("ievalue", "abc", "cba"),
                       ...) {
   
   if (missing(sequence)){
-    stop("protein sequence must be provided to obtain predictions")
+    stop("protein sequence must be provided to obtain predictions",
+         call. = FALSE)
   }
   if (missing(id)){
-    stop("protein id must be provided to obtain predictions")
+    stop("protein id must be provided to obtain predictions",
+         call. = FALSE)
   }
   id <- as.character(id)
   id <- make.names(id)
   sequence <- toupper(as.character(sequence))
   if (length(sequence) != length(id)){
-    stop("id and sequence vectors are not of same length")
+    stop("id and sequence vectors are not of same length",
+         call. = FALSE)
   }
   sequence <- sub("\\*$", "", sequence)
   aa_regex <- "[^ARNDCQEGHILKMFPSTWYVarndcqeghilkmfpstwyv]"
@@ -72,9 +77,10 @@ plot_prot <- function(sequence,
     dom_sort <- "abc"
   }
   if (!dom_sort %in% c("ievalue", "abc", "cba")) {
-    stop("dom_sort should be one of: 'ievalue', 'abc', 'cba")
+    stop("dom_sort should be one of: 'ievalue', 'abc', 'cba",
+         call. = FALSE)
   }
-
+  
   areColors <- function(x) {
     sapply(x, function(X) {
       tryCatch(is.matrix(grDevices::col2rgb(X)), 
@@ -84,52 +90,62 @@ plot_prot <- function(sequence,
   
   if (length(hyp_col) > 1){
     hyp_col <- "#868686FF"
-    warning("One color should be provided for hyp_col. Using default: '#868686FF'")
+    warning("One color should be provided for hyp_col. Using default: '#868686FF'",
+            call. = FALSE)
   }
   
   if (!areColors(hyp_col)){
     hyp_col <- "#868686FF"
-    warning("hyp_col provided is not a valid color, default will be used: '#868686FF'")
+    warning("hyp_col provided is not a valid color, default will be used: '#868686FF'",
+            call. = FALSE)
   }
   
   if (length(gpi_col) > 1){
     gpi_col <- "#0073C2FF"
-    warning("One color should be provided for gpi_col. Using default: '#0073C2FF'")
+    warning("One color should be provided for gpi_col. Using default: '#0073C2FF'",
+            call. = FALSE)
   }
   
   if (!areColors(gpi_col)){
     gpi_col <- "#0073C2FF"
-    warning("gpi_col provided is not a valid color, default will be used: '#0073C2FF'")
+    warning("gpi_col provided is not a valid color, default will be used: '#0073C2FF'",
+            call. = FALSE)
   }
   
   if (length(nsp_col) > 1){
     nsp_col <- "#CD534CFF"
-    warning("One color should be provided for nsp_col. Using default: '#CD534CFF'")
+    warning("One color should be provided for nsp_col. Using default: '#CD534CFF'",
+            call. = FALSE)
   }
   
   if (!areColors(nsp_col)){
     nsp_col <- "#CD534CFF"
-    warning("nsp_col provided is not a valid color, default will be used: '#CD534CFF'")
+    warning("nsp_col provided is not a valid color, default will be used: '#CD534CFF'",
+            call. = FALSE)
   }
   
   if (length(ag_col) > 1){
     ag_col <- "#E5E5E5FF"
-    warning("One color should be provided for ag_col. Using default: '#E5E5E5FF'")
+    warning("One color should be provided for ag_col. Using default: '#E5E5E5FF'",
+            call. = FALSE)
   }
   
   if (!areColors(ag_col)){
     ag_col <- "#E5E5E5FF"
-    warning("ag_col provided is not a valid color, default will be used: '#E5E5E5FF'")
+    warning("ag_col provided is not a valid color, default will be used: '#E5E5E5FF'",
+            call. = FALSE)
   }
   
   if (length(tm_col) > 1){
     tm_col <- "#EFC000FF"
-    warning("One color should be provided for tm_col. Using default: '#EFC000FF'")
+    warning("One color should be provided for tm_col. Using default: '#EFC000FF'",
+            call. = FALSE)
   }
   
   if (!areColors(tm_col)){
     tm_col <- "#EFC000FF"
-    warning("tm_col provided is not a valid color, default will be used: '#EFC000FF'")
+    warning("tm_col provided is not a valid color, default will be used: '#EFC000FF'",
+            call. = FALSE)
   }
   
   if (missing(tm)){
@@ -137,15 +153,36 @@ plot_prot <- function(sequence,
   }
   if (length(tm) > 1){
     tm <- TRUE
-    warning("tm should be of length 1, setting to default: tm = TRUE")
+    warning("tm should be of length 1, setting to default: tm = TRUE",
+            call. = FALSE)
   }
   if (!is.logical(tm)){
     tm <- as.logical(tm)
-    warning("tm is not logical, converting using 'as.logical'")
+    warning("tm is not logical, converting using 'as.logical'",
+            call. = FALSE)
   }
   if (is.na(tm)){
     tm <- TRUE
-    warning("tm was set to NA, setting to default: tm = TRUE")
+    warning("tm was set to NA, setting to default: tm = TRUE",
+            call. = FALSE)
+  }
+  if (missing(disorder)){
+    disorder <- FALSE
+  }
+  if (length(disorder) > 1){
+    disorder <- FALSE
+    warning("disorder should be of length 1, setting to default: disorder = FALSE",
+            call. = FALSE)
+  }
+  if (!is.logical(disorder)){
+    disorder <- as.logical(disorder)
+    warning("disorder is not logical, converting using 'as.logical'",
+            call. = FALSE)
+  }
+  if (is.na(disorder)){
+    disorder <- FALSE
+    warning("disorder was set to NA, setting to default: disorder = FALSE",
+            call. = FALSE)
   }
   
   if (missing(nsp)){
@@ -153,15 +190,18 @@ plot_prot <- function(sequence,
   }
   if (length(nsp) > 1){
     nsp <- TRUE
-    warning("nsp should be of length 1, setting to default: nsp = TRUE")
+    warning("nsp should be of length 1, setting to default: nsp = TRUE",
+            call. = FALSE)
   }
   if (!is.logical(nsp)){
     nsp <- as.logical(nsp)
-    warning("nsp is not logical, converting using 'as.logical'")
+    warning("nsp is not logical, converting using 'as.logical'",
+            call. = FALSE)
   }
   if (is.na(nsp)){
     nsp <- TRUE
-    warning("nsp was set to NA, setting to default: nsp = TRUE")
+    warning("nsp was set to NA, setting to default: nsp = TRUE",
+            call. = FALSE)
   }
   
   if (missing(ag)){
@@ -169,15 +209,18 @@ plot_prot <- function(sequence,
   }
   if (length(ag) > 1){
     ag <- TRUE
-    warning("ag should be of length 1, setting to default: ag = TRUE")
+    warning("ag should be of length 1, setting to default: ag = TRUE",
+            call. = FALSE)
   }
   if (!is.logical(ag)){
     ag <- as.logical(ag)
-    warning("ag is not logical, converting using 'as.logical'")
+    warning("ag is not logical, converting using 'as.logical'",
+            call. = FALSE)
   }
   if (is.na(ag)){
     ag <- TRUE
-    warning("ag was set to NA, setting to default: ag = TRUE")
+    warning("ag was set to NA, setting to default: ag = TRUE",
+            call. = FALSE)
   }
   
   if (missing(hyp)){
@@ -185,15 +228,18 @@ plot_prot <- function(sequence,
   }
   if (length(hyp) > 1){
     hyp <- TRUE
-    warning("hyp should be of length 1, setting to default: hyp = TRUE")
+    warning("hyp should be of length 1, setting to default: hyp = TRUE",
+            call. = FALSE)
   }
   if (!is.logical(hyp)){
     hyp <- as.logical(hyp)
-    warning("hyp is not logical, converting using 'as.logical'")
+    warning("hyp is not logical, converting using 'as.logical'",
+            call. = FALSE)
   }
   if (is.na(hyp)){
     hyp <- TRUE
-    warning("hyp was set to NA, setting to default: hyp = TRUE")
+    warning("hyp was set to NA, setting to default: hyp = TRUE",
+            call. = FALSE)
   }
   
   if (missing(domain)){
@@ -201,15 +247,18 @@ plot_prot <- function(sequence,
   }
   if (length(domain) > 1){
     domain <- TRUE
-    warning("domain should be of length 1, setting to default: domain = TRUE")
+    warning("domain should be of length 1, setting to default: domain = TRUE",
+            call. = FALSE)
   }
   if (!is.logical(domain)){
     domain <- as.logical(domain)
-    warning("domain is not logical, converting using 'as.logical'")
+    warning("domain is not logical, converting using 'as.logical'",
+            call. = FALSE)
   }
   if (is.na(domain)){
     domain <- TRUE
-    warning("domain was set to NA, setting to default: domain = TRUE")
+    warning("domain was set to NA, setting to default: domain = TRUE",
+            call. = FALSE)
   }
   
   if(missing(gpi)){
@@ -219,14 +268,17 @@ plot_prot <- function(sequence,
     gpi <- 'bigpi'
     warning(paste("gpi should be one of",
                   "'bigpi', 'predgpi', 'none',",
-                  "setting to default: gpi = 'bigpi'"))
+                  "setting to default: gpi = 'bigpi'"),
+            call. = FALSE)
   }
   if (length(gpi) > 1){
     gpi <- 'bigpi'
-    warning("gpi should be of length 1, setting to default: gpi = 'bigpi'")
+    warning("gpi should be of length 1, setting to default: gpi = 'bigpi'",
+            call. = FALSE)
   }
   args_signalp <- names(formals(ragp::get_signalp))[4:10]
   args_scanag <- names(formals(ragp::scan_ag))[4:7]
+  args_espritz <- names(formals(get_espritz))[4:5]
   dots <- list(...)
   
   dat <- data.frame(sequence = sequence,
@@ -286,7 +338,7 @@ plot_prot <- function(sequence,
   } else {
     seq_hmm <- NULL
   }
-
+  
   if (nsp) {
     print("querying signalp")
     seq_signalp <- do.call(ragp::get_signalp,
@@ -330,12 +382,12 @@ plot_prot <- function(sequence,
         function(x){
           if (length(x) == 2) {
             x[2]
-            } else {
-              x[1]
-            }
+          } else {
+            x[1]
           }
-        )
+        }
       )
+    )
     
     phobius_seq <- data.frame(id = phobius_seq$id, 
                               id_num = phobius_seq$id_num,
@@ -371,7 +423,7 @@ plot_prot <- function(sequence,
       out <- data.frame(out, id_out)
       out$out_start <- as.numeric(stringr::str_extract(out$out, 
                                                        "\\d+(?=o)"))
-      out$out_start <- ifelse(is.na(out$out_start), 0, 
+      out$out_start <- ifelse(is.na(out$out_start), 1, 
                               out$out_start)
       out$out_end <- as.numeric(stringr::str_extract(out$out, 
                                                      "(?<=o)\\d+"))
@@ -400,7 +452,8 @@ plot_prot <- function(sequence,
   } else {
     phobius_seq <- NULL
   }
-
+  
+  seq_gpi <- NULL
   if (gpi == 'bigpi') {
     print("querying big pi")
     seq_gpi <- ragp::get_big_pi(dat,
@@ -413,10 +466,8 @@ plot_prot <- function(sequence,
     if (nrow(seq_gpi) == 0) {
       seq_gpi <- NULL
     }
-  } else {
-    seq_gpi <- NULL
   }
-  
+
   if (gpi == 'predgpi') {
     print("querying predGPI")
     seq_gpi <- ragp::get_pred_gpi(dat,
@@ -429,11 +480,8 @@ plot_prot <- function(sequence,
     if (nrow(seq_gpi) == 0) {
       seq_gpi <- NULL
     }
-  } else {
-    seq_gpi <- NULL
   }
-  
-  
+
   if (hyp) {
     seq_hyp <- do.call(ragp::predict_hyp,
                        c(list(data = dat,
@@ -452,7 +500,7 @@ plot_prot <- function(sequence,
   } else {
     seq_hyp <- NULL
   }
-    
+  
   if (ag) {
     seq_scan <- do.call(ragp::scan_ag,
                         c(list(data = dat,
@@ -471,7 +519,74 @@ plot_prot <- function(sequence,
   } else {
     seq_scan <- NULL
   }
-  
+
+  seq_espritz <- NULL
+  if (disorder) {
+    print("querying espritz")
+    seq_espritz <- do.call(get_espritz,
+                           c(list(data = dat,
+                                  sequence = "sequence",
+                                  id = "id",
+                                  simplify = FALSE),
+                             dots[names(dots) %in% args_espritz]))
+    
+    seq_espritz$id <- factor(seq_espritz$id,
+                             levels = unique(dat$id))
+    
+    seq_espritz$id_num <- as.numeric(seq_espritz$id)
+    
+    rle_predD <- lapply(
+      strsplit(
+        as.character(
+          seq_espritz$prediction),
+        ""), function(x){
+          rle_x <- rle(x)
+          rle_x <- rep(seq_along(rle_x$values),
+                       times = rle_x$lengths)
+          groupD <- rle_x[x == "D"]
+          residueD <- (1:length(x))[x == "D"]
+          dfD <- data.frame(group = groupD,
+                            residue = residueD)
+          dfD
+        })
+    id_predD <- rep(seq_espritz$id_num,
+                    unlist(lapply(rle_predD, nrow)))
+    
+    
+    rle_predD <- as.data.frame(do.call(rbind,
+                                       rle_predD))
+    
+    rle_predD <- data.frame(rle_predD,
+                            id_num = id_predD)
+    
+    rle_predO <- stringr::str_locate_all(seq_espritz$prediction,
+                                         "(?<=^|D)O+")
+    rle_predO <- lapply(rle_predO, function(x){
+      if(nrow(x) == 0){
+        cbind(start = NA, end = NA)
+      } else {
+        x
+      }
+    })
+    
+    id_predO <- rep(seq_espritz$id_num,
+                    unlist(lapply(rle_predO, nrow)))
+    rle_predO <- as.data.frame(do.call(rbind,
+                                       rle_predO))
+    rle_predO$id_num <- id_predO
+    plot_segments <- rle_predO
+    seq_espritz <- rle_predD
+    if (nrow(seq_espritz) != 0){
+      seq_espritz$y <- rep(c(0, -0.1, 0, 0.1),
+                           length.out = nrow(seq_espritz))
+      seq_espritz$y_plot <- seq_espritz$y + seq_espritz$id_num
+      seq_espritz$inter <- interaction(seq_espritz$group,
+                                       seq_espritz$id_num)
+    } else {
+      seq_espritz <- NULL
+    }
+  }
+ 
   if (!is.null(seq_gpi)){
     for_plot <- merge(x = dat,
                       y = seq_gpi,
@@ -482,7 +597,7 @@ plot_prot <- function(sequence,
   } else {
     for_plot <- dat
   }
-  
+
   if (!is.null(seq_signalp)){
     for_plot <- merge(for_plot,
                       seq_signalp,
@@ -539,11 +654,21 @@ plot_prot <- function(sequence,
   rat <- round(rat/100, 0)*100
   rat <- rat/20
   
-  p <- ggplot2::ggplot(for_plot)+
+  if(!is.null(seq_espritz)){
+  p <- ggplot2::ggplot(plot_segments)+
+    ggplot2::geom_segment(ggplot2::aes_(y = ~id_num,
+                                        yend = ~id_num,
+                                        x = ~start,
+                                        xend = ~end))
+  } else {
+  p <-ggplot2::ggplot(for_plot)+
     ggplot2::geom_segment(ggplot2::aes_(y = ~id_num,
                                         yend = ~id_num,
                                         x = 1,
-                                        xend = ~nchar)) +
+                                        xend = ~nchar))
+  }
+  
+  p <- p  +
     ggplot2::xlab("residue") +
     ggplot2::ylab("id") +
     ggplot2::scale_y_continuous(breaks = seq_along(id),
@@ -557,6 +682,7 @@ plot_prot <- function(sequence,
     ggplot2::coord_equal(ratio = rat,
                          expand = FALSE)
   
+
   if(!is.null(phobius_seq)){
     p <-  p +
       ggplot2::geom_rect(data = tm,
@@ -597,18 +723,20 @@ plot_prot <- function(sequence,
   
   if(!is.null(seq_signalp)) {
     p <- p +
-      ggplot2::geom_segment(ggplot2::aes_(y = ~id_num,
+      ggplot2::geom_segment(data = for_plot,
+                            ggplot2::aes_(y = ~id_num,
                                           yend = ~id_num,
                                           x = 1,
                                           xend = ~Ymax.pos,
                                           color = "N-sp"),
                             size = 2,
                             na.rm = TRUE)
-    } 
+  } 
   
   if(!is.null(seq_scan)) {
     p <- p +
-      ggplot2::geom_rect(ggplot2::aes_(ymin = ~id_num - 0.18,
+      ggplot2::geom_rect(data = for_plot,
+                         ggplot2::aes_(ymin = ~id_num - 0.18,
                                        ymax = ~id_num + 0.18,
                                        xmin = ~location.start,
                                        xmax = ~location.end,
@@ -619,7 +747,8 @@ plot_prot <- function(sequence,
   
   if(!is.null(seq_hyp)) {
     p <- p +
-      ggplot2::geom_errorbar(ggplot2::aes_(ymin = ~id_num - 0.18,
+      ggplot2::geom_errorbar(data = for_plot,
+                             ggplot2::aes_(ymin = ~id_num - 0.18,
                                            ymax = ~id_num + 0.18,
                                            x  = ~P_pos,
                                            color = "hyp"),
@@ -628,32 +757,40 @@ plot_prot <- function(sequence,
                              na.rm = TRUE)
   }
   
+
+  if(!is.null(seq_espritz)){
+    p <- p +  ggplot2::geom_path(data = seq_espritz,
+                                 ggplot2::aes_(x = ~residue,
+                                               y = ~y_plot,
+                                               group = ~inter),
+                                 size = 0.7,
+                                 color = "grey25") 
+  }
+
   if(!is.null(seq_gpi)) {
     p <- p +
-      ggplot2::geom_point(ggplot2::aes_(y = ~id_num,
+      ggplot2::geom_point(data = for_plot,
+                          ggplot2::aes_(y = ~id_num,
                                         x = ~omega_site,
                                         color = "omega site (gpi)"),
                           shape = 18,
                           size = 4,
                           na.rm = TRUE) 
-    } 
-  
-  p <- p +
-    ggplot2::scale_color_manual("feature",
-                                limits = lims,
-                                values = vals,
-                                labels = labs)
-  
-  p <- p + 
-    ggplot2::guides(color = ggplot2::guide_legend(keywidth = 1,
-                                                  keyheight = 1,
-                                                  override.aes = list(size = 5,
-                                                                      shape = 15,
-                                                                      linetype = 1)))
-  
+  } 
+ 
+  if (any(subs)){
+    p <- p +
+      ggplot2::scale_color_manual("feature",
+                                  limits = lims,
+                                  values = vals,
+                                  labels = labs)
+    p <- p + 
+      ggplot2::guides(color = ggplot2::guide_legend(keywidth = 1,
+                                                    keyheight = 1,
+                                                    override.aes = list(size = 5,
+                                                                        shape = 15,
+                                                                        linetype = 1)))
+  }
   
   return(p)
 }
-
-
-

@@ -33,11 +33,11 @@ options(width = 120)
 
 Hydroxyproline rich glycoproteins (HRGPs) are one of the most complex families of macromolecules found in plants, due to the diversity of glycans decorating the protein backbone, as well as the heterogeneity of the protein backbones. While this diversity is responsible for the wide array of physiological functions associated with HRGPs, it hinders attempts for homology based identification. Current approaches, based on identifying sequences with characteristic motifs and biased amino acid composition, are limited to prototypical sequences.  
 
-`ragp` is an R package for mining and analyses of HRGPs, with emphasis on arabinogalactan protein sequences (AGPs). The `ragp` filtering pipeline exploits one of the HRGPs key features, the presence of hydroxyprolines which represent glycosylation sites. Main package features include prediction of proline hydroxylation sites, amino acid motif and bias analyses, efficient communication with web servers for prediction of N-terminal signal peptides and glycosylphosphatidylinositol modification sites, and the ability to annotate sequences through hmmscan and subsequent GO enrichment, based on predicted pfam domains.
+`ragp` is an R package for mining and analyses of HRGPs, with emphasis on arabinogalactan protein sequences (AGPs). The `ragp` filtering pipeline exploits one of the HRGPs key features, the presence of hydroxyprolines which represent glycosylation sites. Main package features include prediction of proline hydroxylation sites, amino acid motif and bias analyses, efficient communication with web servers for prediction of N-terminal signal peptides, glycosylphosphatidylinositol modification sites and protein disorder, as well as the ability to annotate sequences through hmmscan and subsequent GO enrichment, based on predicted pfam domains.
 
 The workflow in `ragp` is illustrated with the following diagram (`ragp` functions to be used for each of the tasks are boxed grey):  
 
-```{r echo = FALSE, out.width = "70%", fig.align = "center"}
+```{r echo = FALSE, out.width = "60%", fig.align = "center"}
 knitr::include_graphics("ragp_flow_chart.svg")
 ```   
 
@@ -45,6 +45,7 @@ knitr::include_graphics("ragp_flow_chart.svg")
 * predict proline hydroxylation and filter sequences containing at least several potential hydroxyprolines (three or more is used in this vignette).
 * optionally predict the presence of potential glycosylphosphatidylinositol attachment sites.  
 * optionally annotate domains using [Pfam](https://pfam.xfam.org/).  
+* optionally predict disordered regions in proteins.
 * find localized clusters of AG glycomodules to identify potential AGPs.  
 * perform motif and amino acid bias (MAAB, Johnson *et al*., 2017) classification scheme.  
 
@@ -231,7 +232,7 @@ The resulting data frame resembles the web server's output, or for those familia
 head(at_hmm[,-c(4, 5, 8, 9, 11:13)])
 ```
 
-HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor [@ellis_arabinogalactan-proteins:_2010]. Attachment of the GPI moiety to the carboxyl terminus (omega-site) of the polypeptide occurs after proteolytic cleavage of a C-terminal propeptide. In order to predict the presence of the omega sites in the filtered sequences two functions are availible: `get_big_pi` which queries the [big-PI Plant Predictor](http://mendel.imp.ac.at/gpi/plant_server.html) [@eisenhaber_glycosylphosphatidylinositol_2003] server and `get_pred_gpi` which queries the [PredGPI](http://gpcr.biocomp.unibo.it/predgpi/) [@pierleoni_predgpi_2011] server. 
+HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor [@ellis_arabinogalactan-proteins:_2010]. Attachment of the GPI moiety to the carboxyl terminus (omega-site) of the polypeptide occurs after proteolytic cleavage of a C-terminal propeptide. In order to predict the presence of the omega sites in the filtered sequences two functions are availible: `get_big_pi` which queries the [big-PI Plant Predictor](http://mendel.imp.ac.at/gpi/plant_server.html) [@eisenhaber_glycosylphosphatidylinositol_2003] server and `get_pred_gpi` which queries the [PredGPI](http://gpcr.biocomp.unibo.it/predgpi/) [@pierleoni_predgpi_2008] server. 
 
 To query [big-PI Plant Predictor](http://mendel.imp.ac.at/gpi/plant_server.html):  
 
@@ -243,7 +244,7 @@ at_gpi <- get_big_pi(at_nsp_3hyp,
 
 This function provides detailed per sequence output when the argument `simplify` is set to `FALSE`, by default `simplify` is set to `TRUE` and the resulting data frame has one row per sequence:  
 
-```{r big_pi 2}
+```{r big_pi2}
 head(at_gpi)
 ```
 
@@ -255,10 +256,27 @@ at_gpi_pred <- get_pred_gpi(at_nsp_3hyp,
                             Transcript.id)
 ```
 
-```{r pred_gpi 2}
+```{r pred_gpi2}
 head(at_gpi_pred)
 ```
 
+##Disorder prediction
+
+A key structural feature of HRGPs, based on abundance of disorder-promoting residues, is that they are intrinsically disordered proteins. To identify potential disordered regions in proteins `ragp` contains `get_espritz` function which queries [ESpritz](http://protein.bio.unipd.it/espritz/) [@walsh_espritz_2012] web server. Three models trained on different data sets are available and can be selected via the argument `model`:  
+
+* 'X-Ray' - based on missing atoms from the [Protein Data Bank](http://www.wwpdb.org/) (PDB) X-ray solved structures. If this option is chosen then the predictors with short disorder options are executed.   
+* 'Disprot' - contains longer disorder segments compared to x-ray. In particular, [disprot](http://www.disprot.org/) is a manually curetted database which is often based on functional attributes of the disordered region was used for this definition. Disorder residues are defined if the disprot curators consider the residue to be disordered at least once. All other residues are considered ordered. If this option is chosen then the predictors with long disorder options are executed.   
+* 'NMR' - based on NMR mobility. NMR flexibility is calculated using the [Mobi server](http://protein.bio.unipd.it/mobi/)  [@martin_mobi_2010] optimized to replicate the ordered-disordered NMR definition used in CASP8.   
+These models provide quite different predictions. To query ESpritz:   
+
+```{r espritz, eval = FALSE}
+at_espritz <- get_espritz(at_nsp_3hyp,
+                          sequence,
+                          Transcript.id,
+                          model = "NMR")
+```
+
+The output of the function depends on the `simplify` argument. If `simplify = TRUE` (default) the output is a `data.frame` (one row per disordered region) with columns `start` and `end` which indicate the start and end of the predicted disordered region as well as the column `id` which is a protein identifier. When `simplify = FALSE` the output contains predicted probabilities of disorder for each amino acid.
 
 ##Arabinogalactan identification
 
@@ -500,15 +518,28 @@ p1 +
 knitr::include_graphics("p1_fill_color.svg")
 ```   
 
+display disordered regions as perdicted by ESpritz and choose predGPI to predict GPI positions:  
+
+```{r plot_prot_disorder, eval = FALSE}
+p2 <- plot_prot(at_nsp$sequence[ind],
+                at_nsp$Transcript.id[ind],
+                gpi = "predgpi",
+                disorder = TRUE)
+p2
+```
+```{r echo = FALSE, out.width = "100%", fig.align = "center"}
+knitr::include_graphics("p2_dis.svg")
+```   
+
 Choose which features to plot when calling `plot_prot`:
 
 ```{r plot_prot8, eval = FALSE}
-p2 <- plot_prot(sequence = at_nsp$sequence[ind],
+p3 <- plot_prot(sequence = at_nsp$sequence[ind],
                 id = at_nsp$Transcript.id[ind],
                 hyp = FALSE,
                 ag = FALSE,
                 dom_sort = "cba")
-p2
+p3
 ```
 ```{r echo = FALSE, out.width = "100%", fig.align = "center"}
 knitr::include_graphics("p2.svg")

@@ -44,15 +44,18 @@ get_phobius <- function(data = NULL, sequence, id){
                sep = "")
   if(missing(data)){
     if (missing(sequence)){
-      stop("protein sequence must be provided to obtain predictions")
+      stop("protein sequence must be provided to obtain predictions",
+           call. = FALSE)
     }
     if (missing(id)){
-      stop("protein id must be provided to obtain predictions")
+      stop("protein id must be provided to obtain predictions",
+           call. = FALSE)
     }
     id <- as.character(id)
     sequence <- toupper(as.character(sequence))
     if (length(sequence) != length(id)){
-      stop("id and sequence vectors are not of same length")
+      stop("id and sequence vectors are not of same length",
+           call. = FALSE)
     }
     sequence <- sub("\\*$", "", sequence)
     file_name <- tmr
@@ -70,29 +73,35 @@ get_phobius <- function(data = NULL, sequence, id){
   }
   if(class(data) == "data.frame"){
     if(missing(sequence)){
-      stop("the column name with the sequences must be specified")
+      stop("the column name with the sequences must be specified",
+           call. = FALSE)
     }
     if(missing(id)){
-      stop("the column name with the sequence id's must be specified")
+      stop("the column name with the sequence id's must be specified",
+           call. = FALSE)
     }
     id <- as.character(substitute(id))
     sequence <- as.character(substitute(sequence))
     if (length(id) != 1L){
-      stop("only one column name for 'id' must be specifed")
+      stop("only one column name for 'id' must be specifed",
+           call. = FALSE)
     }
     if (length(sequence) != 1L){
-      stop("only one column name for 'sequence' must be specifed")
+      stop("only one column name for 'sequence' must be specifed",
+           call. = FALSE)
     }
     id <- if(id %in% colnames(data)){
       data[[id]]
     } else {
-      stop("specified 'id' not found in data")
+      stop("specified 'id' not found in data",
+           call. = FALSE)
     }
     id <- as.character(id)  
     sequence  <- if(sequence %in% colnames(data)){
       data[[sequence]]
     } else {
-      stop("specified 'sequence' not found in data")
+      stop("specified 'sequence' not found in data",
+           call. = FALSE)
     }
     sequence <- toupper(as.character(sequence))
     sequence <- sub("\\*$", "", sequence)
@@ -104,7 +113,8 @@ get_phobius <- function(data = NULL, sequence, id){
     if (file.exists(data)){
       file_name <- data
     } else {
-      stop("cannot find file in the specified path")
+      stop("cannot find file in the specified path",
+           call. = FALSE)
     }
   }
   file_list = ragp::split_fasta(path_in = file_name,

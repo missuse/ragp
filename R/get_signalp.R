@@ -63,38 +63,46 @@ get_signalp <- function(data = NULL,
   }
   if (length(splitter) > 1){
     splitter <- 500L
-    warning("splitter should be of length 1, setting to default: splitter = 500")
+    warning("splitter should be of length 1, setting to default: splitter = 500",
+            call. = FALSE)
   }
   if (!is.numeric(splitter)){
     splitter <- as.numeric(splitter)
-    warning("splitter is not numeric, converting using 'as.numeric'")
+    warning("splitter is not numeric, converting using 'as.numeric'",
+            call. = FALSE)
   }
   if (is.na(splitter)){
     splitter <- 500L
-    warning("splitter was set to NA, setting to default: splitter = 500")
+    warning("splitter was set to NA, setting to default: splitter = 500",
+            call. = FALSE)
   }
   if (is.numeric(splitter)) {
     splitter <- floor(splitter)
   }
   if (!(splitter %in% 1:2000)) {
     splitter <- 500L
-    warning(paste("Illegal splitter input, splitter will be set to 500"))
+    warning("Illegal splitter input, splitter will be set to 500",
+            call. = FALSE)
   }
   if (!missing(trunc)){
     if (length(trunc) > 1){
-      stop("trunc should be of length 1.")
+      stop("trunc should be of length 1.",
+           call. = FALSE)
     }
     if (!is.numeric(trunc)){
-      stop("trunc is not numeric.")
+      stop("trunc is not numeric.",
+           call. = FALSE)
     }
     if (is.na(trunc)){
-      stop("trunc was set to NA.")
+      stop("trunc was set to NA.",
+           call. = FALSE)
     }
     if (is.numeric(trunc)){
       trunc <- floor(trunc)
     }
     if (trunc < 0){
-      stop("trunc was set to a negative number.")
+      stop("trunc was set to a negative number.",
+           call. = FALSE)
     }
     if (trunc == 0){
       trunc <- 1000000L
@@ -105,36 +113,44 @@ get_signalp <- function(data = NULL,
   }
   if (length(sleep) > 1){
     sleep <- 3
-    warning("sleep should be of length 1, setting to default: sleep = 3")
+    warning("sleep should be of length 1, setting to default: sleep = 3",
+            call. = FALSE)
   }
   if (!is.numeric(sleep)){
     sleep <- as.numeric(sleep)
-    warning("sleep is not numeric, converting using 'as.numeric'")
+    warning("sleep is not numeric, converting using 'as.numeric'",
+            call. = FALSE)
   }
   if (is.na(sleep)){
     sleep <- 3
-    warning("sleep was set to NA, setting to default: sleep = 3")
+    warning("sleep was set to NA, setting to default: sleep = 3",
+            call. = FALSE)
   }
   if (sleep < 2){
-    warning("setting sleep to less than 2s can cause problems when fetching results from the server")
+    warning("setting sleep to less than 2s can cause problems when fetching results from the server",
+            call. = FALSE)
   }
   if (missing(org_type)) {
     org_type <- "euk"
   }
   if (!org_type %in% c("euk", "gram-", "gram+")) {
-    stop("org_type should be one of: 'euk', 'gram-', 'gram+'")
+    stop("org_type should be one of: 'euk', 'gram-', 'gram+'",
+         call. = FALSE)
   }
   if (length(org_type) > 1){
-    stop("org_type should be one of: 'euk', 'gram-', 'gram+'")
+    stop("org_type should be one of: 'euk', 'gram-', 'gram+'",
+         call. = FALSE)
   }
   if (missing(Dcut_type)) {
     Dcut_type <- "default"
   }
   if (!Dcut_type %in% c("default", "sensitive", "user")) {
-    stop("Dcut_type should be one of: 'default', 'sensitive', 'user'")
+    stop("Dcut_type should be one of: 'default', 'sensitive', 'user'",
+         call. = FALSE)
   }
   if (length(Dcut_type) > 1){
-    stop("Dcut_type should be one of: 'default', 'sensitive', 'user'")
+    stop("Dcut_type should be one of: 'default', 'sensitive', 'user'",
+         call. = FALSE)
   }
   if (missing(Dcut_noTM)) {
     Dcut_noTM <- "0.45"
@@ -143,21 +159,25 @@ get_signalp <- function(data = NULL,
   }
   if (!is.numeric(as.numeric(Dcut_noTM))){
     Dcut_noTM <- "0.45"
-    warning("Dcut_noTM could not be converted to numeric, setting to default: Dcut_noTM = '0.45'")
+    warning("Dcut_noTM could not be converted to numeric, setting to default: Dcut_noTM = '0.45'",
+            call. = FALSE)
   }
   if (is.na(Dcut_noTM)) {
     Dcut_noTM <- "0.45"
-    warning("Dcut_noTM was set to NA, setting to default: Dcut_noTM = '0.45'")
+    warning("Dcut_noTM was set to NA, setting to default: Dcut_noTM = '0.45'",
+            call. = FALSE)
   }
   if (as.numeric(Dcut_noTM[1]) > 1) {
     Dcut_noTM <- "0.45"
     warning("Dcut_noTM must take values in the range 0 - 1,
-            it was set to the default: Dcut_noTM = '0.45'")
+            it was set to the default: Dcut_noTM = '0.45'",
+            call. = FALSE)
   }
   if (as.numeric(Dcut_noTM[1]) < 0) {
     Dcut_noTM <- "0.45"
     warning("Dcut_noTM must take values in the range 0 - 1,
-            it was set to the default: Dcut_noTM = '0.45'")
+            it was set to the default: Dcut_noTM = '0.45'",
+            call. = FALSE)
   }    
   if (missing(Dcut_TM)) {
     Dcut_TM <- "0.5"
@@ -166,30 +186,36 @@ get_signalp <- function(data = NULL,
   }
   if (!is.numeric(as.numeric(Dcut_TM))){
     Dcut_TM <- "0.5"
-    warning("Dcut_TM could not be converted to numeric, setting to default: Dcut_TM = '0.5'")
+    warning("Dcut_TM could not be converted to numeric, setting to default: Dcut_TM = '0.5'",
+            call. = FALSE)
   }
   if (is.na(Dcut_TM)) {
     Dcut_TM <- "0.5"
-    warning("Dcut_noTM was set to NA, setting to default: Dcut_TM = '0.5'")
+    warning("Dcut_noTM was set to NA, setting to default: Dcut_TM = '0.5'",
+            call. = FALSE)
   }
   if (as.numeric(Dcut_TM[1]) > 1) {
     Dcut_TM <- "0.5"
     warning("Dcut_TM must take values in the range 0 - 1,
-            it was set to the default: Dcut_TM = '0.5'")
+            it was set to the default: Dcut_TM = '0.5'",
+            call. = FALSE)
   }
   if (as.numeric(Dcut_TM[1]) < 0) {
     Dcut_TM <- "0.5"
     warning("Dcut_TM must take values in the range 0 - 1,
-            it was set to the default: Dcut_TM = '0.5'")
+            it was set to the default: Dcut_TM = '0.5'",
+            call. = FALSE)
   } 
   if (missing(method)) {
     method <- "best"
   }
   if (!method %in% c("best", "notm")){
-    stop("method should be one of: 'best', 'notm'")
+    stop("method should be one of: 'best', 'notm'",
+         call. = FALSE)
   }
   if (length(method) > 1){
-    stop("method should be one of: 'best', 'notm'")
+    stop("method should be one of: 'best', 'notm'",
+         call. = FALSE)
   }
   if (missing(minlen)) {
     minlen <- ""
@@ -205,15 +231,18 @@ get_signalp <- function(data = NULL,
                sep = "")
   if(missing(data)){
     if (missing(sequence)){
-      stop("protein sequence must be provided to obtain predictions")
+      stop("protein sequence must be provided to obtain predictions",
+           call. = FALSE)
     }
     if (missing(id)){
-      stop("protein id must be provided to obtain predictions")
+      stop("protein id must be provided to obtain predictions",
+           call. = FALSE)
     }
     id <- as.character(id)
     sequence <- toupper(as.character(sequence))
     if (length(sequence) != length(id)){
-      stop("id and sequence vectors are not of same length")
+      stop("id and sequence vectors are not of same length",
+           call. = FALSE)
     }
     sequence <- sub("\\*$", "", sequence)
     sequence <- substr(sequence,
@@ -241,29 +270,35 @@ get_signalp <- function(data = NULL,
   }
   if(class(data) == "data.frame"){
     if(missing(sequence)){
-      stop("the column name with the sequences must be specified")
+      stop("the column name with the sequences must be specified",
+           call. = FALSE)
     }
     if(missing(id)){
-      stop("the column name with the sequence id's must be specified")
+      stop("the column name with the sequence id's must be specified",
+           call. = FALSE)
     }
     id <- as.character(substitute(id))
     sequence <- as.character(substitute(sequence))
     if (length(id) != 1L){
-      stop("only one column name for 'id' must be specifed")
+      stop("only one column name for 'id' must be specifed",
+           call. = FALSE)
     }
     if (length(sequence) != 1L){
-      stop("only one column name for 'sequence' must be specifed")
+      stop("only one column name for 'sequence' must be specifed",
+           call. = FALSE)
     }
     id <- if(id %in% colnames(data)){
       data[[id]]
     } else {
-      stop("specified 'id' not found in data")
+      stop("specified 'id' not found in data",
+           call. = FALSE)
     }
     id <- as.character(id)  
     sequence  <- if(sequence %in% colnames(data)){
       data[[sequence]]
     } else {
-      stop("specified 'sequence' not found in data")
+      stop("specified 'sequence' not found in data",
+           call. = FALSE)
     }
     sequence <- toupper(as.character(sequence))
     sequence <- sub("\\*$", "", sequence)
@@ -279,7 +314,8 @@ get_signalp <- function(data = NULL,
     if (file.exists(data)){
       file_name <- data
     } else {
-      stop("cannot find file in the specified path")
+      stop("cannot find file in the specified path",
+           call. = FALSE)
     }
   }
   url <- "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi"
@@ -352,7 +388,8 @@ get_signalp <- function(data = NULL,
             "//li")
           )
         stop(paste0(prt, ". Problem in file: ", "temp_",
-                    i, ".fa"))
+                    i, ".fa"),
+             call. = FALSE)
         }
       res2 <- as.character(
         xml2::xml_find_all(

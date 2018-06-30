@@ -58,10 +58,12 @@ get_targetp <- function(data = NULL,
     org_type <- "plant"
   }
   if (!org_type %in% c("non_plant", "plant")) {
-    stop("org_type should be one of: 'non_plant', 'plant'")
+    stop("org_type should be one of: 'non_plant', 'plant'",
+         call. = FALSE)
   }
   if (length(org_type) > 1){
-    stop("org_type should be one of: 'non_plant', 'plant'")
+    stop("org_type should be one of: 'non_plant', 'plant'",
+         call. = FALSE)
   }
   if (missing(tcut)){
     tcut <- 0
@@ -80,69 +82,83 @@ get_targetp <- function(data = NULL,
   }
   if (length(sleep) > 1){
     sleep <- 3
-    warning("sleep should be of length 1, setting to default: sleep = 3")
+    warning("sleep should be of length 1, setting to default: sleep = 3",
+            call. = FALSE)
   }
   if (!is.numeric(sleep)){
     sleep <- as.numeric(sleep)
-    warning("sleep is not numeric, converting using 'as.numeric'")
+    warning("sleep is not numeric, converting using 'as.numeric'",
+            call. = FALSE)
   }
   if (is.na(sleep)){
     sleep <- 3
-    warning("sleep was set to NA, setting to default: sleep = 3")
+    warning("sleep was set to NA, setting to default: sleep = 3",
+            call. = FALSE)
   }
   if (sleep < 2){
-    warning("setting sleep to less than 2s can cause problems when fetching results from the server")
+    warning("setting sleep to less than 2s can cause problems when fetching results from the server",
+            call. = FALSE)
   }
   if (missing(splitter)){
     splitter <- 500
   }
   if (length(splitter) > 1){
     splitter <- 500
-    warning("splitter should be of length 1, setting to default: splitter = 500")
+    warning("splitter should be of length 1, setting to default: splitter = 500",
+            call. = FALSE)
   }
   if (!is.numeric(splitter)){
     splitter <- as.numeric(splitter)
-    warning("splitter is not numeric, converting using 'as.numeric'")
+    warning("splitter is not numeric, converting using 'as.numeric'",
+            call. = FALSE)
   }
   if (is.na(splitter)){
     splitter <- 500
-    warning("splitter was set to NA, setting to default: splitter = 500")
+    warning("splitter was set to NA, setting to default: splitter = 500",
+            call. = FALSE)
   }
   if (is.numeric(splitter)) {
     splitter <- floor(splitter)
   }
   if (!(splitter %in% 1:2000)){
     splitter <- 500
-    warning(paste("Illegal splitter input, splitter will be set to 500"))
+    warning("Illegal splitter input, splitter will be set to 500",
+            call. = FALSE)
   }
   if (missing(cutoffs)){
     cutoffs <- "winner_takes_all"
   }
   if (!cutoffs %in% c("winner_takes_all", "spec95", "spec90", "custom")){
-    stop ("cutoffs can be one of: 'winner_takes_all', 'spec95', 'spec90', 'custom'")
+    stop ("cutoffs can be one of: 'winner_takes_all', 'spec95', 'spec90', 'custom'",
+          call. = FALSE)
   }
   if (length(cutoffs) > 1){
-    stop("cutoffs can be one of: 'winner_takes_all', 'spec95', 'spec90', 'custom'")
+    stop("cutoffs can be one of: 'winner_takes_all', 'spec95', 'spec90', 'custom'",
+         call. = FALSE)
   }
   if (cutoffs != "custom"){
     if (!is.null(tcut)){
       if (tcut != 0) {
-        warning ("cutoffs were not set to custom, pcut will be held at 0")
+        warning ("cutoffs were not set to custom, pcut will be held at 0",
+                 call. = FALSE)
       }
     }
     if (!is.null(pcut)){
       if (pcut != 0) {
-        warning ("cutoffs were not set to custom, pcut will be held at 0")
+        warning ("cutoffs were not set to custom, pcut will be held at 0",
+                 call. = FALSE)
       }
     }
     if (!is.null(scut)){
       if (scut != 0) {
-        warning ("cutoffs were not set to custom, scut will be held at 0")
+        warning ("cutoffs were not set to custom, scut will be held at 0",
+                 call. = FALSE)
       }
     }
     if (!is.null(ocut)){
       if (ocut != 0) {
-        warning ("cutoffs were not set to custom, ocut will be held at 0")
+        warning ("cutoffs were not set to custom, ocut will be held at 0",
+                 call. = FALSE)
       }
     }
   }
@@ -158,100 +174,120 @@ get_targetp <- function(data = NULL,
     }
     if (length(tcut) > 1){
       tcut <- 0
-      warning("tcut should be of length 1, setting to default: tcut = 0")
+      warning("tcut should be of length 1, setting to default: tcut = 0",
+              call. = FALSE)
     }
     if (!is.numeric(tcut)){
       tcut <- as.numeric(tcut)
-      warning("tcut is not numeric, converting using 'as.numeric'")
+      warning("tcut is not numeric, converting using 'as.numeric'",
+              call. = FALSE)
     }
     if (is.na(tcut)){
       tcut <- 0
-      warning("tcut was set to NA, setting to default: tcut = 0")
+      warning("tcut was set to NA, setting to default: tcut = 0",
+              call. = FALSE)
     }
     if (tcut < 0){
       tcut <- 0
       warning(paste("tcut should be in 0 - 1 range,", 
-                    "tcut was set to the default 0"))
+                    "tcut was set to the default 0"),
+              call. = FALSE)
     }
     if (tcut > 1){
       tcut <- 1
       warning(paste("tcut should be in 0 - 1 range,", 
-                    "tcut was set to 1"))
+                    "tcut was set to 1"),
+              call. = FALSE)
     }
     if (missing(pcut)){
       pcut <- 0
     }
     if (length(pcut) > 1){
       pcut <- 0
-      warning("pcut should be of length 1, setting to default: pcut = 0")
+      warning("pcut should be of length 1, setting to default: pcut = 0",
+              call. = FALSE)
     }
     if (!is.numeric(pcut)){
       pcut <- as.numeric(pcut)
-      warning("pcut is not numeric, converting using 'as.numeric'")
+      warning("pcut is not numeric, converting using 'as.numeric'",
+              call. = FALSE)
     }
     if (is.na(pcut)){
       pcut <- 0
-      warning("pcut was set to NA, setting to default: pcut = 0")
+      warning("pcut was set to NA, setting to default: pcut = 0",
+              call. = FALSE)
     }
     if (pcut < 0){
       pcut <- 0
       warning(paste("pcut should be in 0 - 1 range,", 
-                    "pcut was set to the default 0"))
+                    "pcut was set to the default 0"),
+              call. = FALSE)
     }
     if (pcut > 1){
       pcut <- 1
       warning(paste("pcut should be in 0 - 1 range,", 
-                    "pcut was set to 1"))
+                    "pcut was set to 1"),
+              call. = FALSE)
     }
     if (missing(scut)){
       scut <- 0
     }
     if (length(scut) > 1){
       scut <- 0
-      warning("scut should be of length 1, setting to default: scut = 0")
+      warning("scut should be of length 1, setting to default: scut = 0",
+              call. = FALSE)
     }
     if (!is.numeric(scut)){
       scut <- as.numeric(scut)
-      warning("scut is not numeric, converting using 'as.numeric'")
+      warning("scut is not numeric, converting using 'as.numeric'",
+              call. = FALSE)
     }
     if (is.na(scut)){
       scut <- 0
-      warning("scut was set to NA, setting to default: scut = 0")
+      warning("scut was set to NA, setting to default: scut = 0",
+              call. = FALSE)
     }
     if (scut < 0){
       scut <- 0
       warning(paste("scut should be in 0 - 1 range,", 
-                    "scut was set to the default 0"))
+                    "scut was set to the default 0"),
+              call. = FALSE)
     }
     if (scut > 1){
       scut <- 1
       warning(paste("scut should be in 0 - 1 range,", 
-                    "scut was set to 1"))
+                    "scut was set to 1"),
+              call. = FALSE)
     }
     if (missing(ocut)){
       ocut <- 0
     }
     if (length(ocut) > 1){
       ocut <- 0
-      warning("ocut should be of length 1, setting to default: ocut = 0")
+      warning("ocut should be of length 1, setting to default: ocut = 0",
+              call. = FALSE)
     }
     if (!is.numeric(ocut)){
       ocut <- as.numeric(ocut)
-      warning("ocut is not numeric, converting using 'as.numeric'")
+      warning("ocut is not numeric, converting using 'as.numeric'",
+              call. = FALSE)
     }
     if (is.na(ocut)){
       ocut <- 0
-      warning("ocut was set to NA, setting to default: ocut = 0")
+      warning("ocut was set to NA, setting to default: ocut = 0",
+              call. = FALSE)
     }
     if (ocut < 0){
       ocut <- 0
       warning(paste("ocut should be in 0 - 1 range,", 
-                    "ocut was set to the default 0"))
+                    "ocut was set to the default 0"),
+              call. = FALSE)
     }
     if (ocut > 1){
       ocut <- 1
       warning(paste("ocut should be in 0 - 1 range,", 
-                    "ocut was set to 1"))
+                    "ocut was set to 1"),
+              call. = FALSE)
     }
   }
   
@@ -275,15 +311,18 @@ get_targetp <- function(data = NULL,
                sep = "")
   if(missing(data)){
     if (missing(sequence)){
-      stop("protein sequence must be provided to obtain predictions")
+      stop("protein sequence must be provided to obtain predictions",
+           call. = FALSE)
     }
     if (missing(id)){
-      stop("protein id must be provided to obtain predictions")
+      stop("protein id must be provided to obtain predictions",
+           call. = FALSE)
     }
     id <- as.character(id)
     sequence <- toupper(as.character(sequence))
     if (length(sequence) != length(id)){
-      stop("id and sequence vectors are not of same length")
+      stop("id and sequence vectors are not of same length",
+           call. = FALSE)
     }
     sequence <- sub("\\*$", "", sequence)
     file_name <- tmr
@@ -301,29 +340,35 @@ get_targetp <- function(data = NULL,
   }
   if(class(data) == "data.frame"){
     if(missing(sequence)){
-      stop("the column name with the sequences must be specified")
+      stop("the column name with the sequences must be specified",
+           call. = FALSE)
     }
     if(missing(id)){
-      stop("the column name with the sequence id's must be specified")
+      stop("the column name with the sequence id's must be specified",
+           call. = FALSE)
     }
     id <- as.character(substitute(id))
     sequence <- as.character(substitute(sequence))
     if (length(id) != 1L){
-      stop("only one column name for 'id' must be specifed")
+      stop("only one column name for 'id' must be specifed",
+           call. = FALSE)
     }
     if (length(sequence) != 1L){
-      stop("only one column name for 'sequence' must be specifed")
+      stop("only one column name for 'sequence' must be specifed",
+           call. = FALSE)
     }
     id <- if(id %in% colnames(data)){
       data[[id]]
     } else {
-      stop("specified 'id' not found in data")
+      stop("specified 'id' not found in data",
+           call. = FALSE)
     }
     id <- as.character(id)  
     sequence  <- if(sequence %in% colnames(data)){
       data[[sequence]]
     } else {
-      stop("specified 'sequence' not found in data")
+      stop("specified 'sequence' not found in data",
+           call. = FALSE)
     }
     sequence <- toupper(as.character(sequence))
     sequence <- sub("\\*$", "", sequence)
@@ -335,7 +380,8 @@ get_targetp <- function(data = NULL,
     if (file.exists(data)){
       file_name <- data
     } else {
-      stop("cannot find file in the specified path")
+      stop("cannot find file in the specified path",
+           call. = FALSE)
     }
   }
   file_list <- ragp::split_fasta(path_in = file_name,
@@ -411,7 +457,8 @@ get_targetp <- function(data = NULL,
                       ". Problem in file: ",
                       "temp_",
                       i,
-                      ".fa"))
+                      ".fa"),
+               call. = FALSE)
         }
         res2 <- as.character(
           xml2::xml_find_all(

@@ -7,8 +7,8 @@
 plot_prot(sequence, id, hyp_col = "#868686FF", gpi_col = "#0073C2FF",
   nsp_col = "#CD534CFF", ag_col = "#E5E5E5FF", tm_col = "#EFC000FF",
   hyp = TRUE, gpi = c("bigpi", "predgpi", "none"), nsp = TRUE,
-  ag = TRUE, tm = TRUE, domain = TRUE, dom_sort = c("ievalue", "abc",
-  "cba"), ...)
+  ag = TRUE, tm = TRUE, domain = TRUE, disorder = FALSE,
+  dom_sort = c("ievalue", "abc", "cba"), ...)
 }
 \arguments{
 \item{sequence}{String representing a protein amino acid sequence.}
@@ -37,9 +37,11 @@ plot_prot(sequence, id, hyp_col = "#868686FF", gpi_col = "#0073C2FF",
 
 \item{domain}{Bolean, should the domains be plotted.}
 
+\item{disorder}{Bolean, should disordered regions be plotted.}
+
 \item{dom_sort}{One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.}
 
-\item{...}{Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{predict_hyp}} and \code{\link[ragp]{scan_ag}}.}
+\item{...}{Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}} and \code{\link[ragp]{scan_ag}}.}
 }
 \value{
 A ggplot2 plot object
@@ -56,5 +58,5 @@ pred <- plot_prot(sequence = at_nsp$sequence[ind],
 
 }
 \seealso{
-\code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
+\code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{get_espritz}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
 }

@@ -1,5 +1,22 @@
 NEWS
 -----------------------------
+
+version 0.1.0.0004
+-----------------------------
+NEW FEATURES
+
+* Added `get_espritz` function which queries ESpritz web server for 
+  predictions on protein disordered regions.
+  
+* `plot_prot` function has an additional argument `disorder`, indicating
+  should the predicted disordered regions be plotted. Defaults to FALSE.
+  
+BUG FIXES AND IMPROVEMENTS
+
+* fixed a bug in function `plot_prot` introduced in 0.1.0.0003 which prevented 
+  GPIs to be plotted when `gpi = "bigpi"`.
+
+
 version 0.1.0.0003
 -----------------------------
 NEW FEATURES

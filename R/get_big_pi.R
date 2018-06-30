@@ -13,7 +13,7 @@
 #' \describe{
 #'   \item{omega_site}{Character, indicating the sequence position of the highest scoring omega-site}
 #'   \item{Quality}{Character, indicating the quality of the highest scoring omega-site}
-#'   \item{PValue}{Numeric, indicating the p-value for the prediction of the highest scoring omega-site"}
+#'   \item{PValue}{Numeric, indicating the p-value for the prediction of the highest scoring omega-site}
 #'   \item{id}{Character, indicating the protein identifier}
 #'   \item{is.bigpi}{Logical, did big-Pi predict the presence of a GPI}
 #'   }
@@ -53,42 +53,51 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
   }
   if (length(simplify) > 1){
     simplify <- TRUE
-    warning("simplify should be of length 1, setting to default: simplify = TRUE")
+    warning("simplify should be of length 1, setting to default: simplify = TRUE",
+            call. = FALSE)
   }
   if (!is.logical(simplify)){
     simplify <- as.logical(simplify)
-    warning("simplify is not logical, converting using 'as.logical'")
+    warning("simplify is not logical, converting using 'as.logical'",
+            call. = FALSE)
   }
   if (is.na(simplify)){
     simplify <- TRUE
-    warning("simplify was set to NA, setting to default: simplify = TRUE")
+    warning("simplify was set to NA, setting to default: simplify = TRUE",
+            call. = FALSE)
   }
   if (missing(sleep)){
     sleep <- 1
   }
   if (length(sleep) > 1){
     sleep <- 1
-    warning("sleep should be of length 1, setting to default: sleep = 1")
+    warning("sleep should be of length 1, setting to default: sleep = 1",
+            call. = FALSE)
   }
   if (!is.numeric(sleep)){
     sleep <- as.numeric(sleep)
-    warning("sleep is not numeric, converting using 'as.numeric'")
+    warning("sleep is not numeric, converting using 'as.numeric'",
+            call. = FALSE)
   }
   if (is.na(sleep)){
     sleep <- 1
-    warning("sleep was set to NA, setting to default: sleep = 1")
+    warning("sleep was set to NA, setting to default: sleep = 1",
+            call. = FALSE)
   }
   if(missing(data)){
     if (missing(sequence)){
-      stop("protein sequence must be provided to obtain predictions")
+      stop("protein sequence must be provided to obtain predictions",
+           call. = FALSE)
     }
     if (missing(id)){
-      stop("protein id must be provided to obtain predictions")
+      stop("protein id must be provided to obtain predictions",
+           call. = FALSE)
     }
     id <- as.character(id)
     sequence <- toupper(as.character(sequence))
     if (length(sequence) != length(id)){
-      stop("id and sequence vectors are not of same length")
+      stop("id and sequence vectors are not of same length",
+           call. = FALSE)
     }
   }
   if(class(data[[1]]) ==  "SeqFastaAA"){
@@ -98,29 +107,35 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
   }
   if(class(data) == "data.frame"){
     if(missing(sequence)){
-      stop("the column name with the sequences must be specified")
+      stop("the column name with the sequences must be specified",
+           call. = FALSE)
     }
     if(missing(id)){
-      stop("the column name with the sequence id's must be specified")
+      stop("the column name with the sequence id's must be specified",
+           call. = FALSE)
     }
     id <- as.character(substitute(id))
     sequence <- as.character(substitute(sequence))
     if (length(id) != 1L){
-      stop("only one column name for 'id' must be specifed")
+      stop("only one column name for 'id' must be specifed",
+           call. = FALSE)
     }
     if (length(sequence) != 1L){
-      stop("only one column name for 'sequence' must be specifed")
+      stop("only one column name for 'sequence' must be specifed",
+           call. = FALSE)
     }
     id <- if(id %in% colnames(data)){
       data[[id]]
     } else {
-      stop("specified 'id' not found in data")
+      stop("specified 'id' not found in data",
+           call. = FALSE)
     }
     id <- as.character(id)  
     sequence  <- if(sequence %in% colnames(data)){
       data[[sequence]]
     } else {
-      stop("specified 'sequence' not found in data")
+      stop("specified 'sequence' not found in data",
+           call. = FALSE)
     }
     sequence <- toupper(as.character(sequence))
   }
@@ -133,7 +148,8 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
       id <- names(dat)
       sequence <- toupper(as.character(unlist(dat)))
     } else {
-      stop("cannot find file in the specified path")
+      stop("cannot find file in the specified path",
+           call. = FALSE)
     }
   }
   sequence <- sub("\\*$", "", sequence)

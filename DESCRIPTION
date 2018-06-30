@@ -1,7 +1,7 @@
 Package: ragp
 Type: Package
 Title: Mining for Hydroxyproline rich glycoprotein sequences
-Version: 0.1.0.0003
+Version: 0.1.0.0004
 Authors@R: c(
   person("Milan", "Dragicevic", email = "mdragicevic@ibiss.bg.ac.rs",
          role = c("aut", "cre")),
