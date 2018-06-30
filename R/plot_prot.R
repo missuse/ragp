@@ -776,14 +776,15 @@ plot_prot <- function(sequence,
                           shape = 18,
                           size = 4,
                           na.rm = TRUE) 
+
   } 
  
   if (any(subs)){
     p <- p +
-      ggplot2::scale_color_manual("feature",
-                                  limits = lims,
-                                  values = vals,
-                                  labels = labs)
+    ggplot2::scale_color_manual("feature",
+                                limits = lims,
+                                values = vals,
+                                labels = labs)
     p <- p + 
       ggplot2::guides(color = ggplot2::guide_legend(keywidth = 1,
                                                     keyheight = 1,

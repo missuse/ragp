@@ -227,9 +227,13 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
                              Quality = rep("None", 2),
                              PValue =  rep(NA, 2),
                              stringsAsFactors = FALSE)
+    calc <- data.frame(Terms,
+                       Best,
+                       Alternative,
+                       stringsAsFactors = FALSE)
     res_short <- list(prediction = pred_short,
                       calculation = calc)
-    res_short <- rep(list(res_short), length(bad_seq))
+    res_short <- rep(list(res_short), length(short_seq))
     names(res_short) <- id[short_seq]
   }
   
