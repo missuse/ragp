@@ -155,17 +155,25 @@ GPI and hmm query
 HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor (Ellis et al. 2010). To fetch the GPI modification site predictions from [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) (B. Eisenhaber et al. 2003) the function `get_big_pi` can be used:
 
 ``` r
-ind <- c(145, 147, 160, 170,
-         189, 203, 214, 224) #some indexes
-big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
-                          id = at_nsp$Transcript.id[ind])
+big_pi_pred <- get_big_pi(data = at_nsp[1:100,],
+                          sequence = at_nsp$sequence,
+                          id = at_nsp$Transcript.id)
+```
+
+To use [PredGPI](http://gpcr.biocomp.unibo.it/predgpi/) (Pierleoni, Martelli, and Casadio 2008) for GPI prediction:
+
+``` r
+pred_gpi_pred <- get_pred_gpi(data = at_nsp[1:100,],
+                              sequence = at_nsp$sequence,
+                              id = at_nsp$Transcript.id)
 ```
 
 Similarly, domains can be identified by [hmmscan](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) (Finn, Clements, and Eddy 2011) using `get_hmm` function:
 
 ``` r
-pfam_pred <- get_hmm(sequence = at_nsp$sequence[1:20], #a vector of protein sequences as strings
-                     id = at_nsp$Transcript.id[1:20],
+pfam_pred <- get_hmm(data = at_nsp[1:20,],
+                     sequence = sequence,
+                     id = Transcript.id,
                      verbose = FALSE)
 ```
 
@@ -190,17 +198,39 @@ first 10 rows of the GO result with selected columns:
 | AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
 | AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitin> catabolic process                  | <GO:0006032> |
 
+Disorder prediction
+-------------------
+
+HRGPs are considered to be intrinsically disordered. To identify potential disordered regions in proteins `ragp` contains `get_espritz` function which queries [ESpritz](http://protein.bio.unipd.it/espritz/) (Walsh et al. 2012) web server:
+
+``` r
+at_espritz <- get_espritz(at_nsp[1:100,],
+                          sequence,
+                          Transcript.id)
+```
+
 MAAB classification
 -------------------
 
 The MAAB pipeline is explained in detail in Johnson et al. (2017). The `ragp` function `maab` performs motif and amino acid bias classification of HRGPs:
 
 ``` r
-PAST_bias <- maab(at_nsp,
-                  sequence,
-                  Transcript.id) 
+maab_class <- maab(at_nsp,
+                   sequence,
+                   Transcript.id) 
                  
 ```
+
+MAAB classification relies on knowledge if the protein is bound to the membrane by a GPI. One way to remove ambiguities in classes is to set `get_gpi` argument to `"bigpi"` or `"predgpi"`:
+
+``` r
+maab_class <- maab(at_nsp,
+                   sequence,
+                   Transcript.id,
+                   get_gpi = "bigpi")
+```
+
+This will run `get_big_pi` (or `get_pred_gpi` if `"predgpi"` was set) only on the sequences that belong to one of the HRGP classes.
 
 hydroxyproline prediction
 -------------------------
@@ -370,3 +400,7 @@ Hopp, T. P., and K. R. Woods. 1981. “Prediction of Protein Antigenic Determina
 Johnson, Kim L., Andrew M. Cassin, Andrew Lonsdale, Antony Bacic, Monika S. Doblin, and Carolyn J. Schultz. 2017. “Pipeline to Identify Hydroxyproline-Rich Glycoproteins.” *Plant Physiology* 174 (2): 886–903. doi:[10.1104/pp.17.00294](https://doi.org/10.1104/pp.17.00294).
 
 Käll, Lukas, Anders Krogh, and Erik L. L. Sonnhammer. 2007. “Advantages of Combined Transmembrane Topology and Signal Peptide Prediction–the Phobius Web Server.” *Nucleic Acids Research* 35 (Web Server issue): W429–432. doi:[10.1093/nar/gkm256](https://doi.org/10.1093/nar/gkm256).
+
+Pierleoni, Andrea, Pier Luigi Martelli, and Rita Casadio. 2008. “PredGPI: A GPI-Anchor Predictor.” *BMC Bioinformatics* 9 (September): 392. doi:[10.1186/1471-2105-9-392](https://doi.org/10.1186/1471-2105-9-392).
+
+Walsh, Ian, Alberto J. M. Martin, Tomàs Di Domenico, and Silvio C. E. Tosatto. 2012. “ESpritz: Accurate and Fast Prediction of Protein Disorder.” *Bioinformatics* 28 (4): 503–9. doi:[10.1093/bioinformatics/btr682](https://doi.org/10.1093/bioinformatics/btr682).
