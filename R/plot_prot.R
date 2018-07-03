@@ -58,6 +58,7 @@ plot_prot <- function(sequence,
          call. = FALSE)
   }
   id <- as.character(id)
+  id_label <- id
   id <- make.names(id)
   sequence <- toupper(as.character(sequence))
   if (length(sequence) != length(id)){
@@ -672,7 +673,7 @@ plot_prot <- function(sequence,
     ggplot2::xlab("residue") +
     ggplot2::ylab("id") +
     ggplot2::scale_y_continuous(breaks = seq_along(id),
-                                labels = id,
+                                labels = id_label,
                                 limits = c(0.5, length(id) + 0.5)) +
     ggplot2::theme_bw()+
     ggplot2::theme(panel.grid = ggplot2::element_blank(),

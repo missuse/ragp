@@ -1022,11 +1022,11 @@
              sodipodi:role="line"
              id="tspan498">annotation</tspan></text>
 </g></g><path
-       d="m 274.1,238.77 h 98.225 v 40.391 H 274.1 Z"
+       d="m 274.1,238.77 h 73.612 v 40.391 H 274.1 Z"
        style="fill:#d9d9d9;fill-opacity:1;fill-rule:evenodd;stroke:none"
        id="path502"
        inkscape:connector-curvature="0" /><path
-       d="m 274.1,238.77 h 98.225 v 40.391 H 274.1 Z"
+       d="m 274.1,238.77 h 73.612 v 40.391 H 274.1 Z"
        style="fill:none;stroke:#262626;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
        id="path504"
        inkscape:connector-curvature="0" /><g
@@ -1046,10 +1046,10 @@
            transform="matrix(1,0,0,-1,286.18,267.98)"
            style="font-variant:normal;font-weight:normal;font-size:8.03999996px;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
            id="text528"><tspan
-             x="0 4.79988 9.5997601 14.39964 19.19952 23.999399 28.79928 33.71172 38.5116 43.424042 48.223919 53.13636 58.048801 62.848679 67.761124 72.673561"
+             x="0 4.79988 9.5997601 14.39964 19.19952 23.999399 28.79928 33.71172 38.5116 43.424042 48.223919"
              y="0"
              sodipodi:role="line"
-             id="tspan526">get_signalp_file</tspan></text>
+             id="tspan526">get_signalp</tspan></text>
 </g></g><g
        id="g530"><g
          id="g532"
@@ -1067,10 +1067,10 @@
            transform="matrix(1,0,0,-1,286.18,256.34)"
            style="font-variant:normal;font-weight:normal;font-size:8.03999996px;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
            id="text552"><tspan
-             x="0 4.79988 9.5997601 14.39964 19.19952 23.999399 28.79928 33.71172 38.5116 43.424042 48.223919 53.13636 58.048801 62.848679 67.761124 72.673561"
+             x="0 4.79988 9.5997601 14.39964 19.19952 23.999399 28.79928 33.71172 38.5116 43.424042 48.223919"
              y="0"
              sodipodi:role="line"
-             id="tspan550">get_targetp_file</tspan></text>
+             id="tspan550">get_targetp</tspan></text>
 </g></g><g
        id="g554"><g
          id="g556"
@@ -1088,10 +1088,10 @@
            transform="matrix(1,0,0,-1,286.18,244.8)"
            style="font-variant:normal;font-weight:normal;font-size:8.03999996px;font-family:'Lucida Console';-inkscape-font-specification:'Lucida Console';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
            id="text576"><tspan
-             x="0 4.79988 9.5997601 14.39964 19.19952 23.999399 28.79928 33.71172 38.5116 43.424042 48.223919 53.13636 58.048801 62.848679 67.761124 72.673561"
+             x="0 4.79988 9.5997601 14.39964 19.19952 23.999399 28.79928 33.71172 38.5116 43.424042 48.223919"
              y="0"
              sodipodi:role="line"
-             id="tspan574">get_phobius_file</tspan></text>
+             id="tspan574">get_phobius</tspan></text>
 </g></g><path
        d="m 274.58,208.38 h 73.612 v 16.964 H 274.58 Z"
        style="fill:#d9d9d9;fill-opacity:1;fill-rule:evenodd;stroke:none"
