@@ -462,7 +462,7 @@ plot_prot <- function(sequence,
                                 "id")
     
     seq_gpi <- seq_gpi[seq_gpi$is.bigpi,]
-    
+    seq_gpi$omega_site <- as.numeric(seq_gpi$omega_site)
     
     if (nrow(seq_gpi) == 0) {
       seq_gpi <- NULL
