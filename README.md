@@ -121,7 +121,7 @@ nsp_signalp <- get_signalp(at_nsp,
                            Transcript.id)
 ```
 
-The predictions for the 2700 sequences contained in `at_nsp` data frame should be available in around 1 minute. When handling large FASTA files with many sequences it is recommended to split them into smaller files each containing around 10000 sequences, using the `ragp` function `split_fasta` and to obtain predictions in a loop. The returned object `nsp_signalp` is a data frame resembling the web servers output:
+The predictions for the 2700 sequences contained in `at_nsp` data frame should be available in around 1 minute. The returned object `nsp_signalp` is a data frame resembling the web servers output:
 
 ``` r
 knitr::kable(head(nsp_signalp))
