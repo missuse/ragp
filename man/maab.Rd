@@ -2,23 +2,10 @@
 % Please edit documentation in R/maab.R
 \name{maab}
 \alias{maab}
-\alias{maab.character}
-\alias{maab.data.frame}
-\alias{maab.list}
-\alias{maab.default}
 \title{MAAB classification of Hydroxyproline‐rich Glycoproteins}
 \usage{
-maab(data, ...)
-
-\method{maab}{character}(data, ...)
-
-\method{maab}{data.frame}(data, sequence, id, ...)
-
-\method{maab}{list}(data, ...)
-
-\method{maab}{default}(data = NULL, sequence, id, order = c("ext", "tyr",
-  "prp", "agp"), gpi = NULL, get_gpi = c("bigpi", "predgpi", "none"),
-  spec = 0.99)
+maab(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"),
+  gpi = NULL, get_gpi = c("bigpi", "predgpi", "none"), spec = 0.99)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
@@ -64,7 +51,7 @@ data(at_nsp)
 
 maab_class <- maab(sequence = at_nsp$sequence,
                    id = at_nsp$Transcript.id)
-
+                  
 }
 \references{
 Johnson KL, Cassin AM, Lonsdale A, Bacic A, Doblin MS, Schultz CJ. (2017) Pipeline to Identify Hydroxyproline-Rich Glycoproteins. Plant Physiol 174(2): 886-903.

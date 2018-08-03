@@ -5,7 +5,7 @@
 \title{Split a fasta formatted file.}
 \usage{
 split_fasta(path_in, path_out, num_seq = 20000, trim = FALSE,
-  trunc = NULL, id = FALSE)
+  trunc = NULL)
 }
 \arguments{
 \item{path_in}{A path to the .FASTA formatted file that is to be processed}
@@ -17,17 +17,9 @@ split_fasta(path_in, path_out, num_seq = 20000, trim = FALSE,
 \item{trim}{Logical, should the sequences be trimmed to 4000 amino acids to bypass the CBS server restrictions. Defaults to FALSE.}
 
 \item{trunc}{Integer, truncate the sequences to this length. First 1:trunc amino acids will be kept.}
-
-\item{id}{Logical, should the protein id's be returned. Defaults to FALSE.}
 }
 \value{
-if id = FALSE, A Character vector of the paths to the resulting .FASTA formatted files.
-
-if id = TRUE, A list with two elements:
-\describe{
-  \item{id}{Character, protein identifiers.}
-  \item{file_list}{Character, paths to the resulting .FASTA formatted files.}
-  }
+A Character vector of the paths to the resulting .FASTA formatted files.
 }
 \description{
 The function splits a fasta formatted file to a defined number of smaller .fasta files for further processing.

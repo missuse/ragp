@@ -1,8 +1,7 @@
-#' Query TargetP web server.
+#' Scraping TargetP web server.
 #'
 #' TargetP 1.1 predicts the subcellular location of eukaryotic proteins. The location assignment is based on the predicted presence of any of the N-terminal presequences: chloroplast transit peptide (cTP), mitochondrial targeting peptide (mTP) or secretory pathway signal peptide (SP). TargetP uses ChloroP and SignalP to predict cleavage sites for cTP and SP, respectively. For the sequences predicted to contain an N-terminal presequence a potential cleavage site is also predicted.
 #'
-#' @aliases get_targetp get_targetp.default get_targetp.character get_targetp.data.frame get_targetp.list
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
@@ -41,29 +40,20 @@
 #' targetp_pred <- get_targetp(at_nsp[1:20,],
 #'                             sequence,
 #'                             Transcript.id)
-#' @import seqinr
-#' @import httr
-#' @import xml2
+#'
 #' @export
 
-get_targetp <- function (data, ...){
-  if (missing(data) || is.null(data)) get_targetp.default(...)
-  else UseMethod("get_targetp")
-}
-
-#' @rdname get_targetp
-#' @method get_targetp character
-#' @export
-
-get_targetp.character <- function(data,
-                                  org_type = c("non_plant", "plant"),
-                                  cutoffs = c("winner_takes_all", "spec95", "spec90", "custom"),
-                                  tcut = NULL,
-                                  pcut = NULL,
-                                  scut = NULL,
-                                  ocut = NULL,
-                                  splitter = 500,
-                                  sleep = 3){
+get_targetp <- function(data = NULL,
+                        sequence,
+                        id,
+                        org_type = c("non_plant", "plant"),
+                        cutoffs = c("winner_takes_all", "spec95", "spec90", "custom"),
+                        tcut = NULL,
+                        pcut = NULL,
+                        scut = NULL,
+                        ocut = NULL,
+                        splitter = 500,
+                        sleep = 3){
   if (missing(org_type)){
     org_type <- "plant"
   }
@@ -199,13 +189,13 @@ get_targetp.character <- function(data,
     }
     if (tcut < 0){
       tcut <- 0
-      warning(paste("tcut should be in 0 - 1 range,",
+      warning(paste("tcut should be in 0 - 1 range,", 
                     "tcut was set to the default 0"),
               call. = FALSE)
     }
     if (tcut > 1){
       tcut <- 1
-      warning(paste("tcut should be in 0 - 1 range,",
+      warning(paste("tcut should be in 0 - 1 range,", 
                     "tcut was set to 1"),
               call. = FALSE)
     }
@@ -229,13 +219,13 @@ get_targetp.character <- function(data,
     }
     if (pcut < 0){
       pcut <- 0
-      warning(paste("pcut should be in 0 - 1 range,",
+      warning(paste("pcut should be in 0 - 1 range,", 
                     "pcut was set to the default 0"),
               call. = FALSE)
     }
     if (pcut > 1){
       pcut <- 1
-      warning(paste("pcut should be in 0 - 1 range,",
+      warning(paste("pcut should be in 0 - 1 range,", 
                     "pcut was set to 1"),
               call. = FALSE)
     }
@@ -259,13 +249,13 @@ get_targetp.character <- function(data,
     }
     if (scut < 0){
       scut <- 0
-      warning(paste("scut should be in 0 - 1 range,",
+      warning(paste("scut should be in 0 - 1 range,", 
                     "scut was set to the default 0"),
               call. = FALSE)
     }
     if (scut > 1){
       scut <- 1
-      warning(paste("scut should be in 0 - 1 range,",
+      warning(paste("scut should be in 0 - 1 range,", 
                     "scut was set to 1"),
               call. = FALSE)
     }
@@ -289,18 +279,18 @@ get_targetp.character <- function(data,
     }
     if (ocut < 0){
       ocut <- 0
-      warning(paste("ocut should be in 0 - 1 range,",
+      warning(paste("ocut should be in 0 - 1 range,", 
                     "ocut was set to the default 0"),
               call. = FALSE)
     }
     if (ocut > 1){
       ocut <- 1
-      warning(paste("ocut should be in 0 - 1 range,",
+      warning(paste("ocut should be in 0 - 1 range,", 
                     "ocut was set to 1"),
               call. = FALSE)
     }
   }
-
+  
   if (cutoffs == "winner_takes_all"){
     spec <- 0
   }
@@ -313,18 +303,95 @@ get_targetp.character <- function(data,
   if (cutoffs == "custom"){
     spec <- 3
   }
-  if (file.exists(data)){
-    file_name <- data
-  } else {
-    stop("cannot find file in the specified path",
-         call. = FALSE)
+  tmr <- paste("temp_",
+               gsub("^X",
+                    "",
+                    make.names(Sys.time())),
+               ".fasta",
+               sep = "")
+  if(missing(data)){
+    if (missing(sequence)){
+      stop("protein sequence must be provided to obtain predictions",
+           call. = FALSE)
+    }
+    if (missing(id)){
+      stop("protein id must be provided to obtain predictions",
+           call. = FALSE)
+    }
+    id <- as.character(id)
+    sequence <- toupper(as.character(sequence))
+    if (length(sequence) != length(id)){
+      stop("id and sequence vectors are not of same length",
+           call. = FALSE)
+    }
+    sequence <- sub("\\*$", "", sequence)
+    file_name <- tmr
+    seqinr::write.fasta(sequence = strsplit(sequence, ""),
+                        name = id, file = file_name)
+  }
+  if(class(data[[1]]) ==  "SeqFastaAA"){
+    dat <- lapply(data, paste0, collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$", "", sequence)
+    file_name <- tmr
+    seqinr::write.fasta(sequence = strsplit(sequence, ""),
+                        name = id, file = file_name)
+  }
+  if(class(data) == "data.frame"){
+    if(missing(sequence)){
+      stop("the column name with the sequences must be specified",
+           call. = FALSE)
+    }
+    if(missing(id)){
+      stop("the column name with the sequence id's must be specified",
+           call. = FALSE)
+    }
+    id <- as.character(substitute(id))
+    sequence <- as.character(substitute(sequence))
+    if (length(id) != 1L){
+      stop("only one column name for 'id' must be specifed",
+           call. = FALSE)
+    }
+    if (length(sequence) != 1L){
+      stop("only one column name for 'sequence' must be specifed",
+           call. = FALSE)
+    }
+    id <- if(id %in% colnames(data)){
+      data[[id]]
+    } else {
+      stop("specified 'id' not found in data",
+           call. = FALSE)
+    }
+    id <- as.character(id)  
+    sequence  <- if(sequence %in% colnames(data)){
+      data[[sequence]]
+    } else {
+      stop("specified 'sequence' not found in data",
+           call. = FALSE)
+    }
+    sequence <- toupper(as.character(sequence))
+    sequence <- sub("\\*$", "", sequence)
+    file_name <- tmr
+    seqinr::write.fasta(sequence = strsplit(sequence, ""),
+                        name = id, file = file_name)
+  }
+  if(class(data) == "character"){
+    if (file.exists(data)){
+      file_name <- data
+    } else {
+      stop("cannot find file in the specified path",
+           call. = FALSE)
+    }
   }
   file_list <- ragp::split_fasta(path_in = file_name,
                                  path_out = "temp_targetp_",
                                  num_seq = splitter,
                                  trim = TRUE)
-  if(grepl("temp_", file_name)){
-    unlink(file_name)
+  if(class(data) != "character"){
+    if(file_name == tmr){
+      unlink(file_name)
+    }
   }
   for_pb <- length(file_list)
   pb <- utils::txtProgressBar(min = 0,
@@ -378,14 +445,14 @@ get_targetp.character <- function(data,
             httr::content(res2,
                           as = "parsed"),
             "//head")
-        )
+          )
         if (grepl("Illegal", bad)){
           prt <- xml2::xml_text(
             xml2::xml_find_all(
               httr::content(res2,
                             as = "parsed"),
               "//li")
-          )
+            )
           stop(paste0(prt,
                       ". Problem in file: ",
                       "temp_",
@@ -440,161 +507,3 @@ get_targetp.character <- function(data,
                  res)
   return(res)
 }
-
-#' @rdname get_targetp
-#' @method get_targetp data.frame
-#' @export
-
-get_targetp.data.frame <- function(data,
-                                   sequence,
-                                   id,
-                                   ...){
-  if(missing(sequence)){
-    stop("the column name with the sequences must be specified",
-         call. = FALSE)
-  }
-  if(missing(id)){
-    stop("the column name with the sequence id's must be specified",
-         call. = FALSE)
-  }
-  id <- as.character(substitute(id))
-  sequence <- as.character(substitute(sequence))
-  if (length(id) != 1L){
-    stop("only one column name for 'id' must be specifed",
-         call. = FALSE)
-  }
-  if (length(sequence) != 1L){
-    stop("only one column name for 'sequence' must be specifed",
-         call. = FALSE)
-  }
-  id <- if(id %in% colnames(data)){
-    data[[id]]
-  } else {
-    stop("specified 'id' not found in data",
-         call. = FALSE)
-  }
-  id <- as.character(id)
-  sequence  <- if(sequence %in% colnames(data)){
-    data[[sequence]]
-  } else {
-    stop("specified 'sequence' not found in data",
-         call. = FALSE)
-  }
-  sequence <- toupper(as.character(sequence))
-  sequence <- sub("\\*$",
-                  "",
-                  sequence)
-  aa_regex <- "[^ARNDCQEGHILKMFPSTWYV]"
-  if (any(grepl(aa_regex, sequence))){
-    warning(paste("sequences: ",
-                  paste(id[grepl(aa_regex,
-                                 sequence)],
-                        collapse = ", "),
-                  " contain symbols not corresponding to amino acids",
-                  sep = ""),
-            call. = FALSE)
-  }
-  file_name <- paste("temp_",
-                     gsub("^X",
-                          "",
-                          make.names(Sys.time())),
-                     ".fasta",
-                     sep = "")
-  seqinr::write.fasta(sequence = strsplit(sequence, ""),
-                      name = id,
-                      file = file_name)
-  res <- get_targetp.character(data = file_name, ...)
-  return(res)
-}
-
-#' @rdname get_targetp
-#' @method get_targetp list
-#' @export
-
-
-get_targetp.list <- function(data,
-                             ...){
-  if(class(data[[1]]) ==  "SeqFastaAA"){
-    dat <- lapply(data,
-                  paste0,
-                  collapse ="")
-    id <- names(dat)
-    sequence <- toupper(as.character(unlist(dat)))
-    sequence <- sub("\\*$",
-                    "",
-                    sequence)
-    aa_regex <- "[^ARNDCQEGHILKMFPSTWYV]"
-    if (any(grepl(aa_regex, sequence))){
-      warning(paste("sequences: ",
-                    paste(id[grepl(aa_regex,
-                                   sequence)],
-                          collapse = ", "),
-                    " contain symbols not corresponding to amino acids",
-                    sep = ""),
-              call. = FALSE)
-    }
-    file_name <- paste("temp_",
-                       gsub("^X",
-                            "",
-                            make.names(Sys.time())),
-                       ".fasta",
-                       sep = "")
-    seqinr::write.fasta(sequence = strsplit(sequence, ""),
-                        name = id,
-                        file = file_name)
-  } else {
-    stop("only lists containing objects of class SeqFastaAA are supported")
-  }
-  res <- get_targetp.character(data = file_name, ...)
-  return(res)
-}
-
-#' @rdname get_targetp
-#' @method get_targetp default
-#' @export
-
-get_targetp.default <- function(sequence,
-                                id,
-                                ...){
-  if (missing(sequence)){
-    stop("protein sequence must be provided to obtain predictions",
-         call. = FALSE)
-  }
-  if (missing(id)){
-    stop("protein id must be provided to obtain predictions",
-         call. = FALSE)
-  }
-  id <- as.character(id)
-  sequence <- toupper(as.character(sequence))
-  if (length(sequence) != length(id)){
-    stop("id and sequence vectors are not of same length",
-         call. = FALSE)
-  }
-  sequence <- sub("\\*$",
-                  "",
-                  sequence)
-  aa_regex <- "[^ARNDCQEGHILKMFPSTWYV]"
-  if (any(grepl(aa_regex, sequence))){
-    warning(paste("sequences: ",
-                  paste(id[grepl(aa_regex,
-                                 sequence)],
-                        collapse = ", "),
-                  " contain symbols not corresponding to amino acids",
-                  sep = ""),
-            call. = FALSE)
-  }
-  file_name <- paste("temp_",
-                     gsub("^X",
-                          "",
-                          make.names(Sys.time())),
-                     ".fasta",
-                     sep = "")
-  seqinr::write.fasta(sequence = strsplit(sequence, ""),
-                      name = id,
-                      file = file_name)
-  res <- get_targetp.character(data = file_name, ...)
-  return(res)
-}
-
-
-

@@ -2,32 +2,16 @@
 % Please edit documentation in R/get_espritz.R
 \name{get_espritz}
 \alias{get_espritz}
-\alias{get_espritz.default}
-\alias{get_espritz.character}
-\alias{get_espritz.data.frame}
-\alias{get_espritz.list}
-\alias{get_espritz.character}
-\alias{get_espritz.data.frame}
-\alias{get_espritz.list}
-\alias{get_espritz.default}
-\title{Query Espritz web server.}
+\title{Querying Espritz web server.}
 \source{
 \url{http://protein.bio.unipd.it/espritz/}
 }
 \usage{
-get_espritz(data, ...)
-
-\method{get_espritz}{character}(data, ...)
-
-\method{get_espritz}{data.frame}(data, sequence, id, ...)
-
-\method{get_espritz}{list}(data, ...)
-
-\method{get_espritz}{default}(sequence, id, model = c("X-Ray", "Disprot",
-  "NMR"), FPR = c("best Sw", "5\% FPR"), simplify = TRUE)
+get_espritz(data = NULL, sequence, id, model = c("X-Ray", "Disprot", "NMR"),
+  FPR = c("best Sw", "5\% FPR"), simplify = TRUE)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
@@ -47,7 +31,7 @@ A data frame (one row per disordered region) with columns:
   \item{end}{Integer, indicating the sequence position of disordered region end.}
   \item{id}{Character, indicating the protein identifier.}
   }
-
+  
 If simplify == FALSE:
 A data frame (one row per protein) with columns:
 \describe{
@@ -66,12 +50,12 @@ Three models trained on different data sets are available and can be selected vi
 The Espritz web server has a limit on the amount of daily queries by ip. The function will inform the user when the limit has been exceeded.
 }
 \examples{
+ 
 library(ragp)
 
 espritz_test <- get_espritz(at_nsp[1:10,],
                             sequence,
-                            Transcript.id)
-
+                            Transcript.id) 
 }
 \references{
 Walsh I, Martin AJM, Di domenico T, Tosatto SCE (2012) ESpritz: accurate and fast prediction of protein disorder. Bioinformatics 28(4): 503 - 509

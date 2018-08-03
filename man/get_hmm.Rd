@@ -2,28 +2,12 @@
 % Please edit documentation in R/get_hmm.R
 \name{get_hmm}
 \alias{get_hmm}
-\alias{get_hmm.default}
-\alias{get_hmm.character}
-\alias{get_hmm.data.frame}
-\alias{get_hmm.list}
-\alias{get_hmm.character}
-\alias{get_hmm.data.frame}
-\alias{get_hmm.list}
-\alias{get_hmm.default}
 \title{Scraping hmmer web server.}
 \source{
 \url{https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan}
 }
 \usage{
-get_hmm(data, ...)
-
-\method{get_hmm}{character}(data, ...)
-
-\method{get_hmm}{data.frame}(data, sequence, id, ...)
-
-\method{get_hmm}{list}(data, ...)
-
-\method{get_hmm}{default}(sequence, id, verbose = TRUE, sleep = 1,
+get_hmm(data = NULL, sequence, id, verbose = TRUE, sleep = 1,
   attempts = 2L, timeout = 10, progress = TRUE)
 }
 \arguments{
