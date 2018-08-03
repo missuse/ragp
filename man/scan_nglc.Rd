@@ -2,12 +2,25 @@
 % Please edit documentation in R/scan_nglc.R
 \name{scan_nglc}
 \alias{scan_nglc}
+\alias{scan_nglc.character}
+\alias{scan_nglc.data.frame}
+\alias{scan_nglc.list}
+\alias{scan_nglc.default}
 \title{Detection of motifs for N-glycosylation on asparagine residues.}
 \source{
 \url{https://prosite.expasy.org/PDOC00001}
 }
 \usage{
-scan_nglc(data = NULL, sequence, id, span = 5L, cutoff = 0, nsp = 15L)
+scan_nglc(data, ...)
+
+\method{scan_nglc}{character}(data, ...)
+
+\method{scan_nglc}{data.frame}(data, sequence, id, ...)
+
+\method{scan_nglc}{list}(data, ...)
+
+\method{scan_nglc}{default}(sequence, id, span = 5L, cutoff = 0,
+  nsp = 15L)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
@@ -46,7 +59,6 @@ data(at_nsp)
 nglc_pred <- scan_nglc(data = at_nsp,
                        sequence = sequence,
                        id = Transcript.id)
-
 }
 \references{
 Hopp TP. Woods KR. (1981) Prediction of protein antigenic determinants from amino acid sequences. Proceedings of the National Academy of Sciences of the United States of America, 78(6): 3824-8

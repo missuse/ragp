@@ -1,6 +1,29 @@
 NEWS
 -----------------------------
 
+version 0.2.0.0000
+-----------------------------
+NEW FEATURES
+
+* All functions that operate on multiple input objects: `get_big_pi`, `get_espritz`,
+`get_hmm`, `get_phobius`, `get_pred_gpi`, `get_signalp`, `get_targetp`, `maab`,
+`predict_hyp`, `scan_ag` and `scan_nglc` now do so via the S3 object system which will 
+make further extensions of accepted inputs straightforward.
+
+BUG FIXES AND IMPROVEMENTS
+
+* Completely rewrote the code for `scan_ag` which is now simplified and easier to read.
+The function is now about 20% slower.
+
+* fixed a bug in `scan_ag` when argument `exclude_ext = "all"` which resulted
+in detection of unwanted amino acids in certain sequence arrangements.
+The bug occurred only if AG glycomoduls were detected, it did
+not introduce any. If you run this function with `exclude_ext = "all"`
+it is advisable to rerun these analyses again. 
+
+* removed deprecated functions: `get_signap_file`, `get_targetp_file`,
+`get_phobius_file`
+
 version 0.1.0.0004
 -----------------------------
 NEW FEATURES

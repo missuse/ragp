@@ -2,15 +2,31 @@
 % Please edit documentation in R/get_phobius.R
 \name{get_phobius}
 \alias{get_phobius}
-\title{Scraping Phobius web server.}
+\alias{get_phobius.default}
+\alias{get_phobius.character}
+\alias{get_phobius.data.frame}
+\alias{get_phobius.list}
+\alias{get_phobius.character}
+\alias{get_phobius.data.frame}
+\alias{get_phobius.list}
+\alias{get_phobius.default}
+\title{Query Phobius web server.}
 \source{
 \url{http://phobius.sbc.su.se/}
 }
 \usage{
-get_phobius(data = NULL, sequence, id)
+get_phobius(data, ...)
+
+\method{get_phobius}{character}(data)
+
+\method{get_phobius}{data.frame}(data, sequence, id)
+
+\method{get_phobius}{list}(data)
+
+\method{get_phobius}{default}(sequence, id)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call.}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
@@ -48,5 +64,5 @@ phobius_pred <- get_phobius(at_nsp[1:20,],
 Kall O. Krogh A. Sonnhammer E. L. L. (2004) A Combined Transmembrane Topology and Signal Peptide Prediction Method. Journal of Molecular Biology 338(5): 1027-1036
 }
 \seealso{
-\code{\link[ragp]{get_phobius_file}}
+\code{\link[ragp]{get_signalp}}
 }

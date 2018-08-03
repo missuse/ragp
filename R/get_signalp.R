@@ -1,8 +1,9 @@
-#' Scraping SignalP web server.
+#' Query SignalP web server.
 #'
 #' SignalP 4.1 server predicts the presence and location of signal peptide cleavage sites in amino acid sequences from different organisms: Gram-positive prokaryotes, Gram-negative prokaryotes, and eukaryotes. The method incorporates a prediction of cleavage sites and a signal peptide/non-signal peptide prediction based on a combination of several artificial neural networks.
 #'
-#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
+#' @aliases get_signalp get_signalp.default get_signalp.character get_signalp.data.frame get_signalp.list
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param org_type One of c("euk", "gram-", "gram+"), defaults to "euk". Which model should be used for prediction.
@@ -32,32 +33,42 @@
 #'   }
 #'
 #' @note This function creates temporary files in the working directory.
-#' 
+#'
 #' @source \url{http://www.cbs.dtu.dk/services/SignalP-4.1/}
 #' @references Petersen TN. Brunak S. Heijne G. Nielsen H. (2011) SignalP 4.0: discriminating signal peptides from transmembrane regions. Nature Methods 8: 785-786
 #'
-#' @seealso \code{\link[ragp]{get_signalp_file}}
+#' @seealso \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_targetp}}
 #'
 #' @examples
 #' library(ragp)
 #' signalp_pred <- get_signalp(data = at_nsp[1:10,],
 #'                             sequence,
 #'                             Transcript.id)
-#' 
+#'
+#' @import seqinr
+#' @import httr
+#' @import xml2
+#' @export get_signalp
+
+get_signalp <- function (data, ...){
+  if (missing(data) || is.null(data)) get_signalp.default(...)
+  else UseMethod("get_signalp")
+}
+
+#' @rdname get_signalp
+#' @method get_signalp character
 #' @export
 
-get_signalp <- function(data = NULL,
-                        sequence,
-                        id,
-                        org_type = c("euk", "gram-", "gram+"),
-                        Dcut_type = c("default", "sensitive", "user"),
-                        Dcut_noTM = 0.45,
-                        Dcut_TM = 0.5,
-                        method = c("best", "notm"),
-                        minlen = NULL,
-                        trunc = 70L,
-                        splitter = 500L,
-                        sleep = 3){
+get_signalp.character <- function(data,
+                                  org_type = c("euk", "gram-", "gram+"),
+                                  Dcut_type = c("default", "sensitive", "user"),
+                                  Dcut_noTM = 0.45,
+                                  Dcut_TM = 0.5,
+                                  method = c("best", "notm"),
+                                  minlen = NULL,
+                                  trunc = 70L,
+                                  splitter = 500L,
+                                  sleep = 3){
   if (missing(splitter)) {
     splitter <- 500L
   }
@@ -178,7 +189,7 @@ get_signalp <- function(data = NULL,
     warning("Dcut_noTM must take values in the range 0 - 1,
             it was set to the default: Dcut_noTM = '0.45'",
             call. = FALSE)
-  }    
+  }
   if (missing(Dcut_TM)) {
     Dcut_TM <- "0.5"
   } else {
@@ -205,7 +216,7 @@ get_signalp <- function(data = NULL,
     warning("Dcut_TM must take values in the range 0 - 1,
             it was set to the default: Dcut_TM = '0.5'",
             call. = FALSE)
-  } 
+  }
   if (missing(method)) {
     method <- "best"
   }
@@ -222,111 +233,24 @@ get_signalp <- function(data = NULL,
   }  else {
     minlen <- as.character(minlen)[1]
   }
-
-  tmr <- paste("temp_",
-               gsub("^X",
-                    "",
-                    make.names(Sys.time())),
-               ".fasta",
-               sep = "")
-  if(missing(data)){
-    if (missing(sequence)){
-      stop("protein sequence must be provided to obtain predictions",
-           call. = FALSE)
-    }
-    if (missing(id)){
-      stop("protein id must be provided to obtain predictions",
-           call. = FALSE)
-    }
-    id <- as.character(id)
-    sequence <- toupper(as.character(sequence))
-    if (length(sequence) != length(id)){
-      stop("id and sequence vectors are not of same length",
-           call. = FALSE)
-    }
-    sequence <- sub("\\*$", "", sequence)
-    sequence <- substr(sequence,
-                       start = 1,
-                       stop = trunc)
-    file_name <- tmr
-    seqinr::write.fasta(sequence = strsplit(sequence, ""),
-                        name = id,
-                        file = file_name)
+  if(length(data) > 1){
+    stop("one fasta file per function call can be supplied",
+         call. = FALSE)
   }
-  if(class(data[[1]]) ==  "SeqFastaAA"){
-    dat <- lapply(data,
-                  paste0,
-                  collapse ="")
-    id <- names(dat)
-    sequence <- toupper(as.character(unlist(dat)))
-    sequence <- sub("\\*$", "", sequence)
-    sequence <- substr(sequence,
-                       start = 1,
-                       stop = trunc)
-    file_name <- tmr
-    seqinr::write.fasta(sequence = strsplit(sequence, ""),
-                        name = id,
-                        file = file_name)
-  }
-  if(class(data) == "data.frame"){
-    if(missing(sequence)){
-      stop("the column name with the sequences must be specified",
-           call. = FALSE)
-    }
-    if(missing(id)){
-      stop("the column name with the sequence id's must be specified",
-           call. = FALSE)
-    }
-    id <- as.character(substitute(id))
-    sequence <- as.character(substitute(sequence))
-    if (length(id) != 1L){
-      stop("only one column name for 'id' must be specifed",
-           call. = FALSE)
-    }
-    if (length(sequence) != 1L){
-      stop("only one column name for 'sequence' must be specifed",
-           call. = FALSE)
-    }
-    id <- if(id %in% colnames(data)){
-      data[[id]]
-    } else {
-      stop("specified 'id' not found in data",
-           call. = FALSE)
-    }
-    id <- as.character(id)  
-    sequence  <- if(sequence %in% colnames(data)){
-      data[[sequence]]
-    } else {
-      stop("specified 'sequence' not found in data",
-           call. = FALSE)
-    }
-    sequence <- toupper(as.character(sequence))
-    sequence <- sub("\\*$", "", sequence)
-    sequence <- substr(sequence,
-                       start = 1,
-                       stop = trunc)
-    file_name <- tmr
-    seqinr::write.fasta(sequence = strsplit(sequence, ""),
-                        name = id,
-                        file = file_name)
-  }
-  if(class(data) == "character"){
-    if (file.exists(data)){
-      file_name <- data
-    } else {
-      stop("cannot find file in the specified path",
-           call. = FALSE)
-    }
+  if (file.exists(data)){
+    file_name <- data
+  } else {
+    stop("cannot find file in the specified path",
+         call. = FALSE)
   }
   url <- "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi"
+  cfg_file <- "/usr/opt/www/pub/CBS/services/SignalP-4.1/SignalP.cf"
   file_list <- ragp::split_fasta(path_in = file_name,
                                  path_out = "temp_signalp_",
                                  num_seq = splitter,
                                  trunc = trunc)
-  if(class(data) != "character"){
-    if(file_name == tmr){
-      unlink(file_name)
-    }
+  if(grepl("temp_", file_name)){
+    unlink(file_name)
   }
   for_pb <- length(file_list)
   pb <- utils::txtProgressBar(min = 0,
@@ -345,7 +269,7 @@ get_signalp <- function(data = NULL,
       }
       res <- httr::POST(url = url,
                         encode = "multipart",
-                        body = list(configfile = "/usr/opt/www/pub/CBS/services/SignalP-4.1/SignalP.cf",
+                        body = list(configfile = cfg_file,
                                     SEQSUB = file_up,
                                     orgtype = org_type,
                                     `Dcut-type` = Dcut_type,
@@ -367,70 +291,70 @@ get_signalp <- function(data = NULL,
                                floor(i/2) + (10 * (k - 1)))
       Sys.sleep(sleep)
     }
-    
+
     collected_res <- vector("list", length(x))
     for (i in seq_along(x)) {
       repeat {
-      res2 <- httr::GET(url = url,
-                        query = list(jobid = jobid[i],
-                                     wait = "20"))
-      bad <- xml2::xml_text(
-        xml2::xml_find_all(
-          httr::content(res2,
-                        as = "parsed"),
-          "//head")
-      )
-      if (grepl("Illegal", bad)) {
-        prt <- xml2::xml_text(
+        res2 <- httr::GET(url = url,
+                          query = list(jobid = jobid[i],
+                                       wait = "20"))
+        bad <- xml2::xml_text(
           xml2::xml_find_all(
             httr::content(res2,
                           as = "parsed"),
-            "//li")
+            "//head")
+        )
+        if (grepl("Illegal", bad)) {
+          prt <- xml2::xml_text(
+            xml2::xml_find_all(
+              httr::content(res2,
+                            as = "parsed"),
+              "//li")
           )
-        stop(paste0(prt, ". Problem in file: ", "temp_",
-                    i, ".fa"),
-             call. = FALSE)
+          stop(paste0(prt, ". Problem in file: ", "temp_",
+                      i, ".fa"),
+               call. = FALSE)
         }
-      res2 <- as.character(
-        xml2::xml_find_all(
-          httr::content(res2,
-                        as = "parsed"),
-          ".//pre")
-      )
-      res2_split <- unlist(strsplit(res2,
-                                    "\n"))
-      if (any(grepl("Cmax", res2_split))) {
-        break
+        res2 <- as.character(
+          xml2::xml_find_all(
+            httr::content(res2,
+                          as = "parsed"),
+            ".//pre")
+        )
+        res2_split <- unlist(strsplit(res2,
+                                      "\n"))
+        if (any(grepl("Cmax", res2_split))) {
+          break
+        }
       }
+      res2_split <- res2_split[(which(grepl("name", res2_split))[1] +
+                                  1):(which(grepl("/pre", res2_split ))[1] - 1)]
+      if(any(grepl("hr", res2_split))){
+        res2_split <- res2_split[1:(which(grepl("<hr>", res2_split))[1] - 1)]
+      }
+      res2_split <- strsplit(res2_split, " +")
+      res2_split <- do.call(rbind, res2_split)
+      res2_split <- as.data.frame(res2_split, stringsAsFactors = F)
+      colnames(res2_split) <- c("id",
+                                "Cmax",
+                                "Cmax.pos",
+                                "Ymax",
+                                "Ymax.pos",
+                                "Smax",
+                                "Smax.pos",
+                                "Smean",
+                                "Dmean",
+                                "is.sp",
+                                "Dmaxcut",
+                                "Networks.used")
+      utils::setTxtProgressBar(pb,
+                               floor(i/2) + 5 + (10 * (k - 1)))
+      collected_res[[i]] <- res2_split
     }
-    res2_split <- res2_split[(which(grepl("name", res2_split))[1] +
-                                1):(which(grepl("/pre", res2_split ))[1] - 1)]
-    if(any(grepl("hr", res2_split))){
-      res2_split <- res2_split[1:(which(grepl("<hr>", res2_split))[1] - 1)]
-    }
-    res2_split <- strsplit(res2_split, " +")
-    res2_split <- do.call(rbind, res2_split)
-    res2_split <- as.data.frame(res2_split, stringsAsFactors = F)
-    colnames(res2_split) <- c("id",
-                              "Cmax",
-                              "Cmax.pos",
-                              "Ymax",
-                              "Ymax.pos",
-                              "Smax",
-                              "Smax.pos",
-                              "Smean",
-                              "Dmean",
-                              "is.sp",
-                              "Dmaxcut",
-                              "Networks.used")
-    utils::setTxtProgressBar(pb,
-                             floor(i/2) + 5 + (10 * (k - 1)))
-    collected_res[[i]] <- res2_split
-  }
-  collected_res <- do.call(rbind,
-                           collected_res)
-  collected_res$is.signalp <- collected_res$is.sp == "Y"
-  return(collected_res)
+    collected_res <- do.call(rbind,
+                             collected_res)
+    collected_res$is.signalp <- collected_res$is.sp == "Y"
+    return(collected_res)
   }
   )
   res <- do.call(rbind,
@@ -440,3 +364,160 @@ get_signalp <- function(data = NULL,
   close(pb)
   return(res)
 }
+
+#' @rdname get_signalp
+#' @method get_signalp data.frame
+#' @export
+
+get_signalp.data.frame <- function(data,
+                                   sequence,
+                                   id,
+                                   ...){
+  if(missing(sequence)){
+    stop("the column name with the sequences must be specified",
+         call. = FALSE)
+  }
+  if(missing(id)){
+    stop("the column name with the sequence id's must be specified",
+         call. = FALSE)
+  }
+  id <- as.character(substitute(id))
+  sequence <- as.character(substitute(sequence))
+  if (length(id) != 1L){
+    stop("only one column name for 'id' must be specifed",
+         call. = FALSE)
+  }
+  if (length(sequence) != 1L){
+    stop("only one column name for 'sequence' must be specifed",
+         call. = FALSE)
+  }
+  id <- if(id %in% colnames(data)){
+    data[[id]]
+  } else {
+    stop("specified 'id' not found in data",
+         call. = FALSE)
+  }
+  id <- as.character(id)
+  sequence  <- if(sequence %in% colnames(data)){
+    data[[sequence]]
+  } else {
+    stop("specified 'sequence' not found in data",
+         call. = FALSE)
+  }
+  sequence <- toupper(as.character(sequence))
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  aa_regex <- "[^ARNDCQEGHILKMFPSTWYV]"
+  if (any(grepl(aa_regex, sequence))){
+    warning(paste("sequences: ",
+                  paste(id[grepl(aa_regex,
+                                 sequence)],
+                        collapse = ", "),
+                  " contain symbols not corresponding to amino acids",
+                  sep = ""),
+            call. = FALSE)
+  }
+  file_name <- paste("temp_",
+                     gsub("^X",
+                          "",
+                          make.names(Sys.time())),
+                     ".fasta",
+                     sep = "")
+  seqinr::write.fasta(sequence = strsplit(sequence, ""),
+                      name = id,
+                      file = file_name)
+  res <- get_signalp.character(data = file_name, ...)
+  return(res)
+}
+
+#' @rdname get_signalp
+#' @method get_signalp list
+#' @export
+
+
+get_signalp.list <- function(data,
+                             ...){
+  if(class(data[[1]]) ==  "SeqFastaAA"){
+    dat <- lapply(data,
+                  paste0,
+                  collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$",
+                    "",
+                    sequence)
+    aa_regex <- "[^ARNDCQEGHILKMFPSTWYV]"
+    if (any(grepl(aa_regex, sequence))){
+      warning(paste("sequences: ",
+                    paste(id[grepl(aa_regex,
+                                   sequence)],
+                          collapse = ", "),
+                    " contain symbols not corresponding to amino acids",
+                    sep = ""),
+              call. = FALSE)
+    }
+    file_name <- paste("temp_",
+                       gsub("^X",
+                            "",
+                            make.names(Sys.time())),
+                       ".fasta",
+                       sep = "")
+    seqinr::write.fasta(sequence = strsplit(sequence, ""),
+                        name = id,
+                        file = file_name)
+  } else {
+    stop("only lists containing objects of class SeqFastaAA are supported")
+  }
+  res <- get_signalp.character(data = file_name, ...)
+  return(res)
+}
+
+#' @rdname get_signalp
+#' @method get_signalp default
+#' @export
+
+get_signalp.default <- function(sequence,
+                                id,
+                                ...){
+  if (missing(sequence)){
+    stop("protein sequence must be provided to obtain predictions",
+         call. = FALSE)
+  }
+  if (missing(id)){
+    stop("protein id must be provided to obtain predictions",
+         call. = FALSE)
+  }
+  id <- as.character(id)
+  sequence <- toupper(as.character(sequence))
+  if (length(sequence) != length(id)){
+    stop("id and sequence vectors are not of same length",
+         call. = FALSE)
+  }
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  aa_regex <- "[^ARNDCQEGHILKMFPSTWYV]"
+  if (any(grepl(aa_regex, sequence))){
+    warning(paste("sequences: ",
+                  paste(id[grepl(aa_regex,
+                                 sequence)],
+                        collapse = ", "),
+                  " contain symbols not corresponding to amino acids",
+                  sep = ""),
+            call. = FALSE)
+  }
+  file_name <- paste("temp_",
+                     gsub("^X",
+                          "",
+                          make.names(Sys.time())),
+                     ".fasta",
+                     sep = "")
+  seqinr::write.fasta(sequence = strsplit(sequence, ""),
+                      name = id,
+                      file = file_name)
+  res <- get_signalp.character(data = file_name, ...)
+  return(res)
+}
+
+

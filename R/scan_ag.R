@@ -3,6 +3,7 @@
 #' AG glycomodules are amino acid dipeptides: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other (Tan et al., 2003).
 #' Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine and V - valine. This function attempts to find the mentioned dipeptides according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead. If any sequence from the supplied contains "O" the function will consider only true AG glycomodules.
 #'
+#' @aliases scan_ag scan_ag.default scan_ag.character scan_ag.data.frame scan_ag.list
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
@@ -13,7 +14,7 @@
 #' @param simplify Boolean, should the function return a data frame or a list additional values.
 #' @param tidy Boolean, should the function return a tidy data frame instead of a list if simplify = FALSE.
 #'
-#' @return If simplify = TRUE, a data frame with one row per sequence, containing columns:  
+#' @return If simplify = TRUE, a data frame with one row per sequence, containing columns:
 #' \describe{
 #'   \item{id}{Character, as supplied in the function call.}
 #'   \item{sequence}{Character, input sequence with amino acids in dipeptides (which satisfy the user set conditions) in uppercase.}
@@ -22,7 +23,7 @@
 #'   \item{longest}{Integer, maximum length of the found stretches of dipeptides including the amino acids between dipeptides in a match.}
 #' }
 #'
-#' if simplify = FALSE and tidy = TRUE, a data frame with one row per match, with columns:  
+#' if simplify = FALSE and tidy = TRUE, a data frame with one row per match, with columns:
 #' \describe{
 #'   \item{id}{Character, as supplied in the function call.}
 #'   \item{sequence}{Character, input sequence with amino acids in dipeptides that satisfy the user set conditions in uppercase}
@@ -32,7 +33,7 @@
 #'   \item{AG_aa}{Integer, number of amino acids in dipeptides in each match}
 #' }
 #'
-#'If simplify = FALSE and tidy = FALSE, a list with elements:  
+#'If simplify = FALSE and tidy = FALSE, a list with elements:
 #'
 #' \describe{
 #'   \item{id}{Character vector, as supplied in the function call.}
@@ -46,7 +47,7 @@
 #'   \item{div}{Integer, as from input, default div = 10}
 #'   \item{type}{Character, as from input, one of c("conservative", "extended")}
 #' }
-#' 
+#'
 #' @note The function can be supplied with the sequences resulting from predict_hyp in which case only AG glycomodules containing O instead of P will be considered.
 #'
 #' @references Tan L, Leykam JF, Kieliszewski MJ. (2003) Glycosylation motifs that direct arabinogalactan addition to arabinogalactan proteins. Plant Physiol 132: 1362-136
@@ -87,14 +88,131 @@
 #'
 #' at_sp_ag_ext$sequence[at_sp_ag_ext$sequence != at_sp_ag$sequence]
 #'
+#' @import seqinr
+#' @import stringr
 #' @export
 
-scan_ag <- function(data = NULL, sequence, id, dim = 3L, div = 10L,
-                    type = c("conservative", "extended"),
-                    exclude_ext = c("no", "yes", "all"), simplify = TRUE, tidy = FALSE){
+scan_ag <- function (data, ...){
+  if (missing(data) || is.null(data)) scan_ag.default(...)
+  else UseMethod("scan_ag")
+}
+
+#' @rdname scan_ag
+#' @method scan_ag character
+#' @export
+
+scan_ag.character <- function(data,
+                              ...){
+  if (file.exists(data)){
+    dat <- seqinr::read.fasta(file = data,
+                              seqtype = "AA",
+                              as.string = FALSE)
+    dat <- lapply(dat,
+                  paste0,
+                  collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$",
+                    "",
+                    sequence)
+  } else {
+    stop("cannot find file in the specified path",
+         call. = FALSE)
+  }
+  res <- scan_ag.default(sequence = sequence,
+                         id = id,
+                         ...)
+  return(res)
+}
+
+#' @rdname scan_ag
+#' @method scan_ag data.frame
+#' @export
+
+scan_ag.data.frame <- function(data,
+                                  sequence,
+                                  id,
+                                  ...){
+  if(missing(sequence)){
+    stop("the column name with the sequences must be specified",
+         call. = FALSE)
+  }
+  if(missing(id)){
+    stop("the column name with the sequence id's must be specified",
+         call. = FALSE)
+  }
+  id <- as.character(substitute(id))
+  sequence <- as.character(substitute(sequence))
+  if (length(id) != 1L){
+    stop("only one column name for 'id' must be specifed",
+         call. = FALSE)
+  }
+  if (length(sequence) != 1L){
+    stop("only one column name for 'sequence' must be specifed",
+         call. = FALSE)
+  }
+  id <- if(id %in% colnames(data)){
+    data[[id]]
+  } else {
+    stop("specified 'id' not found in data",
+         call. = FALSE)
+  }
+  id <- as.character(id)
+  sequence  <- if(sequence %in% colnames(data)){
+    data[[sequence]]
+  } else {
+    stop("specified 'sequence' not found in data",
+         call. = FALSE)
+  }
+  sequence <- toupper(as.character(sequence))
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  res <- scan_ag.default(sequence = sequence,
+                            id = id,
+                            ...)
+
+  return(res)
+}
+
+#' @rdname scan_ag
+#' @method scan_ag list
+#' @export
+
+scan_ag.list <- function(data,
+                         ...){
+  if(class(data[[1]]) ==  "SeqFastaAA"){
+    dat <- lapply(data,
+                  paste0,
+                  collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$",
+                    "",
+                    sequence)
+  }
+  res <- scan_ag.default(sequence = sequence,
+                         id = id,
+                         ...)
+  return(res)
+}
+
+#' @rdname scan_ag
+#' @method scan_ag default
+#' @export
+
+scan_ag.default <- function(sequence,
+                            id,
+                            dim = 3L,
+                            div = 10L,
+                            type = c("conservative", "extended"),
+                            exclude_ext = c("no", "yes", "all"),
+                            simplify = TRUE,
+                            tidy = FALSE){
   if (length(dim) > 1){
     dim <- 3L
-    warning("dim should be of length 1, setting to default: dim = 3")
+    warning("dim should be of length 1, setting to default: dim = 3",
+            .call = FALSE)
   }
   if (!is.numeric(dim)){
     dim <- as.numeric(dim)
@@ -102,14 +220,16 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3L, div = 10L,
   }
   if (is.na(dim)){
     dim <- 3L
-    warning("dim was set to NA, setting to default: dim = 3")
+    warning("dim was set to NA, setting to default: dim = 3",
+            .call = FALSE)
   }
   if (is.numeric(dim)) {
     dim <- floor(dim)
   }
   if (length(div) > 1){
     div <- 10L
-    warning("div should be of length 1, setting to default: div = 10")
+    warning("div should be of length 1, setting to default: div = 10",
+            .call = FALSE)
   }
   if (!is.numeric(div)){
     div <- as.numeric(div)
@@ -117,14 +237,16 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3L, div = 10L,
   }
   if (is.na(div)){
     div <- 10L
-    warning("div was set to NA, setting to default: div = 10")
+    warning("div was set to NA, setting to default: div = 10",
+            .call = FALSE)
   }
   if (is.numeric(div)) {
     div <- floor(div)
   }
   if (length(simplify) > 1){
     simplify <- TRUE
-    warning("simplify should be of length 1, setting to default: simplify = TRUE")
+    warning("simplify should be of length 1, setting to default: simplify = TRUE",
+            .call = FALSE)
   }
   if (!is.logical(simplify)){
     simplify <- as.logical(simplify)
@@ -132,110 +254,112 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3L, div = 10L,
   }
   if (is.na(simplify)){
     simplify <- TRUE
-    warning("simplify was set to NA, setting to default: simplify = TRUE")
+    warning("simplify was set to NA, setting to default: simplify = TRUE",
+            .call = FALSE)
   }
   if (length(tidy) > 1){
     tidy <- FALSE
-    warning("tidy should be of length 1, setting to default: tidy = FALSE")
+    warning("tidy should be of length 1, setting to default: tidy = FALSE",
+            .call = FALSE)
   }
   if (!is.logical(tidy)){
     tidy <- as.logical(tidy)
-    warning("tidy is not logical, converting using 'as.logical'")
+    warning("tidy is not logical, converting using 'as.logical'",
+            .call = FALSE)
   }
   if (is.na(tidy)){
     tidy <- FALSE
-    warning("tidy was set to NA, setting to default: tidy = FALSE")
+    warning("tidy was set to NA, setting to default: tidy = FALSE",
+            .call = FALSE)
   }
-  if (missing(type)) type <- "extended"
-  if (!type %in% c("conservative", "extended"))
-    stop ("type should be one of: 'conservative', 'extended'")
-  if (missing(exclude_ext)) exclude_ext <- "no"
+  if (missing(type)){
+    type <- "extended"
+  }
+  if (!type %in% c("conservative", "extended")){
+    stop ("type should be one of: 'conservative', 'extended'",
+          .call = FALSE)
+  }
+  if (missing(exclude_ext)){
+    exclude_ext <- "no"
+  }
   if (!exclude_ext %in% c("no", "yes", "all")){
-    stop ("exclude_ext should be one of: 'no', 'yes', 'all'")
+    stop ("exclude_ext should be one of: 'no', 'yes', 'all'",
+          .call = FALSE)
   }
-  if(missing(data)){
-    if (missing(sequence)){
-      stop("protein sequence must be provided to obtain predictions")
-    }
-    if (missing(id)){
-      stop("protein id must be provided to obtain predictions")
-    }
-    id <- as.character(id)
-    sequence <- toupper(as.character(sequence))
-    if (length(sequence) != length(id)){
-      stop("id and sequence vectors are not of same length")
-    }
+  if (missing(sequence)){
+    stop("protein sequence must be provided to obtain predictions",
+         call. = FALSE)
   }
-  if(class(data[[1]]) ==  "SeqFastaAA"){
-    dat <- lapply(data, paste0, collapse ="")
-    id <- names(dat)
-    sequence <- toupper(as.character(unlist(dat)))
+  if (missing(id)){
+    stop("protein id must be provided to obtain predictions",
+         call. = FALSE)
   }
-  if(class(data) == "data.frame"){
-    if(missing(sequence)){
-      stop("the column name with the sequences must be specified")
-    }
-    if(missing(id)){
-      stop("the column name with the sequence id's must be specified")
-    }
-    id <- as.character(substitute(id))
-    sequence <- as.character(substitute(sequence))
-    if (length(id) != 1L){
-      stop("only one column name for 'id' must be specifed")
-    }
-    if (length(sequence) != 1L){
-      stop("only one column name for 'sequence' must be specifed")
-    }
-    id <- if(id %in% colnames(data)){
-      data[[id]]
-    } else {
-      stop("specified 'id' not found in data")
-    }
-    id <- as.character(id)  
-    sequence  <- if(sequence %in% colnames(data)){
-      data[[sequence]]
-    } else {
-      stop("specified 'sequence' not found in data")
-    }
-    sequence <- toupper(as.character(sequence))
+  id <- as.character(id)
+  sequence <- toupper(as.character(sequence))
+  if (length(sequence) != length(id)){
+    stop("id and sequence vectors are not of same length",
+         call. = FALSE)
   }
-  if(class(data) == "character"){
-    if (file.exists(data)){
-      dat <- seqinr::read.fasta(file = data,
-                                seqtype = "AA",
-                                as.string = FALSE)
-      dat <- lapply(dat, paste0, collapse ="")
-      id <- names(dat)
-      sequence <- toupper(as.character(unlist(dat)))
-    } else {
-      stop("cannot find file in the specified path")
-    }
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  aa_regex <- "[^ARNDCQEGHILKMFPSTWYVO]"
+  if (any(grepl(aa_regex, sequence))){
+    warning(paste("sequences: ",
+                  paste(id[grepl(aa_regex,
+                                 sequence)],
+                        collapse = ", "),
+                  " contain symbols not corresponding to amino acids",
+                  sep = ""),
+            call. = FALSE)
   }
-  sequence <- sub("\\*$", "", sequence)
-  if (type == "extended") aa <- "[ASTGV]" else aa <- "[AST]"
-  if (missing(exclude_ext)) exclude_ext <- "none"
+  if (type == "extended"){
+    aa <- "[ASTGV]"
+    aaa <- "ASTGV"
+  } else {
+    aa <- "[AST]"
+    aaa <- "AST"
+  }
   regex <- paste("(P",  aa, "P(?!" , aa, ")|", aa, "P",
                  aa, "(?!P)|", aa, "P|P", aa, ")(.{0,", div, "}(P",
                  aa, "P(?!", aa, ")|", aa, "P", aa, "(?!P)|", aa,
-                 "P|P", aa, ")){", dim-1, ",}", sep="")
+                 "P|P", aa, ")){", dim-1, ",}", sep = "")
+
+  regex2 <- paste("P",  aa, "P(?!" , aa, ")|", aa, "P",
+                  aa, "(?!P)|", aa, "P|P", aa, sep = "")
+
   if (exclude_ext == "yes"){
-    sequence <- stringr::str_replace_all(sequence, "S[PO]{3,}", tolower)
+    sequence <- stringr::str_replace_all(sequence,
+                                         "S[PO]{3,}",
+                                         tolower)
   }
   if (exclude_ext == "all"){
-    sequence <- stringr::str_replace_all(sequence, "[PO]{3,}", tolower)
+    sequence <- stringr::str_replace_all(sequence,
+                                         "[PO]{3,}",
+                                         tolower)
   }
+  hyp <- "P"
   hyps <- FALSE
   if (any(grepl("O", sequence))) {
     message("sequence vector contains O, O will be considered instead of P")
-    regex <- gsub("P", "O", regex, fixed = TRUE)
+    regex <- gsub("P",
+                  "O",
+                  regex,
+                  fixed = TRUE)
+    regex2 <- gsub("P",
+                   "O",
+                   regex2,
+                   fixed = TRUE)
+    hyp <- "O"
     hyps <- TRUE
   }
   lower <- tolower(sequence)
-  locations <- stringr::str_locate_all(sequence, regex)
+  locations <- stringr::str_locate_all(sequence,
+                                       regex)
   n <- length(sequence)
-  upper_PAST <- 1:n
-  length_detected <- 1:n
-  longest_detected <- 1:n
+  upper_PAST <- vector("character", n)
+  length_detected <- vector("integer", n)
+  longest_detected <- vector("integer", n)
   for (i in 1:n){
     locationi <- locations[[i]]
     seqi <- lower[i]
@@ -251,139 +375,48 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3L, div = 10L,
       }
       length_detected[i] <- sum((locationi[,2] + 1) - locationi[,1])
       longest_detected[i] <- max((locationi[,2] + 1) - locationi[,1])
-      
-    } else {length_detected[i]<- 0
-    longest_detected[i] <- 0}
+    } else {
+      length_detected[i] <- 0
+      longest_detected[i] <- 0
+    }
     upper_PAST[i] <- seqi
   }
   if (exclude_ext == "yes"){
-    upper_PAST <- stringr::str_replace_all(upper_PAST, "S[POpo]{3,}", tolower)
+    upper_PAST <- stringr::str_replace_all(upper_PAST,
+                                           "S[POpo]{3,}",
+                                           tolower)
   }
   if (exclude_ext == "all"){
-    upper_PAST <- stringr::str_replace_all(upper_PAST, "[POpo]{3,}", tolower)
+    upper_PAST <- stringr::str_replace_all(upper_PAST,
+                                           "[POpo]{3,}",
+                                           tolower)
   }
-  hyp <- ifelse(any(grepl("O", sequence)), "O", "P")
-  P <- switch(sum(hyp == "O", 1), NULL, "P")
-  if (type == "extended"){
-    oldi <- paste0("CDEFHIKLMNQRWY", P)
-    newi <- tolower(oldi)
-    upper_PAST <- chartr(old = oldi, new = newi, upper_PAST)
-    oldi_p <- paste(oldi, hyp, sep="")
-    newi_p <- paste(newi, tolower(hyp), sep="")
-    upper_PAST <- gsub(paste("(?<=[", newi_p, oldi_p,
-                             "])", hyp, "{1}(?=[", newi_p, oldi_p, "])",
-                             sep=""), tolower(hyp), upper_PAST, perl = 
-                         TRUE)
-    oldi_ASTGV <- paste(oldi, "ASTGV", sep="")
-    newi_ASTGV <- paste(newi, "astgv", sep="")
-    
-    chary <- c("A", "S", "T", "G", "V")
-    regy <- lapply(chary, function(x){
-      paste("(?<=[", newi_ASTGV, oldi_ASTGV,
-            "])", x, "{1}(?=[", newi_ASTGV, oldi_ASTGV,
-            "])", sep="")
-    })
-    for (i in 1:length(regy)){
-      upper_PAST <- gsub(regy[[i]], tolower(chary[i]),
-                         upper_PAST, perl = TRUE)
+  locations2 <- stringr::str_locate_all(upper_PAST,
+                                        regex2)
+  for (i in 1:n){
+    locationi2 <- locations2[[i]]
+    seqi2 <- lower[i]
+    if (nrow(locationi2) >= 1){
+      for (k in 1:nrow(locationi2)){
+        startk <- locationi2[k,1]
+        stopk <- locationi2[k,2]
+        substr(seqi2,
+               start = startk,
+               stop = stopk) <- toupper(substr(seqi2,
+                                               start = startk,
+                                               stop = stopk))
+      }
+      upper_PAST[i] <- seqi2
     }
-    
-    char_any <- c(hyp, "A", "S", "T", "G", "V")
-    regy_any <- lapply(char_any, function(x){
-      paste("(?<=[a-z])[", x, "]{1}(?=[a-z])", sep = "")
-    }
-    )
-    for (i in 1:length(regy_any)){
-      upper_PAST <- gsub(regy_any[[i]], tolower(char_any[i]),
-                         upper_PAST, perl = TRUE)
-    }
-    
-    upper_PAST <- gsub(paste("^", hyp,"(?=[", oldi_p, newi_p, "])", sep 
-                             = ""),
-                       tolower(hyp), upper_PAST, perl = TRUE)
-    
-    regy_start <- lapply(chary, function(x){
-      paste("^", x, "(?=[", newi_ASTGV, oldi_ASTGV, "])", sep="")
-    })
-    for (i in 1:length(regy_start)){
-      upper_PAST <- gsub(regy_start[[i]], tolower(chary[i]),
-                         upper_PAST, perl = TRUE)
-    }
-    
-    upper_PAST <- gsub(paste("(?<=[", newi_p, oldi_p, "])", hyp, "$", 
-                             sep=""),
-                       tolower(hyp), upper_PAST, perl = TRUE)
-    
-    regy_end <- lapply(chary, function(x){
-      paste("(?<=[", newi_ASTGV, oldi_ASTGV, "])", x, "$", sep = "")
-    })
-    
-    for (i in 1:length(regy_end)){
-      upper_PAST <- gsub(regy_end[[i]], tolower(chary[i]),
-                         upper_PAST, perl = TRUE)
-    }
-    pastgv <- paste0(char_any, sep = "", collapse = "|")
-    AG_sum <- stringr::str_count(upper_PAST, pastgv)
-    AG_locations <- stringr::str_locate_all(upper_PAST, pastgv)
-  } else {
-    oldi <- paste0("CDEFHIKLMNQRWYGV", P)
-    newi <- tolower(oldi)
-    upper_PAST <- chartr(old = oldi,
-                         new = newi,
-                         upper_PAST)
-    oldi_p <- paste(oldi, hyp, sep="")
-    newi_p <- paste(newi, tolower(hyp), sep="")
-    upper_PAST <- gsub(paste("(?<=[", newi_p, oldi_p,
-                             "])", hyp, "{1}(?=[", newi_p, oldi_p, "])",
-                             sep=""), tolower(hyp), upper_PAST, perl = TRUE)
-    oldi_AST <- paste(oldi, "AST", sep="")
-    newi_AST <- paste(newi, "ast", sep="")
-    
-    chary <- c("A", "S", "T")
-    regy <- lapply(chary, function(x){
-      paste("(?<=[", newi_AST, oldi_AST,
-            "])", x, "{1}(?=[", newi_AST, oldi_AST,
-            "])", sep="")
-    })
-    for (i in 1:length(regy)){
-      upper_PAST <- gsub(regy[[i]], tolower(chary[i]),
-                         upper_PAST, perl = TRUE)
-    }
-    char_any <- c(hyp, "A", "S", "T")
-    regy_any <- lapply(char_any, function(x){
-      paste("(?<=[a-z])[", x, "]{1}(?=[a-z])", sep = "")
-    })
-    for (i in 1:length(regy_any)){
-      upper_PAST <- gsub(regy_any[[i]], tolower(char_any[i]),
-                         upper_PAST, perl = TRUE)
-    }
-    upper_PAST <-  gsub(paste("^", hyp, "(?=[", oldi_p, newi_p, "])", sep = 
-                                ""),
-                        tolower(hyp), upper_PAST, perl = TRUE)
-    
-    regy_start <- lapply(chary, function(x){
-      paste("^", x, "(?=[", newi_AST, oldi_AST, "])", sep="")
-    })
-    for (i in 1:length(regy_start)){
-      upper_PAST <- gsub(regy_start[[i]], tolower(chary[i]),
-                         upper_PAST, perl = TRUE)
-    }
-    
-    upper_PAST <- gsub(paste("(?<=[", newi_p, oldi_p, "])", hyp, "$", sep=""),
-                       tolower(hyp), upper_PAST, perl = TRUE)
-    
-    regy_end <- lapply(chary, function(x){
-      paste("(?<=[", newi_AST, oldi_AST, "])", x, "$", sep = "")
-    })
-    
-    for (i in 1:length(regy_end)){
-      upper_PAST <- gsub(regy_end[[i]], tolower(chary[i]),
-                         upper_PAST, perl = TRUE)
-    }
-    pastgv <- paste0(char_any, sep = "", collapse = "|")
-    AG_sum <- stringr::str_count(upper_PAST, pastgv)
-    AG_locations <- stringr::str_locate_all(upper_PAST, pastgv)
   }
+  char_any <- c(hyp, unlist(strsplit(aaa, "")))
+  pastgv <- paste0(char_any,
+                   sep = "",
+                   collapse = "|")
+  AG_sum <- stringr::str_count(upper_PAST,
+                               pastgv)
+  AG_locations <- stringr::str_locate_all(upper_PAST,
+                                          pastgv)
   if (simplify){
     out <- data.frame(id = as.character(id),
                       sequence = upper_PAST,
@@ -395,7 +428,7 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3L, div = 10L,
   }
   if (tidy){
     loc <- unlist(lapply(locations, nrow))
-    
+
     tidy_seq <- rep(upper_PAST,
                     ifelse(loc == 0,
                            1,
@@ -414,30 +447,27 @@ scan_ag <- function(data = NULL, sequence, id, dim = 3L, div = 10L,
                          }
                        })
     tidy_location <- do.call(rbind, tidy_loc)
-    
-    substr <- substring(tidy_seq,
-                        tidy_location[,1],
-                        tidy_location[,2])
-    
-    P_loc <- gregexpr("P", substr)
+
+    substri <- substring(tidy_seq,
+                         tidy_location[,1],
+                         tidy_location[,2])
+
     if(hyps) {
-      P_loc <- gregexpr("O", substr)
+      P_loc <- gregexpr("O", substri)
+    } else {
+      P_loc <- gregexpr("P", substri)
     }
-      
+
     P_loc <- lapply(seq_along(P_loc), function(x){
       as.integer(unname(as.vector(P_loc[[x]] + tidy_location[x,1] - 1)))
     }
     )
-    
-    names(P_loc) <- rep("P", length(P_loc))
-    if (any(grepl("O", sequence))) names(P_loc) <- rep("O", length(P_loc))
-    
     tidy <- data.frame(sequence = as.character(tidy_seq),
                        id = as.character(tidy_id),
                        location = tidy_location,
                        P_pos = I(P_loc),
                        length = tidy_location[,2] - tidy_location[,1] + 1,
-                       AG_aa = as.integer(stringr::str_count(substr, pastgv)),
+                       AG_aa = as.integer(stringr::str_count(substri, pastgv)),
                        stringsAsFactors = FALSE)
     attributes(tidy)
     return(tidy)

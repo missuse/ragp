@@ -2,19 +2,35 @@
 % Please edit documentation in R/get_big_pi.R
 \name{get_big_pi}
 \alias{get_big_pi}
-\title{Scraping big-PI Plant Predictor web server.}
+\alias{get_big_pi.default}
+\alias{get_big_pi.character}
+\alias{get_big_pi.data.frame}
+\alias{get_big_pi.list}
+\alias{get_big_pi.character}
+\alias{get_big_pi.data.frame}
+\alias{get_big_pi.list}
+\alias{get_big_pi.default}
+\title{Query big-PI Plant Predictor web server.}
 \source{
 \url{http://mendel.imp.ac.at/gpi/plant_server.html}
 }
 \usage{
-get_big_pi(data = NULL, sequence, id, simplify = TRUE, sleep = 1)
+get_big_pi(data, ...)
+
+\method{get_big_pi}{character}(data, ...)
+
+\method{get_big_pi}{data.frame}(data, sequence, id, ...)
+
+\method{get_big_pi}{list}(data, ...)
+
+\method{get_big_pi}{default}(sequence, id, simplify = TRUE, sleep = 1)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
 
-\item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
+\item{sequence}{An appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
+\item{id}{An appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
 \item{simplify}{A bolean indicating the type of returned object, defaults to TRUE.}
 
@@ -51,7 +67,7 @@ ind <- c(129, 145, 147, 160, 170)
 big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
                           id = at_nsp$Transcript.id[ind],
                           simplify = FALSE)
-                          
+
 big_pi_pred <- get_big_pi(data = at_nsp[ind,],
                           sequence = sequence,
                           id = Transcript.id,

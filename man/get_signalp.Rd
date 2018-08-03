@@ -2,22 +2,34 @@
 % Please edit documentation in R/get_signalp.R
 \name{get_signalp}
 \alias{get_signalp}
-\title{Scraping SignalP web server.}
+\alias{get_signalp.default}
+\alias{get_signalp.character}
+\alias{get_signalp.data.frame}
+\alias{get_signalp.list}
+\alias{get_signalp.character}
+\alias{get_signalp.data.frame}
+\alias{get_signalp.list}
+\alias{get_signalp.default}
+\title{Query SignalP web server.}
 \source{
 \url{http://www.cbs.dtu.dk/services/SignalP-4.1/}
 }
 \usage{
-get_signalp(data = NULL, sequence, id, org_type = c("euk", "gram-",
-  "gram+"), Dcut_type = c("default", "sensitive", "user"), Dcut_noTM = 0.45,
+get_signalp(data, ...)
+
+\method{get_signalp}{character}(data, org_type = c("euk", "gram-", "gram+"),
+  Dcut_type = c("default", "sensitive", "user"), Dcut_noTM = 0.45,
   Dcut_TM = 0.5, method = c("best", "notm"), minlen = NULL, trunc = 70L,
   splitter = 500L, sleep = 3)
+
+\method{get_signalp}{data.frame}(data, sequence, id, ...)
+
+\method{get_signalp}{list}(data, ...)
+
+\method{get_signalp}{default}(sequence, id, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
-
-\item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
-
-\item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call.}
 
 \item{org_type}{One of c("euk", "gram-", "gram+"), defaults to "euk". Which model should be used for prediction.}
 
@@ -36,6 +48,10 @@ get_signalp(data = NULL, sequence, id, org_type = c("euk", "gram-",
 \item{splitter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
 
 \item{sleep}{A numeric indicating the pause in seconds between POST and GET server calls, at default set to 1s. Decreasing is not recommended.}
+
+\item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
+
+\item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 }
 \value{
 A data frame with columns:
@@ -72,5 +88,5 @@ signalp_pred <- get_signalp(data = at_nsp[1:10,],
 Petersen TN. Brunak S. Heijne G. Nielsen H. (2011) SignalP 4.0: discriminating signal peptides from transmembrane regions. Nature Methods 8: 785-786
 }
 \seealso{
-\code{\link[ragp]{get_signalp_file}}
+\code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_targetp}}
 }
