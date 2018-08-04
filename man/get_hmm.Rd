@@ -2,16 +2,34 @@
 % Please edit documentation in R/get_hmm.R
 \name{get_hmm}
 \alias{get_hmm}
+\alias{get_hmm.default}
+\alias{get_hmm.character}
+\alias{get_hmm.data.frame}
+\alias{get_hmm.list}
+\alias{get_hmm.character}
+\alias{get_hmm.data.frame}
+\alias{get_hmm.list}
+\alias{get_hmm.default}
 \title{Scraping hmmer web server.}
 \source{
 \url{https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan}
 }
 \usage{
-get_hmm(data = NULL, sequence, id, verbose = TRUE, sleep = 1,
-  attempts = 2L, timeout = 10, progress = TRUE)
+get_hmm(data, ...)
+
+\method{get_hmm}{character}(data, ...)
+
+\method{get_hmm}{data.frame}(data, sequence, id, ...)
+
+\method{get_hmm}{list}(data, ...)
+
+\method{get_hmm}{default}(data = NULL, sequence, id, verbose = TRUE,
+  sleep = 1, attempts = 2L, timeout = 10, progress = TRUE, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
+
+\item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 

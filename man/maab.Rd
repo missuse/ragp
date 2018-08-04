@@ -2,13 +2,32 @@
 % Please edit documentation in R/maab.R
 \name{maab}
 \alias{maab}
+\alias{maab.default}
+\alias{maab.character}
+\alias{maab.data.frame}
+\alias{maab.list}
+\alias{maab.character}
+\alias{maab.data.frame}
+\alias{maab.list}
+\alias{maab.default}
 \title{MAAB classification of Hydroxyproline‐rich Glycoproteins}
 \usage{
-maab(data = NULL, sequence, id, order = c("ext", "tyr", "prp", "agp"),
-  gpi = NULL, get_gpi = c("bigpi", "predgpi", "none"), spec = 0.99)
+maab(data, ...)
+
+\method{maab}{character}(data, ...)
+
+\method{maab}{data.frame}(data, sequence, id, ...)
+
+\method{maab}{list}(data, ...)
+
+\method{maab}{default}(data = NULL, sequence, id, order = c("ext", "tyr",
+  "prp", "agp"), gpi = NULL, get_gpi = c("bigpi", "predgpi", "none"),
+  spec = 0.99, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
+
+\item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
@@ -51,7 +70,7 @@ data(at_nsp)
 
 maab_class <- maab(sequence = at_nsp$sequence,
                    id = at_nsp$Transcript.id)
-                  
+
 }
 \references{
 Johnson KL, Cassin AM, Lonsdale A, Bacic A, Doblin MS, Schultz CJ. (2017) Pipeline to Identify Hydroxyproline-Rich Glycoproteins. Plant Physiol 174(2): 886-903.

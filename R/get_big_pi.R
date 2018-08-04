@@ -1,13 +1,14 @@
-#' Scraping big-PI Plant Predictor web server.
+#' Query big-PI Plant Predictor web server.
 #'
 #' big-PI Plant Predictor is a web server utilizing a scoring algorithm for prediction of GPI modification sites in plants.
 #'
-#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
-#' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
-#' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#' @aliases get_big_pi get_big_pi.default get_big_pi.character get_big_pi.data.frame get_big_pi.list
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
+#' @param sequence An appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#' @param id An appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param simplify A bolean indicating the type of returned object, defaults to TRUE.
 #' @param sleep A numeric indicating the pause in seconds between server calls, at default set to 1.
-#' 
+#' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #' @return If simplify == TRUE:
 #' A data frame with columns:
 #' \describe{
@@ -38,16 +39,132 @@
 #' big_pi_pred <- get_big_pi(sequence = at_nsp$sequence[ind],
 #'                           id = at_nsp$Transcript.id[ind],
 #'                           simplify = FALSE)
-#'                           
+#'
 #' big_pi_pred <- get_big_pi(data = at_nsp[ind,],
 #'                           sequence = sequence,
 #'                           id = Transcript.id,
 #'                           simplify = TRUE)
+#' @import seqinr
+#' @import httr
+#' @import xml2
+#' @export get_big_pi
 
-#'@export
+get_big_pi <- function (data, ...){
+  if (missing(data) || is.null(data)) get_big_pi.default(...)
+  else UseMethod("get_big_pi")
+}
+
+#' @rdname get_big_pi
+#' @method get_big_pi character
+#' @export
+
+get_big_pi.character <- function(data,
+                                 ...){
+  if (file.exists(data)){
+    dat <- seqinr::read.fasta(file = data,
+                              seqtype = "AA",
+                              as.string = FALSE)
+    dat <- lapply(dat,
+                  paste0,
+                  collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$",
+                    "",
+                    sequence)
+  } else {
+    stop("cannot find file in the specified path",
+         call. = FALSE)
+  }
+  res <- get_big_pi.default(sequence = sequence,
+                            id = id,
+                            ...)
+  return(res)
+}
+
+#' @rdname get_big_pi
+#' @method get_big_pi data.frame
+#' @export
 
 
-get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
+get_big_pi.data.frame <- function(data,
+                                  sequence,
+                                  id,
+                                  ...){
+  if(missing(sequence)){
+    stop("the column name with the sequences must be specified",
+         call. = FALSE)
+  }
+  if(missing(id)){
+    stop("the column name with the sequence id's must be specified",
+         call. = FALSE)
+  }
+  id <- as.character(substitute(id))
+  sequence <- as.character(substitute(sequence))
+  if (length(id) != 1L){
+    stop("only one column name for 'id' must be specifed",
+         call. = FALSE)
+  }
+  if (length(sequence) != 1L){
+    stop("only one column name for 'sequence' must be specifed",
+         call. = FALSE)
+  }
+  id <- if(id %in% colnames(data)){
+    data[[id]]
+  } else {
+    stop("specified 'id' not found in data",
+         call. = FALSE)
+  }
+  id <- as.character(id)
+  sequence  <- if(sequence %in% colnames(data)){
+    data[[sequence]]
+  } else {
+    stop("specified 'sequence' not found in data",
+         call. = FALSE)
+  }
+  sequence <- toupper(as.character(sequence))
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  res <- get_big_pi.default(sequence = sequence,
+                            id = id,
+                            ...)
+
+  return(res)
+}
+
+#' @rdname get_big_pi
+#' @method get_big_pi list
+#' @export
+
+get_big_pi.list <- function(data,
+                            ...){
+  if(class(data[[1]]) ==  "SeqFastaAA"){
+    dat <- lapply(data,
+                  paste0,
+                  collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$",
+                    "",
+                    sequence)
+  }
+  res <- get_big_pi.default(sequence = sequence,
+                            id = id,
+                            ...)
+  return(res)
+}
+
+#' @rdname get_big_pi
+#' @method get_big_pi default
+#' @export
+
+get_big_pi.default <- function(data = NULL,
+                               sequence,
+                               id,
+                               simplify = TRUE,
+                               sleep = 1,
+                               ...){
   if (missing(simplify)){
     simplify <- TRUE
   }
@@ -84,75 +201,23 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
     warning("sleep was set to NA, setting to default: sleep = 1",
             call. = FALSE)
   }
-  if(missing(data)){
-    if (missing(sequence)){
-      stop("protein sequence must be provided to obtain predictions",
-           call. = FALSE)
-    }
-    if (missing(id)){
-      stop("protein id must be provided to obtain predictions",
-           call. = FALSE)
-    }
-    id <- as.character(id)
-    sequence <- toupper(as.character(sequence))
-    if (length(sequence) != length(id)){
-      stop("id and sequence vectors are not of same length",
-           call. = FALSE)
-    }
+  if (missing(sequence)){
+    stop("protein sequence must be provided to obtain predictions",
+         call. = FALSE)
   }
-  if(class(data[[1]]) ==  "SeqFastaAA"){
-    dat <- lapply(data, paste0, collapse ="")
-    id <- names(dat)
-    sequence <- toupper(as.character(unlist(dat)))
+  if (missing(id)){
+    stop("protein id must be provided to obtain predictions",
+         call. = FALSE)
   }
-  if(class(data) == "data.frame"){
-    if(missing(sequence)){
-      stop("the column name with the sequences must be specified",
-           call. = FALSE)
-    }
-    if(missing(id)){
-      stop("the column name with the sequence id's must be specified",
-           call. = FALSE)
-    }
-    id <- as.character(substitute(id))
-    sequence <- as.character(substitute(sequence))
-    if (length(id) != 1L){
-      stop("only one column name for 'id' must be specifed",
-           call. = FALSE)
-    }
-    if (length(sequence) != 1L){
-      stop("only one column name for 'sequence' must be specifed",
-           call. = FALSE)
-    }
-    id <- if(id %in% colnames(data)){
-      data[[id]]
-    } else {
-      stop("specified 'id' not found in data",
-           call. = FALSE)
-    }
-    id <- as.character(id)  
-    sequence  <- if(sequence %in% colnames(data)){
-      data[[sequence]]
-    } else {
-      stop("specified 'sequence' not found in data",
-           call. = FALSE)
-    }
-    sequence <- toupper(as.character(sequence))
+  id <- as.character(id)
+  sequence <- toupper(as.character(sequence))
+  if (length(sequence) != length(id)){
+    stop("id and sequence vectors are not of same length",
+         call. = FALSE)
   }
-  if(class(data) == "character"){
-    if (file.exists(data)){
-      dat <- seqinr::read.fasta(file = data,
-                                seqtype = "AA",
-                                as.string = FALSE)
-      dat <- lapply(dat, paste0, collapse ="")
-      id <- names(dat)
-      sequence <- toupper(as.character(unlist(dat)))
-    } else {
-      stop("cannot find file in the specified path",
-           call. = FALSE)
-    }
-  }
-  sequence <- sub("\\*$", "", sequence)
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
   id_sort <- id
   Terms <- c("Total Score",
              "Profile Score",
@@ -183,30 +248,36 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
                 4, 4, 2, 4, 4, 4, 4,
                 rep(3, 9), 4, 1)
   extract_val <- function(x, y){
-    res <- regmatches(y[grep(x, y)], gregexpr(num_reg, y[grep(x, y)]))
+    res <- regmatches(y[grep(x, y)],
+                      gregexpr(num_reg,
+                               y[grep(x, y)]))
     res <- unlist(res)
     res <- as.numeric(res)
     return(res)
   }
   aa_regex <- "[^ARNDCQEGHILKMFPSTWYVarndcqeghilkmfpstwyv]"
   if (any(grepl(aa_regex, sequence))){
-    warning(paste("sequences: ", paste(id[grepl(aa_regex, sequence)], collapse = ", "), 
+    warning(paste("sequences: ",
+                  paste(id[grepl(aa_regex,
+                                 sequence)],
+                        collapse = ", "),
                   " contain symbols not corresponding to amino acids",
-                  sep = ""), call. = FALSE)
+                  sep = ""),
+            call. = FALSE)
   }
   crop_1 <- ".*Use of the prediction function for VIRIDIPLANTAE"
   site_1 <- "Potential GPI-modification site was found"
   site_2 <- "Potential alternative GPI-modification site was found"
   num_reg <- "[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?"
-  
+
   short_seq <- which(nchar(sequence) <= 55)
   bad_seq <- grep(aa_regex, sequence)
-  
+
   if (length(bad_seq) != 0){
     Best <- rep(NA, length(Terms))
     Alternative <- rep(NA, length(Terms))
     total_score <- NA
-    pred_bad <- data.frame(omega_site = rep("invalid character", 2), 
+    pred_bad <- data.frame(omega_site = rep("invalid character", 2),
                            Quality = rep("None", 2),
                            PValue =  rep(NA, 2),
                            stringsAsFactors = FALSE)
@@ -223,7 +294,7 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
     Best <- rep(NA, length(Terms))
     Alternative <- rep(NA, length(Terms))
     total_score <- NA
-    pred_short <- data.frame(omega_site = rep("short sequence", 2), 
+    pred_short <- data.frame(omega_site = rep("short sequence", 2),
                              Quality = rep("None", 2),
                              PValue =  rep(NA, 2),
                              stringsAsFactors = FALSE)
@@ -236,7 +307,7 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
     res_short <- rep(list(res_short), length(short_seq))
     names(res_short) <- id[short_seq]
   }
-  
+
   if (length(c(short_seq, bad_seq)) != 0) {
     id_else <- id[-sort(c(bad_seq, short_seq))]
     sequence_else <- sequence[-sort(c(bad_seq, short_seq))]
@@ -250,7 +321,7 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
   mat_split <- split(mat, splt)
   sleep <- 2
   url <- "http://mendel.imp.ac.at/gpi/cgi-bin/gpi_pred_plants.cgi"
-  
+
   tot <- length(mat_split)
   pb <- utils::txtProgressBar(min = 0,
                               max = tot,
@@ -279,12 +350,12 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
     utils::setTxtProgressBar(pb, i)
     return(out)
   })
-  
+
   res_good <- unlist(res_good, recursive = FALSE)
-  
-  res_good <- res_good[which(grepl(crop_1, 
+
+  res_good <- res_good[which(grepl(crop_1,
                                    res_good))]
-  
+
   res_out <- lapply(res_good, function(resulti){
     impro <- unlist(strsplit(resulti, "\\\n"))
     impro <- impro[grep(crop_1, impro):length(impro)]
@@ -296,22 +367,22 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
       Alternative <- unlist(lapply(seq_along(Term_pos), function(x){
         extract_val(x = Terms[x], y = impro)[Term_pos[x]+1]
       }))
-      
+
       position_gpi <- extract_val("Sequence position of the omega-site",
                                   impro)
       total_score <- extract_val("Total Score\\.",
                                  impro)[1]
       best_p <- extract_val("PValue = ", impro)[2]
       alt_p <- extract_val("PValue = ", impro)[4]
-      
+
       site_q <- unlist(strsplit(impro[grep("Quality of the site", impro)],
                                 " {2,}", perl = TRUE))[c(2, 4)]
-      
-      pred <- data.frame(omega_site = position_gpi, 
+
+      pred <- data.frame(omega_site = position_gpi,
                          Quality = site_q ,
                          PValue =  c(best_p, alt_p),
                          stringsAsFactors = FALSE)
-      
+
       calc <- data.frame(Terms,
                          Best,
                          Alternative,
@@ -332,8 +403,8 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
         best_p <- extract_val("PValue = ", impro)[2]
         site_q <- unlist(strsplit(impro[grep("Quality of the site", impro)],
                                   " {2,}", perl = TRUE))[2]
-        
-        pred <- data.frame(omega_site = c(position_gpi[1], NA), 
+
+        pred <- data.frame(omega_site = c(position_gpi[1], NA),
                            Quality = c(site_q[1], NA) ,
                            PValue =  c(best_p, NA),
                            stringsAsFactors = FALSE)
@@ -353,8 +424,8 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
                                     impro)
         total_score <- extract_val("Total Score\\.",
                                    impro)[1]
-        
-        pred <- data.frame(omega_site = c(position_gpi[1], NA), 
+
+        pred <- data.frame(omega_site = c(position_gpi[1], NA),
                            Quality = c("None", NA) ,
                            PValue =  c(best_p, NA),
                            stringsAsFactors = FALSE)
@@ -364,24 +435,24 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
                            stringsAsFactors = FALSE)
         res <- list(prediction = pred,
                     calculation = calc)
-        
+
       }
     }
   }
   )
   close(pb)
   names(res_out) <- id_else
-  
+
   if (length(short_seq) != 0){
     res_out <- c(res_out,
                  res_short)
   }
-  
+
   if (length(bad_seq) != 0){
     res_out <- c(res_out,
                  res_bad)
   }
-  
+
   res_out <- res_out[id_sort]
   if(simplify){
     res_out <- lapply(res_out, function(x){
@@ -390,6 +461,6 @@ get_big_pi <- function(data = NULL, sequence, id, simplify = TRUE, sleep = 1){
     res_out <- do.call(rbind, res_out)
     res_out$id <- id
     res_out$is.bigpi <- res_out$Quality != "None"
-  } 
+  }
   return(res_out)
 }

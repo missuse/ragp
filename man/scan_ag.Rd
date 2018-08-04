@@ -2,14 +2,32 @@
 % Please edit documentation in R/scan_ag.R
 \name{scan_ag}
 \alias{scan_ag}
+\alias{scan_ag.default}
+\alias{scan_ag.character}
+\alias{scan_ag.data.frame}
+\alias{scan_ag.list}
+\alias{scan_ag.character}
+\alias{scan_ag.data.frame}
+\alias{scan_ag.list}
+\alias{scan_ag.default}
 \title{Find AG glycomodules in protein sequences}
 \usage{
-scan_ag(data = NULL, sequence, id, dim = 3L, div = 10L,
+scan_ag(data, ...)
+
+\method{scan_ag}{character}(data, ...)
+
+\method{scan_ag}{data.frame}(data, sequence, id, ...)
+
+\method{scan_ag}{list}(data, ...)
+
+\method{scan_ag}{default}(data = NULL, sequence, id, dim = 3L, div = 10L,
   type = c("conservative", "extended"), exclude_ext = c("no", "yes", "all"),
-  simplify = TRUE, tidy = FALSE)
+  simplify = TRUE, tidy = FALSE, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
+
+\item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
@@ -28,7 +46,7 @@ scan_ag(data = NULL, sequence, id, dim = 3L, div = 10L,
 \item{tidy}{Boolean, should the function return a tidy data frame instead of a list if simplify = FALSE.}
 }
 \value{
-If simplify = TRUE, a data frame with one row per sequence, containing columns:  
+If simplify = TRUE, a data frame with one row per sequence, containing columns:
 \describe{
   \item{id}{Character, as supplied in the function call.}
   \item{sequence}{Character, input sequence with amino acids in dipeptides (which satisfy the user set conditions) in uppercase.}
@@ -37,7 +55,7 @@ If simplify = TRUE, a data frame with one row per sequence, containing columns:
   \item{longest}{Integer, maximum length of the found stretches of dipeptides including the amino acids between dipeptides in a match.}
 }
 
-if simplify = FALSE and tidy = TRUE, a data frame with one row per match, with columns:  
+if simplify = FALSE and tidy = TRUE, a data frame with one row per match, with columns:
 \describe{
   \item{id}{Character, as supplied in the function call.}
   \item{sequence}{Character, input sequence with amino acids in dipeptides that satisfy the user set conditions in uppercase}
@@ -47,7 +65,7 @@ if simplify = FALSE and tidy = TRUE, a data frame with one row per match, with c
   \item{AG_aa}{Integer, number of amino acids in dipeptides in each match}
 }
 
-If simplify = FALSE and tidy = FALSE, a list with elements:  
+If simplify = FALSE and tidy = FALSE, a list with elements:
 
 \describe{
   \item{id}{Character vector, as supplied in the function call.}

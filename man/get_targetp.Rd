@@ -2,22 +2,36 @@
 % Please edit documentation in R/get_targetp.R
 \name{get_targetp}
 \alias{get_targetp}
-\title{Scraping TargetP web server.}
+\alias{get_targetp.default}
+\alias{get_targetp.character}
+\alias{get_targetp.data.frame}
+\alias{get_targetp.list}
+\alias{get_targetp.character}
+\alias{get_targetp.data.frame}
+\alias{get_targetp.list}
+\alias{get_targetp.default}
+\title{Query TargetP web server.}
 \source{
 \url{http://www.cbs.dtu.dk/services/TargetP/}
 }
 \usage{
-get_targetp(data = NULL, sequence, id, org_type = c("non_plant", "plant"),
+get_targetp(data, ...)
+
+\method{get_targetp}{character}(data, org_type = c("non_plant", "plant"),
   cutoffs = c("winner_takes_all", "spec95", "spec90", "custom"),
   tcut = NULL, pcut = NULL, scut = NULL, ocut = NULL, splitter = 500,
-  sleep = 3)
+  sleep = 3, ...)
+
+\method{get_targetp}{data.frame}(data, sequence, id, ...)
+
+\method{get_targetp}{list}(data, ...)
+
+\method{get_targetp}{default}(data = NULL, sequence, id, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
 
-\item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
-
-\item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
+\item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 
 \item{org_type}{One of c("non_plant", "plant"), defaults to "plant". Which models should be used for prediction.}
 
@@ -34,6 +48,10 @@ get_targetp(data = NULL, sequence, id, org_type = c("non_plant", "plant"),
 \item{splitter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
 
 \item{sleep}{A numeric indicating the pause in seconds between server calls, at default set to 1}
+
+\item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
+
+\item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 }
 \value{
 A data frame with columns:
@@ -62,11 +80,10 @@ data(at_nsp)
 targetp_pred <- get_targetp(at_nsp[1:20,],
                             sequence,
                             Transcript.id)
-
 }
 \references{
 Emanuelsson O, Nielsen H, Brunak S,von Heijne G. (2000) Predicting subcellular localization of proteins based on their N-terminal amino acid sequence. J. Mol. Biol.300: 1005-1016
 }
 \seealso{
-\code{\link[ragp]{get_targetp_file}}
+\code{\link[ragp]{get_signalp}}
 }

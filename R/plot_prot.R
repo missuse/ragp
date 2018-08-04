@@ -69,9 +69,12 @@ plot_prot <- function(sequence,
   aa_regex <- "[^ARNDCQEGHILKMFPSTWYVarndcqeghilkmfpstwyv]"
   
   if (any(grepl(aa_regex, sequence))){
-    warning(paste("sequences: ", paste(id[grepl(aa_regex, sequence)], collapse = ", "), 
+    warning(paste("sequences: ",
+                  paste(id[grepl(aa_regex, sequence)],
+                        collapse = ", "), 
                   " contain symbols not corresponding to amino acids",
-                  sep = ""), call. = FALSE)
+                  sep = ""),
+            call. = FALSE)
   }
   
   if (missing(dom_sort)){
@@ -294,12 +297,12 @@ plot_prot <- function(sequence,
   
   if (domain) {
     print("querying hmmscan")
-    seq_hmm <- ragp::get_hmm(data = dat,
-                             sequence = sequence,
-                             id = id,
-                             sleep = 0,
-                             attempts = 5,
-                             verbose = FALSE)
+    seq_hmm <- ragp::get_hmm.data.frame(data = dat,
+                                        sequence = sequence,
+                                        id = id,
+                                        sleep = 0,
+                                        attempts = 5,
+                                        verbose = FALSE)
     
     seq_hmm <- seq_hmm[seq_hmm$reported,]
     
@@ -342,7 +345,7 @@ plot_prot <- function(sequence,
   
   if (nsp) {
     print("querying signalp")
-    seq_signalp <- do.call(ragp::get_signalp,
+    seq_signalp <- do.call(ragp::get_signalp.data.frame,
                            c(list(data = dat,
                                   sequence = "sequence",
                                   id = "id"),
@@ -365,9 +368,9 @@ plot_prot <- function(sequence,
   
   if (tm) {
     print("querying phobius")
-    phobius_seq <- ragp::get_phobius(data = dat,
-                                     sequence = sequence,
-                                     id = id)
+    phobius_seq <- ragp::get_phobius.data.frame(data = dat,
+                                                sequence = sequence,
+                                                id = id)
     
     phobius_seq <- merge(dat,
                          phobius_seq,
@@ -457,9 +460,9 @@ plot_prot <- function(sequence,
   seq_gpi <- NULL
   if (gpi == 'bigpi') {
     print("querying big pi")
-    seq_gpi <- ragp::get_big_pi(dat,
-                                "sequence",
-                                "id")
+    seq_gpi <- ragp::get_big_pi.data.frame(dat,
+                                           "sequence",
+                                           "id")
     
     seq_gpi <- seq_gpi[seq_gpi$is.bigpi,]
     seq_gpi$omega_site <- as.numeric(seq_gpi$omega_site)
@@ -471,9 +474,9 @@ plot_prot <- function(sequence,
 
   if (gpi == 'predgpi') {
     print("querying predGPI")
-    seq_gpi <- ragp::get_pred_gpi(dat,
-                                  "sequence",
-                                  "id")
+    seq_gpi <- ragp::get_pred_gpi.data.frame(dat,
+                                             "sequence",
+                                             "id")
     
     seq_gpi <- seq_gpi[seq_gpi$is.gpi,]
     
@@ -484,7 +487,7 @@ plot_prot <- function(sequence,
   }
 
   if (hyp) {
-    seq_hyp <- do.call(ragp::predict_hyp,
+    seq_hyp <- do.call(ragp::predict_hyp.data.frame,
                        c(list(data = dat,
                               sequence = "sequence",
                               id = "id"),
@@ -503,7 +506,7 @@ plot_prot <- function(sequence,
   }
   
   if (ag) {
-    seq_scan <- do.call(ragp::scan_ag,
+    seq_scan <- do.call(ragp::scan_ag.data.frame,
                         c(list(data = dat,
                                sequence = "sequence",
                                id = "id",
@@ -524,7 +527,7 @@ plot_prot <- function(sequence,
   seq_espritz <- NULL
   if (disorder) {
     print("querying espritz")
-    seq_espritz <- do.call(get_espritz,
+    seq_espritz <- do.call(get_espritz.data.frame,
                            c(list(data = dat,
                                   sequence = "sequence",
                                   id = "id",

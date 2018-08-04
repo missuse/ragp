@@ -2,21 +2,39 @@
 % Please edit documentation in R/get_pred_gpi.R
 \name{get_pred_gpi}
 \alias{get_pred_gpi}
-\title{Scraping PredGPI web server.}
+\alias{get_pred_gpi.default}
+\alias{get_pred_gpi.character}
+\alias{get_pred_gpi.data.frame}
+\alias{get_pred_gpi.list}
+\alias{get_pred_gpi.character}
+\alias{get_pred_gpi.data.frame}
+\alias{get_pred_gpi.list}
+\alias{get_pred_gpi.default}
+\title{Query PredGPI web server.}
 \source{
 \url{http://gpcr.biocomp.unibo.it/predgpi/pred.htm}
 }
 \usage{
-get_pred_gpi(data = NULL, sequence, id, spec = 0.99)
+get_pred_gpi(data, ...)
+
+\method{get_pred_gpi}{character}(data, spec = 0.99, ...)
+
+\method{get_pred_gpi}{data.frame}(data, sequence, id, ...)
+
+\method{get_pred_gpi}{list}(data, ...)
+
+\method{get_pred_gpi}{default}(data = NULL, sequence, id, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
+
+\item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
+
+\item{spec}{Numeric in the 0-1 range, indicating the threshold specificity.}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
 \item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
-
-\item{spec}{Numeric in the 0-1 range, indicating the threshold specificity.}
 }
 \value{
 A data frame with columns:
@@ -40,6 +58,7 @@ data(at_nsp)
 gpi_pred <- get_pred_gpi(at_nsp[1:20,],
                          sequence,
                          Transcript.id)
+
 }
 \references{
 Pierleoni A. Martelli P. L. Casadio R. (2008) PredGPI: a GPI-anchor predictor. BMC Bioinformatics 9: 392

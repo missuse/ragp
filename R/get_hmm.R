@@ -3,7 +3,8 @@
 #' hmmer web server offers biosequence analysis using profile hidden Markov Models. This function allows searching
 #' of a protein sequence vs a profile-HMM database (Pfam-A).
 #'
-#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from seqinr::read.fasta call.
+#' @aliases get_hmm get_hmm.default get_hmm.character get_hmm.data.frame get_hmm.list
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param verbose Bolean, whether to print out the output for each sequence, defaults to TRUE.
@@ -11,6 +12,7 @@
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
 #' @param timeout Numeric, time in seconds to wait for server response.
 #' @param progress Bolean, whether to show the progress bar, at default set to TRUE
+#' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
 #' @return A data frame with columns:
 #' \describe{
@@ -43,17 +45,129 @@
 #'                     verbose = FALSE,
 #'                     sleep = 0)
 #'
+#' @import seqinr
+#' @import httr
+#' @import xml2
 #' @export
 
+get_hmm <- function (data, ...){
+  if (missing(data) || is.null(data)) get_hmm.default(...)
+  else UseMethod("get_hmm")
+}
 
-get_hmm <- function(data = NULL,
-                    sequence,
-                    id,
-                    verbose = TRUE,
-                    sleep = 1,
-                    attempts = 2L,
-                    timeout = 10,
-                    progress = TRUE){
+#' @rdname get_hmm
+#' @method get_hmm character
+#' @export
+
+get_hmm.character <- function(data,
+                              ...){
+  if (file.exists(data)){
+    dat <- seqinr::read.fasta(file = data,
+                              seqtype = "AA",
+                              as.string = FALSE)
+    dat <- lapply(dat,
+                  paste0,
+                  collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$",
+                    "",
+                    sequence)
+  } else {
+    stop("cannot find file in the specified path",
+         call. = FALSE)
+  }
+  res <- get_hmm.default(sequence = sequence,
+                         id = id,
+                         ...)
+  return(res)
+}
+
+#' @rdname get_hmm
+#' @method get_hmm data.frame
+#' @export
+
+get_hmm.data.frame <- function(data,
+                               sequence,
+                               id,
+                               ...){
+  if(missing(sequence)){
+    stop("the column name with the sequences must be specified",
+         call. = FALSE)
+  }
+  if(missing(id)){
+    stop("the column name with the sequence id's must be specified",
+         call. = FALSE)
+  }
+  id <- as.character(substitute(id))
+  sequence <- as.character(substitute(sequence))
+  if (length(id) != 1L){
+    stop("only one column name for 'id' must be specifed",
+         call. = FALSE)
+  }
+  if (length(sequence) != 1L){
+    stop("only one column name for 'sequence' must be specifed",
+         call. = FALSE)
+  }
+  id <- if(id %in% colnames(data)){
+    data[[id]]
+  } else {
+    stop("specified 'id' not found in data",
+         call. = FALSE)
+  }
+  id <- as.character(id)
+  sequence  <- if(sequence %in% colnames(data)){
+    data[[sequence]]
+  } else {
+    stop("specified 'sequence' not found in data",
+         call. = FALSE)
+  }
+  sequence <- toupper(as.character(sequence))
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  res <- get_hmm.default(sequence = sequence,
+                         id = id,
+                         ...)
+
+  return(res)
+}
+
+#' @rdname get_hmm
+#' @method get_hmm list
+#' @export
+
+get_hmm.list <- function(data,
+                         ...){
+  if(class(data[[1]]) ==  "SeqFastaAA"){
+    dat <- lapply(data,
+                  paste0,
+                  collapse ="")
+    id <- names(dat)
+    sequence <- toupper(as.character(unlist(dat)))
+    sequence <- sub("\\*$",
+                    "",
+                    sequence)
+  }
+  res <- get_hmm.default(sequence = sequence,
+                         id = id,
+                         ...)
+  return(res)
+}
+
+#' @rdname get_hmm
+#' @method get_hmm default
+#' @export
+
+get_hmm.default <- function(data = NULL,
+                            sequence,
+                            id,
+                            verbose = TRUE,
+                            sleep = 1,
+                            attempts = 2L,
+                            timeout = 10,
+                            progress = TRUE,
+                            ...){
   if (missing(verbose)) {
     verbose <- TRUE
   }
@@ -154,75 +268,33 @@ get_hmm <- function(data = NULL,
     warning("timeout was set to less then 2, setting to default: timeout = 10",
             call. = FALSE)
   }
-  if(missing(data)){
-    if (missing(sequence)){
-      stop("protein sequence must be provided to obtain predictions",
-           call. = FALSE)
-    }
-    if (missing(id)){
-      stop("protein id must be provided to obtain predictions",
-           call. = FALSE)
-    }
-    id <- as.character(id)
-    sequence <- toupper(as.character(sequence))
-    if (length(sequence) != length(id)){
-      stop("id and sequence vectors are not of same length",
-           call. = FALSE)
-    }
+  if (missing(sequence)){
+    stop("protein sequence must be provided to obtain predictions",
+         call. = FALSE)
   }
-  if(class(data[[1]]) ==  "SeqFastaAA"){
-    dat <- lapply(data, paste0, collapse ="")
-    id <- names(dat)
-    sequence <- toupper(as.character(unlist(dat)))
+  if (missing(id)){
+    stop("protein id must be provided to obtain predictions",
+         call. = FALSE)
   }
-  if(class(data) == "data.frame"){
-    if(missing(sequence)){
-      stop("the column name with the sequences must be specified",
-           call. = FALSE)
-    }
-    if(missing(id)){
-      stop("the column name with the sequence id's must be specified",
-           call. = FALSE)
-    }
-    id <- as.character(substitute(id))
-    sequence <- as.character(substitute(sequence))
-    if (length(id) != 1L){
-      stop("only one column name for 'id' must be specifed",
-           call. = FALSE)
-    }
-    if (length(sequence) != 1L){
-      stop("only one column name for 'sequence' must be specifed",
-           call. = FALSE)
-    }
-    id <- if(id %in% colnames(data)){
-      data[[id]]
-    } else {
-      stop("specified 'id' not found in data",
-           call. = FALSE)
-    }
-    id <- as.character(id)  
-    sequence  <- if(sequence %in% colnames(data)){
-      data[[sequence]]
-    } else {
-      stop("specified 'sequence' not found in data",
-           call. = FALSE)
-    }
-    sequence <- toupper(as.character(sequence))
+  id <- as.character(id)
+  sequence <- toupper(as.character(sequence))
+  if (length(sequence) != length(id)){
+    stop("id and sequence vectors are not of same length",
+         call. = FALSE)
   }
-  if(class(data) == "character"){
-    if (file.exists(data)){
-      dat <- seqinr::read.fasta(file = data,
-                                seqtype = "AA",
-                                as.string = FALSE)
-      dat <- lapply(dat, paste0, collapse ="")
-      id <- names(dat)
-      sequence <- toupper(as.character(unlist(dat)))
-    } else {
-      stop("cannot find file in the specified path",
-           call. = FALSE)
-    }
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  aa_regex <- "[^ARNDCQEGHILKMFPSTWYV]"
+  if (any(grepl(aa_regex, sequence))){
+    warning(paste("sequences: ",
+                  paste(id[grepl(aa_regex,
+                                 sequence)],
+                        collapse = ", "),
+                  " contain symbols not corresponding to amino acids",
+                  sep = ""),
+            call. = FALSE)
   }
-  sequence <- sub("\\*$", "", sequence)
   n <- length(sequence)
   url <- "https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan"
   pfam <- list()
@@ -287,13 +359,13 @@ get_hmm <- function(data = NULL,
       while (is.null(res) && attempt <= attempts) {
         attempt <- attempt + 1
         try(res <- httr::POST(url = url,
-                              encode = "form", 
+                              encode = "form",
                               body = list(isajax = "1",
                                           seq = seqi,
-                                          hmmdb = "pfam", 
+                                          hmmdb = "pfam",
                                           alt = "Paste",
                                           threshold = "cut_ga"),
-                              httr::timeout(timeout)), 
+                              httr::timeout(timeout)),
             silent = TRUE)
         if (!is.null(res)) {
           break
@@ -323,7 +395,7 @@ get_hmm <- function(data = NULL,
           pfam$cevalue <- as.numeric(as.character(pfam$cevalue))
           pfam$bitscore <- as.numeric(as.character(pfam$bitscore))
           pfam$reported <- as.logical(as.integer(pfam$reported))
-          warning(paste("maximum attempts reached at", 
+          warning(paste("maximum attempts reached at",
                         id[i], "returning finished queries"),
                   call. = FALSE)
           return(pfam)
@@ -337,18 +409,18 @@ get_hmm <- function(data = NULL,
           doms <- lapply(dom, function(x) {
             resi <- data.frame(id = seqi_id,
                                name = x$alihmmname,
-                               acc = x$alihmmacc, 
+                               acc = x$alihmmacc,
                                desc = x$alihmmdesc,
                                clan = ifelse(is.null(x$clan),
                                              NA,
                                              as.character(x$clan)),
-                               align_start = x$alisqfrom, 
+                               align_start = x$alisqfrom,
                                align_end = x$alisqto,
-                               model_start = x$alihmmfrom, 
+                               model_start = x$alihmmfrom,
                                model_end = x$alihmmto,
-                               ievalue = x$ievalue, 
+                               ievalue = x$ievalue,
                                cevalue = x$cevalue,
-                               bitscore = x$bitscore, 
+                               bitscore = x$bitscore,
                                reported = as.logical(
                                  as.integer(
                                    x$is_included)),
@@ -372,13 +444,13 @@ get_hmm <- function(data = NULL,
         hitx <- data.frame(id = seqi_id,
                            name = NA,
                            acc = NA,
-                           desc = NA, 
+                           desc = NA,
                            clan = NA,
                            align_start = NA,
-                           align_end = NA, 
+                           align_end = NA,
                            model_start = NA,
                            model_end = NA,
-                           ievalue = NA, 
+                           ievalue = NA,
                            cevalue = NA,
                            bitscore = NA,
                            reported = FALSE)
@@ -397,7 +469,7 @@ get_hmm <- function(data = NULL,
   if(progress){
     close(pb)
   }
-  
+
   pfam <- suppressWarnings(do.call(rbind, pfam))
   pfam <- as.data.frame(pfam)
   rownames(pfam) <- 1:nrow(pfam)
@@ -416,4 +488,3 @@ get_hmm <- function(data = NULL,
   pfam$reported <- as.logical(as.integer(pfam$reported))
   return(pfam)
 }
-
