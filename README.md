@@ -111,7 +111,7 @@ input5 <- scan_ag(data = "at_nsp.fasta")
 N-sp query
 ----------
 
-HRGPs are secreted proteins, therefore they are expected to contain a secretory signal sequence on the N-terminus (N-sp). `ragp` incorporates N-sp prediction by querying [SignalP](http://www.cbs.dtu.dk/services/SignalP/), [TargetP](http://www.cbs.dtu.dk/services/TargetP/) (Emanuelsson et al. 2000) and [Phobius](http://phobius.sbc.su.se/) (Käll, Krogh, and Sonnhammer 2007) in an efficient manner via the functions: `get_signalp`, `get_targetp` and `get_phobius` (deprecated but available are the previous versions: `get_signalp_file`, `get_targetp_file` and `get_phobius_file`)
+HRGPs are secreted proteins, therefore they are expected to contain a secretory signal sequence on the N-terminus (N-sp). `ragp` incorporates N-sp prediction by querying [SignalP](http://www.cbs.dtu.dk/services/SignalP/), [TargetP](http://www.cbs.dtu.dk/services/TargetP/) (Emanuelsson et al. 2000) and [Phobius](http://phobius.sbc.su.se/) (Käll, Krogh, and Sonnhammer 2007) in an efficient manner via the functions: `get_signalp`, `get_targetp` and `get_phobius`.
 
 To query [SignalP](http://www.cbs.dtu.dk/services/SignalP/) predictions:
 
