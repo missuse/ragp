@@ -32,8 +32,9 @@ pfam2go <- function(data_pfam, pfam){
   if (missing(pfam)){
     pfam = "acc"
   }
-  if (length(data_pfam[[pfam]])==0){
-    stop ("please provide the column name of the PFAM accesions, in argument pfam")
+  if (length(data_pfam[[pfam]]) == 0){
+    stop ("please provide the column name of the PFAM accesions, in argument pfam",
+          call. = FALSE)
   }
   pfam2go <- httr::GET("http://geneontology.org/external2go/pfam2go")
   go_text <- httr::content(pfam2go, as = "text")
