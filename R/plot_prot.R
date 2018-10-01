@@ -694,7 +694,6 @@ plot_prot <- function(sequence,
                                        xmin = ~tm_start,
                                        xmax = ~tm_end, color = "TM"),
                          fill = tm_col,
-                         color  = tm_col,
                          na.rm = TRUE) +
       ggplot2::geom_segment(data = inside,
                             ggplot2::aes_(y = ~id_inside - 0.35,
