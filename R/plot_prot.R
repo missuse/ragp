@@ -795,6 +795,5 @@ plot_prot <- function(sequence,
                                                                         shape = 15,
                                                                         linetype = 1)))
   }
-  
   return(p)
 }
