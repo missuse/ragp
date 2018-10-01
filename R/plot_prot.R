@@ -756,7 +756,7 @@ plot_prot <- function(sequence,
                                            ymax = ~id_num + 0.18,
                                            x  = ~P_pos,
                                            color = "hyp"),
-                             size = 1,
+                             size = 0.2,
                              width = 0,
                              na.rm = TRUE)
   }
