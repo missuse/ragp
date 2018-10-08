@@ -6,10 +6,6 @@
 \alias{get_hmm.character}
 \alias{get_hmm.data.frame}
 \alias{get_hmm.list}
-\alias{get_hmm.character}
-\alias{get_hmm.data.frame}
-\alias{get_hmm.list}
-\alias{get_hmm.default}
 \title{Scraping hmmer web server.}
 \source{
 \url{https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan}

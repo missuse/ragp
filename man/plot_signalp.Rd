@@ -10,8 +10,8 @@
 plot_signalp(sequence, id, org_type = c("euk", "gram-", "gram+"),
   Dcut_type = c("default", "sensitive", "user"), Dcut_noTM = 0.45,
   Dcut_TM = 0.5, method = c("best", "notm"), c.score.col = "#ff0000",
-  s.score.col = "#59a454", y.score.col = "#728fcc", t.col = "#551a8b",
-  main = NULL, sleep = 5L)
+  s.score.col = "#59a454", y.score.col = "#728fcc",
+  t.col = "#551a8b", main = NULL, sleep = 5L)
 }
 \arguments{
 \item{sequence}{String representing a protein amino acid sequence.}

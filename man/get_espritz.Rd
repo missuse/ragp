@@ -6,10 +6,6 @@
 \alias{get_espritz.character}
 \alias{get_espritz.data.frame}
 \alias{get_espritz.list}
-\alias{get_espritz.character}
-\alias{get_espritz.data.frame}
-\alias{get_espritz.list}
-\alias{get_espritz.default}
 \title{Query Espritz web server.}
 \source{
 \url{http://protein.bio.unipd.it/espritz/}
@@ -23,8 +19,9 @@ get_espritz(data, ...)
 
 \method{get_espritz}{list}(data, ...)
 
-\method{get_espritz}{default}(data = NULL, sequence, id, model = c("X-Ray",
-  "Disprot", "NMR"), FPR = c("best Sw", "5\% FPR"), simplify = TRUE, ...)
+\method{get_espritz}{default}(data = NULL, sequence, id,
+  model = c("X-Ray", "Disprot", "NMR"), FPR = c("best Sw", "5\% FPR"),
+  simplify = TRUE, ...)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}

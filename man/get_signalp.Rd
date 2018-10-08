@@ -6,10 +6,6 @@
 \alias{get_signalp.character}
 \alias{get_signalp.data.frame}
 \alias{get_signalp.list}
-\alias{get_signalp.character}
-\alias{get_signalp.data.frame}
-\alias{get_signalp.list}
-\alias{get_signalp.default}
 \title{Query SignalP web server.}
 \source{
 \url{http://www.cbs.dtu.dk/services/SignalP-4.1/}
@@ -17,10 +13,11 @@
 \usage{
 get_signalp(data, ...)
 
-\method{get_signalp}{character}(data, org_type = c("euk", "gram-", "gram+"),
-  Dcut_type = c("default", "sensitive", "user"), Dcut_noTM = 0.45,
-  Dcut_TM = 0.5, method = c("best", "notm"), minlen = NULL, trunc = 70L,
-  splitter = 500L, sleep = 3, ...)
+\method{get_signalp}{character}(data, org_type = c("euk", "gram-",
+  "gram+"), Dcut_type = c("default", "sensitive", "user"),
+  Dcut_noTM = 0.45, Dcut_TM = 0.5, method = c("best", "notm"),
+  minlen = NULL, trunc = 70L, splitter = 500L, sleep = 3,
+  attempts = 2, progress = TRUE, ...)
 
 \method{get_signalp}{data.frame}(data, sequence, id, ...)
 
@@ -50,6 +47,10 @@ get_signalp(data, ...)
 \item{splitter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
 
 \item{sleep}{A numeric indicating the pause in seconds between POST and GET server calls, at default set to 1s. Decreasing is not recommended.}
+
+\item{attempts}{Integer, number of attempts if server unresponsive, at default set to 2.}
+
+\item{progress}{Bolean, whether to show the progress bar, at default set to TRUE}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 

@@ -6,10 +6,6 @@
 \alias{predict_hyp.character}
 \alias{predict_hyp.data.frame}
 \alias{predict_hyp.list}
-\alias{predict_hyp.character}
-\alias{predict_hyp.data.frame}
-\alias{predict_hyp.list}
-\alias{predict_hyp.default}
 \title{Predict hydroxyproline positions in plant proteins based on primary structure}
 \usage{
 predict_hyp(data, ...)

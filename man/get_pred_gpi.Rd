@@ -6,10 +6,6 @@
 \alias{get_pred_gpi.character}
 \alias{get_pred_gpi.data.frame}
 \alias{get_pred_gpi.list}
-\alias{get_pred_gpi.character}
-\alias{get_pred_gpi.data.frame}
-\alias{get_pred_gpi.list}
-\alias{get_pred_gpi.default}
 \title{Query PredGPI web server.}
 \source{
 \url{http://gpcr.biocomp.unibo.it/predgpi/pred.htm}

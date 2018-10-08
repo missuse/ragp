@@ -6,10 +6,6 @@
 \alias{get_targetp.character}
 \alias{get_targetp.data.frame}
 \alias{get_targetp.list}
-\alias{get_targetp.character}
-\alias{get_targetp.data.frame}
-\alias{get_targetp.list}
-\alias{get_targetp.default}
 \title{Query TargetP web server.}
 \source{
 \url{http://www.cbs.dtu.dk/services/TargetP/}
@@ -19,8 +15,8 @@ get_targetp(data, ...)
 
 \method{get_targetp}{character}(data, org_type = c("non_plant", "plant"),
   cutoffs = c("winner_takes_all", "spec95", "spec90", "custom"),
-  tcut = NULL, pcut = NULL, scut = NULL, ocut = NULL, splitter = 500,
-  sleep = 3, ...)
+  tcut = NULL, pcut = NULL, scut = NULL, ocut = NULL,
+  splitter = 500, sleep = 3, attempts = 2, progress = TRUE, ...)
 
 \method{get_targetp}{data.frame}(data, sequence, id, ...)
 
@@ -48,6 +44,10 @@ get_targetp(data, ...)
 \item{splitter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
 
 \item{sleep}{A numeric indicating the pause in seconds between server calls, at default set to 1}
+
+\item{attempts}{Integer, number of attempts if server unresponsive, at default set to 2.}
+
+\item{progress}{Bolean, whether to show the progress bar, at default set to TRUE}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 

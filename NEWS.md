@@ -1,9 +1,18 @@
 NEWS
 -----------------------------
   
+version 0.2.1.0000
+
+BUG FIXES AND IMPROVEMENTS
+
+* Additional arguments added to `get_targetp` and `get_signalp` functions: `progress` and `attempts`. 
+`progress` is a logical value determining whether to show the progress bar, at default set to TRUE. 
+`attempts` is an integer value determining the number of repeated attempts if server unresponsive, at default set to 2.
+These functions now return finished queues if server becomes unresponsive.  
+  
 version 0.2.0.0000
 -----------------------------
-  NEW FEATURES
+NEW FEATURES
 
 * All functions that operate on multiple input types: `get_big_pi`, `get_espritz`,
 `get_hmm`, `get_phobius`, `get_pred_gpi`, `get_signalp`, `get_targetp`, `maab`,

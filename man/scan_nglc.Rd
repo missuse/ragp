@@ -6,10 +6,6 @@
 \alias{scan_nglc.character}
 \alias{scan_nglc.data.frame}
 \alias{scan_nglc.list}
-\alias{scan_nglc.character}
-\alias{scan_nglc.data.frame}
-\alias{scan_nglc.list}
-\alias{scan_nglc.default}
 \title{Detection of motifs for N-glycosylation on asparagine residues.}
 \source{
 \url{https://prosite.expasy.org/PDOC00001}

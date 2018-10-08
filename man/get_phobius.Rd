@@ -6,10 +6,6 @@
 \alias{get_phobius.character}
 \alias{get_phobius.data.frame}
 \alias{get_phobius.list}
-\alias{get_phobius.character}
-\alias{get_phobius.data.frame}
-\alias{get_phobius.list}
-\alias{get_phobius.default}
 \title{Query Phobius web server.}
 \source{
 \url{http://phobius.sbc.su.se/}
