@@ -308,12 +308,12 @@ get_hmm.default <- function(data = NULL,
     seqi_id <- id[i]
     nc <- nchar(seqi)
     if(nc > 1000){
-      message(cat("\n",
-                  "sequence",
-                  seqi_id,
-                  "is longer than the permitted hmmscan length",
-                  "\n",
-                  "processing in chunks"))
+      message("\n",
+              "sequence",
+              seqi_id,
+              "is longer than the permitted hmmscan length",
+              "\n",
+              "processing in chunks")
       star <- c(1, seq(from = 701,
                        to = nc,
                        by = 700))

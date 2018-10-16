@@ -475,11 +475,10 @@ get_targetp.character <-   function(data,
         
         if ((time2 - time1) > max.time) {
           res2_split <- NULL
-          if(progress) print(
-            paste("file",
-                  x[i],
-                  "took longer then expected")
-          )
+          if(progress) message(
+            "file",
+            x[i],
+            "took longer then expected")
           break
         }
       }
@@ -487,10 +486,9 @@ get_targetp.character <-   function(data,
       if (is.null(res2_split)) {
         tms <- 0
         while(tms < attempts && is.null(res2_split)){
-          if(progress) print(
-            paste("reattempting file",
-                  x[i])
-          )
+          if(progress) message(
+            "reattempting file",
+            x[i])
           file_up <-  httr::upload_file(x[i])
           res <- httr::POST(
             url = "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?",
@@ -581,9 +579,9 @@ get_targetp.character <-   function(data,
           close(pb)
         }
         warning(
-          print(paste("maximum attempts reached at",
-                      x[i],
-                      "returning finished queries")),
+          "maximum attempts reached at",
+          x[i],
+          "returning finished queries",
           call. = FALSE)
         return(output)
       }

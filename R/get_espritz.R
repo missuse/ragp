@@ -266,11 +266,11 @@ get_espritz.default <- function(data = NULL,
                            encoding = "UTF-8")
       really_bad <- "You have exceeded your daily number of runs or number of concurrent runs."
       if(grepl(really_bad, as.character(res))){
-        stop(cat(c("Your job has been blocked.",
-                   "\nYou have exceeded your daily",
-                   "number of runs or number of concurrent runs.",
-                   "\nPlease wait that your running jobs",
-                   "complete or try again tomorrow.")),
+        stop("Your job has been blocked.",
+             "\nYou have exceeded your daily",
+             " number of runs or number of concurrent runs.",
+             "\nPlease wait that your running jobs",
+             " complete or try again tomorrow.",
              call. = FALSE)
       }
 
