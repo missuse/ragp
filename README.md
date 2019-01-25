@@ -111,7 +111,7 @@ input5 <- scan_ag(data = "at_nsp.fasta")
 N-sp query
 ----------
 
-HRGPs are secreted proteins, therefore they are expected to contain a secretory signal sequence on the N-terminus (N-sp). `ragp` incorporates N-sp prediction by querying [SignalP](http://www.cbs.dtu.dk/services/SignalP/), [TargetP](http://www.cbs.dtu.dk/services/TargetP/) (Emanuelsson et al. 2000) and [Phobius](http://phobius.sbc.su.se/) (Käll, Krogh, and Sonnhammer 2007) in an efficient manner via the functions: `get_signalp`, `get_targetp` and `get_phobius`.
+HRGPs are secreted proteins, therefore they are expected to contain a secretory signal sequence on the N-terminus (N-sp). `ragp` incorporates N-sp prediction by querying [SignalP](http://www.cbs.dtu.dk/services/SignalP/), [TargetP](http://www.cbs.dtu.dk/services/TargetP/) (Emanuelsson et al. 2000) and [Phobius](http://phobius.sbc.su.se/) (Käll, Krogh, and Sonnhammer 2007) in an efficient manner via the functions: `get_signalp()`, `get_targetp()` and `get_phobius()`.
 
 To query [SignalP](http://www.cbs.dtu.dk/services/SignalP/) predictions:
 
@@ -121,7 +121,7 @@ nsp_signalp <- get_signalp(at_nsp,
                            Transcript.id)
 ```
 
-The predictions for the 2700 sequences contained in `at_nsp` data frame should be available in around 1 minute. The returned object `nsp_signalp` is a data frame resembling the web servers output:
+The predictions for the 2700 sequences contained in `at_nsp` data frame should be available in around 1 minute. The returned object `nsp_signalp()` is a data frame resembling the web servers output:
 
 ``` r
 knitr::kable(head(nsp_signalp))
@@ -136,7 +136,7 @@ knitr::kable(head(nsp_signalp))
 | AT2G19580.1 | 0.422 | 26       | 0.586 | 26       | 0.885 | 17       | 0.798 | 0.671 | Y     | 0.500   | SignalP-TM    | TRUE       |
 | AT2G19690.2 | 0.797 | 29       | 0.870 | 29       | 0.987 | 18       | 0.952 | 0.914 | Y     | 0.450   | SignalP-noTM  | TRUE       |
 
-Similarly [Phobius](http://phobius.sbc.su.se/) and [TargetP](http://www.cbs.dtu.dk/services/TargetP/) can be accessed by the functions `get_phobius` and `get_targetp`.
+Similarly [Phobius](http://phobius.sbc.su.se/) and [TargetP](http://www.cbs.dtu.dk/services/TargetP/) can be accessed by the functions `get_phobius()` and `get_targetp()`.
 
 When a more in depth look at SignalP predictions is needed the function `plot_signalp` can be used. This function accepts a single protein sequence as input:
 
@@ -152,7 +152,7 @@ pred <- plot_signalp(sequence = at_nsp$sequence[5],
 GPI and hmm query
 -----------------
 
-HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor (Ellis et al. 2010). To fetch the GPI modification site predictions from [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) (B. Eisenhaber et al. 2003) the function `get_big_pi` can be used:
+HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor (Ellis et al. 2010). To fetch the GPI modification site predictions from [big-PI](http://mendel.imp.ac.at/gpi/plant_server.html) (B. Eisenhaber et al. 2003) the function `get_big_pi()` can be used:
 
 ``` r
 big_pi_pred <- get_big_pi(data = at_nsp[1:100,],
@@ -168,7 +168,7 @@ pred_gpi_pred <- get_pred_gpi(data = at_nsp[1:100,],
                               id = Transcript.id)
 ```
 
-Similarly, domains can be identified by [hmmscan](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) (Finn, Clements, and Eddy 2011) using `get_hmm` function:
+Similarly, domains can be identified by [hmmscan](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) (Finn, Clements, and Eddy 2011) using `get_hmm()` function:
 
 ``` r
 pfam_pred <- get_hmm(data = at_nsp[1:20,],
@@ -201,7 +201,7 @@ first 10 rows of the GO result with selected columns:
 Disorder prediction
 -------------------
 
-HRGPs are considered to be intrinsically disordered. To identify potential disordered regions in proteins `ragp` contains `get_espritz` function which queries [ESpritz](http://protein.bio.unipd.it/espritz/) (Walsh et al. 2012) web server:
+HRGPs are considered to be intrinsically disordered. To identify potential disordered regions in proteins `ragp` contains `get_espritz()` function which queries [ESpritz](http://protein.bio.unipd.it/espritz/) (Walsh et al. 2012) web server:
 
 ``` r
 at_espritz <- get_espritz(at_nsp[1:100,],
@@ -212,7 +212,7 @@ at_espritz <- get_espritz(at_nsp[1:100,],
 MAAB classification
 -------------------
 
-The MAAB pipeline is explained in detail in Johnson et al. (2017). The `ragp` function `maab` performs motif and amino acid bias classification of HRGPs:
+The MAAB pipeline is explained in detail in Johnson et al. (2017). The `ragp` function `maab()` performs motif and amino acid bias classification of HRGPs:
 
 ``` r
 maab_class <- maab(at_nsp,
@@ -230,7 +230,7 @@ maab_class <- maab(at_nsp,
                    get_gpi = "bigpi")
 ```
 
-This will run `get_big_pi` (or `get_pred_gpi` if `"predgpi"` was set) only on the sequences that belong to one of the HRGP classes.
+This will run `get_big_pi()` (or `get_pred_gpi()` if `"predgpi"` was set) only on the sequences that belong to one of the HRGP classes.
 
 hydroxyproline prediction
 -------------------------
@@ -258,12 +258,12 @@ Output is a list of two elements. The first element `prediction` is a data frame
 | AT2G43600.1 | AMWFWNRNVRPALYLGFGEIT |     223|  0.02| No  |
 | AT2G43600.1 | EMLGVTPDQGLDC         |     267|  0.00| No  |
 
-`predict_hyp` is also available as a [shiny app](https://profenicolalac.shinyapps.io/HYPpredict_Shiny/). Details on how hydroxyproline sites are predicted will be available soon.
+`predict_hyp()` is also available as a [shiny app](https://profenicolalac.shinyapps.io/HYPpredict_Shiny/). Details on how hydroxyproline sites are predicted will be available soon.
 
 scan AG glycomodules
 --------------------
 
-AGPs are characterized by the presence of so called AG glycomodules - amino acid dipeptides: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other. Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. `scan_ag` function attempts to find the mentioned dipeptides according to user specified rules. Example:
+AGPs are characterized by the presence of so called AG glycomodules - amino acid dipeptides: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other. Where: O - hydroxyproline, A - alanine, S - serine, T - threnonine, G - glycine and V - valine. `scan_ag()` function attempts to find the mentioned dipeptides according to user specified rules. Example:
 
 ``` r
 at_nsp_ag <- scan_ag(at_nsp,
@@ -290,7 +290,7 @@ at_nsp_ag$sequence[ind]
 #> [8] "marsfaiavicivliagvtgqAPTSPPTaTPAPPTPTTPpPAaTPppvsAPppvttSPppvttAPpPAnppppvsSPpPASPpPATPppvaSPpppvaSPpPATPppvaTPpPAPlaSPPAqvPAPAPTtkpdSPSPSPSsSPplPSsdAPgPStdsiSPAPSPTdvndqngaskmvsslvfgsvlvwfmi"
 ```
 
-Before I wrote OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) are AG glycomodules but the above output considers P instead of O since most of the time the positions of O are unknown. However if the sequence argument to `scan_ag` contains O's at some positions, `scan_ag` will consider only them. To do this the sequence output of `predict_hyp` function can be used. Example:
+Before I wrote OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) are AG glycomodules but the above output considers P instead of O since most of the time the positions of O are unknown. However if the sequence argument to `scan_ag()` contains O's at some positions, `scan_ag()` will consider only them. To do this the sequence output of `predict_hyp()` function can be used. Example:
 
 ``` r
 at_nsp_ag <- scan_ag(data = hyp_pred$sequence, #hyp_pred was created a little bit back
@@ -312,7 +312,7 @@ at_nsp_ag$sequence[ind]
 #> [8] "marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTTOoOAaTOoovsAOoovttSOoovttAOoOAnoooovsSOoOASOoOATOoovaSOooovaSOoOATOoovaTOoOAOlaSOOAqvOAOAOTtkodSOSOSOSsSOolOSsdAOgOStdsiSOAOSOTdvndqngaskmvsslvfgsvlvwfmi"
 ```
 
-Extensin motifs in the form of SPPP+ are also detected by `scan_ag` if in correct context, to avoid this add `exclude_ext = "yes"` as an argument:
+Extensin motifs in the form of SPPP+ are also detected by `scan_ag()` if in correct context, to avoid this add `exclude_ext = "yes"` as an argument:
 
 ``` r
 at_nsp_ag <- scan_ag(hyp_pred$sequence,
@@ -361,7 +361,7 @@ at_nsp_ag$sequence[ind]
 scan motifs for N-glycosylation
 -------------------------------
 
-N-glycosylation is frequent in secreted proteins. To scan the amino acid motifs for N-glycosylation the function `scan_nglc` can be used. Detection is based on [PROSITE pattern PS00001](https://prosite.expasy.org/PDOC00001). Mean local hydrophilicity (Hopp and Woods 1981) is used to assess if the asparagines are buried:
+N-glycosylation is frequent in secreted proteins. To scan the amino acid motifs for N-glycosylation the function `scan_nglc()` can be used. Detection is based on [PROSITE pattern PS00001](https://prosite.expasy.org/PDOC00001). Mean local hydrophilicity (Hopp and Woods 1981) is used to assess if the asparagines are buried:
 
 ``` r
 at_nglc <- scan_nglc(at_nsp,
@@ -372,7 +372,7 @@ at_nglc <- scan_nglc(at_nsp,
 create a protein structure diagram
 ----------------------------------
 
-Using the above mentioned functions several protein features can be obtained. To visualize these features the function `plot_prot` can be used. Domains (`get_hmm`), N-terminal signal peptides (`get_signalp`), transmembrane regions, extracellular and intracellular protein regions (`get_phobius`), GPI attachment sites (`get_big_pi` or `get_pred_gpi`), AG glycomodul spans (`scan_ag`), hydroxyproline positions (`predict_hyp`) and disordered reagions (`get_espritz`, off by default) can be shown. The output is a `ggplot2` object which can be manipulated to customize the theme, colors and plot annotations.
+Using the above mentioned functions several protein features can be obtained. To visualize these features the function `plot_prot()` can be used. Domains (`get_hmm()`), N-terminal signal peptides (`get_signalp()`), transmembrane regions, extracellular and intracellular protein regions (`get_phobius()`), GPI attachment sites (`get_big_pi()` or `get_pred_gpi()`), AG glycomodul spans (`scan_ag()`), hydroxyproline positions (`predict_hyp()`) and disordered reagions (`get_espritz()`, off by default) can be shown. The output is a `ggplot2` object which can be manipulated to customize the theme, colors and plot annotations.
 
 ``` r
 ind <- c(23, 24, 5, 80, 81, 120, 230, 334, 345, 1000)
