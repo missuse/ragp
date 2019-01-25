@@ -60,7 +60,7 @@ Usage
 Input
 -----
 
-Input options will be illustrated using `scan_ag` function:
+Input options will be illustrated using `scan_ag()` function:
 
 ``` r
 library(ragp)
