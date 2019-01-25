@@ -121,7 +121,7 @@ nsp_signalp <- get_signalp(at_nsp,
                            Transcript.id)
 ```
 
-The predictions for the 2700 sequences contained in `at_nsp` data frame should be available in around 1 minute. The returned object `nsp_signalp()` is a data frame resembling the web servers output:
+The predictions for the 2700 sequences contained in `at_nsp` data frame should be available in around 1 minute. The returned object `nsp_signalp` is a data frame resembling the web servers output:
 
 ``` r
 knitr::kable(head(nsp_signalp))
