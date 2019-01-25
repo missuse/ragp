@@ -1,25 +1,26 @@
 NEWS
 -----------------------------
   
-version 0.2.1.0000
+#version 0.2.1.0000
 
-BUG FIXES AND IMPROVEMENTS
+##Bug Fixes and Improvements
 
 * Additional arguments added to `get_targetp` and `get_signalp` functions: `progress` and `attempts`. 
 `progress` is a logical value determining whether to show the progress bar, at default set to TRUE. 
 `attempts` is an integer value determining the number of repeated attempts if server unresponsive, at default set to 2.
 These functions now return finished queues if server becomes unresponsive.  
   
-version 0.2.0.0000
------------------------------
-NEW FEATURES
+  
+#version 0.2.0.0000
+
+##New Features
 
 * All functions that operate on multiple input types: `get_big_pi`, `get_espritz`,
 `get_hmm`, `get_phobius`, `get_pred_gpi`, `get_signalp`, `get_targetp`, `maab`,
 `predict_hyp`, `scan_ag` and `scan_nglc` now do so via the S3 object system which will 
 make further extensions of accepted inputs straightforward.
 
-BUG FIXES AND IMPROVEMENTS
+##Bug Fixes and Improvements
 
 * Completely rewrote the code for `scan_ag` which is now simplified and easier to read.
 The function is now about 20% slower.
@@ -34,9 +35,9 @@ it is advisable to rerun these analyses again.
 `get_phobius_file`
 
 
-version 0.1.0.0004
------------------------------
-NEW FEATURES
+#version 0.1.0.0004
+
+##New Features
 
 * Added `get_espritz` function which queries ESpritz web server for 
   predictions on protein disordered regions.
@@ -44,20 +45,20 @@ NEW FEATURES
 * `plot_prot` function has an additional argument `disorder`, indicating
   should the predicted disordered regions be plotted. Defaults to FALSE.
   
-BUG FIXES AND IMPROVEMENTS
+##Bug Fixes and Improvements
 
 * fixed a bug in function `plot_prot` introduced in 0.1.0.0003 which prevented 
   GPIs to be plotted when `gpi = "bigpi"`.
 
 
-version 0.1.0.0003
------------------------------
-NEW FEATURES
+#version 0.1.0.0003
+
+##New Features
 
 * Added `get_pred_gpi` function which queries PredGPI web server for 
   predictions on GPI presence and omega site location.
   
-BUG FIXES AND IMPROVEMENTS
+##Bug Fixes and Improvements
   
 * `maab` function argument `get_gpi` has been changed and now accepts strings
   as input: `get_gpi = c("bigpi", "predgpi", "none")` which indicate whether
@@ -74,20 +75,20 @@ BUG FIXES AND IMPROVEMENTS
   were provided.
 
   
-version 0.1.0.0002
------------------------------
-BUG FIXES AND IMPROVEMENTS
+#version 0.1.0.0002
+
+##Bug Fixes and Improvements
 
 * Removed rvest dependency
 
 
-version 0.1.0.0001
------------------------------
-NEW FEATURES
+#version 0.1.0.0001
+
+##New Features
 
 * Added vignette. 
 
-BUG FIXES AND IMPROVEMENTS
+##Bug Fixes and Improvements
 
 * When using plot_prot with argument dom_sort = "ievalue" the domains with the
   lowest independent e-value will now be correctly plotted on top.
@@ -99,10 +100,9 @@ BUG FIXES AND IMPROVEMENTS
   into several shorter overlapping sequences and querying hmmscan. 
  
  
-version 0.1.0.0000
------------------------------
+#version 0.1.0.0000
 
-NEW FEATURES
+##New Features
 
 * Added `plot_prot` function which returns a `ggplot2` diagram of protein
   structure based on `hmmscan` domain annotation and several types of
@@ -125,7 +125,7 @@ NEW FEATURES
   
 * Added a `NEWS.md` file to track changes to the package.
 
-BUG FIXES AND IMPROVEMENTS
+##Bug Fixes and Improvements
 
 * Significantly improved the speed of `get_big_pi`. Removed the verbose argument.
   Added a progress bar. (#3)
