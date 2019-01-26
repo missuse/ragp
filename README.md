@@ -26,7 +26,7 @@ p1 <- plot_prot(seqs, #plot sequence features
 p1
 ```
 
-![alt text](https://raw.githubusercontent.com/missuse/ragp/master/man/figures/README-plot_prot-2.svg)
+![alt text](/man/figures/README-plot_prot-2.svg)
 
 Installation
 ------------
@@ -378,6 +378,8 @@ Using the above mentioned functions several protein features can be obtained. To
 ind <- c(23, 24, 5, 80, 81, 120, 230, 334, 345, 1000)
 pred <- plot_prot(sequence = at_nsp$sequence[ind],
                   id = at_nsp$Transcript.id[ind])
+
+pred
 ```
 
 ![alt text](/man/figures/README-plot_prot-1.png)
