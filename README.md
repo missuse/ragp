@@ -66,6 +66,3 @@ Acknowledgements
 ----------------
 
 This software was developed with funding from the Ministry of Education, Science and Technological Development of the Republic of Serbia (Projects TR31019 and OI173024).
-
-References:
------------
