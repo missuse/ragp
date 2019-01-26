@@ -26,7 +26,7 @@ p1 <- plot_prot(seqs, #plot sequence features
 p1
 ```
 
-![alt text](/man/figures/README-plot_prot-2.svg)
+![alt text](https://missuse.github.io/ragp/reference/figures/README-plot_prot-2.svg)
 
 Installation
 ------------
@@ -145,9 +145,7 @@ pred <- plot_signalp(sequence = at_nsp$sequence[5],
                      id = at_nsp$Transcript.id[5])
 ```
 
-![](README-SignalP3-1.png)
-
-![alt text](/man/figures/README-SignalP3-1.png)
+![alt text](https://missuse.github.io/ragp/reference/figures/README-SignalP3-1.png)
 
 GPI and hmm query
 -----------------
@@ -187,16 +185,16 @@ first 10 rows of the GO result with selected columns:
 
 | id          | name             | acc        | GO\_name                                       | GO\_acc      |
 |:------------|:-----------------|:-----------|:-----------------------------------------------|:-------------|
-| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:structural> constituent of ribosome        | <GO:0003735> |
-| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:rRNA> binding                              | <GO:0019843> |
-| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:intracellular>                             | <GO:0005622> |
-| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:ribosome>                                  | <GO:0005840> |
-| ATCG00660.1 | Ribosomal\_L20   | PF00453.17 | <GO:translation>                               | <GO:0006412> |
-| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
-| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitin> catabolic process                  | <GO:0006032> |
-| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitinase> activity                        | <GO:0004568> |
-| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
-| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.18 | <GO:chitin> catabolic process                  | <GO:0006032> |
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.18 | <GO:translation>                               | <GO:0006412> |
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.18 | <GO:ribosome>                                  | <GO:0005840> |
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.18 | <GO:intracellular>                             | <GO:0005622> |
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.18 | <GO:structural> constituent of ribosome        | <GO:0003735> |
+| ATCG00660.1 | Ribosomal\_L20   | PF00453.18 | <GO:rRNA> binding                              | <GO:0019843> |
+| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.19 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
+| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.19 | <GO:chitin> catabolic process                  | <GO:0006032> |
+| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.19 | <GO:chitinase> activity                        | <GO:0004568> |
+| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.19 | <GO:cell> wall macromolecule catabolic process | <GO:0016998> |
+| AT2G43600.1 | Glyco\_hydro\_19 | PF00182.19 | <GO:chitin> catabolic process                  | <GO:0006032> |
 
 Disorder prediction
 -------------------
@@ -382,7 +380,7 @@ pred <- plot_prot(sequence = at_nsp$sequence[ind],
 pred
 ```
 
-![alt text](/man/figures/README-plot_prot-1.png)
+![alt text](https://missuse.github.io/ragp/reference/figures/README-plot_prot-1.png)
 
 Acknowledgements
 ----------------
