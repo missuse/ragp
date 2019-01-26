@@ -26,7 +26,7 @@ p1 <- plot_prot(seqs, #plot sequence features
 p1
 ```
 
-![alt text](https://missuse.github.io/ragp/reference/figures/README-plot_prot-2.svg)
+![](https://missuse.github.io/ragp/reference/figures/README-plot_prot-2.svg)
 
 Installation
 ------------
@@ -145,7 +145,7 @@ pred <- plot_signalp(sequence = at_nsp$sequence[5],
                      id = at_nsp$Transcript.id[5])
 ```
 
-![alt text](https://missuse.github.io/ragp/reference/figures/README-SignalP3-1.png)
+![](https://missuse.github.io/ragp/reference/figures/README-SignalP3-1.png)
 
 GPI and hmm query
 -----------------
@@ -380,7 +380,7 @@ pred <- plot_prot(sequence = at_nsp$sequence[ind],
 pred
 ```
 
-![alt text](https://missuse.github.io/ragp/reference/figures/README-plot_prot-1.png)
+![](https://missuse.github.io/ragp/reference/figures/README-plot_prot-1.png)
 
 Acknowledgements
 ----------------
