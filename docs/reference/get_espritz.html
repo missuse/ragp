@@ -137,7 +137,7 @@
 <span class='co'># S3 method for default</span>
 <span class='fu'>get_espritz</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>sequence</span>, <span class='no'>id</span>,
   <span class='kw'>model</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"X-Ray"</span>, <span class='st'>"Disprot"</span>, <span class='st'>"NMR"</span>), <span class='kw'>FPR</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"best Sw"</span>, <span class='st'>"5% FPR"</span>),
-  <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -169,6 +169,10 @@
     <tr>
       <th>simplify</th>
       <td><p>A Boolean indicating the type of returned object, defaults to TRUE.</p></td>
+    </tr>
+    <tr>
+      <th>progress</th>
+      <td><p>Bolean, whether to show the progress bar, at default set to FALSE.</p></td>
     </tr>
     </table>
     
@@ -211,7 +215,35 @@ A data frame (one row per protein) with columns:</p><dl class='dl-horizontal'>
 
 <span class='no'>espritz_test</span> <span class='kw'>&lt;-</span> <span class='fu'>get_espritz</span>(<span class='no'>at_nsp</span>[<span class='fl'>1</span>:<span class='fl'>10</span>,],
                             <span class='no'>sequence</span>,
-                            <span class='no'>Transcript.id</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |==============                                                        |  20%  |                                                                              |======================================================================| 100%</div><div class='input'>
+                            <span class='no'>Transcript.id</span>)
+<span class='no'>espritz_test</span></div><div class='output co'>#&gt;    start end          id
+#&gt; 1      1  12 ATCG00660.1
+#&gt; 2     49  54 ATCG00660.1
+#&gt; 3    111 117 ATCG00660.1
+#&gt; 4      1   9 AT2G43600.1
+#&gt; 5    266 273 AT2G43600.1
+#&gt; 6      1   8 AT2G28410.1
+#&gt; 7     47  61 AT2G28410.1
+#&gt; 8    115 115 AT2G28410.1
+#&gt; 9      1   8 AT2G22960.1
+#&gt; 10    16  19 AT2G22960.1
+#&gt; 11   178 184 AT2G22960.1
+#&gt; 12     1   9 AT2G19580.1
+#&gt; 13    83  88 AT2G19580.1
+#&gt; 14   256 270 AT2G19580.1
+#&gt; 15     1  12 AT2G19690.2
+#&gt; 16   104 108 AT2G19690.2
+#&gt; 17   143 148 AT2G19690.2
+#&gt; 18     1  12 AT2G19690.1
+#&gt; 19   104 109 AT2G19690.1
+#&gt; 20   139 147 AT2G19690.1
+#&gt; 21     1  10 AT2G33130.1
+#&gt; 22    15  17 AT2G33130.1
+#&gt; 23    65 103 AT2G33130.1
+#&gt; 24     1 128 AT2G05520.1
+#&gt; 25   130 145 AT2G05520.1
+#&gt; 26     1 118 AT2G05520.2
+#&gt; 27   123 138 AT2G05520.2</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

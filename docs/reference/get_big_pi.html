@@ -136,7 +136,7 @@
 
 <span class='co'># S3 method for default</span>
 <span class='fu'>get_big_pi</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>sequence</span>, <span class='no'>id</span>,
-  <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>sleep</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>sleep</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -164,6 +164,10 @@
     <tr>
       <th>sleep</th>
       <td><p>A numeric indicating the pause in seconds between server calls, at default set to 1.</p></td>
+    </tr>
+    <tr>
+      <th>progress</th>
+      <td><p>Bolean, whether to show the progress bar, at default set to FALSE.</p></td>
     </tr>
     </table>
     
@@ -203,11 +207,19 @@ A list of predictions, each element named according to the sequence id, containi
 
 <span class='no'>big_pi_pred</span> <span class='kw'>&lt;-</span> <span class='fu'>get_big_pi</span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>[<span class='no'>ind</span>],
                           <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='no'>ind</span>],
-                          <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%</div><div class='input'>
+                          <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
 <span class='no'>big_pi_pred</span> <span class='kw'>&lt;-</span> <span class='fu'>get_big_pi</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>[<span class='no'>ind</span>,],
                           <span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>sequence</span>,
                           <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>Transcript.id</span>,
-                          <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%</div></pre>
+                          <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>big_pi_pred</span></div><div class='output co'>#&gt;             omega_site Quality       PValue          id is.bigpi
+#&gt; AT2G20700.1        135       P 2.672529e-06 AT2G20700.1     TRUE
+#&gt; AT2G13820.1        147       P 4.831245e-05 AT2G13820.1     TRUE
+#&gt; AT2G48130.1        157       P 5.483314e-06 AT2G48130.1     TRUE
+#&gt; AT2G03505.1        146       P 1.938260e-06 AT2G03505.1     TRUE
+#&gt; AT2G45040.1        317       S 6.007296e-04 AT2G45040.1     TRUE</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

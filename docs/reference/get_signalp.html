@@ -130,7 +130,7 @@
   <span class='st'>"gram+"</span>), <span class='kw'>Dcut_type</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"default"</span>, <span class='st'>"sensitive"</span>, <span class='st'>"user"</span>),
   <span class='kw'>Dcut_noTM</span> <span class='kw'>=</span> <span class='fl'>0.45</span>, <span class='kw'>Dcut_TM</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"best"</span>, <span class='st'>"notm"</span>),
   <span class='kw'>minlen</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>trunc</span> <span class='kw'>=</span> <span class='fl'>70L</span>, <span class='kw'>splitter</span> <span class='kw'>=</span> <span class='fl'>500L</span>, <span class='kw'>sleep</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>attempts</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+  <span class='kw'>attempts</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
 <span class='fu'>get_signalp</span>(<span class='no'>data</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='no'>...</span>)
@@ -194,7 +194,7 @@
     </tr>
     <tr>
       <th>progress</th>
-      <td><p>Bolean, whether to show the progress bar, at default set to TRUE</p></td>
+      <td><p>Bolean, whether to show the progress bar, at default set to FALSE.</p></td>
     </tr>
     <tr>
       <th>sequence</th>
@@ -246,7 +246,29 @@
     <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>ragp</span>)
 <span class='no'>signalp_pred</span> <span class='kw'>&lt;-</span> <span class='fu'>get_signalp</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>[<span class='fl'>1</span>:<span class='fl'>10</span>,],
                             <span class='no'>sequence</span>,
-                            <span class='no'>Transcript.id</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%</div><div class='input'>
+                            <span class='no'>Transcript.id</span>)
+<span class='no'>signalp_pred</span></div><div class='output co'>#&gt;             id  Cmax Cmax.pos  Ymax Ymax.pos  Smax Smax.pos Smean Dmean is.sp
+#&gt; 1  ATCG00660.1 0.210       30 0.162       30 0.260        2 0.146 0.154     N
+#&gt; 2  AT2G43600.1 0.860       23 0.894       23 0.984       13 0.930 0.913     Y
+#&gt; 3  AT2G28410.1 0.779       23 0.826       23 0.940       15 0.877 0.853     Y
+#&gt; 4  AT2G22960.1 0.701       23 0.790       23 0.948       15 0.891 0.844     Y
+#&gt; 5  AT2G19580.1 0.422       26 0.586       26 0.885       17 0.798 0.671     Y
+#&gt; 6  AT2G19690.2 0.797       29 0.870       29 0.987       18 0.952 0.914     Y
+#&gt; 7  AT2G19690.1 0.797       29 0.870       29 0.987       18 0.952 0.914     Y
+#&gt; 8  AT2G33130.1 0.318       33 0.530       27 0.990       16 0.933 0.748     Y
+#&gt; 9  AT2G05520.1 0.633       24 0.782       24 0.990       16 0.966 0.881     Y
+#&gt; 10 AT2G05520.2 0.633       24 0.782       24 0.990       16 0.966 0.881     Y
+#&gt;    Dmaxcut Networks.used is.signalp
+#&gt; 1    0.450  SignalP-noTM      FALSE
+#&gt; 2    0.450  SignalP-noTM       TRUE
+#&gt; 3    0.450  SignalP-noTM       TRUE
+#&gt; 4    0.450  SignalP-noTM       TRUE
+#&gt; 5    0.500    SignalP-TM       TRUE
+#&gt; 6    0.450  SignalP-noTM       TRUE
+#&gt; 7    0.450  SignalP-noTM       TRUE
+#&gt; 8    0.450  SignalP-noTM       TRUE
+#&gt; 9    0.450  SignalP-noTM       TRUE
+#&gt; 10   0.450  SignalP-noTM       TRUE</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
