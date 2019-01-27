@@ -163,12 +163,8 @@
 <span class='fu'>data</span>(<span class='no'>at_nsp</span>)
 
 <span class='no'>pfam_pred</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_hmm.html'>get_hmm</a></span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>[<span class='fl'>1</span>],
-                     <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%[1] 1
-#&gt;            id          name        acc                  desc clan align_start
-#&gt; 1 ATCG00660.1 Ribosomal_L20 PF00453.18 Ribosomal protein L20   NA           3
-#&gt;   align_end model_start model_end ievalue cevalue
-#&gt; 1       108           1       104 3.2e-32 1.8e-36
-#&gt;   |                                                                              |======================================================================| 100%</div><div class='input'>
+                     <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='fl'>1</span>])
+
 <span class='no'>pfam_pred_go</span> <span class='kw'>&lt;-</span> <span class='fu'>pfam2go</span>(<span class='kw'>data_pfam</span> <span class='kw'>=</span> <span class='no'>pfam_pred</span>, <span class='kw'>pfam</span> <span class='kw'>=</span> <span class='st'>"acc"</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

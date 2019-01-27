@@ -126,7 +126,8 @@
     <pre class="usage"><span class='fu'>get_pred_gpi</span>(<span class='no'>data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>get_pred_gpi</span>(<span class='no'>data</span>, <span class='kw'>spec</span> <span class='kw'>=</span> <span class='fl'>0.99</span>, <span class='no'>...</span>)
+<span class='fu'>get_pred_gpi</span>(<span class='no'>data</span>, <span class='kw'>spec</span> <span class='kw'>=</span> <span class='fl'>0.99</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
 <span class='fu'>get_pred_gpi</span>(<span class='no'>data</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='no'>...</span>)
@@ -151,6 +152,10 @@
     <tr>
       <th>spec</th>
       <td><p>Numeric in the 0-1 range, indicating the threshold specificity.</p></td>
+    </tr>
+    <tr>
+      <th>progress</th>
+      <td><p>Bolean, whether to show the progress bar, at default set to FALSE.</p></td>
     </tr>
     <tr>
       <th>sequence</th>
@@ -195,7 +200,28 @@
 
 <span class='no'>gpi_pred</span> <span class='kw'>&lt;-</span> <span class='fu'>get_pred_gpi</span>(<span class='no'>at_nsp</span>[<span class='fl'>1</span>:<span class='fl'>20</span>,],
                          <span class='no'>sequence</span>,
-                         <span class='no'>Transcript.id</span>)</div><div class='output co'>#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%</div><div class='input'>
+                         <span class='no'>Transcript.id</span>)
+<span class='no'>gpi_pred</span></div><div class='output co'>#&gt;             id omega_site specificity is.gpi
+#&gt; 1  ATCG00660.1         96       0.073  FALSE
+#&gt; 2  AT2G43600.1        251       0.091  FALSE
+#&gt; 3  AT2G28410.1         90       0.995   TRUE
+#&gt; 4  AT2G22960.1        160       0.145  FALSE
+#&gt; 5  AT2G19580.1        250       0.677  FALSE
+#&gt; 6  AT2G19690.2        120       0.373  FALSE
+#&gt; 7  AT2G19690.1        119       0.227  FALSE
+#&gt; 8  AT2G33130.1         83       0.425  FALSE
+#&gt; 9  AT2G05520.1        123       0.478  FALSE
+#&gt; 10 AT2G05520.2        116       0.452  FALSE
+#&gt; 11 AT2G05520.3        103       0.425  FALSE
+#&gt; 12 AT2G05520.4        102       0.425  FALSE
+#&gt; 13 AT2G05520.6         95       0.425  FALSE
+#&gt; 14 AT2G05520.5         89       0.396  FALSE
+#&gt; 15 AT2G04031.1        128       0.193  FALSE
+#&gt; 16 AT2G43620.1        252       0.425  FALSE
+#&gt; 17 AT2G37390.1        239       0.211  FALSE
+#&gt; 18 AT2G37390.2        238       0.211  FALSE
+#&gt; 19 AT2G35250.1        321       0.325  FALSE
+#&gt; 20 AT2G38390.1        328       0.712  FALSE</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

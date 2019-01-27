@@ -127,7 +127,7 @@
   <span class='kw'>nsp_col</span> <span class='kw'>=</span> <span class='st'>"#CD534CFF"</span>, <span class='kw'>ag_col</span> <span class='kw'>=</span> <span class='st'>"#E5E5E5FF"</span>, <span class='kw'>tm_col</span> <span class='kw'>=</span> <span class='st'>"#EFC000FF"</span>,
   <span class='kw'>hyp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>gpi</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"bigpi"</span>, <span class='st'>"predgpi"</span>, <span class='st'>"none"</span>), <span class='kw'>nsp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>ag</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>tm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>disorder</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>dom_sort</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"ievalue"</span>, <span class='st'>"abc"</span>, <span class='st'>"cba"</span>), <span class='no'>...</span>)</pre>
+  <span class='kw'>dom_sort</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"ievalue"</span>, <span class='st'>"abc"</span>, <span class='st'>"cba"</span>), <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -193,6 +193,10 @@
       <td><p>One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.</p></td>
     </tr>
     <tr>
+      <th>progress</th>
+      <td><p>Bolean, whether to show the progress bar, at default set to FALSE.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Appropriate arguments passed to <code><a href='get_signalp.html'>get_signalp</a></code>, <code><a href='get_espritz.html'>get_espritz</a></code>, <code><a href='predict_hyp.html'>predict_hyp</a></code> and <code><a href='scan_ag.html'>scan_ag</a></code>.</p></td>
     </tr>
@@ -210,16 +214,10 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>ragp</span>)
 
-<span class='no'>ind</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>23</span>,<span class='fl'>24</span>, <span class='fl'>5</span>, <span class='fl'>80</span>, <span class='fl'>81</span>, <span class='fl'>120</span>, <span class='fl'>230</span>, <span class='fl'>334</span>, <span class='fl'>345</span>, <span class='fl'>1000</span>)
+<span class='no'>ind</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>23</span>, <span class='fl'>24</span>, <span class='fl'>5</span>, <span class='fl'>80</span>, <span class='fl'>81</span>, <span class='fl'>120</span>, <span class='fl'>230</span>, <span class='fl'>334</span>, <span class='fl'>345</span>, <span class='fl'>1000</span>)
 <span class='no'>pred</span> <span class='kw'>&lt;-</span> <span class='fu'>plot_prot</span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>[<span class='no'>ind</span>],
-                  <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='no'>ind</span>])</div><div class='output co'>#&gt; [1] "querying hmmscan"
-#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |=======                                                               |  10%  |                                                                              |==============                                                        |  20%  |                                                                              |=====================                                                 |  30%  |                                                                              |============================                                          |  40%  |                                                                              |===================================                                   |  50%  |                                                                              |==========================================                            |  60%  |                                                                              |=================================================                     |  70%  |                                                                              |========================================================              |  80%  |                                                                              |===============================================================       |  90%  |                                                                              |======================================================================| 100%
-#&gt; [1] "querying signalp"
-#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
-#&gt; [1] "querying phobius"
-#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
-#&gt; [1] "querying big pi"
-#&gt;   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%</div><div class='input'>
+                  <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='no'>ind</span>])
+<span class='no'>pred</span></div><div class='img'><img src='plot_prot-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

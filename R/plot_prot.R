@@ -26,11 +26,13 @@
 #'
 #' @examples
 #' library(ragp)
-#' 
+#' library(ggplot2)
 #' ind <- c(23, 24, 5, 80, 81, 120, 230, 334, 345, 1000)
 #' pred <- plot_prot(sequence = at_nsp$sequence[ind],
 #'                   id = at_nsp$Transcript.id[ind])
-#' pred 
+#' pred +
+#'   theme(legend.position = "bottom",
+#'         legend.direction = "vertical")
 #' 
 #' @export
 
