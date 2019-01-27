@@ -1,0 +1,67 @@
+reference:
+  - title: "Query N-sp predictions"
+    desc: >
+      Functions for obtaining N-sp predictions based on protein sequence.
+    contents:
+      - get_signalp
+      - get_targetp
+      - get_phobius
+      - plot_signalp
+  - title: "Query GPI predictions"
+    desc: >
+      Functions for obtaining GPI predictions based on protein sequence.
+    contents:
+      - get_big_pi
+      - get_pred_gpi
+  - title: "Annotate protein sequences"
+    desc: >
+      Functions for domain and disorder prediction based on protein sequence.
+    contents:
+      - get_hmm
+      - get_espritz
+      - pfam2go
+  - title: "Proline hydroxylation prediction"
+    desc: >
+      Predict the probability of proline hydroxylation
+      in secreted plant proteins based on protein sequence.
+    contents:
+      - predict_hyp
+  - title: "Arabinogalactan identification"
+    desc: >
+      Detect localized clusters of characteristic arabinogalactan motifs.
+    contents:
+      - scan_ag
+  - title: "Classify HRGPs"
+    desc: >
+      Perform motif and amino acid bias classification of HRGPs.
+    contents:
+      - maab
+  - title: "Protein structure diagram"
+    desc: >
+      Diagram of protein structure based on hmmscan domain annotation
+      and several types of predictions.
+    contents:
+      - plot_prot
+  - title: "Detection of motifs for N-glycosylation"
+    desc: >
+      Detection of motifs for N-glycosylation on asparagine residues
+      based on PROSITE pattern PS00001.
+    contents:
+      - scan_nglc
+  - title: "data"
+    desc: >
+      Data frame with 2700 Arabidopsis thaliana protein sequences predicted
+      to contain a N-sp by either Phobius or SignalP with length of 100 - 400
+      amino acids.
+    contents:
+      - at_nsp
+  - title: "Functions used internally" 
+    desc: ~
+    contents:  
+      - CTDC  
+      - getAAindex
+      - getKmer
+      - extractMBdesc
+      - QSOlevel
+      - sub_hyp
+      - split_fasta
