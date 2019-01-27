@@ -8,6 +8,7 @@
 #' @param id An appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param simplify A bolean indicating the type of returned object, defaults to TRUE.
 #' @param sleep A numeric indicating the pause in seconds between server calls, at default set to 1.
+#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #' @return If simplify == TRUE:
 #' A data frame with columns:
@@ -44,6 +45,8 @@
 #'                           sequence = sequence,
 #'                           id = Transcript.id,
 #'                           simplify = TRUE)
+#' big_pi_pred
+#' 
 #' @import seqinr
 #' @import httr
 #' @import xml2
@@ -164,6 +167,7 @@ get_big_pi.default <- function(data = NULL,
                                id,
                                simplify = TRUE,
                                sleep = 1,
+                               progress = FALSE,
                                ...){
   if (missing(simplify)){
     simplify <- TRUE
@@ -181,6 +185,24 @@ get_big_pi.default <- function(data = NULL,
   if (is.na(simplify)){
     simplify <- TRUE
     warning("simplify was set to NA, setting to default: simplify = TRUE",
+            call. = FALSE)
+  }
+  if (missing(progress)) {
+    progress <- FALSE
+  }
+  if (length(progress) > 1){
+    progress <- FALSE
+    warning("progress should be of length 1, setting to default: progress = FALSE",
+            call. = FALSE)
+  }
+  if (!is.logical(progress)){
+    progress <- as.logical(progress)
+    warning("progress is not logical, converting using 'as.logical'",
+            call. = FALSE)
+  }
+  if (is.na(progress)){
+    progress <- FALSE
+    warning("progress was set to NA, setting to default: progress = FALSE",
             call. = FALSE)
   }
   if (missing(sleep)){
@@ -321,11 +343,12 @@ get_big_pi.default <- function(data = NULL,
   mat_split <- split(mat, splt)
   sleep <- 2
   url <- "http://mendel.imp.ac.at/gpi/cgi-bin/gpi_pred_plants.cgi"
-
   tot <- length(mat_split)
-  pb <- utils::txtProgressBar(min = 0,
-                              max = tot,
-                              style = 3)
+  if(progress){
+    pb <- utils::txtProgressBar(min = 0,
+                                max = tot,
+                                style = 3)
+  }
   res_good <- lapply(seq_along(mat_split), function(i){
     mat <- mat_split[[i]]
     up <- paste(">",
@@ -347,7 +370,9 @@ get_big_pi.default <- function(data = NULL,
       unlist(strsplit(x, "\\\n"))
     })
     Sys.sleep(sleep)
-    utils::setTxtProgressBar(pb, i)
+    if(progress){
+      utils::setTxtProgressBar(pb, i)
+    }
     return(out)
   })
 
@@ -440,7 +465,9 @@ get_big_pi.default <- function(data = NULL,
     }
   }
   )
-  close(pb)
+  if(progress){
+    close(pb)
+  }
   names(res_out) <- id_else
 
   if (length(short_seq) != 0){

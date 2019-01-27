@@ -9,6 +9,7 @@
 #' @param model One of c('X-Ray', 'Disprot', 'NMR'), default is 'X-Ray'. Determines the model to be used for prediction. See details.
 #' @param FPR One of c('best Sw', '5"\%" FPR'). default is 'best Sw'. Determines the cutoff probability for prediction. 'best Sw' maximizes a weighted score rewarding correctly disorder prediction more than order prediction.
 #' @param simplify A Boolean indicating the type of returned object, defaults to TRUE.
+#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
 #' @return If simplify == TRUE:
@@ -40,6 +41,7 @@
 #' espritz_test <- get_espritz(at_nsp[1:10,],
 #'                             sequence,
 #'                             Transcript.id)
+#' espritz_test
 #'
 #' @import seqinr
 #' @import httr
@@ -162,6 +164,7 @@ get_espritz.default <- function(data = NULL,
                                 model = c("X-Ray", "Disprot", "NMR"),
                                 FPR = c("best Sw", "5% FPR"),
                                 simplify = TRUE,
+                                progress = FALSE,
                                 ...){
   if (missing(model)) {
     model <- "X-Ray"
@@ -184,6 +187,24 @@ get_espritz.default <- function(data = NULL,
   if (length(FPR) > 1){
     stop("FPR should be one of: 'best Sw', '5% FPR'",
          call. = FALSE)
+  }
+  if (missing(progress)) {
+    progress <- FALSE
+  }
+  if (length(progress) > 1){
+    progress <- FALSE
+    warning("progress should be of length 1, setting to default: progress = FALSE",
+            call. = FALSE)
+  }
+  if (!is.logical(progress)){
+    progress <- as.logical(progress)
+    warning("progress is not logical, converting using 'as.logical'",
+            call. = FALSE)
+  }
+  if (is.na(progress)){
+    progress <- FALSE
+    warning("progress was set to NA, setting to default: progress = FALSE",
+            call. = FALSE)
   }
   if (missing(sequence)){
     stop("protein sequence must be provided to obtain predictions",
@@ -237,9 +258,11 @@ get_espritz.default <- function(data = NULL,
   url_query <- "http://protein.bio.unipd.it/espritz/Espritz.jsp"
   url_2 <- "http://protein.bio.unipd.it/espritz/work/pid_"
   tot <- length(mat_split)*5
-  pb <- utils::txtProgressBar(min = 0,
-                              max = tot,
-                              style = 3)
+  if(progress){
+    pb <- utils::txtProgressBar(min = 0,
+                                max = tot,
+                                style = 3)
+  }
   res <- lapply(seq_along(mat_split), function(z) {
     matz <- mat_split[[z]]
     spltz <- 0:(nrow(matz) - 1) %/% 3000
@@ -326,7 +349,9 @@ get_espritz.default <- function(data = NULL,
       }
       collected_res <- do.call(rbind,
                                collected_res)
-      utils::setTxtProgressBar(pb, (z-1)*5+i)
+      if(progress){
+        utils::setTxtProgressBar(pb, (z-1)*5+i)
+      }
       collected_res
     }
     )
@@ -368,12 +393,15 @@ get_espritz.default <- function(data = NULL,
                         id = id_reps,
                         stringsAsFactors = FALSE)
     }
-
-    utils::setTxtProgressBar(pb, tot)
+    if(progress){
+      utils::setTxtProgressBar(pb, tot)
+    }
     return(res)
   }
   )
-  close(pb)
+  if(progress){
+    close(pb)
+  }
   res <- do.call(rbind,
                  res)
   return(res)

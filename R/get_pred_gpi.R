@@ -7,6 +7,7 @@
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param spec Numeric in the 0-1 range, indicating the threshold specificity.
+#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
 #' @return  A data frame with columns:
@@ -31,6 +32,7 @@
 #' gpi_pred <- get_pred_gpi(at_nsp[1:20,],
 #'                          sequence,
 #'                          Transcript.id)
+#' gpi_pred
 #'
 #' @import seqinr
 #' @import httr
@@ -48,6 +50,7 @@ get_pred_gpi <- function (data, ...){
 
 get_pred_gpi.character <- function(data,
                                    spec = 0.99,
+                                   progress = FALSE,
                                    ...){
   tmr <- paste("temp_",
                gsub("^X",
@@ -82,6 +85,24 @@ get_pred_gpi.character <- function(data,
             it was set to the default: spec = 0.99",
             call. = FALSE)
   }
+  if (missing(progress)) {
+    progress <- FALSE
+  }
+  if (length(progress) > 1){
+    progress <- FALSE
+    warning("progress should be of length 1, setting to default: progress = FALSE",
+            call. = FALSE)
+  }
+  if (!is.logical(progress)){
+    progress <- as.logical(progress)
+    warning("progress is not logical, converting using 'as.logical'",
+            call. = FALSE)
+  }
+  if (is.na(progress)){
+    progress <- FALSE
+    warning("progress was set to NA, setting to default: progress = FALSE",
+            call. = FALSE)
+  }
   if(class(data) == "character"){
     if (file.exists(data)){
       file_name <- data
@@ -100,9 +121,11 @@ get_pred_gpi.character <- function(data,
   id <- file_list$id
   file_list <- file_list$file_list
   len <- length(file_list)
-  pb <- utils::txtProgressBar(min = 0,
-                              max = len,
-                              style = 3)
+  if(progress){
+    pb <- utils::txtProgressBar(min = 0,
+                                max = len,
+                                style = 3)
+  }
   url <- "http://gpcr.biocomp.unibo.it/cgi-bin/predictors/gpi/gpipe_1.4.cgi"
   collected_res = vector("list", len)
   for (i in 1 : len){
@@ -143,9 +166,13 @@ get_pred_gpi.character <- function(data,
     collected_res[[i]] <- res
     unlink(file_list[i])
     Sys.sleep(1)
-    utils::setTxtProgressBar(pb, i)
+    if(progress){
+      utils::setTxtProgressBar(pb, i)
+    }
   }
-  close(pb)
+  if(progress){
+    close(pb)
+  }
   collected_res <- do.call(rbind,
                            collected_res)
   collected_res <- merge(data.frame(id),

@@ -17,7 +17,7 @@ get_signalp(data, ...)
   "gram+"), Dcut_type = c("default", "sensitive", "user"),
   Dcut_noTM = 0.45, Dcut_TM = 0.5, method = c("best", "notm"),
   minlen = NULL, trunc = 70L, splitter = 500L, sleep = 3,
-  attempts = 2, progress = TRUE, ...)
+  attempts = 2, progress = FALSE, ...)
 
 \method{get_signalp}{data.frame}(data, sequence, id, ...)
 
@@ -50,7 +50,7 @@ get_signalp(data, ...)
 
 \item{attempts}{Integer, number of attempts if server unresponsive, at default set to 2.}
 
-\item{progress}{Bolean, whether to show the progress bar, at default set to TRUE}
+\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
@@ -85,6 +85,7 @@ library(ragp)
 signalp_pred <- get_signalp(data = at_nsp[1:10,],
                             sequence,
                             Transcript.id)
+signalp_pred
 
 }
 \references{

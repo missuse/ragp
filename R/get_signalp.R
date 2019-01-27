@@ -16,7 +16,7 @@
 #' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.
 #' @param sleep A numeric indicating the pause in seconds between POST and GET server calls, at default set to 1s. Decreasing is not recommended.
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
-#' @param progress Bolean, whether to show the progress bar, at default set to TRUE
+#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
 #' @return  A data frame with columns:
@@ -48,6 +48,7 @@
 #' signalp_pred <- get_signalp(data = at_nsp[1:10,],
 #'                             sequence,
 #'                             Transcript.id)
+#' signalp_pred
 #'
 #' @import seqinr
 #' @import httr
@@ -74,7 +75,7 @@ get_signalp.character <- function(data,
                                   splitter = 500L,
                                   sleep = 3,
                                   attempts = 2,
-                                  progress = TRUE,
+                                  progress = FALSE,
                                   ...){
   if (missing(splitter)) {
     splitter <- 500L
@@ -150,11 +151,11 @@ get_signalp.character <- function(data,
             call. = FALSE)
   }
   if (missing(progress)) {
-    progress <- TRUE
+    progress <- FALSE
   }
   if (length(progress) > 1){
-    progress <- TRUE
-    warning("progress should be of length 1, setting to default: progress = TRUE",
+    progress <- FALSE
+    warning("progress should be of length 1, setting to default: progress = FALSE",
             call. = FALSE)
   }
   if (!is.logical(progress)){
@@ -163,8 +164,8 @@ get_signalp.character <- function(data,
             call. = FALSE)
   }
   if (is.na(progress)){
-    progress <- TRUE
-    warning("progress was set to NA, setting to default: progress = TRUE",
+    progress <- FALSE
+    warning("progress was set to NA, setting to default: progress = FALSE",
             call. = FALSE)
   }
   if (missing(sleep)) {
@@ -300,8 +301,8 @@ get_signalp.character <- function(data,
   if(grepl("temp_", file_name)){
     unlink(file_name)
   }
+  for_pb <- length(file_list)
   if(progress){
-    for_pb <- length(file_list)
     pb <- utils::txtProgressBar(min = 0,
                                 max = for_pb,
                                 style = 3)

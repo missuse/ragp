@@ -13,7 +13,7 @@
 \usage{
 get_phobius(data, ...)
 
-\method{get_phobius}{character}(data, ...)
+\method{get_phobius}{character}(data, progress = FALSE, ...)
 
 \method{get_phobius}{data.frame}(data, sequence, id, ...)
 
@@ -25,6 +25,8 @@ get_phobius(data, ...)
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
 
 \item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
+
+\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
@@ -57,6 +59,8 @@ data(at_nsp)
 phobius_pred <- get_phobius(at_nsp[1:20,],
                             sequence,
                             Transcript.id)
+phobius_pred
+
 }
 \references{
 Kall O. Krogh A. Sonnhammer E. L. L. (2004) A Combined Transmembrane Topology and Signal Peptide Prediction Method. Journal of Molecular Biology 338(5): 1027-1036

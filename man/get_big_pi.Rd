@@ -20,7 +20,7 @@ get_big_pi(data, ...)
 \method{get_big_pi}{list}(data, ...)
 
 \method{get_big_pi}{default}(data = NULL, sequence, id,
-  simplify = TRUE, sleep = 1, ...)
+  simplify = TRUE, sleep = 1, progress = FALSE, ...)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
@@ -34,6 +34,8 @@ get_big_pi(data, ...)
 \item{simplify}{A bolean indicating the type of returned object, defaults to TRUE.}
 
 \item{sleep}{A numeric indicating the pause in seconds between server calls, at default set to 1.}
+
+\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
 }
 \value{
 If simplify == TRUE:
@@ -71,6 +73,8 @@ big_pi_pred <- get_big_pi(data = at_nsp[ind,],
                           sequence = sequence,
                           id = Transcript.id,
                           simplify = TRUE)
+big_pi_pred
+
 }
 \references{
 Eisenhaber B. Wildpaner M. Schultz CJ. Borner GHH. Dupree P. Eisenhaber F. (2003) Glycosylphosphatidylinositol lipid anchoring of plant proteins. Sensitive prediction from sequence- and genome-wide studies for Arabidopsis and rice. Plant Physiology 133(4): 1691-701

@@ -12,10 +12,10 @@
 #' @param pcut A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). cTP user specified cutoff.
 #' @param scut A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). SP user specified cutoff.
 #' @param ocut A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). User specified cutoff for "other" (not with mTP, cTP, SP).
-#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.
+#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 200. Change only in case of a server side error. Accepted values are in range of 1 to 2000.
 #' @param sleep A numeric indicating the pause in seconds between server calls, at default set to 1
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
-#' @param progress Bolean, whether to show the progress bar, at default set to TRUE
+#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
 #' @return  A data frame with columns:
@@ -45,6 +45,8 @@
 #' targetp_pred <- get_targetp(at_nsp[1:20,],
 #'                             sequence,
 #'                             Transcript.id)
+#' targetp_pred     
+#'                       
 #' @import seqinr
 #' @import httr
 #' @import xml2
@@ -66,10 +68,10 @@ get_targetp.character <-   function(data,
                                     pcut = NULL,
                                     scut = NULL,
                                     ocut = NULL,
-                                    splitter = 500,
+                                    splitter = 200,
                                     sleep = 3,
                                     attempts = 2,
-                                    progress = TRUE,
+                                    progress = FALSE,
                                     ...){
   if (missing(org_type)){
     org_type <- "plant"
@@ -117,11 +119,11 @@ get_targetp.character <-   function(data,
             call. = FALSE)
   }
   if (missing(splitter)){
-    splitter <- 500
+    splitter <- 200
   }
   if (length(splitter) > 1){
-    splitter <- 500
-    warning("splitter should be of length 1, setting to default: splitter = 500",
+    splitter <- 200
+    warning("splitter should be of length 1, setting to default: splitter = 200",
             call. = FALSE)
   }
   if (!is.numeric(splitter)){
@@ -130,16 +132,16 @@ get_targetp.character <-   function(data,
             call. = FALSE)
   }
   if (is.na(splitter)){
-    splitter <- 500
-    warning("splitter was set to NA, setting to default: splitter = 500",
+    splitter <- 200
+    warning("splitter was set to NA, setting to default: splitter = 200",
             call. = FALSE)
   }
   if (is.numeric(splitter)) {
     splitter <- floor(splitter)
   }
   if (!(splitter %in% 1:2000)){
-    splitter <- 500
-    warning("Illegal splitter input, splitter will be set to 500",
+    splitter <- 200
+    warning("Illegal splitter input, splitter will be set to 200",
             call. = FALSE)
   }
   if (length(attempts) > 1){
@@ -166,11 +168,11 @@ get_targetp.character <-   function(data,
             call. = FALSE)
   }
   if (missing(progress)) {
-    progress <- TRUE
+    progress <- FALSE
   }
   if (length(progress) > 1){
-    progress <- TRUE
-    warning("progress should be of length 1, setting to default: progress = TRUE",
+    progress <- FALSE
+    warning("progress should be of length 1, setting to default: progress = FALSE",
             call. = FALSE)
   }
   if (!is.logical(progress)){
@@ -179,8 +181,8 @@ get_targetp.character <-   function(data,
             call. = FALSE)
   }
   if (is.na(progress)){
-    progress <- TRUE
-    warning("progress was set to NA, setting to default: progress = TRUE",
+    progress <- FALSE
+    warning("progress was set to NA, setting to default: progress = FALSE",
             call. = FALSE)
   }
   if (missing(cutoffs)){

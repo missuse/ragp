@@ -19,8 +19,8 @@ get_hmm(data, ...)
 
 \method{get_hmm}{list}(data, ...)
 
-\method{get_hmm}{default}(data = NULL, sequence, id, verbose = TRUE,
-  sleep = 1, attempts = 2L, timeout = 10, progress = TRUE, ...)
+\method{get_hmm}{default}(data = NULL, sequence, id, verbose = FALSE,
+  sleep = 1, attempts = 2L, timeout = 10, progress = FALSE, ...)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
@@ -31,7 +31,7 @@ get_hmm(data, ...)
 
 \item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{verbose}{Bolean, whether to print out the output for each sequence, defaults to TRUE.}
+\item{verbose}{Bolean, whether to print out the output for each sequence, defaults to FALSE.}
 
 \item{sleep}{Numeric indicating the pause in seconds between server calls, at default set to 1.}
 
@@ -39,7 +39,7 @@ get_hmm(data, ...)
 
 \item{timeout}{Numeric, time in seconds to wait for server response.}
 
-\item{progress}{Bolean, whether to show the progress bar, at default set to TRUE}
+\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
 }
 \value{
 A data frame with columns:
@@ -73,6 +73,7 @@ pfam_pred <- get_hmm(data = at_nsp[1:5,],
                     id = Transcript.id,
                     verbose = FALSE,
                     sleep = 0)
+pfam_pred
 
 }
 \seealso{

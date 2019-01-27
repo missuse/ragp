@@ -13,7 +13,8 @@
 \usage{
 get_pred_gpi(data, ...)
 
-\method{get_pred_gpi}{character}(data, spec = 0.99, ...)
+\method{get_pred_gpi}{character}(data, spec = 0.99, progress = FALSE,
+  ...)
 
 \method{get_pred_gpi}{data.frame}(data, sequence, id, ...)
 
@@ -27,6 +28,8 @@ get_pred_gpi(data, ...)
 \item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 
 \item{spec}{Numeric in the 0-1 range, indicating the threshold specificity.}
+
+\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
@@ -54,6 +57,7 @@ data(at_nsp)
 gpi_pred <- get_pred_gpi(at_nsp[1:20,],
                          sequence,
                          Transcript.id)
+gpi_pred
 
 }
 \references{

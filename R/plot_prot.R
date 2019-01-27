@@ -17,6 +17,7 @@
 #' @param domain Bolean, should the domains be plotted. 
 #' @param disorder Bolean, should disordered regions be plotted. 
 #' @param dom_sort One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.
+#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}} and \code{\link[ragp]{scan_ag}}.
 #'
 #' @return A ggplot2 plot object
@@ -26,9 +27,10 @@
 #' @examples
 #' library(ragp)
 #' 
-#' ind <- c(23,24, 5, 80, 81, 120, 230, 334, 345, 1000)
+#' ind <- c(23, 24, 5, 80, 81, 120, 230, 334, 345, 1000)
 #' pred <- plot_prot(sequence = at_nsp$sequence[ind],
 #'                   id = at_nsp$Transcript.id[ind])
+#' pred 
 #' 
 #' @export
 
@@ -47,6 +49,7 @@ plot_prot <- function(sequence,
                       domain = TRUE,
                       disorder = FALSE,
                       dom_sort = c("ievalue", "abc", "cba"),
+                      progress = FALSE,
                       ...) {
   
   if (missing(sequence)){
@@ -56,6 +59,24 @@ plot_prot <- function(sequence,
   if (missing(id)){
     stop("protein id must be provided to obtain predictions",
          call. = FALSE)
+  }
+  if (missing(progress)) {
+    progress <- FALSE
+  }
+  if (length(progress) > 1){
+    progress <- FALSE
+    warning("progress should be of length 1, setting to default: progress = FALSE",
+            call. = FALSE)
+  }
+  if (!is.logical(progress)){
+    progress <- as.logical(progress)
+    warning("progress is not logical, converting using 'as.logical'",
+            call. = FALSE)
+  }
+  if (is.na(progress)){
+    progress <- FALSE
+    warning("progress was set to NA, setting to default: progress = FALSE",
+            call. = FALSE)
   }
   id <- as.character(id)
   id_label <- id
@@ -296,13 +317,16 @@ plot_prot <- function(sequence,
   dat$id_num <- as.numeric(dat$id)
   
   if (domain) {
-    print("querying hmmscan")
+    if(progress){
+      print("querying hmmscan")
+    }
     seq_hmm <- ragp::get_hmm(data = dat,
                              sequence = sequence,
                              id = id,
                              sleep = 0,
                              attempts = 5,
-                             verbose = FALSE)
+                             verbose = FALSE,
+                             progress = progress)
     
     seq_hmm <- seq_hmm[seq_hmm$reported,]
     
@@ -344,11 +368,14 @@ plot_prot <- function(sequence,
   }
   
   if (nsp) {
-    print("querying signalp")
+    if(progress){
+      print("querying signalp")
+    }
     seq_signalp <- do.call(ragp::get_signalp,
                            c(list(data = dat,
                                   sequence = "sequence",
-                                  id = "id"),
+                                  id = "id",
+                                  progress = progress),
                              dots[names(dots) %in% args_signalp]))
     
     seq_signalp <- seq_signalp[seq_signalp$is.signalp,]
@@ -367,10 +394,13 @@ plot_prot <- function(sequence,
   }
   
   if (tm) {
-    print("querying phobius")
+    if(progress){
+      print("querying phobius")
+    }
     phobius_seq <- ragp::get_phobius(data = dat,
                                      sequence = sequence,
-                                     id = id)
+                                     id = id,
+                                     progress = progress)
     
     phobius_seq <- merge(dat,
                          phobius_seq,
@@ -459,10 +489,13 @@ plot_prot <- function(sequence,
   
   seq_gpi <- NULL
   if (gpi == 'bigpi') {
-    print("querying big pi")
+    if(progress){
+      print("querying big pi")
+    }
     seq_gpi <- ragp::get_big_pi(data = dat,
                                 sequence = "sequence",
-                                id = "id")
+                                id = "id",
+                                progress = progress)
     
     seq_gpi <- seq_gpi[seq_gpi$is.bigpi,]
     seq_gpi$omega_site <- as.numeric(seq_gpi$omega_site)
@@ -473,10 +506,13 @@ plot_prot <- function(sequence,
   }
 
   if (gpi == 'predgpi') {
-    print("querying predGPI")
+    if(progress){
+      print("querying predGPI")
+    }
     seq_gpi <- ragp::get_pred_gpi(dat,
                                   sequence = "sequence",
-                                  id = "id")
+                                  id = "id",
+                                  progress = progress)
     
     seq_gpi <- seq_gpi[seq_gpi$is.gpi,]
     
@@ -526,12 +562,15 @@ plot_prot <- function(sequence,
 
   seq_espritz <- NULL
   if (disorder) {
-    print("querying espritz")
+    if(progress){
+      print("querying espritz")
+    }
     seq_espritz <- do.call(get_espritz,
                            c(list(data = dat,
                                   sequence = "sequence",
                                   id = "id",
-                                  simplify = FALSE),
+                                  simplify = FALSE,
+                                  progress = progress),
                              dots[names(dots) %in% args_espritz]))
     
     seq_espritz$id <- factor(seq_espritz$id,

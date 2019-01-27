@@ -6,6 +6,7 @@
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
 #' @return  A data frame with columns:
@@ -35,6 +36,8 @@
 #' phobius_pred <- get_phobius(at_nsp[1:20,],
 #'                             sequence,
 #'                             Transcript.id)
+#' phobius_pred
+#' 
 #' @import seqinr
 #' @import httr
 #' @import stringr
@@ -52,7 +55,26 @@ get_phobius <- function (data, ...){
 
 
 get_phobius.character <- function(data,
+                                  progress = FALSE,
                                   ...){
+  if (missing(progress)) {
+    progress <- FALSE
+  }
+  if (length(progress) > 1){
+    progress <- FALSE
+    warning("progress should be of length 1, setting to default: progress = FALSE",
+            call. = FALSE)
+  }
+  if (!is.logical(progress)){
+    progress <- as.logical(progress)
+    warning("progress is not logical, converting using 'as.logical'",
+            call. = FALSE)
+  }
+  if (is.na(progress)){
+    progress <- FALSE
+    warning("progress was set to NA, setting to default: progress = FALSE",
+            call. = FALSE)
+  }
   if(length(data) > 1){
     stop("one fasta file per function call can be supplied",
          call. = FALSE)
@@ -70,9 +92,11 @@ get_phobius.character <- function(data,
   if(grepl("temp_", file_name)){
     unlink(file_name)
   }
-  pb <- utils::txtProgressBar(min = 0,
-                              max = len,
-                              style = 3)
+  if(progress){
+    pb <- utils::txtProgressBar(min = 0,
+                                max = len,
+                                style = 3)
+  }
   url <- "http://phobius.binf.ku.dk/cgi-bin/predict.pl"
   collected_res = vector("list", len)
   for (i in 1 : len){
@@ -102,9 +126,13 @@ get_phobius.character <- function(data,
                        "prediction")
     collected_res[[i]] <- res
     unlink(file_list[i])
-    utils::setTxtProgressBar(pb, i)
+    if(progress){
+      utils::setTxtProgressBar(pb, i)
+    }
   }
-  close(pb)
+  if(progress){
+    close(pb)
+  }
   collected_res <- do.call(rbind,
                            collected_res)
   collected_res$cut_site <- stringr::str_extract(
@@ -178,7 +206,8 @@ get_phobius.data.frame <- function(data,
   seqinr::write.fasta(sequence = strsplit(sequence, ""),
                       name = id,
                       file = file_name)
-  res <- get_phobius.character(file_name)
+  res <- get_phobius.character(file_name,
+                               ...)
   return(res)
 }
 
@@ -219,7 +248,8 @@ get_phobius.list <- function(data,
   } else {
     stop("only lists containing objects of class SeqFastaAA are supported")
   }
-  res <- get_phobius.character(file_name)
+  res <- get_phobius.character(file_name,
+                               ...)
   return(res)
 }
 
@@ -267,6 +297,7 @@ get_phobius.default <- function(data = NULL,
   seqinr::write.fasta(sequence = strsplit(sequence, ""),
                       name = id,
                       file = file_name)
-  res <- get_phobius.character(file_name)
+  res <- get_phobius.character(file_name,
+                               ...)
   return(res)
 }

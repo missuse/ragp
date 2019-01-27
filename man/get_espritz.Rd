@@ -21,7 +21,7 @@ get_espritz(data, ...)
 
 \method{get_espritz}{default}(data = NULL, sequence, id,
   model = c("X-Ray", "Disprot", "NMR"), FPR = c("best Sw", "5\% FPR"),
-  simplify = TRUE, ...)
+  simplify = TRUE, progress = FALSE, ...)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
@@ -37,6 +37,8 @@ get_espritz(data, ...)
 \item{FPR}{One of c('best Sw', '5"\%" FPR'). default is 'best Sw'. Determines the cutoff probability for prediction. 'best Sw' maximizes a weighted score rewarding correctly disorder prediction more than order prediction.}
 
 \item{simplify}{A Boolean indicating the type of returned object, defaults to TRUE.}
+
+\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
 }
 \value{
 If simplify == TRUE:
@@ -70,6 +72,7 @@ library(ragp)
 espritz_test <- get_espritz(at_nsp[1:10,],
                             sequence,
                             Transcript.id)
+espritz_test
 
 }
 \references{

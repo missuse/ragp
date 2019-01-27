@@ -8,7 +8,7 @@ plot_prot(sequence, id, hyp_col = "#868686FF", gpi_col = "#0073C2FF",
   nsp_col = "#CD534CFF", ag_col = "#E5E5E5FF", tm_col = "#EFC000FF",
   hyp = TRUE, gpi = c("bigpi", "predgpi", "none"), nsp = TRUE,
   ag = TRUE, tm = TRUE, domain = TRUE, disorder = FALSE,
-  dom_sort = c("ievalue", "abc", "cba"), ...)
+  dom_sort = c("ievalue", "abc", "cba"), progress = FALSE, ...)
 }
 \arguments{
 \item{sequence}{String representing a protein amino acid sequence.}
@@ -41,6 +41,8 @@ plot_prot(sequence, id, hyp_col = "#868686FF", gpi_col = "#0073C2FF",
 
 \item{dom_sort}{One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.}
 
+\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
+
 \item{...}{Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}} and \code{\link[ragp]{scan_ag}}.}
 }
 \value{
@@ -52,9 +54,10 @@ Plots a diagram of protein structure based on hmmscan domain annotation and seve
 \examples{
 library(ragp)
 
-ind <- c(23,24, 5, 80, 81, 120, 230, 334, 345, 1000)
+ind <- c(23, 24, 5, 80, 81, 120, 230, 334, 345, 1000)
 pred <- plot_prot(sequence = at_nsp$sequence[ind],
                   id = at_nsp$Transcript.id[ind])
+pred 
 
 }
 \seealso{

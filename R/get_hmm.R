@@ -7,11 +7,11 @@
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
-#' @param verbose Bolean, whether to print out the output for each sequence, defaults to TRUE.
+#' @param verbose Bolean, whether to print out the output for each sequence, defaults to FALSE.
 #' @param sleep Numeric indicating the pause in seconds between server calls, at default set to 1.
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
 #' @param timeout Numeric, time in seconds to wait for server response.
-#' @param progress Bolean, whether to show the progress bar, at default set to TRUE
+#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
 #' @return A data frame with columns:
@@ -44,6 +44,7 @@
 #'                     id = Transcript.id,
 #'                     verbose = FALSE,
 #'                     sleep = 0)
+#' pfam_pred
 #'
 #' @import seqinr
 #' @import httr
@@ -162,18 +163,18 @@ get_hmm.list <- function(data,
 get_hmm.default <- function(data = NULL,
                             sequence,
                             id,
-                            verbose = TRUE,
+                            verbose = FALSE,
                             sleep = 1,
                             attempts = 2L,
                             timeout = 10,
-                            progress = TRUE,
+                            progress = FALSE,
                             ...){
   if (missing(verbose)) {
-    verbose <- TRUE
+    verbose <- FALSE
   }
   if (length(verbose) > 1){
-    verbose <- TRUE
-    warning("verbose should be of length 1, setting to default: verbose = TRUE",
+    verbose <- FALSE
+    warning("verbose should be of length 1, setting to default: verbose = FALSE",
             call. = FALSE)
   }
   if (!is.logical(verbose)){
@@ -182,16 +183,16 @@ get_hmm.default <- function(data = NULL,
             call. = FALSE)
   }
   if (is.na(verbose)){
-    verbose <- TRUE
-    warning("verbose was set to NA, setting to default: verbose = TRUE",
+    verbose <- FALSE
+    warning("verbose was set to NA, setting to default: verbose = FALSE",
             call. = FALSE)
   }
   if (missing(progress)) {
-    progress <- TRUE
+    progress <- FALSE
   }
   if (length(progress) > 1){
-    progress <- TRUE
-    warning("progress should be of length 1, setting to default: progress = TRUE",
+    progress <- FALSE
+    warning("progress should be of length 1, setting to default: progress = FALSE",
             call. = FALSE)
   }
   if (!is.logical(progress)){
@@ -200,8 +201,8 @@ get_hmm.default <- function(data = NULL,
             call. = FALSE)
   }
   if (is.na(progress)){
-    progress <- TRUE
-    warning("progress was set to NA, setting to default: progress = TRUE",
+    progress <- FALSE
+    warning("progress was set to NA, setting to default: progress = FALSE",
             call. = FALSE)
   }
   if (missing(sleep)) {
