@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9000</span>
       </span>
     </div>
 
@@ -213,11 +213,12 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>ragp</span>)
-
-<span class='no'>ind</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>23</span>, <span class='fl'>24</span>, <span class='fl'>5</span>, <span class='fl'>80</span>, <span class='fl'>81</span>, <span class='fl'>120</span>, <span class='fl'>230</span>, <span class='fl'>334</span>, <span class='fl'>345</span>, <span class='fl'>1000</span>)
+<span class='fu'>library</span>(<span class='no'>ggplot2</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: package 'ggplot2' was built under R version 3.5.2</span></div><div class='input'><span class='no'>ind</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='fl'>23</span>, <span class='fl'>5</span>, <span class='fl'>80</span>, <span class='fl'>81</span>, <span class='fl'>345</span>)
 <span class='no'>pred</span> <span class='kw'>&lt;-</span> <span class='fu'>plot_prot</span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>[<span class='no'>ind</span>],
                   <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='no'>ind</span>])
-<span class='no'>pred</span></div><div class='img'><img src='plot_prot-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>pred</span> +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>legend.position</span> <span class='kw'>=</span> <span class='st'>"bottom"</span>,
+        <span class='kw'>legend.direction</span> <span class='kw'>=</span> <span class='st'>"vertical"</span>)</div><div class='img'><img src='plot_prot-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -1,3 +1,16 @@
+#ragp 0.2.1.9000
+
+##Bug Fixes and Improvements
+
+* `get_phobius()`, `get_big_pi()`, `get_pred_gpi()` and `plot_prot()`, gain an additional argument `progress`. 
+`progress` is a logical value determining whether to show the progress bar, (default `FALSE`).
+
+* `get_targetp()`, `get_signalp()` and `get_hmm()` argument `progress` is now set to `FALSE` at default.
+
+* `get_hmm()` argument `verbose` is now set to `FALSE` at default.
+
+* added `pkgdown` site for `ragp` at: https://missuse.github.io/ragp/.
+
 #ragp 0.2.1.0000
 
 ##Bug Fixes and Improvements
