@@ -21,31 +21,23 @@ reference:
       - get_espritz
       - pfam2go
   - title: "Proline hydroxylation prediction"
-    desc: >
-      Predict the probability of proline hydroxylation
-      in secreted plant proteins based on protein sequence.
+    desc: ~
     contents:
       - predict_hyp
   - title: "Arabinogalactan identification"
-    desc: >
-      Detect localized clusters of characteristic arabinogalactan motifs.
+    desc: ~
     contents:
       - scan_ag
   - title: "Classify HRGPs"
-    desc: >
-      Perform motif and amino acid bias classification of HRGPs.
+    desc: ~
     contents:
       - maab
   - title: "Protein structure diagram"
-    desc: >
-      Diagram of protein structure based on hmmscan domain annotation
-      and several types of predictions.
+    desc: ~
     contents:
       - plot_prot
   - title: "Detection of motifs for N-glycosylation"
-    desc: >
-      Detection of motifs for N-glycosylation on asparagine residues
-      based on PROSITE pattern PS00001.
+    desc: ~
     contents:
       - scan_nglc
   - title: "data"
