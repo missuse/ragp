@@ -332,12 +332,19 @@ get_signalp.character <- function(data,
                                     minlen = minlen,
                                     method = method,
                                     trunc = as.character(trunc)))
-      res <- httr::content(res,
-                           as = "parsed")
-      res <- xml2::xml_find_all(res,
-                                ".//input[@name='jobid']")
-      jobid[i] <- xml2::xml_attr(res,
-                                 "value")
+      if(!grepl("jobid=", res$url)){
+        stop("something went wrong on server side")
+      }
+      res <- sub("http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?jobid=",
+                 "",
+                 res$url,
+                 fixed = TRUE)
+      
+      res <- sub("&wait=20",
+                 "",
+                 res,
+                 fixed = TRUE)
+      jobid[i] <- res
       if(progress){
         utils::setTxtProgressBar(pb,
                                  floor(i/2) + (10 * (k - 1)))
@@ -418,12 +425,19 @@ get_signalp.character <- function(data,
                                         minlen = minlen,
                                         method = method,
                                         trunc = as.character(trunc)))
-          res <- httr::content(res,
-                               as = "parsed")
-          res <- xml2::xml_find_all(res,
-                                    ".//input[@name='jobid']")
-          jobidi <- xml2::xml_attr(res,
-                                   "value")
+          if(!grepl("jobid=", res$url)){
+            stop("something went wrong on server side")
+          }
+          res <- sub("http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?jobid=",
+                     "",
+                     res$url,
+                     fixed = TRUE)
+          
+          res <- sub("&wait=20",
+                     "",
+                     res,
+                     fixed = TRUE)
+          jobidi <- res
           
           time1 <- Sys.time()
           
