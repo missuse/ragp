@@ -52,7 +52,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../../articles/pkgdown/Protein%20Sequence%20Visualization.html">Protein Sequence Visualization</a>
+      <a href="../../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
     </li>
     <li>
       <a href="../../articles/ragp-vignette.html">ragp vignette</a>
@@ -85,8 +85,8 @@
       <h1>Protein Sequence Visualization</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/missuse/ragp/blob/master/vignettes/pkgdown/Protein%20Sequence%20Visualization.Rmd"><code>vignettes/pkgdown/Protein Sequence Visualization.Rmd</code></a></small>
-      <div class="hidden name"><code>Protein Sequence Visualization.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/missuse/ragp/blob/master/vignettes/pkgdown/PSV.Rmd"><code>vignettes/pkgdown/PSV.Rmd</code></a></small>
+      <div class="hidden name"><code>PSV.Rmd</code></div>
 
     </div>
 
@@ -98,11 +98,10 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">library</span>(protr) 
 <span class="kw">library</span>(ragp)</code></pre></div>
-<p>In order to use <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> the user should supply protein sequences and the corresponding identifiers. In the next example the function <code><a href="http://www.rdocumentation.org/packages/protr/topics/getUniProt">protr::getUniProt()</a></code> will be used to download several protein sequences from <a href="https://www.uniprot.org/">UniProt</a> and then <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> will be used to visualize the sequence attributes:</p>
 <div id="basic-usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#basic-usage" class="anchor"></a>Basic usage</h2>
-<p>In the following examples three protein sequences from <a href="https://www.uniprot.org/">UniProt</a> will be used:</p>
+<p>In the next example the function <code><a href="http://www.rdocumentation.org/packages/protr/topics/getUniProt">protr::getUniProt()</a></code> will be used to download several protein sequences from <a href="https://www.uniprot.org/">UniProt</a> and then <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> will be used to visualize the sequence attributes:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ids &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"Q9C7T7"</span>,
          <span class="st">"Q9ZPR7"</span>,
          <span class="st">"Q9ZQ23"</span>)</code></pre></div>
@@ -113,7 +112,7 @@
                 <span class="dt">id =</span> ids)
 p1</code></pre></div>
 <div class="figure">
-<img src="https://missuse.github.io/ragp/articles/pkgdown/PSV_p1.svg">
+<img src="https://missuse.github.io/ragp/articles/PSV_p1.svg">
 </div>
 <p>By default the plot contains the following information:</p>
 <ul>
@@ -121,7 +120,7 @@ p1</code></pre></div>
 </li>
 <li>Signal peptides (prediction obtained by <code><a href="../../reference/get_signalp.html">get_signalp()</a></code>) are indicated by the thick red line on the N-terminal side.<br>
 </li>
-<li>GPI attachment sites (as predicted by <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code> or <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> depending on the <code>plot_prot</code> argument <code>gpi</code>) are indicated by blue rhomboids.<br>
+<li>GPI attachment sites (as predicted by <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code> or <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> depending on the <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> argument <code>gpi</code>) are indicated by blue rhomboids.<br>
 </li>
 <li>Hydroxyprolines (as predicted by <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code>) are indicated by vertical dark gray lines.<br>
 </li>
@@ -135,14 +134,14 @@ p1</code></pre></div>
                 <span class="dt">disorder =</span> <span class="ot">TRUE</span>) <span class="co">#plot disordered regions</span>
 p1</code></pre></div>
 <div class="figure">
-<img src="https://missuse.github.io/ragp/articles/pkgdown/PSV_p2.svg">
+<img src="https://missuse.github.io/ragp/articles/PSV_p2.svg">
 </div>
 </div>
 <div id="plot_prot-options" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot_prot-options" class="anchor"></a>plot_prot() options</h2>
 <ul>
-<li>determining what features to plot: to turn of some elements from beeing plotted use the approprate argument, for instance <code>hyp = FALSE</code> will result in hydroxyproline predictions to not be plotted.</li>
+<li>determining what features to plot: to turn of some elements from being plotted use the appropriate argument, for instance <code>hyp = FALSE</code> will result in hydroxyproline predictions to not be plotted.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,
                 <span class="dt">id =</span> ids,
@@ -152,10 +151,10 @@ p1</code></pre></div>
                 <span class="dt">gpi =</span> <span class="st">"predgpi"</span>)  <span class="co">#use `get_pred_gpi()` to obtain GPI predictions</span>
 p1</code></pre></div>
 <div class="figure">
-<img src="https://missuse.github.io/ragp/articles/pkgdown/PSV_p3.svg">
+<img src="https://missuse.github.io/ragp/articles/PSV_p3.svg">
 </div>
 <ul>
-<li>feature specific options: passing approaprate function arguments to functions called by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> such as <code>dim</code> and <code>div</code> for <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> or <code>tprob</code> for <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> to change the rules of arabinogalactan motif scan and the threshold for decision if the proline is hydroxylated is supported:</li>
+<li>feature specific options: passing appropriate function arguments to functions called by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> such as <code>dim</code> and <code>div</code> for <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> or <code>tprob</code> for <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> to change the rules of arabinogalactan motif scan and the threshold for decision if the proline is hydroxylated is supported:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p2 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,
                 <span class="dt">id =</span> ids,
@@ -166,7 +165,7 @@ p1</code></pre></div>
                 <span class="dt">model =</span> <span class="st">"Disprot"</span>) <span class="co">#use NMR model when calling `get_espritz()`</span>
 p2</code></pre></div>
 <div class="figure">
-<img src="https://missuse.github.io/ragp/articles/pkgdown/PSV_p4.svg">
+<img src="https://missuse.github.io/ragp/articles/PSV_p4.svg">
 </div>
 <ul>
 <li>change feature colors:</li>
@@ -180,20 +179,20 @@ p2</code></pre></div>
                 <span class="dt">tm_col =</span> <span class="st">"aquamarine"</span>) 
 p3</code></pre></div>
 <div class="figure">
-<img src="https://missuse.github.io/ragp/articles/pkgdown/PSV_p5.svg">
+<img src="https://missuse.github.io/ragp/articles/PSV_p5.svg">
 </div>
 </div>
 <div id="customising-the-plot-using-ggplot-layers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#customising-the-plot-using-ggplot-layers" class="anchor"></a>Customising the plot using ggplot layers</h2>
-<p><code><a href="../../reference/plot_prot.html">plot_prot()</a></code> returns a <code>ggplot</code> object which can be further customised:</p>
+<p><code><a href="../../reference/plot_prot.html">plot_prot()</a></code> returns a <code>ggplot</code> object which can be further customized:</p>
 <ul>
 <li>change theme elements:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
         <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>)</code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/pkgdown/PSV_p6.svg"> * add annotations:</p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p6.svg"> * add annotations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
         <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span>
@@ -202,9 +201,9 @@ p3</code></pre></div>
            <span class="dt">x =</span> <span class="dv">90</span>,
            <span class="dt">label =</span> <span class="st">"FAS domain"</span>)</code></pre></div>
 <div class="figure">
-<img src="https://missuse.github.io/ragp/articles/pkgdown/PSV_p7.svg">
+<img src="https://missuse.github.io/ragp/articles/PSV_p7.svg">
 </div>
-<p>As can be observed from the above call, the <code>y</code> axis is continous - <code>1</code> on the plot corresponds to Q9C7T7, <code>2</code> corresponds to Q9ZPR7 and 3 to Q9ZQ23. The <code>x</code> axis represents amino acids in the sequence. This enables adding annotations anywhere on the plot.</p>
+<p>As can be observed from the above call, the <code>y</code> axis is continuous - <code>1</code> on the plot corresponds to Q9C7T7, <code>2</code> corresponds to Q9ZPR7 and 3 to Q9ZQ23. The <code>x</code> axis represents amino acids in the sequence. This enables adding annotations anywhere on the plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
         <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span>
@@ -213,26 +212,26 @@ p3</code></pre></div>
            <span class="dt">x =</span> <span class="dv">530</span>,
            <span class="dt">label =</span> <span class="st">"annotation 1"</span>)</code></pre></div>
 <div class="figure">
-<img src="https://missuse.github.io/ragp/articles/pkgdown/PSV_p8.svg">
+<img src="https://missuse.github.io/ragp/articles/PSV_p8.svg">
 </div>
 <ul>
-<li>change plot ratio: the ratio of the axes is determined automaticaly by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> and scales with the longest sequence plotted. To change this use the <code>ratio</code> argument to <code>coord_equal()</code>:</li>
+<li>change plot ratio: the ratio of the axes is determined automatically by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> and scales with the longest sequence plotted. To change this use the <code>ratio</code> argument to <code>coord_equal()</code>:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
         <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_equal</span>(<span class="dt">ratio =</span> <span class="dv">80</span>,
               <span class="dt">expand =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/pkgdown/PSV_p9.svg"> * change the domain colors: use another fill palette:</p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p9.svg"> * change the domain colors: use another fill palette:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
         <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">type =</span> <span class="st">"div"</span>)</code></pre></div>
 <div class="figure">
-<img src="https://missuse.github.io/ragp/articles/pkgdown/PSV_p10.svg">
+<img src="https://missuse.github.io/ragp/articles/PSV_p10.svg">
 </div>
 <ul>
-<li>change the domain colors: create a manual pallete:</li>
+<li>change the domain colors: create a manual palette:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
@@ -246,7 +245,7 @@ p3</code></pre></div>
                                <span class="st">"purple"</span>,
                                <span class="st">"grey30"</span>))</code></pre></div>
 <div class="figure">
-<img src="https://missuse.github.io/ragp/articles/pkgdown/PSV_p11.svg">
+<img src="https://missuse.github.io/ragp/articles/PSV_p11.svg">
 </div>
 </div>
   </div>
