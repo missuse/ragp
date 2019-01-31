@@ -10,6 +10,7 @@
 #' @param gpi A Boolean vector indicating if the corresponding id contains a GPI or not. Can be the 'is.bigpi' column from the output of get_big_pi.
 #' @param get_gpi A string indicating if \code{\link[ragp]{get_big_pi}} or \code{\link[ragp]{get_pred_gpi}} should be called on sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge. At default set to 'none'.
 #' @param spec Numeric in the 0-1 range, indicating the threshold specificity of \code{\link[ragp]{get_pred_gpi}}. Only valid if argument get_gpi = "predgpi".
+#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
 #' @return A data frame with columns:
@@ -41,6 +42,8 @@
 #' maab_class <- maab(sequence = at_nsp$sequence,
 #'                    id = at_nsp$Transcript.id)
 #'
+#' head(maab_class)
+#' 
 #' @import stringr
 #' @import seqinr
 #' @export
@@ -161,6 +164,7 @@ maab.default <- function(data = NULL,
                          gpi = NULL,
                          get_gpi = c("bigpi", "predgpi", "none"),
                          spec = 0.99,
+                         progress = FALSE,
                          ...){
   if(missing(order)){
     order <- c("ext", "tyr", "prp", "agp")
@@ -185,14 +189,32 @@ maab.default <- function(data = NULL,
   }
   if(!get_gpi %in% c("bigpi", "predgpi", "none")){
     get_gpi <- 'none'
-    warning(paste("get_gpi should be one of",
-                  "'bigpi', 'predgpi', 'none',",
-                  "setting to default: get_gpi = 'none'"),
+    warning("get_gpi should be one of ",
+            "'bigpi', 'predgpi', 'none', ",
+            "setting to default: get_gpi = 'none'",
             call. = FALSE)
   }
   if (length(get_gpi) > 1){
     get_gpi <- 'none'
     warning("get_gpi should be of length 1, setting to default: get_gpi = 'none'",
+            call. = FALSE)
+  }
+  if (missing(progress)) {
+    progress <- FALSE
+  }
+  if (length(progress) > 1){
+    progress <- FALSE
+    warning("progress should be of length 1, setting to default: progress = FALSE",
+            call. = FALSE)
+  }
+  if (!is.logical(progress)){
+    progress <- as.logical(progress)
+    warning("progress is not logical, converting using 'as.logical'",
+            call. = FALSE)
+  }
+  if (is.na(progress)){
+    progress <- FALSE
+    warning("progress was set to NA, setting to default: progress = FALSE",
             call. = FALSE)
   }
   if (missing(sequence)){
@@ -485,15 +507,19 @@ maab.default <- function(data = NULL,
                     stringsAsFactors = FALSE)
   if(get_gpi == "predgpi"){
     if(!missing(gpi)){
-      warning("get_gpi will override the gpi argument with PredGPI predictions")
+      warning("get_gpi will override the gpi argument with PredGPI predictions",
+              call. = FALSE)
     }
     out_gpi <- out[out$maab_class != "0",]
     seq_gpi <- sequence[out$maab_class != "0"]
     id_gpi <- id[out$maab_class != "0"]
-    print("PredGPI")
+    if(progress){
+      message("querying PredGPI")
+    }
     gpi_predgpi <- ragp::get_pred_gpi(sequence = seq_gpi,
                                       id = id_gpi,
-                                      spec = spec)
+                                      spec = spec,
+                                      progress = progress)
     gpi_predgpi <- gpi_predgpi$is.gpi
     out2 <- ragp::maab(sequence = seq_gpi,
                        id = id_gpi,
@@ -510,21 +536,24 @@ maab.default <- function(data = NULL,
   }
   if(get_gpi == "bigpi"){
     if(!missing(gpi)){
-      warning("get_gpi will override the gpi argument with big Pi predictions")
+      warning("get_gpi will override the gpi argument with big Pi predictions",
+              call. = FALSE)
     }
     out_gpi <- out[out$maab_class != "0",]
     seq_gpi <- sequence[out$maab_class != "0"]
     id_gpi <- id[out$maab_class != "0"]
-    print("querying big Pi")
+    if(progress){
+      message("querying big Pi")
+    }
     gpi_big_pi <- ragp::get_big_pi(sequence = seq_gpi,
                                    id = id_gpi,
-                                   simplify = TRUE)
+                                   simplify = TRUE,
+                                   progress = progress)
     gpi_big_pi <- gpi_big_pi$is.bigpi
     out2 <- ragp::maab(sequence = seq_gpi,
                        id = id_gpi,
                        order = order,
-                       gpi = gpi_big_pi,
-                       get_gpi = FALSE)
+                       gpi = gpi_big_pi)
     out3 <- out[!out$id %in% out2$id,]
     out <- rbind(out3, out2)
     out <- merge(data.frame(id = id,
