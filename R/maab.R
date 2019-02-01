@@ -1,6 +1,6 @@
-#' MAAB classification of Hydroxyproline‐rich Glycoproteins
+#' MAAB classification of hydroxyproline rich glycoproteins
 #'
-#' Perform Motif and amino acid bias classification of Hydroxyproline‐rich Glycoproteins according to Johnson et al. (2017)
+#' Perform Motif and amino acid bias classification of hydroxyproline rich glycoproteins according to Johnson et al. (2017)
 #' 
 #' @aliases maab maab.default maab.character maab.data.frame maab.list
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.

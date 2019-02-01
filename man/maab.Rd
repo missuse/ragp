@@ -6,7 +6,7 @@
 \alias{maab.character}
 \alias{maab.data.frame}
 \alias{maab.list}
-\title{MAAB classification of Hydroxyproline‐rich Glycoproteins}
+\title{MAAB classification of hydroxyproline rich glycoproteins}
 \usage{
 maab(data, ...)
 
@@ -56,7 +56,7 @@ A data frame with columns:
 }
 }
 \description{
-Perform Motif and amino acid bias classification of Hydroxyproline‐rich Glycoproteins according to Johnson et al. (2017)
+Perform Motif and amino acid bias classification of hydroxyproline rich glycoproteins according to Johnson et al. (2017)
 }
 \details{
 The function provides motif and amino acid bias descriptors used for classification of HRGP's by the MAAB pipeline (Johnson et al. 2017) as well as the determined HRGP classes. The motifs are counted in a specific order ext > tyr > prp > agp, and overlapping motifs are not counted. Hence the classification depends on the order of counting, this is most noticeable for tyr and prp, we recommend using both the default order and  'order = c("ext", "prp","tyr", "agp")'.
