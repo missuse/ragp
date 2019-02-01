@@ -22,7 +22,7 @@
 </head>
 <body>
     <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -44,31 +44,34 @@
      
   </a>
 </li>
-<li>
-  <a href="reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Tutorials
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
+      <a href="articles/pkgdown/filter.html">Filtering hydroxyproline rich glycoproteins</a>
     </li>
     <li>
-      <a href="articles/ragp-vignette.html">ragp vignette</a>
+      <a href="articles/pkgdown/analyse.html">Analyse hydroxyproline rich glycoproteins</a>
+    </li>
+    <li>
+      <a href="articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="news/index.html">Changelog</a>
+  <a href="reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="news/index.html">News</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/missuse/ragp">
+  <a href="https://github.com/missuse/ragp/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -109,13 +112,12 @@
 <p>The analysis layer:</p>
 <ul>
 <li>find localized clusters of characteristic arabinogalactan motifs (AG glycomodules) to identify potential AGPs (<code><a href="reference/scan_ag.html">scan_ag()</a></code>) among the hydroxyproline containing sequences.</li>
-<li>perform motif and amino acid bias (MAAB, <span class="citation">(Johnson et al. 2017)</span>) classification scheme (<code><a href="reference/maab.html">maab()</a></code>) to classify hydroxyproline containing sequences into 23 distinct HRGP groups.<br>
+<li>perform motif and amino acid bias (MAAB, <span class="citation">(Johnson et al. 2017)</span>) classification scheme (<code><a href="reference/maab.html">maab()</a></code>) to classify hydroxyproline containing sequences.</li>
+<li>annotate domains using <a href="https://pfam.xfam.org/">Pfam</a> (<code><a href="reference/get_hmm.html">get_hmm()</a></code>) and enrich with gene ontology (GO) terms (<code><a href="reference/pfam2go.html">pfam2go()</a></code>).<br>
 </li>
-<li>annotate domains using <a href="https://pfam.xfam.org/">Pfam</a> (<code><a href="reference/get_hmm.html">get_hmm()</a></code>) and enrich with gene ontology (GO) terms (<code><a href="reference/pfam2go.html">pfam2go()</a></code>.<br>
+<li>predict the presence of potential glycosylphosphatidylinositol attachment sites (<code><a href="reference/get_big_pi.html">get_big_pi()</a></code> and <code><a href="reference/get_pred_gpi.html">get_pred_gpi()</a></code>).<br>
 </li>
-<li>predict the presence of potential glycosylphosphatidylinositol attachment sites.<br>
-</li>
-<li>predict disordered regions in proteins.</li>
+<li>predict disordered regions in proteins (<code><a href="reference/get_espritz.html">get_espritz()</a></code>).</li>
 </ul>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -189,7 +191,7 @@ input4 &lt;-<span class="st"> </span><span class="kw"><a href="reference/scan_ag
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References:</h2>
+<a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-johnson_pipeline_2017">
 <p>Johnson, Kim L., Andrew M. Cassin, Andrew Lonsdale, Antony Bacic, Monika S. Doblin, and Carolyn J. Schultz. 2017. “Pipeline to Identify Hydroxyproline-Rich Glycoproteins.” <em>Plant Physiology</em> 174 (2): 886–903. doi:<a href="https://doi.org/10.1104/pp.17.00294">10.1104/pp.17.00294</a>.</p>

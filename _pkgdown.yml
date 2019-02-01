@@ -57,3 +57,25 @@ reference:
       - QSOlevel
       - sub_hyp
       - split_fasta
+     
+      
+navbar:
+  type: inverse
+  left:
+    - icon: fa-home fa-lg
+      href: index.html
+    - text: "Tutorials"
+      menu: 
+      - text: Filtering hydroxyproline rich glycoproteins
+        href: articles/pkgdown/filter.html
+      - text: Analyse hydroxyproline rich glycoproteins
+        href: articles/pkgdown/analyse.html
+      - text: Protein Sequence Visualization
+        href: articles/pkgdown/PSV.html
+    - text: "Functions"
+      href: reference/index.html
+    - text: "News"
+      href: news/index.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/missuse/ragp/
