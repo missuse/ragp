@@ -2,7 +2,7 @@
 
 ##Bug Fixes and Improvements
 
-* `get_phobius()`, `get_big_pi()`, `get_pred_gpi()` and `plot_prot()`, gain an additional argument `progress`. 
+* `get_phobius()`, `get_big_pi()`, `get_pred_gpi()`, `maab` and `plot_prot()`, gain an additional argument `progress`. 
 `progress` is a logical value determining whether to show the progress bar, (default `FALSE`).
 
 * `get_targetp()`, `get_signalp()` and `get_hmm()` argument `progress` is now set to `FALSE` at default.

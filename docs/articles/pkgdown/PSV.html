@@ -144,7 +144,8 @@ p1</code></pre></div>
 <h2 class="hasAnchor">
 <a href="#plot_prot-options" class="anchor"></a>plot_prot() options</h2>
 <ul>
-<li>determining what features to plot: to turn of some elements from being plotted use the appropriate argument, for instance <code>hyp = FALSE</code> will result in hydroxyproline predictions to not be plotted.</li>
+<li>
+<strong>determining what features to plot</strong>: to turn of some elements from being plotted use the appropriate argument, for instance <code>hyp = FALSE</code> will result in hydroxyproline predictions to not be plotted (check full list of options: <code><a href="../../reference/plot_prot.html">?plot_prot</a></code>):</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,
                 <span class="dt">id =</span> ids,
@@ -157,7 +158,8 @@ p1</code></pre></div>
 <img src="https://missuse.github.io/ragp/articles/PSV_p3.svg">
 </div>
 <ul>
-<li>feature specific options: passing appropriate function arguments to functions called by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> such as <code>dim</code> and <code>div</code> for <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> or <code>tprob</code> for <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> to change the rules of arabinogalactan motif scan and the threshold for decision if the proline is hydroxylated is supported:</li>
+<li>
+<strong>feature specific options</strong>: passing appropriate function arguments to functions called by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> such as <code>dim</code> and <code>div</code> for <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> or <code>tprob</code> for <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> to change the rules of arabinogalactan motif scan and the threshold for decision if the proline is hydroxylated is supported:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p2 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,
                 <span class="dt">id =</span> ids,
@@ -171,7 +173,8 @@ p2</code></pre></div>
 <img src="https://missuse.github.io/ragp/articles/PSV_p4.svg">
 </div>
 <ul>
-<li>change feature colors:</li>
+<li>
+<strong>change feature colors</strong>:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p3 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,
                 <span class="dt">id =</span> ids,
@@ -185,7 +188,8 @@ p3</code></pre></div>
 <img src="https://missuse.github.io/ragp/articles/PSV_p5.svg">
 </div>
 <ul>
-<li>change the order of domain plotting: in the above images it can be observed there are more entries in the legend then can be seen in the plot. Some domains cover other domains. By default the domains with the lowest I-evalue (independent e-value) are plotted on top. To change this the argument <code>dom_sort</code> can be used. This argument can take the following values: <code>"ievalue"</code> (default), <code>"abc"</code> (alphabetically sorted by domain names), <code>"cba"</code> (reverse of <code>"abc"</code>).</li>
+<li>
+<strong>change the order of domain plotting</strong>: in the above images it can be observed there are more entries in the legend then can be seen in the plot. Some domains cover other domains. By default the domains with the lowest I-evalue (independent e-value) are plotted on top. To change this the argument <code>dom_sort</code> can be used. This argument can take the following values: <code>"ievalue"</code> (default), <code>"abc"</code> (alphabetically sorted by domain names), <code>"cba"</code> (reverse of <code>"abc"</code>).</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p4 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,
                 <span class="dt">id =</span> ids,
@@ -194,14 +198,15 @@ p4</code></pre></div>
 <div class="figure">
 <img src="https://missuse.github.io/ragp/articles/PSV_dom_sort.svg">
 </div>
-<p>It can be seen that ureide permease domain overlaps with TMEM144 transmembrane transporter domain and also that protein kinase and protein tyrosine kinase domains overlap.</p>
+<p>Ureide permease domain overlaps with TMEM144 transmembrane transporter domain and also that protein kinase and protein tyrosine kinase domains overlap.</p>
 </div>
 <div id="customising-the-plot-using-ggplot-layers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#customising-the-plot-using-ggplot-layers" class="anchor"></a>Customising the plot using ggplot layers</h2>
 <p><code><a href="../../reference/plot_prot.html">plot_prot()</a></code> returns a <code>ggplot</code> object which can be further customized:</p>
 <ul>
-<li>change theme elements:</li>
+<li>
+<strong>change theme elements</strong>:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
@@ -210,7 +215,8 @@ p4</code></pre></div>
 <img src="https://missuse.github.io/ragp/articles/PSV_p6.svg">
 </div>
 <ul>
-<li>add annotations:</li>
+<li>
+<strong>add annotations</strong>:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
@@ -222,7 +228,7 @@ p4</code></pre></div>
 <div class="figure">
 <img src="https://missuse.github.io/ragp/articles/PSV_p7.svg">
 </div>
-<p>As can be observed from the above call, the <code>y</code> axis is continuous - <code>1</code> on the plot corresponds to Q9C7T7, <code>2</code> corresponds to Q9ZPR7 and 3 to Q9ZQ23. The <code>x</code> axis represents amino acids in the sequence. This enables adding annotations anywhere on the plot.</p>
+<p>The <code>y</code> axis is continuous - <code>1</code> on the plot corresponds to Q9C7T7, <code>2</code> corresponds to Q9ZPR7 and 3 to Q9ZQ23. The <code>x</code> axis represents amino acids in the sequence. This enables adding annotations anywhere on the plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
         <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span>
@@ -234,7 +240,8 @@ p4</code></pre></div>
 <img src="https://missuse.github.io/ragp/articles/PSV_p8.svg">
 </div>
 <ul>
-<li>change plot ratio: the ratio of the axes is determined automatically by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> and scales with the longest sequence plotted. To change this use the <code>ratio</code> argument to <code>coord_equal()</code>:</li>
+<li>
+<strong>change plot ratio</strong>: the ratio of the axes is determined automatically by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> and scales with the longest sequence plotted. To change this use the <code>ratio</code> argument to <code>coord_equal()</code>:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
@@ -245,7 +252,8 @@ p4</code></pre></div>
 <img src="https://missuse.github.io/ragp/articles/PSV_p9.svg">
 </div>
 <ul>
-<li>change the domain colors: use another fill palette:</li>
+<li>
+<strong>change domain colors</strong>: use another fill palette:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
@@ -254,9 +262,7 @@ p4</code></pre></div>
 <div class="figure">
 <img src="https://missuse.github.io/ragp/articles/PSV_p10.svg">
 </div>
-<ul>
-<li>change the domain colors: create a manual palette:</li>
-</ul>
+<p>or create a manual palette:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
         <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span>
