@@ -19,7 +19,7 @@
 </head>
 <body>
     <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -41,31 +41,34 @@
      
   </a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Tutorials
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
+      <a href="../articles/pkgdown/filter.html">Filtering hydroxyproline rich glycoproteins</a>
     </li>
     <li>
-      <a href="../articles/ragp-vignette.html">ragp vignette</a>
+      <a href="../articles/pkgdown/analyse.html">Analyse hydroxyproline rich glycoproteins</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/missuse/ragp">
+  <a href="https://github.com/missuse/ragp/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -104,18 +107,22 @@
 <p><code>ragp</code> is an R package for mining and analyses of HRGPs, with emphasis on arabinogalactan protein sequences (AGPs). The <code>ragp</code> filtering pipeline exploits one of the HRGPs key features, the presence of hydroxyprolines which represent glycosylation sites. Main package features include prediction of proline hydroxylation sites, amino acid motif and bias analyses, efficient communication with web servers for prediction of N-terminal signal peptides, glycosylphosphatidylinositol modification sites and protein disorder, as well as the ability to annotate sequences through hmmscan and subsequent GO enrichment, based on predicted pfam domains.</p>
 <p>The workflow in <code>ragp</code> is illustrated with the following diagram (<code>ragp</code> functions to be used for each of the tasks are boxed grey):</p>
 <p><img src="ragp_flow_chart.svg" width="60%" style="display: block; margin: auto;"></p>
+<p>The filtering layer:</p>
 <ul>
-<li>predict the presence of secretory signals (N-sp) and filter sequences containing them.<br>
+<li>predict the presence of secretory signals (N-sp) and filter sequences containing them. Since several prediction algorithms are utilized (functions <code>get_signalp</code>, <code>get_targetp</code> and <code>get_phobius</code>) this decision is reached by a majority vote.<br>
 </li>
-<li>predict proline hydroxylation and filter sequences containing at least several potential hydroxyprolines (three or more is used in this vignette).</li>
-<li>optionally predict the presence of potential glycosylphosphatidylinositol attachment sites.<br>
+<li>predict proline hydroxylation (function <code>predict_hyp</code>) and filter sequences containing at least several potential hydroxyprolines (three or more).</li>
+</ul>
+<p>The analysis layer:</p>
+<ul>
+<li>find localized clusters of characteristic arabinogalactan motifs (AG glycomodules) to identify potential AGPs (function <code>scan_ag</code>) among the hydroxyproline containing sequences.</li>
+<li>perform motif and amino acid bias (MAAB, <span class="citation">(Johnson et al. 2017)</span>) classification scheme (function <code>maab</code>) to classify hydroxyproline containing sequences into 23 distinct HRGP groups.<br>
 </li>
-<li>optionally annotate domains using <a href="https://pfam.xfam.org/">Pfam</a>.<br>
+<li>annotate domains using <a href="https://pfam.xfam.org/">Pfam</a> (function <code>get_hmm</code>) and enrich with gene ontology (GO) terms (function <code>pfam2go</code>).<br>
 </li>
-<li>optionally predict disordered regions in proteins.</li>
-<li>find localized clusters of AG glycomodules to identify potential AGPs.<br>
+<li>predict the presence of potential glycosylphosphatidylinositol attachment sites (functions <code>get_bit_pi</code> and <code>get_pred_gpi</code>).<br>
 </li>
-<li>perform motif and amino acid bias (MAAB, Johnson <em>et al</em>., 2017) classification scheme.</li>
+<li>predict disordered regions in proteins (function <code>get_espritz</code>).</li>
 </ul>
 </div>
 <div id="data-import" class="section level2">
@@ -252,7 +259,7 @@ at_nsp2 %&gt;%
 #&gt; 4 AT2G43620.1  Chitin_bind_1 PF00187.18         164       168 8.6e+03
 #&gt; 5 AT2G43945.1           &lt;NA&gt;       &lt;NA&gt;          NA        NA      NA
 #&gt; 6 AT2G30933.1             X8 PF07983.12          81       151 2.2e-21</code></pre>
-<p>HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor <span class="citation">(Ellis et al. 2010)</span>. Attachment of the GPI moiety to the carboxyl terminus (omega-site) of the polypeptide occurs after proteolytic cleavage of a C-terminal propeptide. In order to predict the presence of the omega sites in the filtered sequences two functions are availible: <code>get_big_pi</code> which queries the <a href="http://mendel.imp.ac.at/gpi/plant_server.html">big-PI Plant Predictor</a> <span class="citation">(B. Eisenhaber et al. 2003)</span> server and <code>get_pred_gpi</code> which queries the <a href="http://gpcr.biocomp.unibo.it/predgpi/">PredGPI</a> <span class="citation">(Pierleoni, Martelli, and Casadio 2008)</span> server.</p>
+<p>HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor <span class="citation">(Ellis et al. 2010)</span>. Attachment of the GPI moiety to the carboxyl terminus (omega-site) of the polypeptide occurs after proteolytic cleavage of a C-terminal propeptide. In order to predict the presence of the omega sites in the filtered sequences two functions are available: <code>get_big_pi</code> which queries the <a href="http://mendel.imp.ac.at/gpi/plant_server.html">big-PI Plant Predictor</a> <span class="citation">(B. Eisenhaber et al. 2003)</span> server and <code>get_pred_gpi</code> which queries the <a href="http://gpcr.biocomp.unibo.it/predgpi/">PredGPI</a> <span class="citation">(Pierleoni, Martelli, and Casadio 2008)</span> server.</p>
 <p>To query <a href="http://mendel.imp.ac.at/gpi/plant_server.html">big-PI Plant Predictor</a>:</p>
 <pre class="text"><code>at_gpi &lt;- get_big_pi(at_nsp_3hyp,
                      sequence,
@@ -286,7 +293,7 @@ at_nsp2 %&gt;%
 <ul>
 <li>‘X-Ray’ - based on missing atoms from the <a href="http://www.wwpdb.org/">Protein Data Bank</a> (PDB) X-ray solved structures. If this option is chosen then the predictors with short disorder options are executed.<br>
 </li>
-<li>‘Disprot’ - contains longer disorder segments compared to x-ray. In particular, <a href="http://www.disprot.org/">disprot</a> is a manually curetted database which is often based on functional attributes of the disordered region was used for this definition. Disorder residues are defined if the disprot curators consider the residue to be disordered at least once. All other residues are considered ordered. If this option is chosen then the predictors with long disorder options are executed.<br>
+<li>‘Disprot’ - contains longer disorder segments compared to x-ray. In particular, <a href="http://www.disprot.org/">disprot</a> is a manually curated database which is often based on functional attributes of the disordered region was used for this definition. Disorder residues are defined if the disprot curators consider the residue to be disordered at least once. All other residues are considered ordered. If this option is chosen then the predictors with long disorder options are executed.<br>
 </li>
 <li>‘NMR’ - based on NMR mobility. NMR flexibility is calculated using the <a href="http://protein.bio.unipd.it/mobi/">Mobi server</a> <span class="citation">(Martin, Walsh, and Tosatto 2010)</span> optimized to replicate the ordered-disordered NMR definition used in CASP8.<br>
 These models provide quite different predictions. To query ESpritz:</li>
@@ -479,7 +486,7 @@ p3</code></pre>
   scale_fill_brewer(type = "div")+
   scale_color_brewer(type = "qual")</code></pre>
 <p><img src="p1_fill_color.svg" width="100%" style="display: block; margin: auto;"></p>
-<p>display disordered regions as perdicted by ESpritz and choose predGPI to predict GPI positions:</p>
+<p>display disordered regions as predicted by ESpritz and choose predGPI to predict GPI positions:</p>
 <pre class="text"><code>p2 &lt;- plot_prot(at_nsp$sequence[ind],
                 at_nsp$Transcript.id[ind],
                 gpi = "predgpi",

@@ -19,7 +19,7 @@
 </head>
 <body>
     <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -41,31 +41,34 @@
      
   </a>
 </li>
-<li>
-  <a href="../../reference/index.html">Reference</a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Tutorials
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
+      <a href="../../articles/pkgdown/filter.html">Filtering hydroxyproline rich glycoproteins</a>
     </li>
     <li>
-      <a href="../../articles/ragp-vignette.html">ragp vignette</a>
+      <a href="../../articles/pkgdown/analyse.html">Analyse hydroxyproline rich glycoproteins</a>
+    </li>
+    <li>
+      <a href="../../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../../news/index.html">Changelog</a>
+  <a href="../../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../../news/index.html">News</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/missuse/ragp">
+  <a href="https://github.com/missuse/ragp/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -181,6 +184,17 @@ p3</code></pre></div>
 <div class="figure">
 <img src="https://missuse.github.io/ragp/articles/PSV_p5.svg">
 </div>
+<ul>
+<li>change the order of domain plotting: in the above images it can be observed there are more entries in the legend then can be seen in the plot. Some domains cover other domains. By default the domains with the lowest I-evalue (independent e-value) are plotted on top. To change this the argument <code>dom_sort</code> can be used. This argument can take the following values: <code>"ievalue"</code> (default), <code>"abc"</code> (alphabetically sorted by domain names), <code>"cba"</code> (reverse of <code>"abc"</code>).</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p4 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,
+                <span class="dt">id =</span> ids,
+                <span class="dt">dom_sort =</span> <span class="st">"cba"</span>)
+p4</code></pre></div>
+<div class="figure">
+<img src="https://missuse.github.io/ragp/articles/PSV_dom_sort.svg">
+</div>
+<p>It can be seen that ureide permease domain overlaps with TMEM144 transmembrane transporter domain and also that protein kinase and protein tyrosine kinase domains overlap.</p>
 </div>
 <div id="customising-the-plot-using-ggplot-layers" class="section level2">
 <h2 class="hasAnchor">
