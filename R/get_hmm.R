@@ -348,7 +348,7 @@ get_hmm.default <- function(data = NULL,
       resis$align_end <- resis$align_end + st
       resis$id <- seqi_id
       resis <- resis[!duplicated(resis[,-11]),]
-      if (verbose == T) {
+      if (verbose == TRUE) {
         print(i, quote = FALSE)
         print(resis[, 1:11])
         utils::flush.console()
@@ -368,6 +368,9 @@ get_hmm.default <- function(data = NULL,
                                           threshold = "cut_ga"),
                               httr::timeout(timeout)),
             silent = TRUE)
+        if(res$status_code == 500){ #if(res$status_code != 200){
+          res <- NULL
+        }
         if (!is.null(res)) {
           break
         }
