@@ -64,6 +64,8 @@ navbar:
   left:
     - icon: fa-home fa-lg
       href: index.html
+    - text: Getting started
+      href: articles/pkgdown/start.html
     - text: "Tutorials"
       menu: 
       - text: Filtering hydroxyproline rich glycoproteins

@@ -44,6 +44,9 @@
      
   </a>
 </li>
+<li>
+  <a href="articles/pkgdown/start.html">Getting started</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Tutorials
@@ -119,6 +122,7 @@
 </li>
 <li>predict disordered regions in proteins (<code><a href="reference/get_espritz.html">get_espritz()</a></code>).</li>
 </ul>
+<p>Additionally <code>ragp</code> provides tools for visualization of the mentioned attributes via <code><a href="reference/plot_prot.html">plot_prot()</a></code>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -131,48 +135,6 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
                          <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>to build vignettes which can be viewed by:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">browseVignettes</span>(<span class="st">"ragp"</span>)</code></pre></div>
-</div>
-<div id="input" class="section level2">
-<h2 class="hasAnchor">
-<a href="#input" class="anchor"></a>Input</h2>
-<p><code>ragp</code> functions require single letter protein sequences and the corresponding identifiers as input. These can be provided in the form of basic <code>R</code> data types such as vectors or data frames. Additionally <code>ragp</code> imports the <a href="https://cran.r-project.org/web/packages/seqinr/index.html"><code>seqinr</code></a> package for the manipulation of <code>.FASTA</code> files, so the input objects can be a list of <code>SeqFastaAA</code> objects returned by the <a href="https://cran.r-project.org/web/packages/seqinr/index.html"><code>seqinr</code></a> function <code>read.fasta</code>. The location of a <code>.FASTA</code> file is also possible as a type of input.</p>
-<p>Input options will be illustrated using <code><a href="reference/scan_ag.html">scan_ag()</a></code> function:</p>
-<ul>
-<li>provide a <code>character</code> vector of protein sequences to the <code>sequence</code> argument and a <code>character</code> vector of protein identifiers to the <code>id</code> argument:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ragp)
-<span class="kw">data</span>(at_nsp) <span class="co">#a data frame of 2700 Arabidopsis sequences</span>
-input1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/scan_ag.html">scan_ag</a></span>(<span class="dt">sequence =</span> at_nsp<span class="op">$</span>sequence,
-                  <span class="dt">id =</span> at_nsp<span class="op">$</span>Transcript.id) </code></pre></div>
-<ul>
-<li>provide a <code>data.frame</code> to <code>data</code> argument, and names of columns containing the protein sequences and corresponding identifiers to <code>sequence</code> and <code>id</code> arguments:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_nsp,
-                  <span class="dt">sequence =</span> <span class="st">"sequence"</span>,
-                  <span class="dt">id =</span> <span class="st">"Transcript.id"</span>) </code></pre></div>
-<p>quoting column names is not necessary:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input3 &lt;-<span class="st"> </span><span class="kw"><a href="reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_nsp,
-                  <span class="dt">sequence =</span> sequence,
-                  <span class="dt">id =</span> Transcript.id) </code></pre></div>
-<ul>
-<li>provide a list of <code>SeqFastaAA</code> objects to <code>data</code> argument:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(seqinr) <span class="co">#to create a fasta file with protein sequences</span>
-
-<span class="co">#write a FASTA file</span>
-seqinr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/seqinr/topics/write.fasta">write.fasta</a></span>(<span class="dt">sequence =</span> <span class="kw">strsplit</span>(at_nsp<span class="op">$</span>sequence, <span class="st">""</span>),
-                    <span class="dt">name =</span> at_nsp<span class="op">$</span>Transcript.id, <span class="dt">file =</span> <span class="st">"at_nsp.fasta"</span>)
-
-<span class="co">#read a FASTA file</span>
-At_seq_fas &lt;-<span class="st"> </span><span class="kw">read.fasta</span>(<span class="st">"at_nsp.fasta"</span>,
-                         <span class="dt">seqtype =</span>  <span class="st">"AA"</span>, 
-                         <span class="dt">as.string =</span> <span class="ot">TRUE</span>) 
-
-input4 &lt;-<span class="st"> </span><span class="kw"><a href="reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> At_seq_fas) </code></pre></div>
-<ul>
-<li>provide the location of a <code>.FASTA</code> file to be analyzed as string:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input5 &lt;-<span class="st"> </span><span class="kw"><a href="reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> <span class="st">"at_nsp.fasta"</span>) <span class="co">#file at_nsp.fasta is in the working directory</span></code></pre></div>
 </div>
 <div id="bug-reports" class="section level2">
 <h2 class="hasAnchor">
