@@ -17,7 +17,7 @@
 #'@seealso \code{\link[ragp]{get_hmm}}
 #'
 #'@examples
-#'
+#'\dontrun{
 #' library(ragp)
 #' data(at_nsp)
 #'
@@ -25,7 +25,7 @@
 #'                      id = at_nsp$Transcript.id[1])
 #'
 #' pfam_pred_go <- pfam2go(data_pfam = pfam_pred, pfam = "acc")
-#'
+#'}
 #'@export
 
 pfam2go <- function(data_pfam, pfam){
