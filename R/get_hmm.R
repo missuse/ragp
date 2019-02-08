@@ -1,4 +1,4 @@
-#' Scraping hmmer web server.
+#' Query hmmer web server.
 #'
 #' hmmer web server offers biosequence analysis using profile hidden Markov Models. This function allows searching
 #' of a protein sequence vs a profile-HMM database (Pfam-A).
