@@ -511,28 +511,30 @@ maab.default <- function(data = NULL,
               call. = FALSE)
     }
     out_gpi <- out[out$maab_class != "0",]
-    seq_gpi <- sequence[out$maab_class != "0"]
-    id_gpi <- id[out$maab_class != "0"]
-    if(progress){
-      message("querying PredGPI")
+    if(nrow(out_gpi) != 0){
+      seq_gpi <- sequence[out$maab_class != "0"]
+      id_gpi <- id[out$maab_class != "0"]
+      if(progress){
+        message("querying PredGPI")
+        }
+      gpi_predgpi <- ragp::get_pred_gpi(sequence = seq_gpi,
+                                        id = id_gpi,
+                                        spec = spec,
+                                        progress = progress)
+      gpi_predgpi <- gpi_predgpi$is.gpi
+      out2 <- ragp::maab(sequence = seq_gpi,
+                         id = id_gpi,
+                         order = order,
+                         gpi = gpi_predgpi)
+      out3 <- out[!out$id %in% out2$id,]
+      out <- rbind(out3, out2)
+      out <- merge(data.frame(id = id,
+                              stringsAsFactors = FALSE),
+                   out,
+                   all.x = TRUE,
+                   sort = FALSE)
+      out$maab_class <- factor(out$maab_class)
     }
-    gpi_predgpi <- ragp::get_pred_gpi(sequence = seq_gpi,
-                                      id = id_gpi,
-                                      spec = spec,
-                                      progress = progress)
-    gpi_predgpi <- gpi_predgpi$is.gpi
-    out2 <- ragp::maab(sequence = seq_gpi,
-                       id = id_gpi,
-                       order = order,
-                       gpi = gpi_predgpi)
-    out3 <- out[!out$id %in% out2$id,]
-    out <- rbind(out3, out2)
-    out <- merge(data.frame(id = id,
-                            stringsAsFactors = FALSE),
-                 out,
-                 all.x = TRUE,
-                 sort = FALSE)
-    out$maab_class <- factor(out$maab_class)
   }
   if(get_gpi == "bigpi"){
     if(!missing(gpi)){
@@ -540,28 +542,30 @@ maab.default <- function(data = NULL,
               call. = FALSE)
     }
     out_gpi <- out[out$maab_class != "0",]
-    seq_gpi <- sequence[out$maab_class != "0"]
-    id_gpi <- id[out$maab_class != "0"]
-    if(progress){
-      message("querying big Pi")
+    if(nrow(out_gpi) != 0){
+      seq_gpi <- sequence[out$maab_class != "0"]
+      id_gpi <- id[out$maab_class != "0"]
+      if(progress){
+        message("querying big Pi")
+        }
+      gpi_big_pi <- ragp::get_big_pi(sequence = seq_gpi,
+                                     id = id_gpi,
+                                     simplify = TRUE,
+                                     progress = progress)
+      gpi_big_pi <- gpi_big_pi$is.bigpi
+      out2 <- ragp::maab(sequence = seq_gpi,
+                         id = id_gpi,
+                         order = order,
+                         gpi = gpi_big_pi)
+      out3 <- out[!out$id %in% out2$id,]
+      out <- rbind(out3, out2)
+      out <- merge(data.frame(id = id,
+                              stringsAsFactors = FALSE),
+                   out,
+                   all.x = TRUE,
+                   sort = FALSE)
+      out$maab_class <- factor(out$maab_class)
     }
-    gpi_big_pi <- ragp::get_big_pi(sequence = seq_gpi,
-                                   id = id_gpi,
-                                   simplify = TRUE,
-                                   progress = progress)
-    gpi_big_pi <- gpi_big_pi$is.bigpi
-    out2 <- ragp::maab(sequence = seq_gpi,
-                       id = id_gpi,
-                       order = order,
-                       gpi = gpi_big_pi)
-    out3 <- out[!out$id %in% out2$id,]
-    out <- rbind(out3, out2)
-    out <- merge(data.frame(id = id,
-                            stringsAsFactors = FALSE),
-                 out,
-                 all.x = TRUE,
-                 sort = FALSE)
-    out$maab_class <- factor(out$maab_class)
   }
   return(out)
 }
