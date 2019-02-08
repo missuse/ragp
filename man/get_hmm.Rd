@@ -6,7 +6,7 @@
 \alias{get_hmm.character}
 \alias{get_hmm.data.frame}
 \alias{get_hmm.list}
-\title{Scraping hmmer web server.}
+\title{Query hmmer web server.}
 \source{
 \url{https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan}
 }

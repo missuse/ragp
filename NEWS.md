@@ -1,3 +1,12 @@
+#ragp 0.2.1.9100
+
+##Bug Fixes and Improvements
+
+* `maab()` now correctly outputs when there are no MAAB classes found and `get_gpi` argument is set to `"predgpi"` or `"bigpi"`. Previously this caused an error due to `stringr::write.fasta()` attempting to write a file with no sequences.
+
+* `pfam2go()` now takes Pfam > GO mappings from ftp://ftp.geneontology.org/pub/go/external2go/pfam2go instead of http://geneontology.org/external2go/pfam2go.
+
+
 #ragp 0.2.1.9000
 
 ##Bug Fixes and Improvements
