@@ -12,12 +12,14 @@
 #'   \item{GO_acc}{Character, GO term accession.}
 #'   }
 #'
-#'@source \url{http://geneontology.org/external2go/pfam2go}
+#'@source \url{http://geneontology.org/external2go/pfam2go}  
+#'
+#'        \url{ftp://ftp.geneontology.org/pub/go/external2go/pfam2go}
 #'
 #'@seealso \code{\link[ragp]{get_hmm}}
 #'
 #'@examples
-#'\dontrun{
+#'
 #' library(ragp)
 #' data(at_nsp)
 #'
@@ -25,7 +27,8 @@
 #'                      id = at_nsp$Transcript.id[1])
 #'
 #' pfam_pred_go <- pfam2go(data_pfam = pfam_pred, pfam = "acc")
-#'}
+#' pfam_pred_go
+#' 
 #'@export
 
 pfam2go <- function(data_pfam, pfam){
@@ -36,10 +39,7 @@ pfam2go <- function(data_pfam, pfam){
     stop ("please provide the column name of the PFAM accesions, in argument pfam",
           call. = FALSE)
   }
-  pfam2go <- httr::GET("http://geneontology.org/external2go/pfam2go")
-  go_text <- httr::content(pfam2go, as = "text")
-  go_text <- strsplit(go_text, "\n")
-  go_text <- unlist(go_text)
+  go_text <- readLines("ftp://ftp.geneontology.org/pub/go/external2go/pfam2go")
   go_text <- go_text[grep("^Pfam:", go_text)]
   go_text <- strsplit(go_text, "{0,} > {0,}")
   go_text <- do.call(rbind, go_text)

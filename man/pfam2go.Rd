@@ -4,7 +4,9 @@
 \alias{pfam2go}
 \title{Add GO terms based on pfam accessions}
 \source{
-\url{http://geneontology.org/external2go/pfam2go}
+\url{http://geneontology.org/external2go/pfam2go}  
+
+       \url{ftp://ftp.geneontology.org/pub/go/external2go/pfam2go}
 }
 \usage{
 pfam2go(data_pfam, pfam)
@@ -27,7 +29,7 @@ A merged data frame with columns as provided in data_pfam argument and additiona
 The objective of gene ontology (GO) is to provide controlled vocabularies for the description of the biological process, molecular function, and cellular component of gene products. This function maps existing PFAM accessions to corresponding GO terms.
 }
 \examples{
-\dontrun{
+
 library(ragp)
 data(at_nsp)
 
@@ -35,7 +37,8 @@ pfam_pred <- get_hmm(sequence = at_nsp$sequence[1],
                      id = at_nsp$Transcript.id[1])
 
 pfam_pred_go <- pfam2go(data_pfam = pfam_pred, pfam = "acc")
-}
+pfam_pred_go
+
 }
 \seealso{
 \code{\link[ragp]{get_hmm}}
