@@ -78,6 +78,8 @@ navbar:
       href: reference/index.html
     - text: "News"
       href: news/index.html
+    - text: "ragp shiny"
+      href: https://ragp.shinyapps.io/Rapp/
   right:
     - icon: fa-github fa-lg
       href: https://github.com/missuse/ragp/
