@@ -25,7 +25,7 @@ Imports: xgboost (>= 0.6),
     utils (>= 3.3),
     graphics (>= 3.3),
     ggplot2 (>= 2.2.1)
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests:
     protr,
     knitr,
