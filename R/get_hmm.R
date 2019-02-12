@@ -368,8 +368,10 @@ get_hmm.default <- function(data = NULL,
                                           threshold = "cut_ga"),
                               httr::timeout(timeout)),
             silent = TRUE)
-        if(res$status_code == 500){ #if(res$status_code != 200){
-          res <- NULL
+        if (!is.null(res)){
+          if(res$status_code == 500){ #if(res$status_code != 200){
+            res <- NULL
+          }
         }
         if (!is.null(res)) {
           break
