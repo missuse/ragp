@@ -320,7 +320,7 @@ plot_prot <- function(sequence,
   
   if (domain) {
     if(progress){
-      print("querying hmmscan")
+      message("querying hmmscan")
     }
     seq_hmm <- ragp::get_hmm(data = dat,
                              sequence = sequence,
@@ -371,7 +371,7 @@ plot_prot <- function(sequence,
   
   if (nsp) {
     if(progress){
-      print("querying signalp")
+      message("querying signalp")
     }
     seq_signalp <- do.call(ragp::get_signalp,
                            c(list(data = dat,
@@ -397,7 +397,7 @@ plot_prot <- function(sequence,
   
   if (tm) {
     if(progress){
-      print("querying phobius")
+      message("querying phobius")
     }
     phobius_seq <- ragp::get_phobius(data = dat,
                                      sequence = sequence,
@@ -492,7 +492,7 @@ plot_prot <- function(sequence,
   seq_gpi <- NULL
   if (gpi == 'bigpi') {
     if(progress){
-      print("querying big pi")
+      message("querying big pi")
     }
     seq_gpi <- ragp::get_big_pi(data = dat,
                                 sequence = "sequence",
@@ -509,7 +509,7 @@ plot_prot <- function(sequence,
 
   if (gpi == 'predgpi') {
     if(progress){
-      print("querying predGPI")
+      message("querying predGPI")
     }
     seq_gpi <- ragp::get_pred_gpi(dat,
                                   sequence = "sequence",
@@ -565,7 +565,7 @@ plot_prot <- function(sequence,
   seq_espritz <- NULL
   if (disorder) {
     if(progress){
-      print("querying espritz")
+      message("querying espritz")
     }
     seq_espritz <- do.call(get_espritz,
                            c(list(data = dat,

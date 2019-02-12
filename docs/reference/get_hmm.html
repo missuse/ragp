@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Scraping hmmer web server. — get_hmm • ragp</title>
+<title>Query hmmer web server. — get_hmm • ragp</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="Scraping hmmer web server. — get_hmm" />
+<meta property="og:title" content="Query hmmer web server. — get_hmm" />
 
 <meta property="og:description" content="hmmer web server offers biosequence analysis using profile hidden Markov Models. This function allows searching
 of a protein sequence vs a profile-HMM database (Pfam-A)." />
@@ -52,7 +52,7 @@ of a protein sequence vs a profile-HMM database (Pfam-A)." />
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -62,7 +62,7 @@ of a protein sequence vs a profile-HMM database (Pfam-A)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9100</span>
       </span>
     </div>
 
@@ -75,31 +75,40 @@ of a protein sequence vs a profile-HMM database (Pfam-A)." />
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/pkgdown/start.html">Getting started</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Tutorials
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
+      <a href="../articles/pkgdown/filter.html">Filtering hydroxyproline rich glycoproteins</a>
     </li>
     <li>
-      <a href="../articles/ragp-vignette.html">ragp vignette</a>
+      <a href="../articles/pkgdown/analyse.html">Analyse hydroxyproline rich glycoproteins</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
+</li>
+<li>
+  <a href="https://ragp.shinyapps.io/Rapp/">ragp shiny</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/missuse/ragp">
+  <a href="https://github.com/missuse/ragp/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -116,7 +125,7 @@ of a protein sequence vs a profile-HMM database (Pfam-A)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Scraping hmmer web server.</h1>
+    <h1>Query hmmer web server.</h1>
     <small class="dont-index">Source: <a href='https://github.com/missuse/ragp/blob/master/R/get_hmm.R'><code>R/get_hmm.R</code></a></small>
     <div class="hidden name"><code>get_hmm.Rd</code></div>
     </div>

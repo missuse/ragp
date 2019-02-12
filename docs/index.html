@@ -22,7 +22,7 @@
 </head>
 <body>
     <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ragp</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9100</span>
       </span>
     </div>
 
@@ -45,30 +45,39 @@
   </a>
 </li>
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="articles/pkgdown/start.html">Getting started</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Tutorials
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
+      <a href="articles/pkgdown/filter.html">Filtering hydroxyproline rich glycoproteins</a>
     </li>
     <li>
-      <a href="articles/ragp-vignette.html">ragp vignette</a>
+      <a href="articles/pkgdown/analyse.html">Analyse hydroxyproline rich glycoproteins</a>
+    </li>
+    <li>
+      <a href="articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="news/index.html">Changelog</a>
+  <a href="reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="news/index.html">News</a>
+</li>
+<li>
+  <a href="https://ragp.shinyapps.io/Rapp/">ragp shiny</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/missuse/ragp">
+  <a href="https://github.com/missuse/ragp/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -88,6 +97,16 @@
 
     
     
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 15px;
+  }
+code.r{ /* Code block */
+    font-size: 14px;
+}
+  
+</style>
 <div id="ragp" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#ragp" class="anchor"></a>ragp</h1></div>
@@ -104,19 +123,19 @@
 <ul>
 <li>predict the presence of secretory signals (N-sp) and filter sequences containing them. Since several prediction algorithms are utilized (<code><a href="reference/get_signalp.html">get_signalp()</a></code>, <code><a href="reference/get_targetp.html">get_targetp()</a></code> and <code><a href="reference/get_phobius.html">get_phobius()</a></code>) this decision is reached by a majority vote.<br>
 </li>
-<li>predict proline hydroxylation (<code><a href="reference/predict_hyp.html">predict_hyp()</a></code>) and filter sequences containing at least several potential hydroxyprolines (three or more).</li>
+<li>predict proline hydroxylation (<code><a href="reference/predict_hyp.html">predict_hyp()</a></code>) and filter sequences containing at least three potential hydroxyprolines.</li>
 </ul>
 <p>The analysis layer:</p>
 <ul>
 <li>find localized clusters of characteristic arabinogalactan motifs (AG glycomodules) to identify potential AGPs (<code><a href="reference/scan_ag.html">scan_ag()</a></code>) among the hydroxyproline containing sequences.</li>
-<li>perform motif and amino acid bias (MAAB, <span class="citation">(Johnson et al. 2017)</span>) classification scheme (<code><a href="reference/maab.html">maab()</a></code>) to classify hydroxyproline containing sequences into 23 distinct HRGP groups.<br>
+<li>perform motif and amino acid bias (MAAB, <span class="citation">(Johnson et al. 2017)</span>) classification scheme (<code><a href="reference/maab.html">maab()</a></code>) to classify hydroxyproline containing sequences.</li>
+<li>annotate domains using <a href="https://pfam.xfam.org/">Pfam</a> (<code><a href="reference/get_hmm.html">get_hmm()</a></code>) and enrich with gene ontology (GO) terms (<code><a href="reference/pfam2go.html">pfam2go()</a></code>).<br>
 </li>
-<li>annotate domains using <a href="https://pfam.xfam.org/">Pfam</a> (<code><a href="reference/get_hmm.html">get_hmm()</a></code>) and enrich with gene ontology (GO) terms (<code><a href="reference/pfam2go.html">pfam2go()</a></code>.<br>
+<li>predict the presence of potential glycosylphosphatidylinositol attachment sites (<code><a href="reference/get_big_pi.html">get_big_pi()</a></code> and <code><a href="reference/get_pred_gpi.html">get_pred_gpi()</a></code>).<br>
 </li>
-<li>predict the presence of potential glycosylphosphatidylinositol attachment sites.<br>
-</li>
-<li>predict disordered regions in proteins.</li>
+<li>predict disordered regions in proteins (<code><a href="reference/get_espritz.html">get_espritz()</a></code>).</li>
 </ul>
+<p>Additionally <code>ragp</code> provides tools for visualization of the mentioned attributes via <code><a href="reference/plot_prot.html">plot_prot()</a></code>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -130,57 +149,15 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <p>to build vignettes which can be viewed by:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">browseVignettes</span>(<span class="st">"ragp"</span>)</code></pre></div>
 </div>
-<div id="input" class="section level2">
-<h2 class="hasAnchor">
-<a href="#input" class="anchor"></a>Input</h2>
-<p><code>ragp</code> functions require single letter protein sequences and the corresponding identifiers as input. These can be provided in the form of basic <code>R</code> data types such as vectors or data frames. Additionally <code>ragp</code> imports the <a href="https://cran.r-project.org/web/packages/seqinr/index.html"><code>seqinr</code></a> package for the manipulation of <code>.FASTA</code> files, so the input objects can be a list of <code>SeqFastaAA</code> objects returned by the <a href="https://cran.r-project.org/web/packages/seqinr/index.html"><code>seqinr</code></a> function <code>read.fasta</code>. The location of a <code>.FASTA</code> file is also possible as a type of input.</p>
-<p>Input options will be illustrated using <code><a href="reference/scan_ag.html">scan_ag()</a></code> function:</p>
-<ul>
-<li>provide a <code>character</code> vector of protein sequences to the <code>sequence</code> argument and a <code>character</code> vector of protein identifiers to the <code>id</code> argument:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ragp)
-<span class="kw">data</span>(at_nsp) <span class="co">#a data frame of 2700 Arabidopsis sequences</span>
-input1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/scan_ag.html">scan_ag</a></span>(<span class="dt">sequence =</span> at_nsp<span class="op">$</span>sequence,
-                  <span class="dt">id =</span> at_nsp<span class="op">$</span>Transcript.id) </code></pre></div>
-<ul>
-<li>provide a <code>data.frame</code> to <code>data</code> argument, and names of columns containing the protein sequences and corresponding identifiers to <code>sequence</code> and <code>id</code> arguments:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_nsp,
-                  <span class="dt">sequence =</span> <span class="st">"sequence"</span>,
-                  <span class="dt">id =</span> <span class="st">"Transcript.id"</span>) </code></pre></div>
-<p>quoting column names is not necessary:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input3 &lt;-<span class="st"> </span><span class="kw"><a href="reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_nsp,
-                  <span class="dt">sequence =</span> sequence,
-                  <span class="dt">id =</span> Transcript.id) </code></pre></div>
-<ul>
-<li>provide a list of <code>SeqFastaAA</code> objects to <code>data</code> argument:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(seqinr) <span class="co">#to create a fasta file with protein sequences</span>
-
-<span class="co">#write a FASTA file</span>
-seqinr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/seqinr/topics/write.fasta">write.fasta</a></span>(<span class="dt">sequence =</span> <span class="kw">strsplit</span>(at_nsp<span class="op">$</span>sequence, <span class="st">""</span>),
-                    <span class="dt">name =</span> at_nsp<span class="op">$</span>Transcript.id, <span class="dt">file =</span> <span class="st">"at_nsp.fasta"</span>)
-
-<span class="co">#read a FASTA file</span>
-At_seq_fas &lt;-<span class="st"> </span><span class="kw">read.fasta</span>(<span class="st">"at_nsp.fasta"</span>,
-                         <span class="dt">seqtype =</span>  <span class="st">"AA"</span>, 
-                         <span class="dt">as.string =</span> <span class="ot">TRUE</span>) 
-
-input4 &lt;-<span class="st"> </span><span class="kw"><a href="reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> At_seq_fas) </code></pre></div>
-<ul>
-<li>provide the location of a <code>.FASTA</code> file to be analyzed as string:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">input5 &lt;-<span class="st"> </span><span class="kw"><a href="reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> <span class="st">"at_nsp.fasta"</span>) <span class="co">#file at_nsp.fasta is in the working directory</span></code></pre></div>
-</div>
-<div id="tutorials" class="section level2">
-<h2 class="hasAnchor">
-<a href="#tutorials" class="anchor"></a>Tutorials</h2>
-<p>Tutorials on usage of <code>ragp</code> functions with examples on how to combine them into meaningful HRGP filtering and analysis pipelines are available at: <a href="https://missuse.github.io/ragp/articles" class="uri">https://missuse.github.io/ragp/articles</a></p>
-</div>
 <div id="bug-reports" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-reports" class="anchor"></a>Bug reports</h2>
-<p>If you encounter undesired behavior in <code>ragp</code> functions or you have ideas how to improve them please open an issue at: <a href="https://github.com/missuse/ragp/issues" class="uri">https://github.com/missuse/ragp/issues</a></p>
+<p>If you encounter undesired behavior in <code>ragp</code> functions or you have ideas how to improve them please open an issue at: <a href="https://github.com/missuse/ragp/issues" class="uri">https://github.com/missuse/ragp/issues</a>.</p>
+</div>
+<div id="shiny-application" class="section level2">
+<h2 class="hasAnchor">
+<a href="#shiny-application" class="anchor"></a>Shiny application</h2>
+<p>A shiny web interface to <code>ragp</code> functions <code><a href="reference/predict_hyp.html">predict_hyp()</a></code>, <code><a href="reference/scan_ag.html">scan_ag()</a></code> and <code><a href="reference/maab.html">maab()</a></code> is available at <a href="https://ragp.shinyapps.io/Rapp/" class="uri">https://ragp.shinyapps.io/Rapp/</a>.</p>
 </div>
 <div id="acknowledgements" class="section level2">
 <h2 class="hasAnchor">
@@ -189,7 +166,7 @@ input4 &lt;-<span class="st"> </span><span class="kw"><a href="reference/scan_ag
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References:</h2>
+<a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-johnson_pipeline_2017">
 <p>Johnson, Kim L., Andrew M. Cassin, Andrew Lonsdale, Antony Bacic, Monika S. Doblin, and Carolyn J. Schultz. 2017. “Pipeline to Identify Hydroxyproline-Rich Glycoproteins.” <em>Plant Physiology</em> 174 (2): 886–903. doi:<a href="https://doi.org/10.1104/pp.17.00294">10.1104/pp.17.00294</a>.</p>

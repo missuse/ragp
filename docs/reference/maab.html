@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MAAB classification of Hydroxyproline‐rich Glycoproteins — maab • ragp</title>
+<title>MAAB classification of hydroxyproline rich glycoproteins — maab • ragp</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="MAAB classification of Hydroxyproline‐rich Glycoproteins — maab" />
+<meta property="og:title" content="MAAB classification of hydroxyproline rich glycoproteins — maab" />
 
-<meta property="og:description" content="Perform Motif and amino acid bias classification of Hydroxyproline‐rich Glycoproteins according to Johnson et al. (2017)" />
+<meta property="og:description" content="Perform Motif and amino acid bias classification of hydroxyproline rich glycoproteins according to Johnson et al. (2017)" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -51,7 +51,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9100</span>
       </span>
     </div>
 
@@ -74,31 +74,40 @@
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/pkgdown/start.html">Getting started</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Tutorials
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
+      <a href="../articles/pkgdown/filter.html">Filtering hydroxyproline rich glycoproteins</a>
     </li>
     <li>
-      <a href="../articles/ragp-vignette.html">ragp vignette</a>
+      <a href="../articles/pkgdown/analyse.html">Analyse hydroxyproline rich glycoproteins</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
+</li>
+<li>
+  <a href="https://ragp.shinyapps.io/Rapp/">ragp shiny</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/missuse/ragp">
+  <a href="https://github.com/missuse/ragp/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -115,14 +124,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>MAAB classification of Hydroxyproline‐rich Glycoproteins</h1>
+    <h1>MAAB classification of hydroxyproline rich glycoproteins</h1>
     <small class="dont-index">Source: <a href='https://github.com/missuse/ragp/blob/master/R/maab.R'><code>R/maab.R</code></a></small>
     <div class="hidden name"><code>maab.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Perform Motif and amino acid bias classification of Hydroxyproline‐rich Glycoproteins according to Johnson et al. (2017)</p>
+    <p>Perform Motif and amino acid bias classification of hydroxyproline rich glycoproteins according to Johnson et al. (2017)</p>
     
     </div>
 
@@ -140,7 +149,7 @@
 <span class='co'># S3 method for default</span>
 <span class='fu'>maab</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='kw'>order</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"ext"</span>,
   <span class='st'>"tyr"</span>, <span class='st'>"prp"</span>, <span class='st'>"agp"</span>), <span class='kw'>gpi</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>get_gpi</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"bigpi"</span>, <span class='st'>"predgpi"</span>,
-  <span class='st'>"none"</span>), <span class='kw'>spec</span> <span class='kw'>=</span> <span class='fl'>0.99</span>, <span class='no'>...</span>)</pre>
+  <span class='st'>"none"</span>), <span class='kw'>spec</span> <span class='kw'>=</span> <span class='fl'>0.99</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -176,6 +185,10 @@
     <tr>
       <th>spec</th>
       <td><p>Numeric in the 0-1 range, indicating the threshold specificity of <code><a href='get_pred_gpi.html'>get_pred_gpi</a></code>. Only valid if argument get_gpi = "predgpi".</p></td>
+    </tr>
+    <tr>
+      <th>progress</th>
+      <td><p>Bolean, whether to show the progress bar, at default set to FALSE.</p></td>
     </tr>
     </table>
     
@@ -215,7 +228,23 @@
 <span class='fu'>data</span>(<span class='no'>at_nsp</span>)
 
 <span class='no'>maab_class</span> <span class='kw'>&lt;-</span> <span class='fu'>maab</span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>,
-                   <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>)</div></pre>
+                   <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>)
+
+<span class='fu'>head</span>(<span class='no'>maab_class</span>)</div><div class='output co'>#&gt;            id ext_sp ext_tyr prp agp past_percent pvyk_percent psky_percent
+#&gt; 1 ATCG00660.1      0       1   0   0     18.80342     14.52991     17.94872
+#&gt; 2 AT2G43600.1      0       6   0   4     21.61172     23.44322     26.73993
+#&gt; 3 AT2G28410.1      0       0   0   4     37.39130     18.26087     22.60870
+#&gt; 4 AT2G22960.1      0       0   0   3     23.91304     17.93478     23.36957
+#&gt; 5 AT2G19580.1      0       1   0   2     22.96296     21.85185     18.88889
+#&gt; 6 AT2G19690.2      0       0   0   0     20.94595     20.94595     19.59459
+#&gt;   p_percent   coverage maab_class
+#&gt; 1  0.000000 0.02564103          0
+#&gt; 2  3.663004 0.08791209          0
+#&gt; 3  7.826087 0.06956522          0
+#&gt; 4  5.434783 0.03260870          0
+#&gt; 5  4.074074 0.02592593          0
+#&gt; 6  2.702703 0.00000000          0</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

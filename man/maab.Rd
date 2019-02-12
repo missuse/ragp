@@ -6,7 +6,7 @@
 \alias{maab.character}
 \alias{maab.data.frame}
 \alias{maab.list}
-\title{MAAB classification of Hydroxyproline‐rich Glycoproteins}
+\title{MAAB classification of hydroxyproline rich glycoproteins}
 \usage{
 maab(data, ...)
 
@@ -18,7 +18,7 @@ maab(data, ...)
 
 \method{maab}{default}(data = NULL, sequence, id, order = c("ext",
   "tyr", "prp", "agp"), gpi = NULL, get_gpi = c("bigpi", "predgpi",
-  "none"), spec = 0.99, ...)
+  "none"), spec = 0.99, progress = FALSE, ...)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
@@ -36,6 +36,8 @@ maab(data, ...)
 \item{get_gpi}{A string indicating if \code{\link[ragp]{get_big_pi}} or \code{\link[ragp]{get_pred_gpi}} should be called on sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge. At default set to 'none'.}
 
 \item{spec}{Numeric in the 0-1 range, indicating the threshold specificity of \code{\link[ragp]{get_pred_gpi}}. Only valid if argument get_gpi = "predgpi".}
+
+\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
 }
 \value{
 A data frame with columns:
@@ -54,7 +56,7 @@ A data frame with columns:
 }
 }
 \description{
-Perform Motif and amino acid bias classification of Hydroxyproline‐rich Glycoproteins according to Johnson et al. (2017)
+Perform Motif and amino acid bias classification of hydroxyproline rich glycoproteins according to Johnson et al. (2017)
 }
 \details{
 The function provides motif and amino acid bias descriptors used for classification of HRGP's by the MAAB pipeline (Johnson et al. 2017) as well as the determined HRGP classes. The motifs are counted in a specific order ext > tyr > prp > agp, and overlapping motifs are not counted. Hence the classification depends on the order of counting, this is most noticeable for tyr and prp, we recommend using both the default order and  'order = c("ext", "prp","tyr", "agp")'.
@@ -66,6 +68,8 @@ data(at_nsp)
 
 maab_class <- maab(sequence = at_nsp$sequence,
                    id = at_nsp$Transcript.id)
+
+head(maab_class)
 
 }
 \references{

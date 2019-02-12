@@ -51,7 +51,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9100</span>
       </span>
     </div>
 
@@ -74,31 +74,40 @@
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/pkgdown/start.html">Getting started</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Tutorials
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
+      <a href="../articles/pkgdown/filter.html">Filtering hydroxyproline rich glycoproteins</a>
     </li>
     <li>
-      <a href="../articles/ragp-vignette.html">ragp vignette</a>
+      <a href="../articles/pkgdown/analyse.html">Analyse hydroxyproline rich glycoproteins</a>
+    </li>
+    <li>
+      <a href="../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
+</li>
+<li>
+  <a href="https://ragp.shinyapps.io/Rapp/">ragp shiny</a>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/missuse/ragp">
+  <a href="https://github.com/missuse/ragp/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -144,6 +153,7 @@
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
     <p><a href='http://geneontology.org/external2go/pfam2go'>http://geneontology.org/external2go/pfam2go</a></p>
+<p><a href='ftp://ftp.geneontology.org/pub/go/external2go/pfam2go'>ftp://ftp.geneontology.org/pub/go/external2go/pfam2go</a></p>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -161,14 +171,16 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='fu'>library</span>(<span class='no'>ragp</span>)
 <span class='fu'>data</span>(<span class='no'>at_nsp</span>)
 
 <span class='no'>pfam_pred</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_hmm.html'>get_hmm</a></span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>[<span class='fl'>1</span>],
                      <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='fl'>1</span>])
 
-<span class='no'>pfam_pred_go</span> <span class='kw'>&lt;-</span> <span class='fu'>pfam2go</span>(<span class='kw'>data_pfam</span> <span class='kw'>=</span> <span class='no'>pfam_pred</span>, <span class='kw'>pfam</span> <span class='kw'>=</span> <span class='st'>"acc"</span>)</div></pre>
+<span class='no'>pfam_pred_go</span> <span class='kw'>&lt;-</span> <span class='fu'>pfam2go</span>(<span class='kw'>data_pfam</span> <span class='kw'>=</span> <span class='no'>pfam_pred</span>, <span class='kw'>pfam</span> <span class='kw'>=</span> <span class='st'>"acc"</span>)
+<span class='co'># }</span><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

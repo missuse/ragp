@@ -19,7 +19,7 @@
 </head>
 <body>
     <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">ragp</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9100</span>
       </span>
     </div>
 
@@ -42,30 +42,39 @@
   </a>
 </li>
 <li>
-  <a href="../../reference/index.html">Reference</a>
+  <a href="../../articles/pkgdown/start.html">Getting started</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
+    Tutorials
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
+      <a href="../../articles/pkgdown/filter.html">Filtering hydroxyproline rich glycoproteins</a>
     </li>
     <li>
-      <a href="../../articles/ragp-vignette.html">ragp vignette</a>
+      <a href="../../articles/pkgdown/analyse.html">Analyse hydroxyproline rich glycoproteins</a>
+    </li>
+    <li>
+      <a href="../../articles/pkgdown/PSV.html">Protein Sequence Visualization</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../../news/index.html">Changelog</a>
+  <a href="../../reference/index.html">Functions</a>
+</li>
+<li>
+  <a href="../../news/index.html">News</a>
+</li>
+<li>
+  <a href="https://ragp.shinyapps.io/Rapp/">ragp shiny</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/missuse/ragp">
+  <a href="https://github.com/missuse/ragp/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -92,6 +101,16 @@
 
     
     
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 15px;
+  }
+code.r{ /* Code block */
+    font-size: 14px;
+}
+  
+</style>
 <p>All of the protein sequence attributes which can be acquired using <code>ragp</code> functions can be visualized using the function <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> which accepts protein sequences in the form of strings, calls the appropriate <code>ragp</code> functions to obtain sequence features and returns a <code>ggplot2</code> object.</p>
 <p>The following section explains how to use <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> and manipulate the output visual style.</p>
 <p>Required packages:</p>
@@ -101,12 +120,16 @@
 <div id="basic-usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#basic-usage" class="anchor"></a>Basic usage</h2>
-<p>In the next example the function <code><a href="http://www.rdocumentation.org/packages/protr/topics/getUniProt">protr::getUniProt()</a></code> will be used to download several protein sequences from <a href="https://www.uniprot.org/">UniProt</a> and then <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> will be used to visualize the sequence attributes:</p>
+<p>In the next example the function <code><a href="http://www.rdocumentation.org/packages/protr/topics/getUniProt">protr::getUniProt()</a></code> will be used to download several protein sequences from <a href="https://www.uniprot.org/">UniProt</a> and then <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> will be used to visualize the sequence attributes. Do note that downloading the sequences from UniProt is not a requirement for <code><a href="../../reference/plot_prot.html">plot_prot()</a></code>. No information apart the actual protein sequences and their identifiers (accessions) is required for <code><a href="../../reference/plot_prot.html">plot_prot()</a></code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ids &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"Q9C7T7"</span>,
          <span class="st">"Q9ZPR7"</span>,
          <span class="st">"Q9ZQ23"</span>)</code></pre></div>
 <p>Download the corresponding sequences using <code><a href="http://www.rdocumentation.org/packages/protr/topics/getUniProt">protr::getUniProt()</a></code> and unlist them so they are in an appropriate format for <code><a href="../../reference/plot_prot.html">plot_prot()</a></code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">seqs &lt;-<span class="st"> </span><span class="kw">unlist</span>(protr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/protr/topics/getUniProt">getUniProt</a></span>(ids))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">seqs &lt;-<span class="st"> </span><span class="kw">unlist</span>(protr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/protr/topics/getUniProt">getUniProt</a></span>(ids))
+seqs
+<span class="co">#&gt; [1] "MSRRPDLLRGSVVATVAATFLLFIFPPNVESTVEKQALFRFKNRLDDSHNILQSWKPSDSPCVFRGITCDPLSGEVIGISLGNVNLSGTISPSISALTKLSTLSLPSNFISGRIPPEIVNCKNLKVLNLTSNRLSGTIPNLSPLKSLEILDISGNFLNGEFQSWIGNMNQLVSLGLGNNHYEEGIIPESIGGLKKLTWLFLARSNLTGKIPNSIFDLNALDTFDIANNAISDDFPILISRLVNLTKIELFNNSLTGKIPPEIKNLTRLREFDISSNQLSGVLPEELGVLKELRVFHCHENNFTGEFPSGFGDLSHLTSLSIYRNNFSGEFPVNIGRFSPLDTVDISENEFTGPFPRFLCQNKKLQFLLALQNEFSGEIPRSYGECKSLLRLRINNNRLSGQVVEGFWSLPLAKMIDLSDNELTGEVSPQIGLSTELSQLILQNNRFSGKIPRELGRLTNIERIYLSNNNLSGEIPMEVGDLKELSSLHLENNSLTGFIPKELKNCVKLVDLNLAKNFLTGEIPNSLSQIASLNSLDFSGNRLTGEIPASLVKLKLSFIDLSGNQLSGRIPPDLLAVGGSTAFSRNEKLCVDKENAKTNQNLGLSICSGYQNVKRNSSLDGTLLFLALAIVVVVLVSGLFALRYRVVKIRELDSENRDINKADAKWKIASFHQMELDVDEICRLDEDHVIGSGSAGKVYRVDLKKGGGTVAVKWLKRGGGEEGDGTEVSVAEMEILGKIRHRNVLKLYACLVGRGSRYLVFEFMENGNLYQALGNNIKGGLPELDWLKRYKIAVGAAKGIAYLHHDCCPPIIHRDIKSSNILLDGDYESKIADFGVAKVADKGYEWSCVAGTHGYMAPELAYSFKATEKSDVYSFGVVLLELVTGLRPMEDEFGEGKDIVDYVYSQIQQDPRNLQNVLDKQVLSTYIEESMIRVLKMGLLCTTKLPNLRPSMREVVRKLDDADPCVSNSQDTTGKITV"</span>
+<span class="co">#&gt; [2] "MYMIESKGGAIACMLLALLFLGTWPAIMTLTERRGRLPQHTYLDYTLTNLLAAVIIALTLGEIGPSRPNFFTQLSQDNWQSVMFAMAGGIVLSLGNLATQYAWAYVGLSVTEVITASITVVIGTTLNYFLDDRINRAEVLFPGVACFLIAVCFGSAVHKSNAADNKTKLQNFKSLETTSSFEMETISASNGLTKGKAKEGTAAFLIELEKQRAIKVFGKSTIIGLVITFFAGICFSLFSPAFNLATNDQWHTLKHGVPKLNVYTAFFYFSISAFVVALILNIRFLYWPILGLPRSSFKAYLNDWNGRGWSFLAGFLCGFGNGLQFMGGQAAGYAAADAVQALPLVSTFWGILLFGEYRRSSRKTYTLLISMLLMFIVAVAVLMASSGHRK"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           </span>
+<span class="co">#&gt; [3] "MGLKVSSSLLCLTILLAVSSIVSAVNITRVLEKYPEFSTMTELLAKTELTPIINKRQTITVLALNNDAIGSISGRPEEEVKNILMNHVVLDYFDELKLKALKEKSTLLTTLYQSTGLGQQQNGFLNCTKSNGKIYFGSGVKGAPQTAEYITTVFRNPYNLSVVQISMPIVAPGLGSPVKVPPPPPMSSPPAPSPKKGAATPAPAPADEGDYADAPPGLAPETAPASAPSESDSPAPAPDKSGKKKMAAADEAEPPSSASNTGLSFGAVLVLGFVASFVGF"</span></code></pre></div>
 <p>Provide the sequences and protein identifiers to <code><a href="../../reference/plot_prot.html">plot_prot()</a></code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,
                 <span class="dt">id =</span> ids)
@@ -141,7 +164,8 @@ p1</code></pre></div>
 <h2 class="hasAnchor">
 <a href="#plot_prot-options" class="anchor"></a>plot_prot() options</h2>
 <ul>
-<li>determining what features to plot: to turn of some elements from being plotted use the appropriate argument, for instance <code>hyp = FALSE</code> will result in hydroxyproline predictions to not be plotted.</li>
+<li>
+<strong>determining what features to plot</strong>: to turn off some elements from being plotted use the appropriate argument, for instance <code>hyp = FALSE</code> will result in hydroxyproline predictions to not be plotted (check full list of options: <code><a href="../../reference/plot_prot.html">?plot_prot</a></code>):</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,
                 <span class="dt">id =</span> ids,
@@ -154,7 +178,8 @@ p1</code></pre></div>
 <img src="https://missuse.github.io/ragp/articles/PSV_p3.svg">
 </div>
 <ul>
-<li>feature specific options: passing appropriate function arguments to functions called by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> such as <code>dim</code> and <code>div</code> for <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> or <code>tprob</code> for <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> to change the rules of arabinogalactan motif scan and the threshold for decision if the proline is hydroxylated is supported:</li>
+<li>
+<strong>feature specific options</strong>: passing appropriate function arguments to functions called by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> such as <code>dim</code> and <code>div</code> for <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> or <code>tprob</code> for <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> to change the rules of arabinogalactan motif scan and the threshold for decision if the proline is hydroxylated is supported:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p2 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,
                 <span class="dt">id =</span> ids,
@@ -168,7 +193,8 @@ p2</code></pre></div>
 <img src="https://missuse.github.io/ragp/articles/PSV_p4.svg">
 </div>
 <ul>
-<li>change feature colors:</li>
+<li>
+<strong>change feature colors</strong>:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p3 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,
                 <span class="dt">id =</span> ids,
@@ -181,13 +207,26 @@ p3</code></pre></div>
 <div class="figure">
 <img src="https://missuse.github.io/ragp/articles/PSV_p5.svg">
 </div>
+<ul>
+<li>
+<strong>change the order of domain plotting</strong>: in the above images it can be observed there are more entries in the legend then can be seen in the plot. Some domains cover other domains. By default the domains with the lowest I-evalue (independent e-value) are plotted on top. To change this the argument <code>dom_sort</code> can be used. This argument can take the following values: <code>"ievalue"</code> (default), <code>"abc"</code> (alphabetically sorted by domain names), <code>"cba"</code> (reverse of <code>"abc"</code>).</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p4 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,
+                <span class="dt">id =</span> ids,
+                <span class="dt">dom_sort =</span> <span class="st">"cba"</span>)
+p4</code></pre></div>
+<div class="figure">
+<img src="https://missuse.github.io/ragp/articles/PSV_dom_sort.svg">
+</div>
+<p>Ureide permease domain overlaps with TMEM144 transmembrane transporter domain and also protein kinase and protein tyrosine kinase domains overlap.</p>
 </div>
 <div id="customising-the-plot-using-ggplot-layers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#customising-the-plot-using-ggplot-layers" class="anchor"></a>Customising the plot using ggplot layers</h2>
 <p><code><a href="../../reference/plot_prot.html">plot_prot()</a></code> returns a <code>ggplot</code> object which can be further customized:</p>
 <ul>
-<li>change theme elements:</li>
+<li>
+<strong>change theme elements</strong>:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
@@ -196,7 +235,8 @@ p3</code></pre></div>
 <img src="https://missuse.github.io/ragp/articles/PSV_p6.svg">
 </div>
 <ul>
-<li>add annotations:</li>
+<li>
+<strong>add annotations</strong>:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
@@ -208,7 +248,7 @@ p3</code></pre></div>
 <div class="figure">
 <img src="https://missuse.github.io/ragp/articles/PSV_p7.svg">
 </div>
-<p>As can be observed from the above call, the <code>y</code> axis is continuous - <code>1</code> on the plot corresponds to Q9C7T7, <code>2</code> corresponds to Q9ZPR7 and 3 to Q9ZQ23. The <code>x</code> axis represents amino acids in the sequence. This enables adding annotations anywhere on the plot.</p>
+<p>The <code>y</code> axis is continuous - <code>1</code> on the plot corresponds to Q9C7T7, <code>2</code> corresponds to Q9ZPR7 and 3 to Q9ZQ23. The <code>x</code> axis represents amino acids in the sequence. This enables adding annotations anywhere on the plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
         <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span>
@@ -220,7 +260,8 @@ p3</code></pre></div>
 <img src="https://missuse.github.io/ragp/articles/PSV_p8.svg">
 </div>
 <ul>
-<li>change plot ratio: the ratio of the axes is determined automatically by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> and scales with the longest sequence plotted. To change this use the <code>ratio</code> argument to <code>coord_equal()</code>:</li>
+<li>
+<strong>change plot ratio</strong>: the ratio of the axes is determined automatically by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> and scales with the longest sequence plotted. To change this use the <code>ratio</code> argument to <code>coord_equal()</code>:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
@@ -231,7 +272,8 @@ p3</code></pre></div>
 <img src="https://missuse.github.io/ragp/articles/PSV_p9.svg">
 </div>
 <ul>
-<li>change the domain colors: use another fill palette:</li>
+<li>
+<strong>change domain colors</strong>: use another fill palette:</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
@@ -240,9 +282,7 @@ p3</code></pre></div>
 <div class="figure">
 <img src="https://missuse.github.io/ragp/articles/PSV_p10.svg">
 </div>
-<ul>
-<li>change the domain colors: create a manual palette:</li>
-</ul>
+<p>or create a manual palette:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,
         <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span>
