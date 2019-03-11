@@ -41,13 +41,20 @@ The workflow in `ragp` is illustrated with the following diagram (`ragp` functio
 knitr::include_graphics("ragp_flow_chart.svg")
 ```   
 
-* predict the presence of secretory signals (N-sp) and filter sequences containing them.  
-* predict proline hydroxylation and filter sequences containing at least several potential hydroxyprolines (three or more is used in this vignette).
-* optionally predict the presence of potential glycosylphosphatidylinositol attachment sites.  
-* optionally annotate domains using [Pfam](https://pfam.xfam.org/).  
-* optionally predict disordered regions in proteins.
-* find localized clusters of AG glycomodules to identify potential AGPs.  
-* perform motif and amino acid bias (MAAB, Johnson *et al*., 2017) classification scheme.  
+The filtering layer:
+
+* predict the presence of secretory signals (N-sp) and filter sequences containing them. Since several prediction algorithms are utilized (functions `get_signalp`, `get_targetp` and `get_phobius`) this decision is reached by a majority vote.  
+* predict proline hydroxylation (function `predict_hyp`) and filter sequences containing at least three potential hydroxyprolines.
+
+The analysis layer:
+
+* find localized clusters of characteristic arabinogalactan motifs (AG glycomodules) to identify potential AGPs (function `scan_ag`) among the hydroxyproline containing sequences.
+* perform motif and amino acid bias (MAAB, [@johnson_pipeline_2017]) classification scheme (function `maab`) to classify hydroxyproline containing sequences into 23 distinct HRGP groups.  
+* annotate domains using [Pfam](https://pfam.xfam.org/) (function `get_hmm`) and enrich with gene ontology (GO) terms (function `pfam2go`).  
+* predict the presence of potential glycosylphosphatidylinositol attachment sites (functions `get_bit_pi` and `get_pred_gpi`).  
+* predict disordered regions in proteins (function `get_espritz`).
+
+Additionally `ragp` provides tools for visualization of the mentioned attributes via the function `plot_prot`.
 
 ##Data import
 
@@ -117,6 +124,15 @@ at_gpi_pred <- vigfiles$at_gpi_pred
 at_nsp2 <- dplyr::filter(at_nsp, Transcript.id %in% id_nsp)
 
 ```
+
+#Filtering HRGPs
+
+The filtering layer in `ragp` consists of two sequential tasks:  
+
+* predict the presence of secretory signals (N-sp) and filter sequences containing them.  
+* predict proline hydroxylation and filter sequences containing at least several potential hydroxyprolines.  
+
+The following section explains how to perform these tasks.  
 
 ##Predicting N-terminal secretory signal sequences (N-sp)
 
@@ -216,67 +232,15 @@ at_nsp2 %>%
 
 There are `r nrow(at_nsp_3hyp)` sequences that satisfy this condition.  
 
-##Domain annotation and GPI prediction
+#Analyzing HRGPs
 
-Domain annotation is a fundamental research tool in protein sequence analyses. In many occasions domain annotation has already been performed prior to HRGP mining, either by using [hmmer](http://hmmer.org/) [@eddy_accelerated_2011], [InterProScan](https://www.ebi.ac.uk/interpro/interproscan.html) [@jones_interproscan_2014] or some other resource. In such circumstances the annotation can be imported into `R` and joined with the filtered sequences. When this is not the case `ragp` offers the function `get_hmm` which queries the [hmmscan](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) web server [@finn_hmmer_2011]. Domain annotation is not necessary for AGP prediction although it enhances interpretation, but it is a fundamental part of the MAAB classification scheme. As with other `ragp` functions the first argument is the `data`, followed by the names of the columns containing the protein sequences and corresponding identifiers:
+The analysis layer in `ragp` consists of:  
 
-```{r hmmscan 1, eval = FALSE}
-at_hmm <- get_hmm(at_nsp_3hyp,
-                  sequence,
-                  Transcript.id)
-```
-
-The resulting data frame resembles the web server's output, or for those familiar with the [`hmmer`](http://hmmer.org/) software the domain hits table produced by using the argument `--domtblout`. First few rows with several columns omitted:  
-
-```{r hmmscan 2}
-head(at_hmm[,-c(4, 5, 8, 9, 11:13)])
-```
-
-HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor [@ellis_arabinogalactan-proteins:_2010]. Attachment of the GPI moiety to the carboxyl terminus (omega-site) of the polypeptide occurs after proteolytic cleavage of a C-terminal propeptide. In order to predict the presence of the omega sites in the filtered sequences two functions are availible: `get_big_pi` which queries the [big-PI Plant Predictor](http://mendel.imp.ac.at/gpi/plant_server.html) [@eisenhaber_glycosylphosphatidylinositol_2003] server and `get_pred_gpi` which queries the [PredGPI](http://gpcr.biocomp.unibo.it/predgpi/) [@pierleoni_predgpi_2008] server. 
-
-To query [big-PI Plant Predictor](http://mendel.imp.ac.at/gpi/plant_server.html):  
-
-```{r big_pi, eval = FALSE}
-at_gpi <- get_big_pi(at_nsp_3hyp,
-                     sequence,
-                     Transcript.id)
-```
-
-This function provides detailed per sequence output when the argument `simplify` is set to `FALSE`, by default `simplify` is set to `TRUE` and the resulting data frame has one row per sequence:  
-
-```{r big_pi2}
-head(at_gpi)
-```
-
-similarly to query [PredGPI](http://gpcr.biocomp.unibo.it/predgpi/):  
-
-```{r pred_gpi, eval = FALSE}
-at_gpi_pred <- get_pred_gpi(at_nsp_3hyp,
-                            sequence,
-                            Transcript.id)
-```
-
-```{r pred_gpi2}
-head(at_gpi_pred)
-```
-
-##Disorder prediction
-
-A key structural feature of HRGPs, based on abundance of disorder-promoting residues, is that they are intrinsically disordered proteins. To identify potential disordered regions in proteins `ragp` contains `get_espritz` function which queries [ESpritz](http://protein.bio.unipd.it/espritz/) [@walsh_espritz_2012] web server. Three models trained on different data sets are available and can be selected via the argument `model`:  
-
-* 'X-Ray' - based on missing atoms from the [Protein Data Bank](http://www.wwpdb.org/) (PDB) X-ray solved structures. If this option is chosen then the predictors with short disorder options are executed.   
-* 'Disprot' - contains longer disorder segments compared to x-ray. In particular, [disprot](http://www.disprot.org/) is a manually curetted database which is often based on functional attributes of the disordered region was used for this definition. Disorder residues are defined if the disprot curators consider the residue to be disordered at least once. All other residues are considered ordered. If this option is chosen then the predictors with long disorder options are executed.   
-* 'NMR' - based on NMR mobility. NMR flexibility is calculated using the [Mobi server](http://protein.bio.unipd.it/mobi/)  [@martin_mobi_2010] optimized to replicate the ordered-disordered NMR definition used in CASP8.   
-These models provide quite different predictions. To query ESpritz:   
-
-```{r espritz, eval = FALSE}
-at_espritz <- get_espritz(at_nsp_3hyp,
-                          sequence,
-                          Transcript.id,
-                          model = "NMR")
-```
-
-The output of the function depends on the `simplify` argument. If `simplify = TRUE` (default) the output is a `data.frame` (one row per disordered region) with columns `start` and `end` which indicate the start and end of the predicted disordered region as well as the column `id` which is a protein identifier. When `simplify = FALSE` the output contains predicted probabilities of disorder for each amino acid.
+* Arabinogalactan identification by finding localized clusters of characteristic motifs (AG glycomodules) 
+* Hydroxyproline rich glycoprotein classification by the  motif and amino acid bias scheme (MAAB, [@johnson_pipeline_2017]). 
+* Domain annotation using [Pfam](https://pfam.xfam.org/) data base and enrichment with gene ontology (GO) terms.  
+* Glycosylphosphatidylinositol attachment sites prediction.  
+* Identification of disordered regions in proteins.  
 
 ##Arabinogalactan identification
 
@@ -290,7 +254,7 @@ scaned_at <- scan_ag(data = at_nsp_3hyp,
                      Transcript.id)
 ```  
 
-The output object `scaned_At` can be a list, or a data frame depending on the `simplify`/`tidy` arguments. The default output is a data frame one row per sequences with five columns. Here are the 55 N-terminal amino acids from the [Classical arabinogalactan protein 9](http://www.uniprot.org/uniprot/Q9C5S0) as an example:  
+The output object `scaned_At` can be a list, or a data frame depending on the `simplify`/`tidy` arguments. The default output is a data frame one row per sequences with five columns. Here are the 55 N-terminal amino acids from the [Classical arabinogalactan protein 9](http://www.uniprot.org/uniprot/Q9C5S0) (AT2G14890.1) as an example:  
 
 ```{r scan_ag2}
 scaned_at  %>%
@@ -301,7 +265,7 @@ scaned_at  %>%
 
 The column "sequence" contains the input sequence where only the amino acids in potential AG glycomodules are in uppercase while all other are in lower case.  The column "AG_aa" contains the amino acid count found in potential AG glycomodules, while columns "total_length" and "longest" correspond to the matched sequence spans.  
 
-True AG glycomodules contain hydroxyproline instead of proline in the dipeptides: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) but the above output considers P instead of O since most of the time the positions of O are unknown. However if the sequence argument to `scan_ag` contains O's at some positions, `scan_ag` will consider only them. To do this the `sequence` element of `predict_hyp` function output can be used:  
+True AG glycomodules contain hydroxyproline instead of proline in the dipeptides: OA, OS, OT, AO, SO and TO (and in some cases OG, OV, GO and VO) but the above output considers P instead of O since most of the time the positions of O are unknown. However if the sequence argument to `scan_ag` contains O's at some positions, `scan_ag` will consider only them. To do this the `sequence` element of `predict_hyp` function output can be used:  
 
 ```{r scan_ag3}
 scaned_at <- scan_ag(data = at_hyp$sequence,
@@ -382,13 +346,13 @@ Thus the prediction of hydroxyprolines greatly reduced the pool of potential ara
 
 ##Motif and amino acid bias classification - MAAB
 
-The MAAB pipeline is explained in detail in @johnson_pipeline_2017. In short, after removal of sequences without a predicted N-sp and removal of sequences with predicted domains the sequences are first evaluated for amino acid bias. Sequences with  > 45% of PAST (AGP bias) or PSKY (EXT bias) or PVKY (proline-rich proteins (PRP) bias) are grouped further into 24 distinct groups based on amino acid bias, presence of GPIs and the following motifs (as regular expression):  
+The MAAB pipeline is explained in detail in @johnson_pipeline_2017. In short, after removal of sequences without a predicted N-sp and removal of sequences with predicted domains the sequences are first evaluated for amino acid bias. Sequences with  > 45% of PAST (AGP bias) or PSKY (EXT bias) or PVKY (proline-rich proteins (PRP) bias) are grouped further into 24 distinct groups (23 of which represent HRGPs) based on amino acid bias, presence of GPIs and the following motifs (as regular expression):  
 
 * EXT: the SPn motif `SP{3,5}` and the tyr motifs `[FY].Y`, `KHY`, `VY[HKDE]`, `V.Y` and `YY`.  
 * PRP: `PPV.[KT]`, `PPV[QK]` and `KKPCPP`.  
 * AGP: `[AVTG]P{1,3}` and `[ASVTG]P{1,2}`.  
 
-The motifs are counted in a specific order ext > tyr > prp > agp, and overlapping motifs are not counted twice. Based on the final motif count and the overall coverage of the motifs HRGPs are clustered in the mentioned 24 groups. This can be performed using the `ragp` function `maab`: 
+The motifs are counted in a specific order ext > tyr > prp > agp, and overlapping motifs are not counted twice. Based on the final motif count and the overall coverage of the motifs HRGPs are clustered in the mentioned 24 groups. This classification can be performed using the `ragp` function `maab`: 
 
 ```{r maab 1}
 maab_at <- maab(at_nsp_3hyp,
@@ -436,12 +400,74 @@ maab_at %>%
 
 This will run `get_big_pi` or `get_pred_gpi` only on the sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge.
 
-##Protein structure diagram
+##Domain annotation and GPI prediction
+
+Domain annotation is a fundamental research tool in protein sequence analyses. In many occasions domain annotation has already been performed prior to HRGP mining, either by using [hmmer](http://hmmer.org/) [@eddy_accelerated_2011], [InterProScan](https://www.ebi.ac.uk/interpro/interproscan.html) [@jones_interproscan_2014] or some other resource. In such circumstances the annotation can be imported into `R` and joined with the filtered sequences. When this is not the case `ragp` offers the function `get_hmm` which queries the [hmmscan](https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan) web server [@finn_hmmer_2011]. Domain annotation is not necessary for AGP prediction although it enhances interpretation, but it is a fundamental part of the MAAB classification scheme. As with other `ragp` functions the first argument is the `data`, followed by the names of the columns containing the protein sequences and corresponding identifiers:
+
+```{r hmmscan 1, eval = FALSE}
+at_hmm <- get_hmm(at_nsp_3hyp,
+                  sequence,
+                  Transcript.id)
+```
+
+The resulting data frame resembles the web server's output, or for those familiar with the [`hmmer`](http://hmmer.org/) software the domain hits table produced by using the argument `--domtblout`. First few rows with several columns omitted:  
+
+```{r hmmscan 2}
+head(at_hmm[,-c(4, 5, 8, 9, 11:13)])
+```
+
+HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor [@ellis_arabinogalactan-proteins:_2010]. Attachment of the GPI moiety to the carboxyl terminus (omega-site) of the polypeptide occurs after proteolytic cleavage of a C-terminal propeptide. In order to predict the presence of the omega sites in the filtered sequences two functions are available: `get_big_pi` which queries the [big-PI Plant Predictor](http://mendel.imp.ac.at/gpi/plant_server.html) [@eisenhaber_glycosylphosphatidylinositol_2003] server and `get_pred_gpi` which queries the [PredGPI](http://gpcr.biocomp.unibo.it/predgpi/) [@pierleoni_predgpi_2008] server. 
+
+To query [big-PI Plant Predictor](http://mendel.imp.ac.at/gpi/plant_server.html):  
+
+```{r big_pi, eval = FALSE}
+at_gpi <- get_big_pi(at_nsp_3hyp,
+                     sequence,
+                     Transcript.id)
+```
+
+This function provides detailed per sequence output when the argument `simplify` is set to `FALSE`, by default `simplify` is set to `TRUE` and the resulting data frame has one row per sequence:  
+
+```{r big_pi2}
+head(at_gpi)
+```
+
+similarly to query [PredGPI](http://gpcr.biocomp.unibo.it/predgpi/):  
+
+```{r pred_gpi, eval = FALSE}
+at_gpi_pred <- get_pred_gpi(at_nsp_3hyp,
+                            sequence,
+                            Transcript.id)
+```
+
+```{r pred_gpi2}
+head(at_gpi_pred)
+```
+
+##Disorder prediction
+
+A key structural feature of HRGPs, based on abundance of disorder-promoting residues, is that they are intrinsically disordered proteins. To identify potential disordered regions in proteins `ragp` contains `get_espritz` function which queries [ESpritz](http://protein.bio.unipd.it/espritz/) [@walsh_espritz_2012] web server. Three models trained on different data sets are available and can be selected via the argument `model`:  
+
+* 'X-Ray' - based on missing atoms from the [Protein Data Bank](http://www.wwpdb.org/) (PDB) X-ray solved structures. If this option is chosen then the predictors with short disorder options are executed.   
+* 'Disprot' - contains longer disorder segments compared to x-ray. In particular, [disprot](http://www.disprot.org/) is a manually curated database which is often based on functional attributes of the disordered region was used for this definition. Disorder residues are defined if the disprot curators consider the residue to be disordered at least once. All other residues are considered ordered. If this option is chosen then the predictors with long disorder options are executed.   
+* 'NMR' - based on NMR mobility. NMR flexibility is calculated using the [Mobi server](http://protein.bio.unipd.it/mobi/)  [@martin_mobi_2010] optimized to replicate the ordered-disordered NMR definition used in CASP8.   
+These models provide quite different predictions. To query ESpritz:   
+
+```{r espritz, eval = FALSE}
+at_espritz <- get_espritz(at_nsp_3hyp,
+                          sequence,
+                          Transcript.id,
+                          model = "NMR")
+```
+
+The output of the function depends on the `simplify` argument. If `simplify = TRUE` (default) the output is a `data.frame` (one row per disordered region) with columns `start` and `end` which indicate the start and end of the predicted disordered region as well as the column `id` which is a protein identifier. When `simplify = FALSE` the output contains predicted probabilities of disorder for each amino acid.  
+
+#Protein structure diagram
 
 All of the above mentioned protein features can be visualized using the function `plot_prot`. It accepts protein sequences in the form of strings, calls the above mentioned functions to obtain sequence features and returns a `ggplot` object:
 
 ```{r plot_prot1, eval = FALSE}
-ind <- c(20, 23, 34, 52, 80, 127, 345) #some sequences
+ind <- c(20, 23, 34, 52, 80, 127, 345) #some indexes which will be used to filter sequences 
 p1 <- plot_prot(sequence = at_nsp$sequence[ind],
                 id = at_nsp$Transcript.id[ind],
                 dom_sort = "ievalue") #to plot domains by independent e-value (lower on top)
@@ -455,7 +481,7 @@ knitr::include_graphics("p1_evalue.svg")
 The diagram contains the following elements:  
 
 * Transmembrane regions (TM) are shown in yellow, extracellular regions are indicated by the dashed line above the sequences while intracellular   regions are indicated by the dashed line bellow the sequence (as predicted by Phobius).
-* Signal peptides (as predicted by SignalP) are indicated by the thick red line on the N-terminal side. Signal peptides (as predicted by Phobius)   can be deduced by the start of the dashed lines.
+* Signal peptides (as predicted by SignalP) are indicated by the thick red line on the N-terminal side. 
 * GPI attachment sites (as predicted by Big Pi or PredGPI depending on the argument `gpi`) are indicated by blue rhomboids.
 * Hydroxyprolines (as predicted by `predict_hyp`) are indicated by vertical dark gray lines.
 * AG glycomodul spans are indicated by the light grey background.
@@ -518,7 +544,7 @@ p1 +
 knitr::include_graphics("p1_fill_color.svg")
 ```   
 
-display disordered regions as perdicted by ESpritz and choose predGPI to predict GPI positions:  
+display disordered regions as predicted by ESpritz and choose predGPI to predict GPI positions:  
 
 ```{r plot_prot_disorder, eval = FALSE}
 p2 <- plot_prot(at_nsp$sequence[ind],

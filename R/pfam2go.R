@@ -51,8 +51,18 @@ pfam2go <- function(data_pfam, pfam){
   go_2 <- do.call(rbind, go_2)
   go <- data.frame(go_1, go_2, stringsAsFactors = FALSE)
   colnames(go) <- c("Pfam_acc", "Pfam_name", "GO_name", "GO_acc")
-  data_pfam[["temp"]] <- substring(data_pfam[[pfam]], first = 1, last = 7)
-  out <- merge.data.frame(data_pfam, go, by.x = "temp", by.y = "Pfam_acc", all.x = T, sort= FALSE)
-  out <- out[,-1]
+  data_pfam[["acc_temp"]] <- substring(data_pfam[[pfam]], first = 1, last = 7)
+  data_pfam[["rownames_temp"]] <- 1:nrow(data_pfam)
+  out <- merge.data.frame(data_pfam,
+                          go,
+                          by.x = "acc_temp",
+                          by.y = "Pfam_acc",
+                          all.x = TRUE, 
+                          all.y = FALSE,
+                          sort = FALSE)
+  out <- out[order(out[["rownames_temp"]]),]
+  out <- out[,setdiff(names(out),
+                      c("acc_temp",
+                        "rownames_temp"))]
   return(out)
   }
