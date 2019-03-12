@@ -16,7 +16,8 @@ predict_hyp(data, ...)
 
 \method{predict_hyp}{list}(data, ...)
 
-\method{predict_hyp}{default}(data = NULL, sequence, id, tprob = 0.3,
+\method{predict_hyp}{default}(data = NULL, sequence, id,
+  version = "V2", tprob = ifelse(version == "V1", 0.3, 0.224),
   split = 1, ...)
 }
 \arguments{
@@ -28,7 +29,9 @@ predict_hyp(data, ...)
 
 \item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{tprob}{A numeric value indicating the threshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.3 offering a tradeoff between sensitivity and specificity.}
+\item{version}{A string indicating which model version to use: the first version "V1", or the second version "V2". Default is "V2".}
+
+\item{tprob}{A numeric value indicating the threshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.3 for "V1" model and 0.224 for "V2" model, offering a tradeoff between sensitivity and specificity.}
 
 \item{split}{A numeric value determining the ratio of vectorized and sequential computation. Should be left at default, lower to 0 - 1 range if low memory errors occur. Increase at your own risk.}
 }
@@ -48,7 +51,7 @@ A list with two elements:
 }
 \description{
 predict_hyp is a hydroxyproline site prediction algorithm for plant proteins, based on the xgboost distributed gradient boosting library.
-It was trained on plant sequences with experimentally determined 4-hydroxyprolines from uniprot data base. Prediction is not possible for prolines which are within 10 N-terminal and 6 C-terminal amino acids, they will be excluded from output.
+It was trained on plant sequences with experimentally determined 4-hydroxyprolines from swissprot data base. Prediction is not possible for prolines which are within 10 N-terminal and 6 C-terminal amino acids (V1 model version) and 10 N-terminal and 7 C-terminal amino acids (V2 model version), they will be excluded from output.
 }
 \examples{
 library(ragp)

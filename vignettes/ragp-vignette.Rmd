@@ -208,7 +208,7 @@ The object returned by `predict_hyp` is a list with two elements `prediction` an
 head(at_hyp$prediction)
 ```
 
-These predictions are based on a probability threshold of 0.3 which offers the best trade-off between specificity and sensitivity. To increase specificity at the cost of sensitivity the threshold can be increased using the `tprob` argument: 
+These predictions are based on a probability threshold of 0.224 which offers the best trade-off between specificity and sensitivity. To increase specificity at the cost of sensitivity the threshold can be increased using the `tprob` argument: 
 
 ```{r predict 2, eval = FALSE}
 at_hyp2 <- predict_hyp(data = at_nsp2,
@@ -217,7 +217,7 @@ at_hyp2 <- predict_hyp(data = at_nsp2,
                        tprob = 0.6)
 ```   
 
-The `at_hyp` object can be used to filter the sequences that contain more than a certain number of hydroxyprolines. The default threshold of 0.3 will be used. To filter sequences with three or more O:  
+The `at_hyp` object can be used to filter the sequences that contain more than a certain number of hydroxyprolines. The default threshold will be used. To filter sequences with three or more O:  
 
 ```{r filter hyp three or more}
 at_hyp$prediction %>%
@@ -369,23 +369,9 @@ maab_at %>%
   head 
 ```
 
-Since the function was not provided knowledge on the GPI presence, both possible classes are indicated as in: "1/4" or "2/9". GPI presence can be indicated with the argument `gpi` which accepts a Boolean vector of the same length as the sequences, like the `is.bigpi`/`is.gpi` columns from the outputs of `get_big_pi`/`get_pred_gpi` functions:   
+Since the function was not provided knowledge on the GPI presence, both possible classes are indicated as in: "1/4" or "2/9". GPI presence can be indicated with the argument `gpi` which accepts a Boolean vector of the same length as the sequences, like the `is.bigpi`/`is.gpi` columns from the outputs of `get_big_pi`/`get_pred_gpi` functions. Another way to remove ambiguities in classes if GPI presence is unknown is to set `get_gpi` argument to `"bigpi"` or `"predgpi"`:
 
-```{r maab 3}
-maab_at <- maab(at_nsp_3hyp,
-                sequence,
-                Transcript.id,
-                gpi = at_gpi$is.bigpi)
-
-maab_at %>%
-  filter(maab_class != "0") %>%
-  select(-ends_with("percent")) %>% 
-  head 
-```
-
-A faster way to remove ambiguities in classes if GPI presence is unknown is to set `get_gpi` argument to `"bigpi"` or `"predgpi"`:
-
-```{r maab 4, results ="hide", eval = FALSE}
+```{r maab 4, results ="hide", eval = TRUE}
 maab_at <- maab(at_nsp_3hyp,
                 sequence,
                 Transcript.id,

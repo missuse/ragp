@@ -7,10 +7,10 @@
 QSOlevel(m)
 }
 \arguments{
-\item{m}{A vector of k-mers of length: nchar(m) 21 or 13}
+\item{m}{A vector of k-mers}
 }
 \value{
-A matrix with the Quasi-Sequence-Order Descriptor (dim: 54)
+A matrix with the Quasi-Sequence-Order Descriptor (dim: 64)
 }
 \description{
 This function calculates the Quasi-Sequence-Order (QSO) descriptor with lag 12

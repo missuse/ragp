@@ -3,8 +3,10 @@
 #' This function calculates the normalized Moreau-Broto autocorrelation descriptor with lag 6.
 #'  
 #' @param x A vector of k-mers
-#' 
-#' @return A matrix with the Normalized Moreau-Broto Autocorrelation Descriptor (dim: 36)
+#' @param mat A matrix with amino acid atributes. Columns are amino acids, rows are atributes
+#' @param nlag The lag parameter
+#'  
+#' @return A matrix with the Normalized Moreau-Broto Autocorrelation Descriptor (dim: nlag * nrow(mat))
 #' 
 #' @details Normalized Moreau-Broto Autocorrelation Descriptor is calculated based on the following amino acid attributes:
 #' CIDH920105 - Normalized average hydrophobicity scales, BHAR880101 - Average flexibility indices,
@@ -16,28 +18,43 @@
 #' @author original R code by Nan Xiao, modified by Milan Dragićević
 #' 
 #' @seealso \code{\link[ragp]{predict_hyp} \link[protr]{extractMoreauBroto}}
+#' 
+#' @import stats
 
 
-extractMBdesc <- function(x){
+extractMBdesc <- function(x, mat, nlag){
   N <- nchar(x[1])
-  m1 <- t(Pr)[strsplit(paste(x, collapse = ""), "")[[1]], ]
-  P <- do.call(cbind, lapply(1:N, function(i) m1[seq(i, nrow(m1), by = N), ]))
-  P <- do.call(cbind, lapply(1:6, function(x) P[,seq(x, ncol(P), by = 6)]))
+  mat_names <- rownames(mat)
+  mat_rows <- nrow(mat)
+  pmean <- rowMeans(mat)
+  psd <- apply(mat, 1, stats::sd) * sqrt((20 - 1)/20)
+  mat <- (mat - pmean)/psd
+  m1 <- t(mat)[strsplit(paste(x,
+                              collapse = ""),
+                        "")[[1]], ]
+  P <- do.call(cbind,
+               lapply(1:N,
+                      function(i) m1[seq(i,
+                                         nrow(m1),
+                                         by = N), ]))
+  P <- do.call(cbind, lapply(1:mat_rows,
+                             function(x) P[,seq(x,
+                                                ncol(P),
+                                                by = mat_rows)]))
   P <- matrix(t(P), byrow = T, ncol = N)
-  MB <- vector("list", 6)
-  nlag = 6
+  MB <- vector("list", nlag)
   for (j in 1:nlag) {
     MB[[j]] <- rowSums(P[, 1:(N - j)] * P[, 1:(N - j) + j])/(N - j)
   }
   MB <- do.call(cbind, MB)
-  MB <- matrix(t(MB), byrow = T, ncol = 36)
-  
-  colnames(MB) = as.vector(t(outer(props,
-                                   paste(".lag",
-                                         1:nlag,
-                                         sep = ""),
-                                   paste,
-                                   sep = "")))
+  MB <- matrix(t(MB),
+               byrow = T,
+               ncol = nlag * mat_rows)
+  colnames(MB) <- as.vector(t(outer(mat_names,
+                                    paste(".lag",
+                                          1:nlag,
+                                          sep = ""),
+                                    paste, sep = "")))
   return(MB)
 }
 
@@ -46,9 +63,9 @@ extractMBdesc <- function(x){
 #'
 #' This function calculates the Quasi-Sequence-Order (QSO) descriptor with lag 12
 #' 
-#' @param m A vector of k-mers of length: nchar(m) 21 or 13
+#' @param m A vector of k-mers
 #' 
-#' @return  A matrix with the Quasi-Sequence-Order Descriptor (dim: 54)
+#' @return  A matrix with the Quasi-Sequence-Order Descriptor (dim: 64)
 #' 
 #' @details QSO descriptor is calculated based on two physicochemical distance matrices: Schneider-Wrede (Schneider and Wrede, 1994) and Grantham physicochemical distance matrix (Grantham, 1974)
 #' 
@@ -62,102 +79,81 @@ extractMBdesc <- function(x){
 #' @seealso \code{\link[ragp]{predict_hyp} \link[protr]{extractQSO}}
 
 
-QSOlevel <- function(m) {
+QSOlevel <- function (m){
   QSObabe <- function(x) {
-    if(length(x) == 1){
+    if (length(x) == 1) {
       x <- c(x, x)
-    } 
+    }
     w <- 0.1
     nlag <- 12
-    N <- as.numeric(nchar(x[1]))
-    xSplitted <- strsplit(as.character(x), split = "")
-    xSplitted <- do.call(rbind, xSplitted)
+    N <- nchar(x[1])
+    xSplitted <- strsplit(as.character(x),
+                          split = "")
+    xSplitted <- do.call(rbind,
+                         xSplitted)
     tau1 <- list()
     for (d in 1:nlag) {
       for (i in 1:(N - d)) {
-        tau1[[length(tau1) + 1]] <- diag(as.matrix(DistMat1)[xSplitted[, 
-                                                                       i], xSplitted[, i + d]])^2
+        tau1[[length(tau1) + 1]] <- diag(as.matrix(DistMat1)[xSplitted[, i],
+                                                             xSplitted[, i + d]])^2
       }
     }
-    
-    
     tau1 <- t(do.call(rbind, tau1))
-    if(N == 21){tau1 <- cbind(rowSums(tau1[, 1:20]),
-                              rowSums(tau1[, 21:39]),
-                              rowSums(tau1[, 40:57]),
-                              rowSums(tau1[, 58:74]),
-                              rowSums(tau1[, 75:90]),
-                              rowSums(tau1[, 91:105]),
-                              rowSums(tau1[, 106:119]),
-                              rowSums(tau1[, 120:132]),
-                              rowSums(tau1[, 133:144]),
-                              rowSums(tau1[, 145:155]),
-                              rowSums(tau1[, 156:165]),
-                              rowSums(tau1[, 166:174]))}
-    if(N == 13){tau1 <- cbind(rowSums(tau1[, 1:12]),
-                              rowSums(tau1[, 13:23]),
-                              rowSums(tau1[, 24:33]),
-                              rowSums(tau1[, 34:42]),
-                              rowSums(tau1[, 43:50]),
-                              rowSums(tau1[, 51:57]),
-                              rowSums(tau1[, 58:63]),
-                              rowSums(tau1[, 64:68]),
-                              rowSums(tau1[, 69:72]),
-                              rowSums(tau1[, 73:75]),
-                              rowSums(tau1[, 76:77]),
-                              tau1[, 78])}
+    ends <- cumsum(N - 1:nlag)
+    starts <- c(1, ends[-length(ends)] + 1)
+    tau1 <- do.call(cbind,
+                    lapply(mapply(seq,
+                                  starts,
+                                  ends),
+                           function(s) if(length(s) > 1){
+                             rowSums(tau1[,s])
+                           } else {
+                             tau1[,s]
+                           }
+                    )
+    )
     
-    fr <- sapply(AADict, function(y) sapply(gregexpr(y, 
-                                                     as.character(x)), function(x) sum(x > 0)))
-    
-    
-    
+    fr <- sapply(AADict, function(y) sapply(gregexpr(y,
+                                                     as.character(x)),
+                                            function(x) sum(x > 0)))
     Xr1 <- fr/(1 + (w * rowSums(tau1)))
-    colnames(Xr1) <- paste("Schneider.Xr.", colnames(Xr1), 
+    colnames(Xr1) <- paste("Schneider.Xr.",
+                           colnames(Xr1), 
                            sep = "")
     Xd1 <- (w * tau1)/(1 + (w * rowSums(tau1)))
-    colnames(Xd1) <- paste("Schneider.Xd.", 1:nlag, sep = "")
+    colnames(Xd1) <- paste("Schneider.Xd.",
+                           1:nlag,
+                           sep = "")
     tau2 <- list()
     for (d in 1:nlag) {
       for (i in 1:(N - d)) {
-        tau2[[length(tau2) + 1]] <- diag(as.matrix(DistMat2)[xSplitted[, 
-                                                                       i], xSplitted[, i + d]])^2
+        tau2[[length(tau2) + 1]] <- diag(as.matrix(DistMat2)[xSplitted[, i],
+                                                             xSplitted[, i + d]])^2
       }
     }
     tau2 <- t(do.call(rbind, tau2))
-    if(N == 21){tau2 <- cbind(rowSums(tau2[, 1:20]),
-                              rowSums(tau2[, 21:39]),
-                              rowSums(tau2[, 40:57]),
-                              rowSums(tau2[, 58:74]),
-                              rowSums(tau2[, 75:90]),
-                              rowSums(tau2[, 91:105]),
-                              rowSums(tau2[, 106:119]),
-                              rowSums(tau2[, 120:132]),
-                              rowSums(tau2[, 133:144]),
-                              rowSums(tau2[, 145:155]),
-                              rowSums(tau2[, 156:165]),
-                              rowSums(tau2[, 166:174]))}
-    if(N == 13){tau2 <- cbind(rowSums(tau2[, 1:12]),
-                              rowSums(tau2[, 13:23]),
-                              rowSums(tau2[, 24:33]),
-                              rowSums(tau2[, 34:42]),
-                              rowSums(tau2[, 43:50]),
-                              rowSums(tau2[, 51:57]),
-                              rowSums(tau2[, 58:63]),
-                              rowSums(tau2[, 64:68]),
-                              rowSums(tau2[, 69:72]),
-                              rowSums(tau2[, 73:75]),
-                              rowSums(tau2[, 76:77]),
-                              tau2[, 78])}
-    
+    tau2 <- do.call(cbind,
+                    lapply(mapply(seq,
+                                  starts,
+                                  ends),
+                           function(s) if(length(s) > 1){
+                             rowSums(tau2[,s])
+                           } else {
+                             tau2[,s]
+                           }
+                    )
+    )
     Xr2 <- fr/(1 + (w * rowSums(tau2)))
-    colnames(Xr2) <- paste("Grantham.Xr.", colnames(Xr2), 
+    colnames(Xr2) <- paste("Grantham.Xr.",
+                           colnames(Xr2), 
                            sep = "")
     Xd2 <- (w * tau2)/(1 + (w * rowSums(tau2)))
-    colnames(Xd2) <- paste("Grantham.Xd.", 1:nlag, sep = "")
+    colnames(Xd2) <- paste("Grantham.Xd.",
+                           1:nlag,
+                           sep = "")
     QSO <- cbind(Xr1, Xr2, Xd1, Xd2)
-    if(length(unique(x)) == 1){
-      QSO <- QSO[1,,drop = FALSE]
+    if (length(unique(x)) == 1) {
+      QSO <- QSO[1, , drop = FALSE]
     }
     return(QSO)
   }
@@ -174,6 +170,7 @@ QSOlevel <- function(m) {
   }
   return(QSO_all)
 }
+
 
 
 #' Composition descriptor (CTDC) 
@@ -193,41 +190,46 @@ QSOlevel <- function(m) {
 #' @seealso \code{\link[ragp]{predict_hyp} \link[protr]{extractCTDC}}
 
 CTDC <- function (x){
-  group1 = list(hydrophobicity = c("R", "K", "E", "D", "Q", 
-                                   "N"), normwaalsvolume = c("G", "A", "S", "T", "P", "D", 
-                                                             "C"), polarity = c("L", "I", "F", "W", "C", "M", "V", 
-                                                                                "Y"), polarizability = c("G", "A", "S", "D", "T"), charge = c("K", 
-                                                                                                                                              "R"), secondarystruct = c("E", "A", "L", "M", "Q", "K", 
-                                                                                                                                                                        "R", "H"), solventaccess = c("A", "L", "F", "C", "G", 
-                                                                                                                                                                                                     "I", "V", "W"))
-  group2 = list(hydrophobicity = c("G", "A", "S", "T", "P", 
-                                   "H", "Y"), normwaalsvolume = c("N", "V", "E", "Q", "I", 
-                                                                  "L"), polarity = c("P", "A", "T", "G", "S"), polarizability = c("C", 
-                                                                                                                                  "P", "N", "V", "E", "Q", "I", "L"), charge = c("A", "N", 
-                                                                                                                                                                                 "C", "Q", "G", "H", "I", "L", "M", "F", "P", "S", "T", 
-                                                                                                                                                                                 "W", "Y", "V"), secondarystruct = c("V", "I", "Y", "C", 
-                                                                                                                                                                                                                     "W", "F", "T"), solventaccess = c("R", "K", "Q", "E", 
-                                                                                                                                                                                                                                                       "N", "D"))
-  group3 = list(hydrophobicity = c("C", "L", "V", "I", "M", 
-                                   "F", "W"), normwaalsvolume = c("M", "H", "K", "F", "R", 
-                                                                  "Y", "W"), polarity = c("H", "Q", "R", "K", "N", "E", 
-                                                                                          "D"), polarizability = c("K", "M", "H", "F", "R", "Y", 
-                                                                                                                   "W"), charge = c("D", "E"), secondarystruct = c("G", 
-                                                                                                                                                                   "N", "P", "S", "D"), solventaccess = c("M", "S", "P", 
-                                                                                                                                                                                                          "T", "H", "Y"))
-  xSplitted = strsplit(x, split = "")[[1]]
-  n = nchar(x)
-  g1 = lapply(group1, function(g) length(which(xSplitted %in% 
-                                                 g)))
-  names(g1) = paste(names(g1), "Group1", sep = ".")
-  g2 = lapply(group2, function(g) length(which(xSplitted %in% 
-                                                 g)))
-  names(g2) = paste(names(g2), "Group2", sep = ".")
-  g3 = lapply(group3, function(g) length(which(xSplitted %in% 
-                                                 g)))
-  names(g3) = paste(names(g3), "Group3", sep = ".")
-  CTDC = unlist(c(g1, g2, g3))/n
-  ids = unlist(lapply(1:7, function(x) x + c(0, 7, 14)))
+  group1 <- list(hydrophobicity = c("R", "K", "E", "D", "Q", "N"),
+                 normwaalsvolume = c("G", "A", "S", "T", "P", "D", "C"),
+                 polarity = c("L", "I", "F", "W", "C", "M", "V", "Y"),
+                 polarizability = c("G", "A", "S", "D", "T"),
+                 charge = c("K", "R"),
+                 secondarystruct = c("E", "A", "L", "M", "Q", "K", "R", "H"),
+                 solventaccess = c("A", "L", "F", "C", "G", "I", "V", "W"))
+  group2 <- list(hydrophobicity = c("G", "A", "S", "T", "P", "H", "Y"),
+                 normwaalsvolume = c("N", "V", "E", "Q", "I", "L"),
+                 polarity = c("P", "A", "T", "G", "S"),
+                 polarizability = c("C", "P", "N", "V", "E", "Q", "I", "L"),
+                 charge = c("A", "N", "C", "Q", "G", "H", "I", "L", "M", "F", "P", "S", "T", "W", "Y", "V"),
+                 secondarystruct = c("V", "I", "Y", "C", "W", "F", "T"),
+                 solventaccess = c("R", "K", "Q", "E", "N", "D"))
+  group3 <- list(hydrophobicity = c("C", "L", "V", "I", "M", "F", "W"),
+                 normwaalsvolume = c("M", "H", "K", "F", "R", "Y", "W"),
+                 polarity = c("H", "Q", "R", "K", "N", "E", "D"),
+                 polarizability = c("K", "M", "H", "F", "R", "Y", "W"),
+                 charge = c("D", "E"),
+                 secondarystruct = c("G", "N", "P", "S", "D"),
+                 solventaccess = c("M", "S", "P", "T", "H", "Y"))
+  xSplitted <- strsplit(x, split = "")[[1]]
+  n <- nchar(x)
+  g1 <- lapply(group1,
+               function(g) length(which(xSplitted %in% g)))
+  names(g1) <- paste(names(g1),
+                     "Group1",
+                     sep = ".")
+  g2 <- lapply(group2,
+               function(g) length(which(xSplitted %in% g)))
+  names(g2) <- paste(names(g2),
+                     "Group2",
+                     sep = ".")
+  g3 <- lapply(group3,
+               function(g) length(which(xSplitted %in% g)))
+  names(g3) <- paste(names(g3),
+                     "Group3",
+                     sep = ".")
+  CTDC <- unlist(c(g1, g2, g3))/n
+  ids <- unlist(lapply(1:7, function(x) x + c(0, 7, 14)))
   CTDC[ids]
 }
 

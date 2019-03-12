@@ -4,13 +4,17 @@
 \alias{extractMBdesc}
 \title{Normalized Moreau-Broto Autocorrelation Descriptor}
 \usage{
-extractMBdesc(x)
+extractMBdesc(x, mat, nlag)
 }
 \arguments{
 \item{x}{A vector of k-mers}
+
+\item{mat}{A matrix with amino acid atributes. Columns are amino acids, rows are atributes}
+
+\item{nlag}{The lag parameter}
 }
 \value{
-A matrix with the Normalized Moreau-Broto Autocorrelation Descriptor (dim: 36)
+A matrix with the Normalized Moreau-Broto Autocorrelation Descriptor (dim: nlag * nrow(mat))
 }
 \description{
 This function calculates the normalized Moreau-Broto autocorrelation descriptor with lag 6.

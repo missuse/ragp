@@ -529,7 +529,8 @@ plot_prot <- function(sequence,
                        c(list(data = dat,
                               sequence = "sequence",
                               id = "id"),
-                         dots[names(dots) == "tprob"])
+                         dots[names(dots) == "tprob"],
+                         dots[names(dots) == "version"])
     )$prediction
     
     if (!is.null(seq_hyp)) {
