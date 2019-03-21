@@ -6,7 +6,7 @@
 #' @aliases predict_hyp predict_hyp.default predict_hyp.character predict_hyp.data.frame predict_hyp.list
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
-#' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
+#' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank. Ids should be unique.
 #' @param tprob A numeric value indicating the threshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.3 for "V1" model and 0.224 for "V2" model, offering a tradeoff between sensitivity and specificity.
 #' @param version A string indicating which model version to use: the first version "V1", or the second version "V2". Default is "V2".
 #' @param split A numeric value determining the ratio of vectorized and sequential computation. Should be left at default, lower to 0 - 1 range if low memory errors occur. Increase at your own risk.
@@ -227,6 +227,10 @@ predict_hyp.default <- function (data = NULL,
   sequence <- toupper(as.character(sequence))
   if (length(sequence) != length(id)){
     stop("id and sequence vectors are not of same length",
+         call. = FALSE)
+  }
+  if (length(unique(id)) != length(id)){
+    stop("id's should be unique",
          call. = FALSE)
   }
   sequence <- sub("\\*$",
