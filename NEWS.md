@@ -1,3 +1,13 @@
+#ragp 0.3.0.0000
+
+##New Features
+
+* `predict_hyp()` internal model is updated to 2nd version ('V2'). Predictions are around 25% faster compared to the first version. The performance in terms of accuracy is similar based on the test set used. 'V2' was created using a more streamlined manner and is the default model. The old model ('V1') is still available using the `version` argument to `predict_hyp()`.
+
+##Bug Fixes and Improvements
+
+* `predict_hyp()` now checks if all provided ids are unique. Previously non unique ids caused an error at the end of computation. 
+
 #ragp 0.2.1.9100
 
 ##Bug Fixes and Improvements
