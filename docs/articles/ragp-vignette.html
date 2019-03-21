@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9100</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0.0</span>
       </span>
     </div>
 
@@ -117,7 +117,7 @@
 <ul>
 <li>predict the presence of secretory signals (N-sp) and filter sequences containing them. Since several prediction algorithms are utilized (functions <code>get_signalp</code>, <code>get_targetp</code> and <code>get_phobius</code>) this decision is reached by a majority vote.<br>
 </li>
-<li>predict proline hydroxylation (function <code>predict_hyp</code>) and filter sequences containing at least several potential hydroxyprolines (three or more).</li>
+<li>predict proline hydroxylation (function <code>predict_hyp</code>) and filter sequences containing at least three potential hydroxyprolines.</li>
 </ul>
 <p>The analysis layer:</p>
 <ul>
@@ -130,6 +130,7 @@
 </li>
 <li>predict disordered regions in proteins (function <code>get_espritz</code>).</li>
 </ul>
+<p>Additionally <code>ragp</code> provides tools for visualization of the mentioned attributes via the function <code>plot_prot</code>.</p>
 </div>
 <div id="data-import" class="section level2">
 <h2 class="hasAnchor">
@@ -175,6 +176,16 @@ input4 &lt;- scan_ag(data = At_seq_fas) </code></pre>
 <p>and lastly the location of a <code>.FASTA</code> file to be analyzed as string:</p>
 <pre class="text"><code>input5 &lt;- scan_ag(data = "at_nsp.fasta") </code></pre>
 </div>
+<div id="filtering-hrgps" class="section level1">
+<h1 class="hasAnchor">
+<a href="#filtering-hrgps" class="anchor"></a>Filtering HRGPs</h1>
+<p>The filtering layer in <code>ragp</code> consists of two sequential tasks:</p>
+<ul>
+<li>predict the presence of secretory signals (N-sp) and filter sequences containing them.<br>
+</li>
+<li>predict proline hydroxylation and filter sequences containing at least several potential hydroxyprolines.</li>
+</ul>
+<p>The following section explains how to perform these tasks.</p>
 <div id="predicting-n-terminal-secretory-signal-sequences-n-sp" class="section level2">
 <h2 class="hasAnchor">
 <a href="#predicting-n-terminal-secretory-signal-sequences-n-sp" class="anchor"></a>Predicting N-terminal secretory signal sequences (N-sp)</h2>
@@ -227,18 +238,18 @@ at_nsp2 &lt;- filter(at_nsp, Transcript.id %in% id_nsp)</code></pre>
 <p>The object returned by <code>predict_hyp</code> is a list with two elements <code>prediction</code> and <code>sequence</code>. The <code>prediction</code> element is a data frame containing the probability of hydroxylation for each P in each sequence along with the amino acid span used for prediction. First few rows of this element:</p>
 <pre class="text"><code>head(at_hyp$prediction)
 #&gt;            id                substr P_pos       prob HYP
-#&gt; 1 AT2G43600.1 FSQNCMDTSCPGLKECCSRWG    31 0.01618746  No
-#&gt; 2 AT2G43600.1 EYCGFFCFSGPCNIKGKSYGY    58 0.01682046  No
-#&gt; 3 AT2G43600.1 YGYDYNVDAGPRGKIETVITS    76 0.03108880  No
-#&gt; 4 AT2G43600.1 ERYCSKSKKYPCEPGKNYYGR   163 0.03680637  No
-#&gt; 5 AT2G43600.1 CSKSKKYPCEPGKNYYGRGLL   166 0.02318067  No
-#&gt; 6 AT2G43600.1 YYGAGKHLGLPLLKDPDLVSR   194 0.01805580  No</code></pre>
-<p>These predictions are based on a probability threshold of 0.3 which offers the best trade-off between specificity and sensitivity. To increase specificity at the cost of sensitivity the threshold can be increased using the <code>tprob</code> argument:</p>
+#&gt; 1 AT2G43600.1 FSQNCMDTSCPGLKECCSRWG    31 0.01492346  No
+#&gt; 2 AT2G43600.1 EYCGFFCFSGPCNIKGKSYGY    58 0.01603031  No
+#&gt; 3 AT2G43600.1 YGYDYNVDAGPRGKIETVITS    76 0.01827260  No
+#&gt; 4 AT2G43600.1 ERYCSKSKKYPCEPGKNYYGR   163 0.01534502  No
+#&gt; 5 AT2G43600.1 CSKSKKYPCEPGKNYYGRGLL   166 0.01449253  No
+#&gt; 6 AT2G43600.1 YYGAGKHLGLPLLKDPDLVSR   194 0.01456114  No</code></pre>
+<p>These predictions are based on a probability threshold of 0.224 which offers the best trade-off between specificity and sensitivity. To increase specificity at the cost of sensitivity the threshold can be increased using the <code>tprob</code> argument:</p>
 <pre class="text"><code>at_hyp2 &lt;- predict_hyp(data = at_nsp2,
                        sequence = sequence,
                        id = Transcript.id,
                        tprob = 0.6)</code></pre>
-<p>The <code>at_hyp</code> object can be used to filter the sequences that contain more than a certain number of hydroxyprolines. The default threshold of 0.3 will be used. To filter sequences with three or more O:</p>
+<p>The <code>at_hyp</code> object can be used to filter the sequences that contain more than a certain number of hydroxyprolines. The default threshold will be used. To filter sequences with three or more O:</p>
 <pre class="text"><code>at_hyp$prediction %&gt;%
   group_by(id) %&gt;%
   summarise(n = sum(HYP == "Yes")) %&gt;%
@@ -247,69 +258,22 @@ at_nsp2 &lt;- filter(at_nsp, Transcript.id %in% id_nsp)</code></pre>
 
 at_nsp2 %&gt;%
   filter(Transcript.id %in% at_3hyp) -&gt; at_nsp_3hyp</code></pre>
-<p>There are 348 sequences that satisfy this condition.</p>
+<p>There are 398 sequences that satisfy this condition.</p>
 </div>
-<div id="domain-annotation-and-gpi-prediction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#domain-annotation-and-gpi-prediction" class="anchor"></a>Domain annotation and GPI prediction</h2>
-<p>Domain annotation is a fundamental research tool in protein sequence analyses. In many occasions domain annotation has already been performed prior to HRGP mining, either by using <a href="http://hmmer.org/">hmmer</a> <span class="citation">(Eddy 2011)</span>, <a href="https://www.ebi.ac.uk/interpro/interproscan.html">InterProScan</a> <span class="citation">(Jones et al. 2014)</span> or some other resource. In such circumstances the annotation can be imported into <code>R</code> and joined with the filtered sequences. When this is not the case <code>ragp</code> offers the function <code>get_hmm</code> which queries the <a href="https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan">hmmscan</a> web server <span class="citation">(Finn, Clements, and Eddy 2011)</span>. Domain annotation is not necessary for AGP prediction although it enhances interpretation, but it is a fundamental part of the MAAB classification scheme. As with other <code>ragp</code> functions the first argument is the <code>data</code>, followed by the names of the columns containing the protein sequences and corresponding identifiers:</p>
-<pre class="text"><code>at_hmm &lt;- get_hmm(at_nsp_3hyp,
-                  sequence,
-                  Transcript.id)</code></pre>
-<p>The resulting data frame resembles the web server’s output, or for those familiar with the <a href="http://hmmer.org/"><code>hmmer</code></a> software the domain hits table produced by using the argument <code>--domtblout</code>. First few rows with several columns omitted:</p>
-<pre class="text"><code>head(at_hmm[,-c(4, 5, 8, 9, 11:13)])
-#&gt;            id           name        acc align_start align_end ievalue
-#&gt; 1 AT2G43620.1 Glyco_hydro_19 PF00182.18          94       228 4.3e-38
-#&gt; 2 AT2G43620.1 Glyco_hydro_19 PF00182.18         237       283 1.7e-06
-#&gt; 3 AT2G43620.1  Chitin_bind_1 PF00187.18          31        64 1.5e-08
-#&gt; 4 AT2G43620.1  Chitin_bind_1 PF00187.18         164       168 8.6e+03
-#&gt; 5 AT2G43945.1           &lt;NA&gt;       &lt;NA&gt;          NA        NA      NA
-#&gt; 6 AT2G30933.1             X8 PF07983.12          81       151 2.2e-21</code></pre>
-<p>HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor <span class="citation">(Ellis et al. 2010)</span>. Attachment of the GPI moiety to the carboxyl terminus (omega-site) of the polypeptide occurs after proteolytic cleavage of a C-terminal propeptide. In order to predict the presence of the omega sites in the filtered sequences two functions are available: <code>get_big_pi</code> which queries the <a href="http://mendel.imp.ac.at/gpi/plant_server.html">big-PI Plant Predictor</a> <span class="citation">(B. Eisenhaber et al. 2003)</span> server and <code>get_pred_gpi</code> which queries the <a href="http://gpcr.biocomp.unibo.it/predgpi/">PredGPI</a> <span class="citation">(Pierleoni, Martelli, and Casadio 2008)</span> server.</p>
-<p>To query <a href="http://mendel.imp.ac.at/gpi/plant_server.html">big-PI Plant Predictor</a>:</p>
-<pre class="text"><code>at_gpi &lt;- get_big_pi(at_nsp_3hyp,
-                     sequence,
-                     Transcript.id)</code></pre>
-<p>This function provides detailed per sequence output when the argument <code>simplify</code> is set to <code>FALSE</code>, by default <code>simplify</code> is set to <code>TRUE</code> and the resulting data frame has one row per sequence:</p>
-<pre class="text"><code>head(at_gpi)
-#&gt;             omega_site Quality       PValue          id is.bigpi
-#&gt; AT2G43620.1        257    None 1.122397e-01 AT2G43620.1    FALSE
-#&gt; AT2G43945.1        265    None 4.582008e-01 AT2G43945.1    FALSE
-#&gt; AT2G30933.1        200       P 6.822348e-05 AT2G30933.1     TRUE
-#&gt; AT2G30933.2        141    None 3.148265e-01 AT2G30933.2    FALSE
-#&gt; AT2G22470.1        107       P 3.425805e-08 AT2G22470.1     TRUE
-#&gt; AT2G43610.1        255    None 3.183057e-01 AT2G43610.1    FALSE</code></pre>
-<p>similarly to query <a href="http://gpcr.biocomp.unibo.it/predgpi/">PredGPI</a>:</p>
-<pre class="text"><code>at_gpi_pred &lt;- get_pred_gpi(at_nsp_3hyp,
-                            sequence,
-                            Transcript.id)</code></pre>
-<pre class="text"><code>head(at_gpi_pred)
-#&gt;            id omega_site specificity is.gpi
-#&gt; 1 ATCG00660.1         96       0.073  FALSE
-#&gt; 2 AT2G43600.1        251       0.091  FALSE
-#&gt; 3 AT2G28410.1         90       0.995   TRUE
-#&gt; 4 AT2G22960.1        160       0.145  FALSE
-#&gt; 5 AT2G19580.1        250       0.677  FALSE
-#&gt; 6 AT2G19690.2        120       0.373  FALSE</code></pre>
 </div>
-<div id="disorder-prediction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#disorder-prediction" class="anchor"></a>Disorder prediction</h2>
-<p>A key structural feature of HRGPs, based on abundance of disorder-promoting residues, is that they are intrinsically disordered proteins. To identify potential disordered regions in proteins <code>ragp</code> contains <code>get_espritz</code> function which queries <a href="http://protein.bio.unipd.it/espritz/">ESpritz</a> <span class="citation">(Walsh et al. 2012)</span> web server. Three models trained on different data sets are available and can be selected via the argument <code>model</code>:</p>
+<div id="analyzing-hrgps" class="section level1">
+<h1 class="hasAnchor">
+<a href="#analyzing-hrgps" class="anchor"></a>Analyzing HRGPs</h1>
+<p>The analysis layer in <code>ragp</code> consists of:</p>
 <ul>
-<li>‘X-Ray’ - based on missing atoms from the <a href="http://www.wwpdb.org/">Protein Data Bank</a> (PDB) X-ray solved structures. If this option is chosen then the predictors with short disorder options are executed.<br>
+<li>Arabinogalactan identification by finding localized clusters of characteristic motifs (AG glycomodules)</li>
+<li>Hydroxyproline rich glycoprotein classification by the motif and amino acid bias scheme (MAAB, <span class="citation">(Johnson et al. 2017)</span>).</li>
+<li>Domain annotation using <a href="https://pfam.xfam.org/">Pfam</a> data base and enrichment with gene ontology (GO) terms.<br>
 </li>
-<li>‘Disprot’ - contains longer disorder segments compared to x-ray. In particular, <a href="http://www.disprot.org/">disprot</a> is a manually curated database which is often based on functional attributes of the disordered region was used for this definition. Disorder residues are defined if the disprot curators consider the residue to be disordered at least once. All other residues are considered ordered. If this option is chosen then the predictors with long disorder options are executed.<br>
+<li>Glycosylphosphatidylinositol attachment sites prediction.<br>
 </li>
-<li>‘NMR’ - based on NMR mobility. NMR flexibility is calculated using the <a href="http://protein.bio.unipd.it/mobi/">Mobi server</a> <span class="citation">(Martin, Walsh, and Tosatto 2010)</span> optimized to replicate the ordered-disordered NMR definition used in CASP8.<br>
-These models provide quite different predictions. To query ESpritz:</li>
+<li>Identification of disordered regions in proteins.</li>
 </ul>
-<pre class="text"><code>at_espritz &lt;- get_espritz(at_nsp_3hyp,
-                          sequence,
-                          Transcript.id,
-                          model = "NMR")</code></pre>
-<p>The output of the function depends on the <code>simplify</code> argument. If <code>simplify = TRUE</code> (default) the output is a <code>data.frame</code> (one row per disordered region) with columns <code>start</code> and <code>end</code> which indicate the start and end of the predicted disordered region as well as the column <code>id</code> which is a protein identifier. When <code>simplify = FALSE</code> the output contains predicted probabilities of disorder for each amino acid.</p>
-</div>
 <div id="arabinogalactan-identification" class="section level2">
 <h2 class="hasAnchor">
 <a href="#arabinogalactan-identification" class="anchor"></a>Arabinogalactan identification</h2>
@@ -318,7 +282,7 @@ These models provide quite different predictions. To query ESpritz:</li>
 <pre class="text"><code>scaned_at &lt;- scan_ag(data = at_nsp_3hyp,
                      sequence,
                      Transcript.id)</code></pre>
-<p>The output object <code>scaned_At</code> can be a list, or a data frame depending on the <code>simplify</code>/<code>tidy</code> arguments. The default output is a data frame one row per sequences with five columns. Here are the 55 N-terminal amino acids from the <a href="http://www.uniprot.org/uniprot/Q9C5S0">Classical arabinogalactan protein 9</a> as an example:</p>
+<p>The output object <code>scaned_At</code> can be a list, or a data frame depending on the <code>simplify</code>/<code>tidy</code> arguments. The default output is a data frame one row per sequences with five columns. Here are the 55 N-terminal amino acids from the <a href="http://www.uniprot.org/uniprot/Q9C5S0">Classical arabinogalactan protein 9</a> (AT2G14890.1) as an example:</p>
 <pre class="text"><code>scaned_at  %&gt;%
   mutate(sequence = strtrim(sequence, 55)) %&gt;%
   select(-3) %&gt;% #omitting 3rd column
@@ -326,7 +290,7 @@ These models provide quite different predictions. To query ESpritz:</li>
 #&gt;            id                                                sequence total_length longest
 #&gt; 1 AT2G14890.1 marsfaiavicivliagvtgqAPTSPPTaTPAPPTPTTPpPAaTPpPVsAPpPVt          144     144</code></pre>
 <p>The column “sequence” contains the input sequence where only the amino acids in potential AG glycomodules are in uppercase while all other are in lower case. The column “AG_aa” contains the amino acid count found in potential AG glycomodules, while columns “total_length” and “longest” correspond to the matched sequence spans.</p>
-<p>True AG glycomodules contain hydroxyproline instead of proline in the dipeptides: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) but the above output considers P instead of O since most of the time the positions of O are unknown. However if the sequence argument to <code>scan_ag</code> contains O’s at some positions, <code>scan_ag</code> will consider only them. To do this the <code>sequence</code> element of <code>predict_hyp</code> function output can be used:</p>
+<p>True AG glycomodules contain hydroxyproline instead of proline in the dipeptides: OA, OS, OT, AO, SO and TO (and in some cases OG, OV, GO and VO) but the above output considers P instead of O since most of the time the positions of O are unknown. However if the sequence argument to <code>scan_ag</code> contains O’s at some positions, <code>scan_ag</code> will consider only them. To do this the <code>sequence</code> element of <code>predict_hyp</code> function output can be used:</p>
 <pre class="text"><code>scaned_at &lt;- scan_ag(data = at_hyp$sequence,
                      sequence,
                      id)</code></pre>
@@ -373,7 +337,7 @@ scaned_at  %&gt;%
   filter(id == "AT2G14890.1")
 #&gt;            id                                                sequence total_length longest
 #&gt; 1 AT2G14890.1 marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTTOoOAaTOoovsAOoovt          144     144</code></pre>
-<p>With default settings <code>scan_ag</code> identifies 231 sequences. To compare it with the number of sequences that would be filtered if the proline hydroxylation prediction was omitted the function can be run on <code>at_nsp2</code> data:</p>
+<p>With default settings <code>scan_ag</code> identifies 234 sequences. To compare it with the number of sequences that would be filtered if the proline hydroxylation prediction was omitted the function can be run on <code>at_nsp2</code> data:</p>
 <pre class="text"><code>scaned_at_nsp2 &lt;- scan_ag(data = at_nsp2,
                           sequence,
                           Transcript.id)
@@ -385,7 +349,7 @@ sum(scaned_at_nsp2$total_length != 0)
 <div id="motif-and-amino-acid-bias-classification---maab" class="section level2">
 <h2 class="hasAnchor">
 <a href="#motif-and-amino-acid-bias-classification---maab" class="anchor"></a>Motif and amino acid bias classification - MAAB</h2>
-<p>The MAAB pipeline is explained in detail in <span class="citation">Johnson et al. (2017)</span>. In short, after removal of sequences without a predicted N-sp and removal of sequences with predicted domains the sequences are first evaluated for amino acid bias. Sequences with &gt; 45% of PAST (AGP bias) or PSKY (EXT bias) or PVKY (proline-rich proteins (PRP) bias) are grouped further into 24 distinct groups based on amino acid bias, presence of GPIs and the following motifs (as regular expression):</p>
+<p>The MAAB pipeline is explained in detail in <span class="citation">Johnson et al. (2017)</span>. In short, after removal of sequences without a predicted N-sp and removal of sequences with predicted domains the sequences are first evaluated for amino acid bias. Sequences with &gt; 45% of PAST (AGP bias) or PSKY (EXT bias) or PVKY (proline-rich proteins (PRP) bias) are grouped further into 24 distinct groups (23 of which represent HRGPs) based on amino acid bias, presence of GPIs and the following motifs (as regular expression):</p>
 <ul>
 <li>EXT: the SPn motif <code>SP{3,5}</code> and the tyr motifs <code>[FY].Y</code>, <code>KHY</code>, <code>VY[HKDE]</code>, <code>V.Y</code> and <code>YY</code>.<br>
 </li>
@@ -393,11 +357,11 @@ sum(scaned_at_nsp2$total_length != 0)
 </li>
 <li>AGP: <code>[AVTG]P{1,3}</code> and <code>[ASVTG]P{1,2}</code>.</li>
 </ul>
-<p>The motifs are counted in a specific order ext &gt; tyr &gt; prp &gt; agp, and overlapping motifs are not counted twice. Based on the final motif count and the overall coverage of the motifs HRGPs are clustered in the mentioned 24 groups. This can be performed using the <code>ragp</code> function <code>maab</code>:</p>
+<p>The motifs are counted in a specific order ext &gt; tyr &gt; prp &gt; agp, and overlapping motifs are not counted twice. Based on the final motif count and the overall coverage of the motifs HRGPs are clustered in the mentioned 24 groups. This classification can be performed using the <code>ragp</code> function <code>maab</code>:</p>
 <pre class="text"><code>maab_at &lt;- maab(at_nsp_3hyp,
                 sequence,
                 Transcript.id)</code></pre>
-<p>Of the 348 sequences in <code>at_nsp_3hyp</code>, 72 are predicted to belong to any of the HRGP classes (1 - 24). The output of the <code>maab</code> function is a data frame containing columns: <code>id</code> - sequence identifier; <code>ext_sp</code>, <code>ext_tyr</code>, <code>prp</code> and <code>agp</code> - corresponding motif count; <code>past_percent</code>, <code>pvyk_percent</code>, <code>psky_percent</code>, <code>p_percent</code> - percentage of the corresponding amino acids in sequence; <code>coverage</code> - the motif coverage; <code>maab_class</code> - the MAAB class. The first several hits:</p>
+<p>Of the 398 sequences in <code>at_nsp_3hyp</code>, 71 are predicted to belong to any of the HRGP classes (1 - 24). The output of the <code>maab</code> function is a data frame containing columns: <code>id</code> - sequence identifier; <code>ext_sp</code>, <code>ext_tyr</code>, <code>prp</code> and <code>agp</code> - corresponding motif count; <code>past_percent</code>, <code>pvyk_percent</code>, <code>psky_percent</code>, <code>p_percent</code> - percentage of the corresponding amino acids in sequence; <code>coverage</code> - the motif coverage; <code>maab_class</code> - the MAAB class. The first several hits:</p>
 <pre class="text"><code>maab_at %&gt;%
   filter(maab_class != "0") %&gt;%
   select(-ends_with("percent")) %&gt;% #omitting columns ending with "percent"
@@ -409,24 +373,7 @@ sum(scaned_at_nsp2$total_length != 0)
 #&gt; 4 AT2G23130.2      0       0   0  32 0.4197531        1/4
 #&gt; 5 AT2G32300.1      0       1   0  16 0.1379310         24
 #&gt; 6 AT2G34870.1      0       0   0   6 0.1379310         24</code></pre>
-<p>Since the function was not provided knowledge on the GPI presence, both possible classes are indicated as in: “1/4” or “2/9”. GPI presence can be indicated with the argument <code>gpi</code> which accepts a Boolean vector of the same length as the sequences, like the <code>is.bigpi</code>/<code>is.gpi</code> columns from the outputs of <code>get_big_pi</code>/<code>get_pred_gpi</code> functions:</p>
-<pre class="text"><code>maab_at &lt;- maab(at_nsp_3hyp,
-                sequence,
-                Transcript.id,
-                gpi = at_gpi$is.bigpi)
-
-maab_at %&gt;%
-  filter(maab_class != "0") %&gt;%
-  select(-ends_with("percent")) %&gt;% 
-  head 
-#&gt;            id ext_sp ext_tyr prp agp  coverage maab_class
-#&gt; 1 AT2G22470.1      0       0   0  21 0.3511450          1
-#&gt; 2 AT2G21140.1      0       0   4   5 0.1059190         24
-#&gt; 3 AT2G23130.1      0       0   0  32 0.3675676          1
-#&gt; 4 AT2G23130.2      0       0   0  32 0.4197531          4
-#&gt; 5 AT2G32300.1      0       1   0  16 0.1379310         24
-#&gt; 6 AT2G34870.1      0       0   0   6 0.1379310         24</code></pre>
-<p>A faster way to remove ambiguities in classes if GPI presence is unknown is to set <code>get_gpi</code> argument to <code>"bigpi"</code> or <code>"predgpi"</code>:</p>
+<p>Since the function was not provided knowledge on the GPI presence, both possible classes are indicated as in: “1/4” or “2/9”. GPI presence can be indicated with the argument <code>gpi</code> which accepts a Boolean vector of the same length as the sequences, like the <code>is.bigpi</code>/<code>is.gpi</code> columns from the outputs of <code>get_big_pi</code>/<code>get_pred_gpi</code> functions. Another way to remove ambiguities in classes if GPI presence is unknown is to set <code>get_gpi</code> argument to <code>"bigpi"</code> or <code>"predgpi"</code>:</p>
 <pre class="text"><code>maab_at &lt;- maab(at_nsp_3hyp,
                 sequence,
                 Transcript.id,
@@ -444,11 +391,73 @@ maab_at %&gt;%
 #&gt; 6 AT2G34870.1      0       0   0   6 0.1379310         24</code></pre>
 <p>This will run <code>get_big_pi</code> or <code>get_pred_gpi</code> only on the sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge.</p>
 </div>
-<div id="protein-structure-diagram" class="section level2">
+<div id="domain-annotation-and-gpi-prediction" class="section level2">
 <h2 class="hasAnchor">
-<a href="#protein-structure-diagram" class="anchor"></a>Protein structure diagram</h2>
+<a href="#domain-annotation-and-gpi-prediction" class="anchor"></a>Domain annotation and GPI prediction</h2>
+<p>Domain annotation is a fundamental research tool in protein sequence analyses. In many occasions domain annotation has already been performed prior to HRGP mining, either by using <a href="http://hmmer.org/">hmmer</a> <span class="citation">(Eddy 2011)</span>, <a href="https://www.ebi.ac.uk/interpro/interproscan.html">InterProScan</a> <span class="citation">(Jones et al. 2014)</span> or some other resource. In such circumstances the annotation can be imported into <code>R</code> and joined with the filtered sequences. When this is not the case <code>ragp</code> offers the function <code>get_hmm</code> which queries the <a href="https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan">hmmscan</a> web server <span class="citation">(Finn, Clements, and Eddy 2011)</span>. Domain annotation is not necessary for AGP prediction although it enhances interpretation, but it is a fundamental part of the MAAB classification scheme. As with other <code>ragp</code> functions the first argument is the <code>data</code>, followed by the names of the columns containing the protein sequences and corresponding identifiers:</p>
+<pre class="text"><code>at_hmm &lt;- get_hmm(at_nsp_3hyp,
+                  sequence,
+                  Transcript.id)</code></pre>
+<p>The resulting data frame resembles the web server’s output, or for those familiar with the <a href="http://hmmer.org/"><code>hmmer</code></a> software the domain hits table produced by using the argument <code>--domtblout</code>. First few rows with several columns omitted:</p>
+<pre class="text"><code>head(at_hmm[,-c(4, 5, 8, 9, 11:13)])
+#&gt;            id           name        acc align_start align_end ievalue
+#&gt; 1 AT2G43620.1 Glyco_hydro_19 PF00182.19          94       228 1.3e-37
+#&gt; 2 AT2G43620.1 Glyco_hydro_19 PF00182.19         237       283 1.6e-06
+#&gt; 3 AT2G43620.1  Chitin_bind_1 PF00187.19          30        64 1.9e-08
+#&gt; 4 AT2G43620.1  Chitin_bind_1 PF00187.19         164       168 8.5e+03
+#&gt; 5 AT2G43945.1           &lt;NA&gt;       &lt;NA&gt;          NA        NA      NA
+#&gt; 6 AT2G30933.1             X8 PF07983.13          81       151 2.6e-21</code></pre>
+<p>HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor <span class="citation">(Ellis et al. 2010)</span>. Attachment of the GPI moiety to the carboxyl terminus (omega-site) of the polypeptide occurs after proteolytic cleavage of a C-terminal propeptide. In order to predict the presence of the omega sites in the filtered sequences two functions are available: <code>get_big_pi</code> which queries the <a href="http://mendel.imp.ac.at/gpi/plant_server.html">big-PI Plant Predictor</a> <span class="citation">(B. Eisenhaber et al. 2003)</span> server and <code>get_pred_gpi</code> which queries the <a href="http://gpcr.biocomp.unibo.it/predgpi/">PredGPI</a> <span class="citation">(Pierleoni, Martelli, and Casadio 2008)</span> server.</p>
+<p>To query <a href="http://mendel.imp.ac.at/gpi/plant_server.html">big-PI Plant Predictor</a>:</p>
+<pre class="text"><code>at_gpi &lt;- get_big_pi(at_nsp_3hyp,
+                     sequence,
+                     Transcript.id)</code></pre>
+<p>This function provides detailed per sequence output when the argument <code>simplify</code> is set to <code>FALSE</code>, by default <code>simplify</code> is set to <code>TRUE</code> and the resulting data frame has one row per sequence:</p>
+<pre class="text"><code>head(at_gpi)
+#&gt;             omega_site Quality       PValue          id is.bigpi
+#&gt; AT2G43620.1        257    None 1.122397e-01 AT2G43620.1    FALSE
+#&gt; AT2G43945.1        265    None 4.582008e-01 AT2G43945.1    FALSE
+#&gt; AT2G30933.1        200       P 6.822348e-05 AT2G30933.1     TRUE
+#&gt; AT2G30933.2        141    None 3.148265e-01 AT2G30933.2    FALSE
+#&gt; AT2G22470.1        107       P 3.425805e-08 AT2G22470.1     TRUE
+#&gt; AT2G43610.1        255    None 3.183057e-01 AT2G43610.1    FALSE</code></pre>
+<p>similarly to query <a href="http://gpcr.biocomp.unibo.it/predgpi/">PredGPI</a>:</p>
+<pre class="text"><code>at_gpi_pred &lt;- get_pred_gpi(at_nsp_3hyp,
+                            sequence,
+                            Transcript.id)</code></pre>
+<pre class="text"><code>head(at_gpi_pred)
+#&gt;            id omega_site specificity is.gpi
+#&gt; 1 AT2G43620.1        252       0.425  FALSE
+#&gt; 2 AT2G43945.1        268       0.478  FALSE
+#&gt; 3 AT2G30933.1        197       1.000   TRUE
+#&gt; 4 AT2G30933.2        139       0.478  FALSE
+#&gt; 5 AT2G22470.1        107       0.999   TRUE
+#&gt; 6 AT2G43610.1        260       0.160  FALSE</code></pre>
+</div>
+<div id="disorder-prediction" class="section level2">
+<h2 class="hasAnchor">
+<a href="#disorder-prediction" class="anchor"></a>Disorder prediction</h2>
+<p>A key structural feature of HRGPs, based on abundance of disorder-promoting residues, is that they are intrinsically disordered proteins. To identify potential disordered regions in proteins <code>ragp</code> contains <code>get_espritz</code> function which queries <a href="http://protein.bio.unipd.it/espritz/">ESpritz</a> <span class="citation">(Walsh et al. 2012)</span> web server. Three models trained on different data sets are available and can be selected via the argument <code>model</code>:</p>
+<ul>
+<li>‘X-Ray’ - based on missing atoms from the <a href="http://www.wwpdb.org/">Protein Data Bank</a> (PDB) X-ray solved structures. If this option is chosen then the predictors with short disorder options are executed.<br>
+</li>
+<li>‘Disprot’ - contains longer disorder segments compared to x-ray. In particular, <a href="http://www.disprot.org/">disprot</a> is a manually curated database which is often based on functional attributes of the disordered region was used for this definition. Disorder residues are defined if the disprot curators consider the residue to be disordered at least once. All other residues are considered ordered. If this option is chosen then the predictors with long disorder options are executed.<br>
+</li>
+<li>‘NMR’ - based on NMR mobility. NMR flexibility is calculated using the <a href="http://protein.bio.unipd.it/mobi/">Mobi server</a> <span class="citation">(Martin, Walsh, and Tosatto 2010)</span> optimized to replicate the ordered-disordered NMR definition used in CASP8.<br>
+These models provide quite different predictions. To query ESpritz:</li>
+</ul>
+<pre class="text"><code>at_espritz &lt;- get_espritz(at_nsp_3hyp,
+                          sequence,
+                          Transcript.id,
+                          model = "NMR")</code></pre>
+<p>The output of the function depends on the <code>simplify</code> argument. If <code>simplify = TRUE</code> (default) the output is a <code>data.frame</code> (one row per disordered region) with columns <code>start</code> and <code>end</code> which indicate the start and end of the predicted disordered region as well as the column <code>id</code> which is a protein identifier. When <code>simplify = FALSE</code> the output contains predicted probabilities of disorder for each amino acid.</p>
+</div>
+</div>
+<div id="protein-structure-diagram" class="section level1">
+<h1 class="hasAnchor">
+<a href="#protein-structure-diagram" class="anchor"></a>Protein structure diagram</h1>
 <p>All of the above mentioned protein features can be visualized using the function <code>plot_prot</code>. It accepts protein sequences in the form of strings, calls the above mentioned functions to obtain sequence features and returns a <code>ggplot</code> object:</p>
-<pre class="text"><code>ind &lt;- c(20, 23, 34, 52, 80, 127, 345) #some sequences
+<pre class="text"><code>ind &lt;- c(20, 23, 34, 52, 80, 127, 345) #some indexes which will be used to filter sequences 
 p1 &lt;- plot_prot(sequence = at_nsp$sequence[ind],
                 id = at_nsp$Transcript.id[ind],
                 dom_sort = "ievalue") #to plot domains by independent e-value (lower on top)
@@ -458,7 +467,7 @@ p1</code></pre>
 <p>The diagram contains the following elements:</p>
 <ul>
 <li>Transmembrane regions (TM) are shown in yellow, extracellular regions are indicated by the dashed line above the sequences while intracellular regions are indicated by the dashed line bellow the sequence (as predicted by Phobius).</li>
-<li>Signal peptides (as predicted by SignalP) are indicated by the thick red line on the N-terminal side. Signal peptides (as predicted by Phobius) can be deduced by the start of the dashed lines.</li>
+<li>Signal peptides (as predicted by SignalP) are indicated by the thick red line on the N-terminal side.</li>
 <li>GPI attachment sites (as predicted by Big Pi or PredGPI depending on the argument <code>gpi</code>) are indicated by blue rhomboids.</li>
 <li>Hydroxyprolines (as predicted by <code>predict_hyp</code>) are indicated by vertical dark gray lines.</li>
 <li>AG glycomodul spans are indicated by the light grey background.</li>
@@ -520,7 +529,6 @@ p3</code></pre>
            fill = "dodgerblue",
            size = 3)</code></pre>
 <p><img src="p1_anno.svg" width="100%" style="display: block; margin: auto;"></p>
-</div>
 <div id="acknowledgements" class="section level2">
 <h2 class="hasAnchor">
 <a href="#acknowledgements" class="anchor"></a>Acknowledgements</h2>
@@ -568,6 +576,7 @@ p3</code></pre>
 </div>
 </div>
 </div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -577,15 +586,26 @@ p3</code></pre>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#introduction">Introduction</a></li>
       <li><a href="#data-import">Data import</a></li>
-      <li><a href="#predicting-n-terminal-secretory-signal-sequences-n-sp">Predicting N-terminal secretory signal sequences (N-sp)</a></li>
+      <li>
+<a href="#filtering-hrgps">Filtering HRGPs</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#predicting-n-terminal-secretory-signal-sequences-n-sp">Predicting N-terminal secretory signal sequences (N-sp)</a></li>
       <li><a href="#predicting-proline-hydroxylation">Predicting proline hydroxylation</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#analyzing-hrgps">Analyzing HRGPs</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#arabinogalactan-identification">Arabinogalactan identification</a></li>
+      <li><a href="#motif-and-amino-acid-bias-classification---maab">Motif and amino acid bias classification - MAAB</a></li>
       <li><a href="#domain-annotation-and-gpi-prediction">Domain annotation and GPI prediction</a></li>
       <li><a href="#disorder-prediction">Disorder prediction</a></li>
-      <li><a href="#arabinogalactan-identification">Arabinogalactan identification</a></li>
-      <li><a href="#motif-and-amino-acid-bias-classification---maab">Motif and amino acid bias classification - MAAB</a></li>
-      <li><a href="#protein-structure-diagram">Protein structure diagram</a></li>
-      <li><a href="#acknowledgements">Acknowledgements</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#protein-structure-diagram">Protein structure diagram</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#acknowledgements">Acknowledgements</a></li>
       <li><a href="#references">References</a></li>
+      </ul>
+</li>
       </ul>
 </div>
       </div>

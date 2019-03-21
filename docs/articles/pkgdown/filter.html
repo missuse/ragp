@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">ragp</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9100</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0.0</span>
       </span>
     </div>
 
@@ -192,19 +192,19 @@ at_nsp_filtered &lt;-<span class="st"> </span><span class="kw">filter</span>(at_
 <p>The object returned by <code>predict_hyp</code> is a list with two elements <code>prediction</code> and <code>sequence</code>. The <code>prediction</code> element is a data frame containing the probability of hydroxylation for each P in each sequence along with the amino acid span used for prediction. First few rows of this element:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(at_hyp<span class="op">$</span>prediction) </code></pre></div>
 <pre><code>#&gt;            id                substr P_pos  prob HYP
-#&gt; 1 AT2G43600.1 FSQNCMDTSCPGLKECCSRWG    31 0.016  No
-#&gt; 2 AT2G43600.1 EYCGFFCFSGPCNIKGKSYGY    58 0.017  No
-#&gt; 3 AT2G43600.1 YGYDYNVDAGPRGKIETVITS    76 0.031  No
-#&gt; 4 AT2G43600.1 ERYCSKSKKYPCEPGKNYYGR   163 0.037  No
-#&gt; 5 AT2G43600.1 CSKSKKYPCEPGKNYYGRGLL   166 0.023  No
-#&gt; 6 AT2G43600.1 YYGAGKHLGLPLLKDPDLVSR   194 0.018  No</code></pre>
+#&gt; 1 AT2G43600.1 FSQNCMDTSCPGLKECCSRWG    31 0.015  No
+#&gt; 2 AT2G43600.1 EYCGFFCFSGPCNIKGKSYGY    58 0.016  No
+#&gt; 3 AT2G43600.1 YGYDYNVDAGPRGKIETVITS    76 0.018  No
+#&gt; 4 AT2G43600.1 ERYCSKSKKYPCEPGKNYYGR   163 0.015  No
+#&gt; 5 AT2G43600.1 CSKSKKYPCEPGKNYYGRGLL   166 0.014  No
+#&gt; 6 AT2G43600.1 YYGAGKHLGLPLLKDPDLVSR   194 0.015  No</code></pre>
 <p>The <code>sequence</code> (<code>at_hyp$sequence</code>) element is a data frame with the same sequences as provided in the function call in which prolines (P) are replaced by hydroxyprolines (O) at positions predicted to be hydroxylated. This element can be useful as input to <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> as explained in <a href="https://missuse.github.io/ragp/articles/pkgdown/analyse">HRGP analysis</a> tutorial.</p>
-<p>The predictions are based on a probability threshold of 0.3 which offers the best trade-off between specificity and sensitivity. To increase specificity at the cost of sensitivity the threshold can be increased using the <code>tprob</code> argument:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">at_hyp2 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/predict_hyp.html">predict_hyp</a></span>(<span class="dt">data =</span> at_nsp2,
+<p>The predictions are based on a probability threshold of 0.224 which offers the best trade-off between specificity and sensitivity. To increase specificity at the cost of sensitivity the threshold can be increased using the <code>tprob</code> argument:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">at_hyp2 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/predict_hyp.html">predict_hyp</a></span>(<span class="dt">data =</span> at_nsp_filtered,
                        <span class="dt">sequence =</span> sequence,
                        <span class="dt">id =</span> Transcript.id,
                        <span class="dt">tprob =</span> <span class="fl">0.6</span>)</code></pre></div>
-<p>The <code>at_hyp</code> object can be used to filter the sequences that contain more than a certain number of hydroxyprolines. The default threshold of 0.3 will be used. To filter sequences with three or more O:</p>
+<p>The <code>at_hyp</code> object can be used to filter the sequences that contain more than a certain number of hydroxyprolines. The default threshold will be used. To filter sequences with three or more O:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">at_hyp<span class="op">$</span>prediction <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#the prediction element</span>
 <span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#group by id</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">sum</span>(HYP <span class="op">==</span><span class="st"> "Yes"</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#calculate the number of hydroxyprolines per sequence</span>
@@ -213,7 +213,7 @@ at_nsp_filtered &lt;-<span class="st"> </span><span class="kw">filter</span>(at_
 
 at_nsp_filtered <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(Transcript.id <span class="op">%in%</span><span class="st"> </span>at_3hyp) -&gt;<span class="st"> </span>at_nsp_3hyp <span class="co">#filter sequences from `at_nsp_filtered`</span></code></pre></div>
-<p>There are 348 sequences that satisfy this condition.</p>
+<p>There are 398 sequences that satisfy this condition.</p>
 <p>After the filtering step the sequences can be analyzed by <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> to identify arabinogalactan motifs, by <code><a href="../../reference/maab.html">maab()</a></code> to classify prototypical HRGPs, by <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code> and <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> to predict GPI anchor sites in sequences and by <code><a href="../../reference/get_hmm.html">get_hmm()</a></code> and <code><a href="../../reference/get_espritz.html">get_espritz()</a></code> to identify domains and disordered regions. This is explained in <a href="https://missuse.github.io/ragp/articles/pkgdown/analyse">HRGP analysis</a> tutorial.</p>
 </div>
 <div id="references" class="section level2 unnumbered">

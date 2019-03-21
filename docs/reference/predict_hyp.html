@@ -33,7 +33,7 @@
 <meta property="og:title" content="Predict hydroxyproline positions in plant proteins based on primary structure — predict_hyp" />
 
 <meta property="og:description" content="predict_hyp is a hydroxyproline site prediction algorithm for plant proteins, based on the xgboost distributed gradient boosting library.
-It was trained on plant sequences with experimentally determined 4-hydroxyprolines from uniprot data base. Prediction is not possible for prolines which are within 10 N-terminal and 6 C-terminal amino acids, they will be excluded from output." />
+It was trained on plant sequences with experimentally determined 4-hydroxyprolines from swissprot data base. Prediction is not possible for prolines which are within 10 N-terminal and 6 C-terminal amino acids (V1 model version) and 10 N-terminal and 7 C-terminal amino acids (V2 model version), they will be excluded from output." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -62,7 +62,7 @@ It was trained on plant sequences with experimentally determined 4-hydroxyprolin
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9100</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0.0</span>
       </span>
     </div>
 
@@ -133,7 +133,7 @@ It was trained on plant sequences with experimentally determined 4-hydroxyprolin
     <div class="ref-description">
     
     <p>predict_hyp is a hydroxyproline site prediction algorithm for plant proteins, based on the xgboost distributed gradient boosting library.
-It was trained on plant sequences with experimentally determined 4-hydroxyprolines from uniprot data base. Prediction is not possible for prolines which are within 10 N-terminal and 6 C-terminal amino acids, they will be excluded from output.</p>
+It was trained on plant sequences with experimentally determined 4-hydroxyprolines from swissprot data base. Prediction is not possible for prolines which are within 10 N-terminal and 6 C-terminal amino acids (V1 model version) and 10 N-terminal and 7 C-terminal amino acids (V2 model version), they will be excluded from output.</p>
     
     </div>
 
@@ -149,7 +149,8 @@ It was trained on plant sequences with experimentally determined 4-hydroxyprolin
 <span class='fu'>predict_hyp</span>(<span class='no'>data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>predict_hyp</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='kw'>tprob</span> <span class='kw'>=</span> <span class='fl'>0.3</span>,
+<span class='fu'>predict_hyp</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>sequence</span>, <span class='no'>id</span>,
+  <span class='kw'>version</span> <span class='kw'>=</span> <span class='st'>"V2"</span>, <span class='kw'>tprob</span> <span class='kw'>=</span> <span class='fu'>ifelse</span>(<span class='no'>version</span> <span class='kw'>==</span> <span class='st'>"V1"</span>, <span class='fl'>0.3</span>, <span class='fl'>0.224</span>),
   <span class='kw'>split</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -169,11 +170,15 @@ It was trained on plant sequences with experimentally determined 4-hydroxyprolin
     </tr>
     <tr>
       <th>id</th>
-      <td><p>A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.</p></td>
+      <td><p>A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank. Ids should be unique.</p></td>
+    </tr>
+    <tr>
+      <th>version</th>
+      <td><p>A string indicating which model version to use: the first version "V1", or the second version "V2". Default is "V2".</p></td>
     </tr>
     <tr>
       <th>tprob</th>
-      <td><p>A numeric value indicating the threshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.3 offering a tradeoff between sensitivity and specificity.</p></td>
+      <td><p>A numeric value indicating the threshold for prediction. Acceptable values are in 0 - 1 range. At default set to 0.3 for "V1" model and 0.224 for "V2" model, offering a tradeoff between sensitivity and specificity.</p></td>
     </tr>
     <tr>
       <th>split</th>

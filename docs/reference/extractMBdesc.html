@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.2.1.9100</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.0.0</span>
       </span>
     </div>
 
@@ -135,7 +135,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>extractMBdesc</span>(<span class='no'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>extractMBdesc</span>(<span class='no'>x</span>, <span class='no'>mat</span>, <span class='no'>nlag</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -144,11 +144,19 @@
       <th>x</th>
       <td><p>A vector of k-mers</p></td>
     </tr>
+    <tr>
+      <th>mat</th>
+      <td><p>A matrix with amino acid atributes. Columns are amino acids, rows are atributes</p></td>
+    </tr>
+    <tr>
+      <th>nlag</th>
+      <td><p>The lag parameter</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A matrix with the Normalized Moreau-Broto Autocorrelation Descriptor (dim: 36)</p>
+    <p>A matrix with the Normalized Moreau-Broto Autocorrelation Descriptor (dim: nlag * nrow(mat))</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
