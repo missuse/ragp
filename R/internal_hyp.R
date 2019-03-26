@@ -309,6 +309,7 @@ getKmer <- function(sequence, id, kmer) {
 sub_hyp <- function (sequence, id, hyp){
   sequence <- unlist(lapply(id, function(x) {
     hyp <- hyp[hyp$id == x, ]
+    hyp <- hyp[!is.na(hyp$HYP), ]
     sequencei <- as.character(sequence[id == x])
     if(nrow(hyp) == 0){
       return(sequencei)
