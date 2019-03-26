@@ -306,18 +306,24 @@ getKmer <- function(sequence, id, kmer) {
 #' 
 #' @seealso \code{\link[ragp]{predict_hyp}}
 
-sub_hyp <- function(sequence, id, hyp) {
+sub_hyp <- function (sequence, id, hyp){
   sequence <- unlist(lapply(id, function(x) {
     hyp <- hyp[hyp$id == x, ]
-    p_pos <- as.numeric(as.character(hyp$P_pos[hyp$HYP == 
-                                                 "Yes"]))
+    hyp <- hyp[!is.na(hyp$HYP),]
     sequencei <- as.character(sequence[id == x])
+    if(nrow(hyp) == 0){
+      return(sequencei)
+    }
+    p_pos <- as.numeric(
+      as.character(
+        hyp$P_pos[hyp$HYP == "Yes"]))
     for (i in p_pos) {
       substr(sequencei, start = i, stop = i) <- "O"
     }
-    sequencei
+    return(sequencei)
   }))
 }
+
 
 
 
