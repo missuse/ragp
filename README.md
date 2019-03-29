@@ -1,11 +1,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-ragp
-====
+ragp - hydroxyproline aware filtering of hydroxyproline rich glycoprotein sequences
+===================================================================================
 
 [![Build Status](https://travis-ci.org/missuse/ragp.svg?branch=master)](https://travis-ci.org/missuse/ragp) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-`ragp` is primarily designed for mining and analysis of plant hydroxyproline rich glycoproteins. It incorporates a novel concept with an additional analysis layer where the probability of proline hydroxylation is estimated by a machine learning model. Only proteins predicted to contain hydroxyprolines are further analysed for HRGP characteristic motifs and features. `ragp` can also be used for protein annotation by obtaining predictions for several protein features based on sequence (secretory signals, transmembrane regions, domains, glycosylphosphatidylinositol attachment sites and disordered regions). Additionally ragp provides tools for visualization of the mentioned attributes.
+`ragp` is an R package primarily designed for mining and analysis of plant hydroxyproline rich glycoproteins. It incorporates a novel concept with an additional analysis layer where the probability of proline hydroxylation is estimated by a machine learning model. Only proteins predicted to contain hydroxyprolines are further analysed for HRGP characteristic motifs and features. `ragp` can also be used for protein annotation by obtaining predictions for several protein features based on sequence (secretory signals, transmembrane regions, domains, glycosylphosphatidylinositol attachment sites and disordered regions). Additionally ragp provides tools for visualization of the mentioned attributes.
 
 Short example:
 
