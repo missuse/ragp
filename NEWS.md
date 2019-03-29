@@ -8,6 +8,8 @@
 
 * `predict_hyp()` now checks if all provided ids are unique. Previously non unique ids caused an error at the end of computation. 
 
+* `predict_hyp()` `sequence` output has changed for sequences containing non amino acid letters. Previously NA was returned for such sequences. At present all "P"" for which the probability is higher then the defined threshold (`tprob` argument) are changed to "O"" and all others are left as "P".
+
 #ragp 0.2.1.9100
 
 ##Bug Fixes and Improvements
@@ -21,7 +23,7 @@
 
 ##Bug Fixes and Improvements
 
-* `get_phobius()`, `get_big_pi()`, `get_pred_gpi()`, `maab` and `plot_prot()`, gain an additional argument `progress`. 
+* `get_phobius()`, `get_big_pi()`, `get_pred_gpi()`, `maab()` and `plot_prot()`, gain an additional argument `progress`. 
 `progress` is a logical value determining whether to show the progress bar, (default `FALSE`).
 
 * `get_targetp()`, `get_signalp()` and `get_hmm()` argument `progress` is now set to `FALSE` at default.
