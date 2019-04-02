@@ -142,6 +142,7 @@
 <ul>
 <li><p><code><a href="../reference/predict_hyp.html">predict_hyp()</a></code> now checks if all provided ids are unique. Previously non unique ids caused an error at the end of computation.</p></li>
 <li><p><code><a href="../reference/predict_hyp.html">predict_hyp()</a></code> <code>sequence</code> output has changed for sequences containing non amino acid letters. Previously NA was returned for such sequences. At present all “P”" for which the probability is higher then the defined threshold (<code>tprob</code> argument) are changed to “O”" and all others are left as “P”.</p></li>
+<li><p><code><a href="../reference/get_big_pi.html">get_big_pi()</a></code> and <code><a href="../reference/get_pred_gpi.html">get_pred_gpi()</a></code> now return <code>FALSE</code> in respective <code>is.bigpi</code> and <code>is.gpi</code> columns when the servers are unable to make a prediction due to non-amino acid letters or length of the sequence.</p></li>
 </ul>
 </div>
 </div>
