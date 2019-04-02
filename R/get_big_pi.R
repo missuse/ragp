@@ -26,6 +26,8 @@
 #'   \item{prediction}{data frame, resembling the one returned by simplify == TRUE, along with alternative site predictions (if present)}
 #'   \item{calculation}{data frame, with profile dependent and profile independent scores}
 #'   }
+#'   
+#' @note If the server is unable to make a prediction due to non-amino acid letters or length of the sequence, the returned prediction is FALSE (is.bigpi column).
 #'
 #' @source \url{http://mendel.imp.ac.at/gpi/plant_server.html}
 #' @references Eisenhaber B. Wildpaner M. Schultz CJ. Borner GHH. Dupree P. Eisenhaber F. (2003) Glycosylphosphatidylinositol lipid anchoring of plant proteins. Sensitive prediction from sequence- and genome-wide studies for Arabidopsis and rice. Plant Physiology 133(4): 1691-701

@@ -18,7 +18,7 @@
 #' \item{is.gpi}{Logical, is the specificity of the prediction higher than the set threshold specificity}
 #'}
 #'
-#' @note This function creates temporary files in the working directory.
+#' @note This function creates temporary files in the working directory. If the server is unable to make a prediction due to non-amino acid letters or length of the sequence, the returned prediction is FALSE (is.gpi column).
 #'
 #' @source \url{http://gpcr.biocomp.unibo.it/predgpi/pred.htm}
 #'
@@ -175,17 +175,21 @@ get_pred_gpi.character <- function(data,
   }
   collected_res <- do.call(rbind,
                            collected_res)
-  collected_res <- merge(data.frame(id),
+  id_num <- as.numeric(factor(id, levels = id))
+  collected_res <- merge(data.frame(id, id_num),
                          collected_res,
                          all.x = TRUE,
                          sort = FALSE)
-  collected_res
+  collected_res <- collected_res[order(collected_res$id_num),]
+  rownames(collected_res) <- 1:nrow(collected_res)
+  collected_res <- collected_res[,-2]
   collected_res$id <- as.character(collected_res$id)
   collected_res$omega_site <- as.integer(collected_res$omega_site)
   collected_res$specificity <- sub("%$", "", collected_res$specificity)
   collected_res$specificity <- as.numeric(collected_res$specificity)/100
   collected_res$is.gpi <- collected_res$specificity >= spec
-  collected_res
+  collected_res$is.gpi[is.na(collected_res$is.gpi)] <- FALSE
+  return(collected_res)
 }
 
 

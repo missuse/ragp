@@ -58,6 +58,9 @@ A list of predictions, each element named according to the sequence id, containi
 \description{
 big-PI Plant Predictor is a web server utilizing a scoring algorithm for prediction of GPI modification sites in plants.
 }
+\note{
+If the server is unable to make a prediction due to non-amino acid letters or length of the sequence, the returned prediction is FALSE (is.bigpi column).
+}
 \examples{
 library(ragp)
 data(at_nsp)

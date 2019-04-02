@@ -61,6 +61,7 @@ pfam2go <- function(data_pfam, pfam){
                           all.y = FALSE,
                           sort = FALSE)
   out <- out[order(out[["rownames_temp"]]),]
+  rownames(out) <- 1:nrow(out)
   out <- out[,setdiff(names(out),
                       c("acc_temp",
                         "rownames_temp"))]
