@@ -10,6 +10,8 @@
 
 * `predict_hyp()` `sequence` output has changed for sequences containing non amino acid letters. Previously NA was returned for such sequences. At present all "P"" for which the probability is higher then the defined threshold (`tprob` argument) are changed to "O"" and all others are left as "P".
 
+* `get_big_pi()` and `get_pred_gpi()` now return `FALSE` in respective `is.bigpi` and `is.gpi` columns when the servers are unable to make a prediction due to non-amino acid letters or length of the sequence.
+
 #ragp 0.2.1.9100
 
 ##Bug Fixes and Improvements
