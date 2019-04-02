@@ -48,7 +48,7 @@ A data frame with columns:
 PredGPI web server is a predictor of GPI modification sites.
 }
 \note{
-This function creates temporary files in the working directory. If the server is unable to make a prediction due to non-amino acid letters or length of the sequence, the returned prediction is FALSE (is.gpi column).
+This function creates temporary files in the working directory. If the server is unable to make a prediction due to non-amino acid letters or length of the sequence, the returned prediction is NA (is.gpi column).
 }
 \examples{
 library(ragp)

@@ -17,7 +17,7 @@ extractMBdesc(x, mat, nlag)
 A matrix with the Normalized Moreau-Broto Autocorrelation Descriptor (dim: nlag * nrow(mat))
 }
 \description{
-This function calculates the normalized Moreau-Broto autocorrelation descriptor with lag 6.
+This function calculates the normalized Moreau-Broto autocorrelation descriptor.
 }
 \details{
 Normalized Moreau-Broto Autocorrelation Descriptor is calculated based on the following amino acid attributes:

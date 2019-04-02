@@ -1,6 +1,6 @@
 #' Normalized Moreau-Broto Autocorrelation Descriptor
 #'
-#' This function calculates the normalized Moreau-Broto autocorrelation descriptor with lag 6.
+#' This function calculates the normalized Moreau-Broto autocorrelation descriptor.
 #'  
 #' @param x A vector of k-mers
 #' @param mat A matrix with amino acid atributes. Columns are amino acids, rows are atributes

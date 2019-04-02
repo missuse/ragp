@@ -1,3 +1,11 @@
+#ragp 0.3.0.0001
+
+##Bug Fixes and Improvements
+
+* `get_big_pi()` and `get_pred_gpi()` now return `NA` in respective `is.bigpi` and `is.gpi` columns when the servers are unable to make a prediction due to non-amino acid letters or length of the sequence.
+
+* `maab()` now correctly does not resolve class ambiguities when the logical vector provided as `gpi` argument contains `NA` values. Previously it returned `NA` as `maab_class`. This is useful when `maab()` is called with `get_gpi = 'predgpi'` or `get_gpi = 'bigpi'` arguments, and the corresponding servers are unable to make a prediction for a sequence due to non-amino acid letters or length of the sequence.
+
 #ragp 0.3.0.0000
 
 ##New Features
@@ -9,8 +17,6 @@
 * `predict_hyp()` now checks if all provided ids are unique. Previously non unique ids caused an error at the end of computation. 
 
 * `predict_hyp()` `sequence` output has changed for sequences containing non amino acid letters. Previously NA was returned for such sequences. At present all "P"" for which the probability is higher then the defined threshold (`tprob` argument) are changed to "O"" and all others are left as "P".
-
-* `get_big_pi()` and `get_pred_gpi()` now return `FALSE` in respective `is.bigpi` and `is.gpi` columns when the servers are unable to make a prediction due to non-amino acid letters or length of the sequence.
 
 #ragp 0.2.1.9100
 

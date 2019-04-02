@@ -27,7 +27,7 @@
 #'   \item{calculation}{data frame, with profile dependent and profile independent scores}
 #'   }
 #'   
-#' @note If the server is unable to make a prediction due to non-amino acid letters or length of the sequence, the returned prediction is FALSE (is.bigpi column).
+#' @note If the server is unable to make a prediction due to non-amino acid letters or length of the sequence, the returned prediction is NA (is.bigpi column).
 #'
 #' @source \url{http://mendel.imp.ac.at/gpi/plant_server.html}
 #' @references Eisenhaber B. Wildpaner M. Schultz CJ. Borner GHH. Dupree P. Eisenhaber F. (2003) Glycosylphosphatidylinositol lipid anchoring of plant proteins. Sensitive prediction from sequence- and genome-wide studies for Arabidopsis and rice. Plant Physiology 133(4): 1691-701
@@ -490,6 +490,9 @@ get_big_pi.default <- function(data = NULL,
     res_out <- do.call(rbind, res_out)
     res_out$id <- id
     res_out$is.bigpi <- res_out$Quality != "None"
+    res_out$is.bigpi <- ifelse(is.na(res_out$PValue),
+                               NA, 
+                               res_out$is.bigpi)
   }
   return(res_out)
 }

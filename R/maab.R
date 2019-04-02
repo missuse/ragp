@@ -481,22 +481,22 @@ maab.default <- function(data = NULL,
     if(length(gpi) != length(sequence)){
       stop("gpi must be the same length as the provided sequences")
     }
-    maab_class <- ifelse(maab_class == "1/4" & gpi,
+    maab_class <- ifelse(maab_class == "1/4" & gpi & !is.na(gpi),
                          "1",
                          maab_class)
-    maab_class <- ifelse(maab_class == "1/4" & !gpi,
+    maab_class <- ifelse(maab_class == "1/4" & !gpi & !is.na(gpi),
                          "4",
                          maab_class)
-    maab_class <- ifelse(maab_class == "2/9" & gpi,
+    maab_class <- ifelse(maab_class == "2/9" & gpi & !is.na(gpi),
                          "9",
                          maab_class)
-    maab_class <- ifelse(maab_class == "2/9" & !gpi,
+    maab_class <- ifelse(maab_class == "2/9" & !gpi & !is.na(gpi),
                          "2",
                          maab_class)
-    maab_class <- ifelse(maab_class == "3/14" & gpi,
+    maab_class <- ifelse(maab_class == "3/14" & gpi & !is.na(gpi),
                          "14",
                          maab_class)
-    maab_class <- ifelse(maab_class == "3/14" & !gpi,
+    maab_class <- ifelse(maab_class == "3/14" & !gpi & !is.na(gpi),
                          "3",
                          maab_class)
   }
