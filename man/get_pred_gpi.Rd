@@ -38,7 +38,7 @@ get_pred_gpi(data, ...)
 \value{
 A data frame with columns:
 \describe{
-\item{id}{Character, name of the submitted sequence.}
+\item{id}{Character, name of the submitted sequence truncated to 30 characters.}
 \item{omega_site}{Integer, indicating the sequence position of the omega-site.}
 \item{specificity}{Numeric, indicating the specificity of the prediction.}
 \item{is.gpi}{Logical, is the specificity of the prediction higher than the set threshold specificity}
@@ -48,7 +48,7 @@ A data frame with columns:
 PredGPI web server is a predictor of GPI modification sites.
 }
 \note{
-This function creates temporary files in the working directory. If the server is unable to make a prediction due to non-amino acid letters or length of the sequence, the returned prediction is NA (is.gpi column).
+This function creates temporary files in the working directory. If the server is unable to make a prediction due to non-amino acid letters or length of the sequence, the returned prediction is NA (is.gpi column). Protein ids should be shorter then 30 characters.
 }
 \examples{
 library(ragp)

@@ -72,7 +72,7 @@ A data frame with columns:
 TargetP 1.1 predicts the subcellular location of eukaryotic proteins. The location assignment is based on the predicted presence of any of the N-terminal presequences: chloroplast transit peptide (cTP), mitochondrial targeting peptide (mTP) or secretory pathway signal peptide (SP). TargetP uses ChloroP and SignalP to predict cleavage sites for cTP and SP, respectively. For the sequences predicted to contain an N-terminal presequence a potential cleavage site is also predicted.
 }
 \note{
-This function creates temporary files in the working directory.
+This function creates temporary files in the working directory. Protein ids should be shorter then 20 characters due to server side truncation.
 }
 \examples{
 library(ragp)
