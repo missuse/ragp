@@ -97,7 +97,7 @@ get_phobius.character <- function(data,
                                 max = len,
                                 style = 3)
   }
-  url <- "http://phobius.binf.ku.dk/cgi-bin/predict.pl"
+  url <- "http://phobius.sbc.su.se/cgi-bin/predict.pl"
   collected_res = vector("list", len)
   for (i in 1 : len){
     file_up <- httr::upload_file(file_list[i])
