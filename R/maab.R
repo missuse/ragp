@@ -307,8 +307,7 @@ maab.default <- function(data = NULL,
   for(i in seq_along(hrgp_motif)){
     counts[[i]] <- stringr::str_count(sequencei,
                                       hrgp_motif[i])
-    stringr::str_extract_all(sequencei,
-                             hrgp_motif[i])
+
     lens[[i]] <- unlist(lapply(stringr::str_extract_all(sequencei,
                                                         hrgp_motif[i]),
                                function(x){
