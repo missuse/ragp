@@ -327,19 +327,25 @@ maab.default <- function(data = NULL,
                     counts)
   out_percent <- do.call(cbind,
                          out_percent)
-  counts2 <- data.frame(ext_sp = counts[,"ext_sp"],
+
+  counts2 <- data.frame(ext_sp = counts[,"ext_sp",
+                                        drop = FALSE],
                         ext_tyr = rowSums(counts[,c("ext_fyxy_count",
                                                     "ext_khy_count",
                                                     "ext_vyhkde_count",
                                                     "ext_vxy_count",
-                                                    "ext_yy_count")]),
+                                                    "ext_yy_count"),
+                                                 drop = FALSE]),
                         prp = rowSums(counts[,c("prp_ppvqk_count",
                                                 "prp_ppvxkt_count",
-                                                "ppr_kkpcpp")]),
+                                                "ppr_kkpcpp"),
+                                             drop = FALSE]),
                         agp = rowSums(counts[,c("agp_atgvppp_count",
-                                                "agp_astgvp_count")]),
+                                                "agp_astgvp_count"),
+                                             drop = FALSE]),
                         out_percent,
                         coverage = coverage)
+  
   predict_maab <- function(maab){
     past_percent <- maab$past_percent
     pvyk_percent <- maab$pvyk_percent
