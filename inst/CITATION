@@ -1,0 +1,18 @@
+bibentry(
+  bibtype = "article",
+  key = "ragp",
+  title = "{{{ragp}}: {{Pipeline for mining of plant hydroxyproline}}-{{rich glycoproteins with implementation in R}}}",
+  author = c(
+    person("Milan", "Dragićević"),
+    person("Danijela", "Paunović"),
+    person("Milica", "Bogdanović"),
+    person("Slađana", "Todorović"),
+    person("Ana", "Simonović")),
+  journal = "Glycobiology",
+  eprint = "cwz072",
+  publisher = "Oxford University Press",
+  year = "2019",
+  date = "2019-09-11",  
+  url = "https://academic.oup.com/glycob/advance-article-abstract/doi/10.1093/glycob/cwz072/5567434",
+  doi = "https://doi.org/10.1093/glycob/cwz072"
+)
