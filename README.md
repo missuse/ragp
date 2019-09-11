@@ -67,7 +67,7 @@ Citation
 
 If you find `ragp` useful in your own research please cite our Glycobiology [paper](https://academic.oup.com/glycob/advance-article-abstract/doi/10.1093/glycob/cwz072/5567434) (Preprint).
 
-> Milan B Dragićević, Danijela M Paunović, Milica D Bogdanović, Slađana I Todorović, Ana D Simonović, ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R, Glycobiology, cwz072, <https://doi.org/10.1093/glycob/cwz072>
+> Milan B Dragićević, Danijela M Paunović, Milica D Bogdanović, Slađana I Todorović, Ana D Simonović (2019) ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R, Glycobiology, cwz072, <https://doi.org/10.1093/glycob/cwz072>
 
 You can get citation info via `citation("ragp")` or by copying the following BibTex entry:
 
