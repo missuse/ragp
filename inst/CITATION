@@ -1,7 +1,7 @@
 bibentry(
   bibtype = "article",
   key = "ragp",
-  title = "{{{ragp}}: {{Pipeline for mining of plant hydroxyproline}}-{{rich glycoproteins with implementation in R}}}",
+  title = "ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R",
   author = c(
     person("Milan", "Dragićević"),
     person("Danijela", "Paunović"),
