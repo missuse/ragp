@@ -68,16 +68,15 @@ Citation
 If you find `ragp` useful in your own research please cite our Glycobiology [paper](https://academic.oup.com/glycob/advance-article-abstract/doi/10.1093/glycob/cwz072/5567434) (Preprint). You can get citation info via `citation("ragp")` or by copying the following BibTex entry:
 
 ``` bibtex
-@article{ragp,
-  title = {{{ragp}}: {{Pipeline for mining of plant hydroxyproline}}-{{rich glycoproteins with implementation in R}}},
-  url = {https://academic.oup.com/glycob/advance-article-abstract/doi/10.1093/glycob/cwz072/5567434},
-  shorttitle = {ragp},
-  journal = {Glycobiology},
-  eprint = {cwz072}
-  publisher = {Oxford University Press},
-  author = {Dragićević, Milan B and Paunović, Danijela M and Bogdanović, Milica D and Todorović, Slađana I and Simonović, Ana D},
-  date = {2019-09-11},
-  doi = {https://doi.org/10.1093/glycob/cwz072}
+@article{10.1093/glycob/cwz072,
+    author = {Dragićević, Milan B and Paunović, Danijela M and Bogdanović, Milica D and Todorović, Slađana I and Simonović, Ana D},
+    title = "{ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R}",
+    journal = {Glycobiology},
+    year = {2019},
+    month = {09},
+    issn = {1460-2423},
+    doi = {10.1093/glycob/cwz072},
+    url = {https://doi.org/10.1093/glycob/cwz072}
 }
 ```
 
