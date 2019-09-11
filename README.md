@@ -65,11 +65,11 @@ If you encounter undesired behavior in `ragp` functions or you have ideas how to
 Citation
 --------
 
-If you find `ragp` useful in your own research please cite our Glycobiology [paper](https://academic.oup.com/glycob/advance-article-abstract/doi/10.1093/glycob/cwz072/5567434) (Preprint). You can get citation info via `citation("ragp")` or by coping the following BibTex entry:
+If you find `ragp` useful in your own research please cite our Glycobiology [paper](https://academic.oup.com/glycob/advance-article-abstract/doi/10.1093/glycob/cwz072/5567434) (Preprint). You can get citation info via `citation("ragp")` or by copying the following BibTex entry:
 
 ``` bibtex
 @article{ragp,
-  title = {ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R},
+  title = {{{ragp}}: {{Pipeline for mining of plant hydroxyproline}}-{{rich glycoproteins with implementation in R}}},
   url = {https://academic.oup.com/glycob/advance-article-abstract/doi/10.1093/glycob/cwz072/5567434},
   shorttitle = {ragp},
   journal = {Glycobiology},
