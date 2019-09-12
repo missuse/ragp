@@ -20,7 +20,8 @@ get_hmm(data, ...)
 \method{get_hmm}{list}(data, ...)
 
 \method{get_hmm}{default}(data = NULL, sequence, id, verbose = FALSE,
-  sleep = 1, attempts = 2L, timeout = 10, progress = FALSE, ...)
+  sleep = 1, attempts = 2L, timeout = 10, progress = FALSE,
+  ievalue = NULL, bitscore = NULL, ...)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
@@ -40,6 +41,10 @@ get_hmm(data, ...)
 \item{timeout}{Numeric, time in seconds to wait for server response.}
 
 \item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
+
+\item{ievalue}{Numeric, all sequences with independent E-value lower or equal to this value will be retained in the function output. Used to filter out low similarity matches. If set some queried sequences might be discarded from the output. Suggested values: 1e-2 - 1e-5.}
+
+\item{bitscore}{Numeric, all sequences with bitscore greater or equal to this value will be retained in the function output. Used to filter out low similarity. If set some queried sequences might be discarded from the output. Suggested values: 10 - 20.}
 }
 \value{
 A data frame with columns:

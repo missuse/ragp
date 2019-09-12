@@ -2,6 +2,15 @@
 
 ##Bug Fixes and Improvements
 
+* `maab()` now correctly performes when only a single protein sequence is provided as an argument. 
+
+* `get_hmm()` receives additional numeric arguments: `ievalue` and `bitscore`. These arguments are used to filter sequnces with lower or equal `ievalue` and higher or equal `bitscore` in the output. This is usefull when used from `plot_prot()` to avoid ploting weakly identified domains. 
+
+
+#ragp 0.3.0.0001
+
+##Bug Fixes and Improvements
+
 * `get_big_pi()` and `get_pred_gpi()` now return `NA` in respective `is.bigpi` and `is.gpi` columns when the servers are unable to make a prediction due to non-amino acid letters or length of the sequence.
 
 * `maab()` now correctly does not resolve class ambiguities when the logical vector provided as `gpi` argument contains `NA` values. Previously it returned `NA` as `maab_class`. This is useful when `maab()` is called with `get_gpi = 'predgpi'` or `get_gpi = 'bigpi'` arguments, and the corresponding servers are unable to make a prediction for a sequence due to non-amino acid letters or length of the sequence.

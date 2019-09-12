@@ -43,7 +43,7 @@ plot_prot(sequence, id, hyp_col = "#868686FF", gpi_col = "#0073C2FF",
 
 \item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
 
-\item{...}{Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}} and \code{\link[ragp]{scan_ag}}.}
+\item{...}{Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.}
 }
 \value{
 A ggplot2 plot object
@@ -60,7 +60,16 @@ pred <- plot_prot(sequence = at_nsp$sequence[ind],
 pred +
   theme(legend.position = "bottom",
         legend.direction = "vertical")
-
+        
+pred <- plot_prot(sequence = at_nsp$sequence[ind],
+                  id = at_nsp$Transcript.id[ind],
+                  model = "Disprot",
+                  bitscore = 30,
+                  dim = 7)
+pred +
+  theme(legend.position = "bottom",
+        legend.direction = "vertical")
+        
 }
 \seealso{
 \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{get_espritz}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}

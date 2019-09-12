@@ -11,6 +11,8 @@
 #' @param sleep Numeric indicating the pause in seconds between server calls, at default set to 1.
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
 #' @param timeout Numeric, time in seconds to wait for server response.
+#' @param ievalue Numeric, all sequences with independent E-value lower or equal to this value will be retained in the function output. Used to filter out low similarity matches. If set some queried sequences might be discarded from the output. Suggested values: 1e-2 - 1e-5.
+#' @param bitscore Numeric, all sequences with bitscore greater or equal to this value will be retained in the function output. Used to filter out low similarity. If set some queried sequences might be discarded from the output. Suggested values: 10 - 20.
 #' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
@@ -168,6 +170,8 @@ get_hmm.default <- function(data = NULL,
                             attempts = 2L,
                             timeout = 10,
                             progress = FALSE,
+                            ievalue = NULL,
+                            bitscore = NULL,
                             ...){
   if (missing(verbose)) {
     verbose <- FALSE
@@ -203,6 +207,57 @@ get_hmm.default <- function(data = NULL,
   if (is.na(progress)){
     progress <- FALSE
     warning("progress was set to NA, setting to default: progress = FALSE",
+            call. = FALSE)
+  }
+  if (!missing(ievalue)) {
+    if (length(ievalue) > 1){
+      stop("ievalue should be of length 1",
+              call. = FALSE)
+    }
+    if (!is.numeric(ievalue)){
+      stop("ievalue should be numeric of length 1",
+           call. = FALSE)
+    }
+    if (is.nan(ievalue)){
+      stop("ievalue should be numeric of length 1",
+           call. = FALSE)
+    }
+    if (is.na(ievalue)){
+      stop("ievalue should be numeric of length 1",
+           call. = FALSE)
+    }
+  }
+  if (!missing(bitscore)) {
+    if (length(bitscore) > 1){
+      stop("bitscore should be of length 1",
+           call. = FALSE)
+    }
+    if (!is.numeric(bitscore)){
+      stop("bitscore should be numeric of length 1",
+           call. = FALSE)
+    }
+    if (is.nan(bitscore)){
+      stop("bitscore should be numeric of length 1",
+           call. = FALSE)
+    }
+    if (is.na(bitscore)){
+      stop("bitscore should be numeric of length 1",
+           call. = FALSE)
+    }
+  }
+  if (length(sleep) > 1){
+    sleep <- 1
+    warning("sleep should be of length 1, setting to default: sleep = 1",
+            call. = FALSE)
+  }
+  if (!is.numeric(sleep)){
+    sleep <- as.numeric(sleep)
+    warning("sleep is not numeric, converting using 'as.numeric'",
+            call. = FALSE)
+  }
+  if (is.na(sleep)){
+    sleep <- 1
+    warning("sleep was set to NA, setting to default: sleep = 1",
             call. = FALSE)
   }
   if (missing(sleep)) {
@@ -492,5 +547,12 @@ get_hmm.default <- function(data = NULL,
   pfam$cevalue <- as.numeric(as.character(pfam$cevalue))
   pfam$bitscore <- as.numeric(as.character(pfam$bitscore))
   pfam$reported <- as.logical(as.integer(pfam$reported))
+  if (!missing(ievalue)) {
+    pfam <- pfam[!is.na(pfam$ievalue) & pfam$ievalue <= ievalue,]
+  }
+  if (!missing(bitscore)) {
+    pfam <- pfam[!is.na(pfam$bitscore) & pfam$bitscore >= bitscore,]
+  }
+  rownames(pfam) <- NULL
   return(pfam)
 }

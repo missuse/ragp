@@ -18,7 +18,7 @@
 #' @param disorder Bolean, should disordered regions be plotted. 
 #' @param dom_sort One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.
 #' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
-#' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}} and \code{\link[ragp]{scan_ag}}.
+#' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.
 #'
 #' @return A ggplot2 plot object
 #'
@@ -33,7 +33,16 @@
 #' pred +
 #'   theme(legend.position = "bottom",
 #'         legend.direction = "vertical")
-#' 
+#'         
+#' pred <- plot_prot(sequence = at_nsp$sequence[ind],
+#'                   id = at_nsp$Transcript.id[ind],
+#'                   model = "Disprot",
+#'                   bitscore = 30,
+#'                   dim = 7)
+#' pred +
+#'   theme(legend.position = "bottom",
+#'         legend.direction = "vertical")
+#'         
 #' @export
 
 plot_prot <- function(sequence,
@@ -303,11 +312,12 @@ plot_prot <- function(sequence,
     warning("gpi should be of length 1, setting to default: gpi = 'bigpi'",
             call. = FALSE)
   }
-  args_signalp <- names(formals(ragp::get_signalp))[4:10]
-  args_scanag <- names(formals(ragp::scan_ag))[4:7]
-  args_espritz <- names(formals(ragp::get_espritz))[4:5]
+  args_signalp <- names(formals(get_signalp.character))[2:8]
+  args_scanag <- names(formals(scan_ag.default))[4:7]
+  args_espritz <- names(formals(get_espritz.default))[4:5]
+  args_hmm <- names(formals(get_hmm.default))[9:10]
   dots <- list(...)
-  
+
   dat <- data.frame(sequence = sequence,
                     id = id,
                     nchar = nchar(sequence),
@@ -322,14 +332,13 @@ plot_prot <- function(sequence,
     if(progress){
       message("querying hmmscan")
     }
-    seq_hmm <- ragp::get_hmm(data = dat,
-                             sequence = sequence,
-                             id = id,
-                             sleep = 0,
-                             attempts = 5,
-                             verbose = FALSE,
-                             progress = progress)
-    
+    seq_hmm <- do.call(ragp::get_hmm,
+                       c(list(data = dat,
+                              sequence = "sequence",
+                              id = "id",
+                              progress = progress),
+                         dots[names(dots) %in% args_hmm]))
+
     seq_hmm <- seq_hmm[seq_hmm$reported,]
     
     if(nrow(seq_hmm) != 0){
@@ -350,7 +359,7 @@ plot_prot <- function(sequence,
         seq_hmm <- seq_hmm[with(seq_hmm, order(id_num,
                                                as.numeric(ievalue),
                                                decreasing = c(FALSE, TRUE),
-                                               method="radix")),]
+                                               method = "radix")),]
       }
       
       if (dom_sort == "abc"){
@@ -360,7 +369,7 @@ plot_prot <- function(sequence,
         seq_hmm <- seq_hmm[with(seq_hmm, order(id_num,
                                                name,
                                                decreasing = c(FALSE, TRUE),
-                                               method="radix")),]
+                                               method = "radix")),]
       }
     } else {
       seq_hmm <- NULL

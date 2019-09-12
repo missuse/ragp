@@ -6,3 +6,7 @@
 ^README_cache$
 ^_pkgdown\.yml$
 ^docs$
+^index_cache$
+^index\.md$
+^index\.Rmd$
+^vignettes/pkgdown$
