@@ -162,6 +162,7 @@ p1</code></pre></div>
 <div class="figure">
 <img src="https://missuse.github.io/ragp/articles/PSV_p2.svg">
 </div>
+<p>Plotting can take a while since <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> first obtains the appropriate predictions using <code><a href="../../reference/get_hmm.html">get_hmm()</a></code>, <code><a href="../../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../../reference/get_phobius.html">get_phobius()</a></code>, <code><a href="../../reference/get_espritz.html">get_espritz()</a></code>, <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> and <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> and then generates the plot. To check what actions the function is performing set the argument <code>progress</code> to <code>TRUE</code>.</p>
 </div>
 <div id="plot_prot-options" class="section level2">
 <h2 class="hasAnchor">
@@ -190,7 +191,7 @@ p1</code></pre></div>
                 <span class="dt">dim =</span> <span class="dv">5</span>, <span class="co">#`scan_ag()` argument, minimum number of dipeptides for a motif</span>
                 <span class="dt">div =</span> <span class="dv">5</span>, <span class="co">#`scan_ag()` argument, maximum number of amino acids between dipeptides </span>
                 <span class="dt">tprob =</span> <span class="fl">0.9</span>, <span class="co">#`predict_hyp()` argument, threshold probability for prediction</span>
-                <span class="dt">model =</span> <span class="st">"Disprot"</span>) <span class="co">#use NMR model when calling `get_espritz()`</span>
+                <span class="dt">model =</span> <span class="st">"Disprot"</span>) <span class="co">#use the 'Disprot' model when calling `get_espritz()`</span>
 p2</code></pre></div>
 <div class="figure">
 <img src="https://missuse.github.io/ragp/articles/PSV_p4.svg">
