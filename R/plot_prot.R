@@ -36,7 +36,6 @@
 #'         
 #' pred <- plot_prot(sequence = at_nsp$sequence[ind],
 #'                   id = at_nsp$Transcript.id[ind],
-#'                   model = "Disprot",
 #'                   bitscore = 30,
 #'                   dim = 7)
 #' pred +
