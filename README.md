@@ -1,11 +1,28 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-ragp - hydroxyproline aware filtering of hydroxyproline rich glycoprotein sequences
-===================================================================================
 
-[![Build Status](https://travis-ci.org/missuse/ragp.svg?branch=master)](https://travis-ci.org/missuse/ragp) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+\#ragp - hydroxyproline aware filtering of hydroxyproline rich
+glycoprotein sequences
 
-`ragp` is an R package primarily designed for mining and analysis of plant hydroxyproline rich glycoproteins. It incorporates a novel concept with an additional analysis layer where the probability of proline hydroxylation is estimated by a machine learning model. Only proteins predicted to contain hydroxyprolines are further analysed for HRGP characteristic motifs and features. `ragp` can also be used for protein annotation by obtaining predictions for several protein features based on sequence (secretory signals, transmembrane regions, domains, glycosylphosphatidylinositol attachment sites and disordered regions). Additionally ragp provides tools for visualization of the mentioned attributes.
+[![Build
+Status](https://travis-ci.org/missuse/ragp.svg?branch=master)](https://travis-ci.org/missuse/ragp)
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![License:
+MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+`ragp` is an R package primarily designed for mining and analysis of
+plant hydroxyproline rich glycoproteins. It incorporates a novel concept
+with an additional analysis layer where the probability of proline
+hydroxylation is estimated by a machine learning model. Only proteins
+predicted to contain hydroxyprolines are further analysed for HRGP
+characteristic motifs and features. `ragp` can also be used for protein
+annotation by obtaining predictions for several protein features based
+on sequence (secretory signals, transmembrane regions, domains,
+glycosylphosphatidylinositol attachment sites and disordered regions).
+Additionally ragp provides tools for visualization of the mentioned
+attributes.
 
 Short example:
 
@@ -28,8 +45,7 @@ p1
 
 ![](https://missuse.github.io/ragp/reference/figures/README-plot_prot-2.svg)
 
-Installation
-------------
+\#\#Installation
 
 You can install ragp from github with:
 
@@ -52,24 +68,31 @@ to build vignettes which can be viewed by:
 browseVignettes("ragp")
 ```
 
-Tutorials
----------
+\#\#Tutorials
 
-Tutorials on usage of `ragp` functions with examples on how to combine them into meaningful HRGP filtering and analysis pipelines are available at: <https://missuse.github.io/ragp/>
+Tutorials on usage of `ragp` functions with examples on how to combine
+them into meaningful HRGP filtering and analysis pipelines are available
+at: <https://missuse.github.io/ragp/>
 
-Bug reports
------------
+\#\#Bug reports
 
-If you encounter undesired behavior in `ragp` functions or you have ideas how to improve them please open an issue at: <https://github.com/missuse/ragp/issues>
+If you encounter undesired behavior in `ragp` functions or you have
+ideas how to improve them please open an issue at:
+<https://github.com/missuse/ragp/issues>
 
-Citation
---------
+\#\#Citation
 
-If you find `ragp` useful in your own research please cite our Glycobiology [paper](https://academic.oup.com/glycob/advance-article-abstract/doi/10.1093/glycob/cwz072/5567434) (Preprint).
+If you find `ragp` useful in your own research please cite our
+Glycobiology
+[paper](https://academic.oup.com/glycob/advance-article-abstract/doi/10.1093/glycob/cwz072/5567434).
 
-> Milan B Dragićević, Danijela M Paunović, Milica D Bogdanović, Slađana I Todorović, Ana D Simonović (2019) ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R, Glycobiology, cwz072, <https://doi.org/10.1093/glycob/cwz072>
+> Milan B Dragićević, Danijela M Paunović, Milica D Bogdanović, Slađana
+> I Todorović, Ana D Simonović (2019) ragp: Pipeline for mining of plant
+> hydroxyproline-rich glycoproteins with implementation in R,
+> Glycobiology, cwz072, <https://doi.org/10.1093/glycob/cwz072>
 
-You can get citation info via `citation("ragp")` or by copying the following BibTex entry:
+You can get citation info via `citation("ragp")` or by copying the
+following BibTex entry:
 
 ``` bibtex
 @article{10.1093/glycob/cwz072,
@@ -84,7 +107,8 @@ You can get citation info via `citation("ragp")` or by copying the following Bib
 }
 ```
 
-Acknowledgements
-----------------
+\#\#Acknowledgements
 
-This software was developed with funding from the Ministry of Education, Science and Technological Development of the Republic of Serbia (Projects TR31019 and OI173024).
+This software was developed with funding from the Ministry of Education,
+Science and Technological Development of the Republic of Serbia
+(Projects TR31019 and OI173024).
