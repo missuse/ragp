@@ -1,8 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-\#ragp - hydroxyproline aware filtering of hydroxyproline rich
-glycoprotein sequences
+# ragp - hydroxyproline aware filtering of hydroxyproline rich glycoprotein sequences
 
 [![Build
 Status](https://travis-ci.org/missuse/ragp.svg?branch=master)](https://travis-ci.org/missuse/ragp)
@@ -45,7 +44,7 @@ p1
 
 ![](https://missuse.github.io/ragp/reference/figures/README-plot_prot-2.svg)
 
-\#\#Installation
+# Installation
 
 You can install ragp from github with:
 
@@ -68,19 +67,19 @@ to build vignettes which can be viewed by:
 browseVignettes("ragp")
 ```
 
-\#\#Tutorials
+# Tutorials
 
 Tutorials on usage of `ragp` functions with examples on how to combine
 them into meaningful HRGP filtering and analysis pipelines are available
 at: <https://missuse.github.io/ragp/>
 
-\#\#Bug reports
+# Bug reports
 
 If you encounter undesired behavior in `ragp` functions or you have
 ideas how to improve them please open an issue at:
 <https://github.com/missuse/ragp/issues>
 
-\#\#Citation
+# Citation
 
 If you find `ragp` useful in your own research please cite our
 Glycobiology
@@ -107,7 +106,7 @@ following BibTex entry:
 }
 ```
 
-\#\#Acknowledgements
+# Acknowledgements
 
 This software was developed with funding from the Ministry of Education,
 Science and Technological Development of the Republic of Serbia
