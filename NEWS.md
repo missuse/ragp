@@ -1,6 +1,8 @@
-#ragp 0.3.1.0000
+ragp 0.3.1.0000
+===============
 
-##New Features
+New Features
+------------
 
 *  New `get_netGPI()` queries NetGPI web server (https://services.healthtech.dtu.dk/service.php?NetGPI-1.0) for predictions of GPI-anchored proteins.  
 
@@ -9,47 +11,58 @@
 * `plot_prot()` argument `gpi` has an additional option `"netgpi"`. When set, the function will query NetGPI web server for prediction of omega sites.
 
 
-#ragp 0.3.0.0002
+ragp 0.3.0.0002
+===============
 
-##Bug Fixes and Improvements
+Bug Fixes and Improvements
+--------------------------
 
 * `maab()` now correctly performs when only a single protein sequence is provided as an argument. 
 
 * `get_hmm()` receives additional numeric arguments: `ievalue` and `bitscore`. These arguments are used to filter sequences with lower or equal `ievalue` and higher or equal `bitscore` in the output. This is useful when used from `plot_prot()` to avoid plotting weakly identified domains. 
 
 
-#ragp 0.3.0.0001
+ragp 0.3.0.0001
+===============
 
-##Bug Fixes and Improvements
+Bug Fixes and Improvements
+--------------------------
 
 * `get_big_pi()` and `get_pred_gpi()` now return `NA` in respective `is.bigpi` and `is.gpi` columns when the servers are unable to make a prediction due to non-amino acid letters or length of the sequence.
 
 * `maab()` now correctly does not resolve class ambiguities when the logical vector provided as `gpi` argument contains `NA` values. Previously it returned `NA` as `maab_class`. This is useful when `maab()` is called with `get_gpi = 'predgpi'` or `get_gpi = 'bigpi'` arguments, and the corresponding servers are unable to make a prediction for a sequence due to non-amino acid letters or length of the sequence.
 
-#ragp 0.3.0.0000
+ragp 0.3.0.0000
+===============
 
-##New Features
+New Features
+------------
 
 * `predict_hyp()` internal model is updated to 2nd version ('V2'). Predictions are around 25% faster compared to the first version. The performance in terms of accuracy is similar based on the test set used. 'V2' was created using a more streamlined manner and is the default model. The old model ('V1') is still available using the `version` argument to `predict_hyp()`.
 
-##Bug Fixes and Improvements
+Bug Fixes and Improvements
+--------------------------
 
 * `predict_hyp()` now checks if all provided ids are unique. Previously non unique ids caused an error at the end of computation. 
 
 * `predict_hyp()` `sequence` output has changed for sequences containing non amino acid letters. Previously NA was returned for such sequences. At present all "P"" for which the probability is higher then the defined threshold (`tprob` argument) are changed to "O"" and all others are left as "P".
 
-#ragp 0.2.1.9100
+ragp 0.2.1.9100
+===============
 
-##Bug Fixes and Improvements
+Bug Fixes and Improvements
+--------------------------
 
 * `maab()` now correctly outputs when there are no MAAB classes found and `get_gpi` argument is set to `"predgpi"` or `"bigpi"`. Previously this caused an error due to `stringr::write.fasta()` attempting to write a file with no sequences.
 
 * `pfam2go()` now takes Pfam > GO mappings from ftp://ftp.geneontology.org/pub/go/external2go/pfam2go instead of http://geneontology.org/external2go/pfam2go.
 
 
-#ragp 0.2.1.9000
+ragp 0.2.1.9000
+===============
 
-##Bug Fixes and Improvements
+Bug Fixes and Improvements
+--------------------------
 
 * `get_phobius()`, `get_big_pi()`, `get_pred_gpi()`, `maab()` and `plot_prot()`, gain an additional argument `progress`. 
 `progress` is a logical value determining whether to show the progress bar, (default `FALSE`).
@@ -60,9 +73,11 @@
 
 * added `pkgdown` site for `ragp` at: https://missuse.github.io/ragp/.
 
-#ragp 0.2.1.0000
+ragp 0.2.1.0000
+===============
 
-##Bug Fixes and Improvements
+Bug Fixes and Improvements
+--------------------------
 
 * `get_targetp()` and `get_signalp()` gain additional arguments `progress` and `attempts`. 
 `progress` is a logical value determining whether to show the progress bar, (default `TRUE`). 
@@ -70,15 +85,18 @@
 These functions now return finished queues if server becomes unresponsive.  
   
   
-#ragp 0.2.0.0000
+ragp 0.2.0.0000
+===============
 
-##New Features
+New Features
+------------
 
 * `get_big_pi()`, `get_espritz()`,`get_hmm()`, `get_phobius()`, `get_pred_gpi()`, `get_signalp()`,
 `get_targetp()`, `maab()`, `predict_hyp()`, `scan_ag()` and `scan_nglc()` now use the S3 object
 system which will make further extensions of accepted inputs straightforward.
 
-##Bug Fixes and Improvements
+Bug Fixes and Improvements
+--------------------------
 
 * Completely rewrote the code for `scan_ag()` which is now simplified and easier to read.
 The function is now about 20% slower.
@@ -93,9 +111,11 @@ it is advisable to rerun these analyses again.
 `get_phobius_file()`.
 
 
-#ragp 0.1.0.0004
+ragp 0.1.0.0004
+===============
 
-##New Features
+New Features
+------------
 
 * New `get_espritz()` queries ESpritz web server for predictions on protein
 disordered regions.
@@ -103,20 +123,24 @@ disordered regions.
 * `plot_prot()` gains an additional argument `disorder`, logical indicating
 should the predicted disordered regions be plotted. Defaults to `FALSE`.
   
-##Bug Fixes and Improvements
+Bug Fixes and Improvements
+--------------------------
 
 * fixed a bug in function `plot_prot()` introduced in 0.1.0.0003 which prevented 
   GPIs to be plotted when `gpi = "bigpi"`.
 
 
-#ragp 0.1.0.0003
+ragp 0.1.0.0003
+===============
 
-##New Features
+New Features
+------------
 
 * New `get_pred_gpi()` queries PredGPI web server for predictions on GPI presence
 and omega site location.
   
-##Bug Fixes and Improvements
+Bug Fixes and Improvements
+--------------------------
   
 * `maab()` argument `get_gpi` has been changed and now accepts strings
   as input: `get_gpi = c("bigpi", "predgpi", "none")` which indicate whether
@@ -133,20 +157,25 @@ and omega site location.
   were provided.
 
   
-#ragp 0.1.0.0002
+ragp 0.1.0.0002
+===============
 
-##Bug Fixes and Improvements
+Bug Fixes and Improvements
+--------------------------
 
 * Removed rvest dependency
 
 
-#ragp 0.1.0.0001
+ragp 0.1.0.0001
+===============
 
-##New Features
+New Features
+------------
 
 * Added vignette. 
 
-##Bug Fixes and Improvements
+Bug Fixes and Improvements
+--------------------------
 
 * When using `plot_prot()` with argument `dom_sort = "ievalue"` the domains with the
   lowest independent e-value will now be correctly plotted on top.
@@ -158,9 +187,11 @@ and omega site location.
   into several shorter overlapping sequences and querying hmmscan. 
  
  
-#ragp 0.1.0.0000
+ragp 0.1.0.0000
+===============
 
-##New Features
+New Features
+------------
 
 * New `plot_prot()` returns a `ggplot2` diagram of protein structure based on `hmmscan`
 domain annotation and several types of predictions.
@@ -180,7 +211,8 @@ HRGP classes thus resolving class ambiguities that depend on GPI knowledge.
   
 * Added a `NEWS.md` file to track changes to the package.
 
-##Bug Fixes and Improvements
+Bug Fixes and Improvements
+--------------------------
 
 * Significantly improved the speed of `get_big_pi()`. Removed the verbose argument.
   Added a progress bar (#3).
