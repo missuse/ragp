@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1.0</span>
       </span>
     </div>
 
@@ -126,102 +126,102 @@ code.r{ /* Code block */
 </ul>
 <p>The following section explains how to perform these tasks on a set of 398 Arabidopsis protein sequences obtained in <a href="https://missuse.github.io/ragp/articles/pkgdown/filter">Filtering hydroxyproline rich glycoproteins</a> tutorial (the <code>at_nsp_3hyp</code> data frame).</p>
 <p>Required packages:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ragp)
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggplot2)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ragp)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggplot2)</a></code></pre></div>
 <div id="arabinogalactan-identification" class="section level2">
 <h2 class="hasAnchor">
 <a href="#arabinogalactan-identification" class="anchor"></a>Arabinogalactan identification</h2>
 <p>To identify potential arabinogalactans the function <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> can be used. This function scans the protein sequences for AG glycomodule clusters, by constructing regular expressions based on user input.</p>
 <p>By default <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> searches for at least three dipeptides PA, PS, PT, PG, PV, AP, SP, TP, GP and VP which are separated by maximally 10 amino acids. The minimal number of dipeptides to be considered can be changed by the argument <code>dim</code> while the maximum number of separating amino acids can be tweaked using the argument <code>div</code>. To consider only PA, PS, PT, AP, SP and TP dipeptides the <code>type</code> argument can be changed to <code>"conservative"</code>. In cases when the dipeptides are ambiguous, such as SPT, PTP etc. all three amino acids will be counted as one dipeptide, while cases such as PTPA are considered as two dipeptides separated by zero amino acids. When the <code>sequence</code> object returned by <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> function is passed to <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> only prolines predicted to be hydroxylated are considered when searching for dipeptides:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scaned_at &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_nsp_3hyp,
-                     sequence,
-                     Transcript.id)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">scaned_at &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_nsp_3hyp,</a>
+<a class="sourceLine" id="cb2-2" title="2">                     sequence,</a>
+<a class="sourceLine" id="cb2-3" title="3">                     Transcript.id)</a></code></pre></div>
 <p>The output of <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> can be a list, or a data frame depending on the <code>simplify</code>/<code>tidy</code> arguments. The default output is a data frame with one row per sequence which contains five columns. Here are the 55 N-terminal amino acids from the <a href="http://www.uniprot.org/uniprot/Q9C5S0">Classical arabinogalactan protein 9</a> as an example:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scaned_at  <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sequence =</span> <span class="kw"><a href="https://rdrr.io/r/base/strtrim.html">strtrim</a></span>(sequence, <span class="dv">55</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#take the first 55 amino acids from the sequences</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(id <span class="op">==</span><span class="st"> "AT2G14890.1"</span>) <span class="co">#filter Q9C5S0</span>
-<span class="co">#&gt;            id                                                sequence</span>
-<span class="co">#&gt; 1 AT2G14890.1 marsfaiavicivliagvtgqAPTSPPTaTPAPPTPTTPpPAaTPpPVsAPpPVt</span>
-<span class="co">#&gt;   AG_aa total_length longest</span>
-<span class="co">#&gt; 1   100          144     144</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">scaned_at  <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sequence =</span> <span class="kw"><a href="https://rdrr.io/r/base/strtrim.html">strtrim</a></span>(sequence, <span class="dv">55</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#take the first 55 amino acids from the sequences</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(id <span class="op">==</span><span class="st"> "AT2G14890.1"</span>) <span class="co">#filter Q9C5S0</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="co">#&gt;            id                                                sequence</span></a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="co">#&gt; 1 AT2G14890.1 marsfaiavicivliagvtgqAPTSPPTaTPAPPTPTTPpPAaTPpPVsAPpPVt</span></a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="co">#&gt;   AG_aa total_length longest</span></a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="co">#&gt; 1   100          144     144</span></a></code></pre></div>
 <p>The column <code>sequence</code> contains the input sequence where only the amino acids in potential AG glycomodules are in uppercase while all other are in lower case. The column <code>AG_aa</code> contains the amino acid count found in potential AG glycomodules, while columns <code>total_length</code> and <code>longest</code> correspond to the matched sequence spans. From the output it can be observed that 100 amino acids were found in AG glycomodules, that the longest span of AG glycomodules is 144 amino acids long (AG glycomodule dipeptides in one span are separated by less then 10 amino acids, since <code>div</code> argument which determines this is set per default to 10) and that it is the only span in the sequence.</p>
 <p>To obtain a more detailed data frame the function can be called with <code>simplify = FALSE</code> and <code>tidy = TRUE</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scaned_at2 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_nsp_3hyp,
-                      sequence,
-                      Transcript.id, 
-                      <span class="dt">simplify =</span> <span class="ot">FALSE</span>,
-                      <span class="dt">tidy =</span> <span class="ot">TRUE</span>)
-
-scaned_at2  <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sequence =</span> <span class="kw"><a href="https://rdrr.io/r/base/strtrim.html">strtrim</a></span>(sequence, <span class="dv">55</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#take the first 55 amino acids from the sequences</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(id <span class="op">==</span><span class="st"> "AT2G14890.1"</span>)
-<span class="co">#&gt;                                                  sequence          id</span>
-<span class="co">#&gt; 1 marsfaiavicivliagvtgqAPTSPPTaTPAPPTPTTPpPAaTPpPVsAPpPVt AT2G14890.1</span>
-<span class="co">#&gt;   location.start location.end        P_pos length AG_aa</span>
-<span class="co">#&gt; 1             22          165 23, 26, ....    144   100</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">scaned_at2 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_nsp_3hyp,</a>
+<a class="sourceLine" id="cb4-2" title="2">                      sequence,</a>
+<a class="sourceLine" id="cb4-3" title="3">                      Transcript.id, </a>
+<a class="sourceLine" id="cb4-4" title="4">                      <span class="dt">simplify =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb4-5" title="5">                      <span class="dt">tidy =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb4-6" title="6"></a>
+<a class="sourceLine" id="cb4-7" title="7">scaned_at2  <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sequence =</span> <span class="kw"><a href="https://rdrr.io/r/base/strtrim.html">strtrim</a></span>(sequence, <span class="dv">55</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#take the first 55 amino acids from the sequences</span></a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(id <span class="op">==</span><span class="st"> "AT2G14890.1"</span>)</a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt;                                                  sequence          id</span></a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co">#&gt; 1 marsfaiavicivliagvtgqAPTSPPTaTPAPPTPTTPpPAaTPpPVsAPpPVt AT2G14890.1</span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="co">#&gt;   location.start location.end        P_pos length AG_aa</span></a>
+<a class="sourceLine" id="cb4-13" title="13"><span class="co">#&gt; 1             22          165 23, 26, ....    144   100</span></a></code></pre></div>
 <p>Output obtained in this way contains the start and end location of each AG glycomodul span (in this example there is only one) as well as a vector of proline positions in AG glycomodules.</p>
 <p>To incorporate hydroxyproline position knowledge when searching AG glycomodules the <code>sequence</code> output of <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> can be provided to <code><a href="../../reference/scan_ag.html">scan_ag()</a></code>:</p>
 <ul>
 <li>First <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> will be called on <code>at_nsp_filtered</code> data frame created during <a href="https://missuse.github.io/ragp/articles/pkgdown/filter">Filtering hydroxyproline rich glycoproteins</a> tutorial.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">at_hyp &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/predict_hyp.html">predict_hyp</a></span>(<span class="dt">data =</span> at_nsp_filtered,
-                      <span class="dt">sequence =</span> sequence,
-                      <span class="dt">id =</span> Transcript.id)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">at_hyp &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/predict_hyp.html">predict_hyp</a></span>(<span class="dt">data =</span> at_nsp_filtered,</a>
+<a class="sourceLine" id="cb5-2" title="2">                      <span class="dt">sequence =</span> sequence,</a>
+<a class="sourceLine" id="cb5-3" title="3">                      <span class="dt">id =</span> Transcript.id)</a></code></pre></div>
 <ul>
 <li>Then <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> will be called on the output <code>at_hyp$sequence</code>:</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scaned_at3 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_hyp<span class="op">$</span>sequence,
-                      sequence,
-                      id, <span class="co">#`at_hyp$sequence` data frame contains the column `id`</span>
-                      <span class="dt">simplify =</span> <span class="ot">FALSE</span>,
-                      <span class="dt">tidy =</span> <span class="ot">TRUE</span>)
-<span class="co">#&gt; sequence vector contains O, O will be considered instead of P</span>
-
-scaned_at3  <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sequence =</span> <span class="kw"><a href="https://rdrr.io/r/base/strtrim.html">strtrim</a></span>(sequence, <span class="dv">55</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#take the first 55 amino acids from the sequences</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(id <span class="op">==</span><span class="st"> "AT2G14890.1"</span>)
-<span class="co">#&gt;                                                  sequence          id</span>
-<span class="co">#&gt; 1 marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTTOoOAaTOoOVsAOoOVt AT2G14890.1</span>
-<span class="co">#&gt;   location.start location.end        P_pos length AG_aa</span>
-<span class="co">#&gt; 1             22          165 23, 26, ....    144    98</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">scaned_at3 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_hyp<span class="op">$</span>sequence,</a>
+<a class="sourceLine" id="cb6-2" title="2">                      sequence,</a>
+<a class="sourceLine" id="cb6-3" title="3">                      id, <span class="co">#`at_hyp$sequence` data frame contains the column `id`</span></a>
+<a class="sourceLine" id="cb6-4" title="4">                      <span class="dt">simplify =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb6-5" title="5">                      <span class="dt">tidy =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="co">#&gt; sequence vector contains O, O will be considered instead of P</span></a>
+<a class="sourceLine" id="cb6-7" title="7"></a>
+<a class="sourceLine" id="cb6-8" title="8">scaned_at3  <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-9" title="9"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sequence =</span> <span class="kw"><a href="https://rdrr.io/r/base/strtrim.html">strtrim</a></span>(sequence, <span class="dv">55</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#take the first 55 amino acids from the sequences</span></a>
+<a class="sourceLine" id="cb6-10" title="10"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(id <span class="op">==</span><span class="st"> "AT2G14890.1"</span>)</a>
+<a class="sourceLine" id="cb6-11" title="11"><span class="co">#&gt;                                                  sequence          id</span></a>
+<a class="sourceLine" id="cb6-12" title="12"><span class="co">#&gt; 1 marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTTOoOAaTOoOVsAOoOVt AT2G14890.1</span></a>
+<a class="sourceLine" id="cb6-13" title="13"><span class="co">#&gt;   location.start location.end        P_pos length AG_aa</span></a>
+<a class="sourceLine" id="cb6-14" title="14"><span class="co">#&gt; 1             22          165 23, 26, ....    144    98</span></a></code></pre></div>
 <p>It is clear almost all prolines (P) were predicted to be hydroxylated (O) so the start and end location as well as the length of the amino acid span containing AG glycomoduls are unchanged for this sequence.</p>
 <p>Many of the found motifs in <code>AT2G14890.1</code> (shown in uppercase) correspond to extensin motifs (PPP+ or OOO+). This might not be desired when searching for AG glycomodules, and <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> offers the argument <code>exclude_ext</code> which enables the function to omit extensin motifs either of the common sequence <code>SP{3,}</code> or <code>SO{3,}</code> (<code>exclude_ext = "yes"</code>) or of the form <code>P[3,}</code> or <code>O{3,}</code> (<code>exclude_ext = "all"</code>):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scaned_at4 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_hyp<span class="op">$</span>sequence,
-                      sequence,
-                      id, 
-                      <span class="dt">simplify =</span> <span class="ot">FALSE</span>,
-                      <span class="dt">tidy =</span> <span class="ot">TRUE</span>,
-                      <span class="dt">exclude_ext =</span> <span class="st">"all"</span>)
-<span class="co">#&gt; sequence vector contains O, O will be considered instead of P</span>
-
-scaned_at4  <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sequence =</span> <span class="kw"><a href="https://rdrr.io/r/base/strtrim.html">strtrim</a></span>(sequence, <span class="dv">55</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#take the first 55 amino acids from the sequences</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(id <span class="op">==</span><span class="st"> "AT2G14890.1"</span>)
-<span class="co">#&gt;                                                  sequence          id</span>
-<span class="co">#&gt; 1 marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTtoooaatooovsaooovt AT2G14890.1</span>
-<span class="co">#&gt; 2 marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTtoooaatooovsaooovt AT2G14890.1</span>
-<span class="co">#&gt;   location.start location.end        P_pos length AG_aa</span>
-<span class="co">#&gt; 1             22           37 23, 26, ....     16    15</span>
-<span class="co">#&gt; 2            114          165 115, 119....     52    34</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">scaned_at4 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_hyp<span class="op">$</span>sequence,</a>
+<a class="sourceLine" id="cb7-2" title="2">                      sequence,</a>
+<a class="sourceLine" id="cb7-3" title="3">                      id, </a>
+<a class="sourceLine" id="cb7-4" title="4">                      <span class="dt">simplify =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb7-5" title="5">                      <span class="dt">tidy =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb7-6" title="6">                      <span class="dt">exclude_ext =</span> <span class="st">"all"</span>)</a>
+<a class="sourceLine" id="cb7-7" title="7"><span class="co">#&gt; sequence vector contains O, O will be considered instead of P</span></a>
+<a class="sourceLine" id="cb7-8" title="8"></a>
+<a class="sourceLine" id="cb7-9" title="9">scaned_at4  <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-10" title="10"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sequence =</span> <span class="kw"><a href="https://rdrr.io/r/base/strtrim.html">strtrim</a></span>(sequence, <span class="dv">55</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#take the first 55 amino acids from the sequences</span></a>
+<a class="sourceLine" id="cb7-11" title="11"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(id <span class="op">==</span><span class="st"> "AT2G14890.1"</span>)</a>
+<a class="sourceLine" id="cb7-12" title="12"><span class="co">#&gt;                                                  sequence          id</span></a>
+<a class="sourceLine" id="cb7-13" title="13"><span class="co">#&gt; 1 marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTtoooaatooovsaooovt AT2G14890.1</span></a>
+<a class="sourceLine" id="cb7-14" title="14"><span class="co">#&gt; 2 marsfaiavicivliagvtgqAOTSOOTaTOAOOTOTtoooaatooovsaooovt AT2G14890.1</span></a>
+<a class="sourceLine" id="cb7-15" title="15"><span class="co">#&gt;   location.start location.end        P_pos length AG_aa</span></a>
+<a class="sourceLine" id="cb7-16" title="16"><span class="co">#&gt; 1             22           37 23, 26, ....     16    15</span></a>
+<a class="sourceLine" id="cb7-17" title="17"><span class="co">#&gt; 2            114          165 115, 119....     52    34</span></a></code></pre></div>
 <p>When extensin motifs are masked two AG glycomodule spans are found in <code>AT2G14890.1</code>, from position 22 to 37 and from position 114 to 165.</p>
 <p>Next we will compare how many sequences are identified as arabinogalactans with and without prediction of proline hydroxylation when extensin motifs are masked:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#without proline hydroxylation knowledge:</span>
-scaned_at5 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_nsp_filtered,
-                      sequence,
-                      Transcript.id,
-                      <span class="dt">exclude_ext =</span> <span class="st">"all"</span>)
-<span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(scaned_at5<span class="op">$</span>total_length <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)
-<span class="co">#&gt; [1] 685</span>
-
-<span class="co">#using the output of `predict_hyp()</span>
-scaned_at6 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_hyp<span class="op">$</span>sequence,
-                      sequence,
-                      id,
-                      <span class="dt">exclude_ext =</span> <span class="st">"all"</span>)
-<span class="co">#&gt; sequence vector contains O, O will be considered instead of P</span>
-<span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(scaned_at6<span class="op">$</span>total_length <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)
-<span class="co">#&gt; [1] 217</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co">#without proline hydroxylation knowledge:</span></a>
+<a class="sourceLine" id="cb8-2" title="2">scaned_at5 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_nsp_filtered,</a>
+<a class="sourceLine" id="cb8-3" title="3">                      sequence,</a>
+<a class="sourceLine" id="cb8-4" title="4">                      Transcript.id,</a>
+<a class="sourceLine" id="cb8-5" title="5">                      <span class="dt">exclude_ext =</span> <span class="st">"all"</span>)</a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(scaned_at5<span class="op">$</span>total_length <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb8-7" title="7"><span class="co">#&gt; [1] 685</span></a>
+<a class="sourceLine" id="cb8-8" title="8"></a>
+<a class="sourceLine" id="cb8-9" title="9"><span class="co">#using the output of `predict_hyp()</span></a>
+<a class="sourceLine" id="cb8-10" title="10">scaned_at6 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/scan_ag.html">scan_ag</a></span>(<span class="dt">data =</span> at_hyp<span class="op">$</span>sequence,</a>
+<a class="sourceLine" id="cb8-11" title="11">                      sequence,</a>
+<a class="sourceLine" id="cb8-12" title="12">                      id,</a>
+<a class="sourceLine" id="cb8-13" title="13">                      <span class="dt">exclude_ext =</span> <span class="st">"all"</span>)</a>
+<a class="sourceLine" id="cb8-14" title="14"><span class="co">#&gt; sequence vector contains O, O will be considered instead of P</span></a>
+<a class="sourceLine" id="cb8-15" title="15"><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(scaned_at6<span class="op">$</span>total_length <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb8-16" title="16"><span class="co">#&gt; [1] 217</span></a></code></pre></div>
 <p>Incorporating hydroxyproline predictions in the search for AGPs reduced the pool of identified sequences by threefold. <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> is capable of identifying potential chimeric and short AGPs without pronounced amino acid bias and with few characteristic motifs. In combination with <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> the specificity of the found sequences is greatly increased since the majority of sequences unlikely to contain hydroxyprolines are excluded.</p>
 </div>
 <div id="motif-and-amino-acid-bias-classification---maab" class="section level2">
@@ -236,226 +236,222 @@ scaned_at6 &lt;-<span class="st"> </span><span class="kw"><a href="../../referen
 <li>AGP: <code>[AVTG]P{1,3}</code> and <code>[ASVTG]P{1,2}</code>.</li>
 </ul>
 <p>The motifs are counted in a specific order ext &gt; tyr &gt; prp &gt; agp, and overlapping motifs are not counted twice. Based on the final motif count and the overall coverage of the motifs HRGPs are clustered in the mentioned 24 groups. This can be performed using <code><a href="../../reference/maab.html">maab()</a></code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">maab_at &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/maab.html">maab</a></span>(at_nsp_3hyp,
-                sequence,
-                Transcript.id)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">maab_at &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/maab.html">maab</a></span>(at_nsp_3hyp,</a>
+<a class="sourceLine" id="cb9-2" title="2">                sequence,</a>
+<a class="sourceLine" id="cb9-3" title="3">                Transcript.id)</a></code></pre></div>
 <p>The output of <code><a href="../../reference/maab.html">maab()</a></code> is a data frame containing columns: <code>id</code> - sequence identifier; <code>ext_sp</code>, <code>ext_tyr</code>, <code>prp</code> and <code>agp</code> - corresponding motif count; <code>past_percent</code>, <code>pvyk_percent</code>, <code>psky_percent</code>, <code>p_percent</code> - percentage of the corresponding amino acids in sequence; <code>coverage</code> - the motif coverage; <code>maab_class</code> - the MAAB class. First several hits as example:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">maab_at <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove maab_class 0 - not HRGP</span>
-<span class="st">  </span>head <span class="co">#first 6 hits</span>
-<span class="co">#&gt;            id ext_sp ext_tyr prp agp past_percent pvyk_percent</span>
-<span class="co">#&gt; 1 AT2G22470.1      0       0   0  21           63           31</span>
-<span class="co">#&gt; 2 AT2G21140.1      0       0   4   5           31           46</span>
-<span class="co">#&gt; 3 AT2G23130.1      0       0   0  32           57           31</span>
-<span class="co">#&gt; 4 AT2G23130.2      0       0   0  32           59           34</span>
-<span class="co">#&gt; 5 AT2G32300.1      0       1   0  16           47           24</span>
-<span class="co">#&gt; 6 AT2G34870.1      0       0   0   6           47           32</span>
-<span class="co">#&gt;   psky_percent p_percent coverage maab_class</span>
-<span class="co">#&gt; 1           32        21     0.35        1/4</span>
-<span class="co">#&gt; 2           43        20     0.11         24</span>
-<span class="co">#&gt; 3           37        21     0.37        1/4</span>
-<span class="co">#&gt; 4           40        23     0.42        1/4</span>
-<span class="co">#&gt; 5           29        13     0.14         24</span>
-<span class="co">#&gt; 6           34        26     0.14         24</span></code></pre></div>
-<p>Since the function was not provided knowledge on the GPI presence, both possible classes are indicated as in: “1/4” or “2/9”. To remove ambiguities in classes <code>get_gpi</code> argument can be set to <code>"bigpi"</code> or <code>"predgpi"</code> this will run <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code> or <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> only on the sequences that belong to one of the HRGP classes:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">maab_at &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/maab.html">maab</a></span>(at_nsp_3hyp,
-                sequence,
-                Transcript.id,
-                <span class="dt">get_gpi =</span> <span class="st">"bigpi"</span>)
-
-maab_at <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove maab_class 0 - not HRGP</span>
-<span class="st">  </span>head
-<span class="co">#&gt;            id ext_sp ext_tyr prp agp past_percent pvyk_percent</span>
-<span class="co">#&gt; 1 AT2G22470.1      0       0   0  21           63           31</span>
-<span class="co">#&gt; 2 AT2G21140.1      0       0   4   5           31           46</span>
-<span class="co">#&gt; 3 AT2G23130.1      0       0   0  32           57           31</span>
-<span class="co">#&gt; 4 AT2G23130.2      0       0   0  32           59           34</span>
-<span class="co">#&gt; 5 AT2G32300.1      0       1   0  16           47           24</span>
-<span class="co">#&gt; 6 AT2G34870.1      0       0   0   6           47           32</span>
-<span class="co">#&gt;   psky_percent p_percent coverage maab_class</span>
-<span class="co">#&gt; 1           32        21     0.35          1</span>
-<span class="co">#&gt; 2           43        20     0.11         24</span>
-<span class="co">#&gt; 3           37        21     0.37          1</span>
-<span class="co">#&gt; 4           40        23     0.42          4</span>
-<span class="co">#&gt; 5           29        13     0.14         24</span>
-<span class="co">#&gt; 6           34        26     0.14         24</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">maab_at <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove maab_class 0 - not HRGP</span></a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="st">  </span>head <span class="co">#first 6 hits</span></a>
+<a class="sourceLine" id="cb10-4" title="4"><span class="co">#&gt;            id ext_sp ext_tyr prp agp past_percent pvyk_percent</span></a>
+<a class="sourceLine" id="cb10-5" title="5"><span class="co">#&gt; 1 AT2G22470.1      0       0   0  21           63           31</span></a>
+<a class="sourceLine" id="cb10-6" title="6"><span class="co">#&gt; 2 AT2G21140.1      0       0   4   5           31           46</span></a>
+<a class="sourceLine" id="cb10-7" title="7"><span class="co">#&gt; 3 AT2G23130.1      0       0   0  32           57           31</span></a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="co">#&gt; 4 AT2G23130.2      0       0   0  32           59           34</span></a>
+<a class="sourceLine" id="cb10-9" title="9"><span class="co">#&gt; 5 AT2G32300.1      0       1   0  16           47           24</span></a>
+<a class="sourceLine" id="cb10-10" title="10"><span class="co">#&gt; 6 AT2G34870.1      0       0   0   6           47           32</span></a>
+<a class="sourceLine" id="cb10-11" title="11"><span class="co">#&gt;   psky_percent p_percent coverage maab_class</span></a>
+<a class="sourceLine" id="cb10-12" title="12"><span class="co">#&gt; 1           32        21     0.35        1/4</span></a>
+<a class="sourceLine" id="cb10-13" title="13"><span class="co">#&gt; 2           43        20     0.11         24</span></a>
+<a class="sourceLine" id="cb10-14" title="14"><span class="co">#&gt; 3           37        21     0.37        1/4</span></a>
+<a class="sourceLine" id="cb10-15" title="15"><span class="co">#&gt; 4           40        23     0.42        1/4</span></a>
+<a class="sourceLine" id="cb10-16" title="16"><span class="co">#&gt; 5           29        13     0.14         24</span></a>
+<a class="sourceLine" id="cb10-17" title="17"><span class="co">#&gt; 6           34        26     0.14         24</span></a></code></pre></div>
+<p>Since the function was not provided knowledge on the GPI presence, both possible classes are indicated as in: “1/4” or “2/9”. To remove ambiguities in classes <code>get_gpi</code> argument can be set to <code>"bigpi"</code>, <code>"predgpi"</code> or “<code>netgpi</code>” this will run <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> or <code><a href="../../reference/get_netGPI.html">get_netGPI()</a></code> only on the sequences that belong to one of the HRGP classes:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">maab_at &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/maab.html">maab</a></span>(at_nsp_3hyp,</a>
+<a class="sourceLine" id="cb11-2" title="2">                sequence,</a>
+<a class="sourceLine" id="cb11-3" title="3">                Transcript.id,</a>
+<a class="sourceLine" id="cb11-4" title="4">                <span class="dt">get_gpi =</span> <span class="st">"bigpi"</span>)</a>
+<a class="sourceLine" id="cb11-5" title="5"></a>
+<a class="sourceLine" id="cb11-6" title="6">maab_at <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb11-7" title="7"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove maab_class 0 - not HRGP</span></a>
+<a class="sourceLine" id="cb11-8" title="8"><span class="st">  </span>head</a>
+<a class="sourceLine" id="cb11-9" title="9"><span class="co">#&gt;            id ext_sp ext_tyr prp agp past_percent pvyk_percent</span></a>
+<a class="sourceLine" id="cb11-10" title="10"><span class="co">#&gt; 1 AT2G22470.1      0       0   0  21           63           31</span></a>
+<a class="sourceLine" id="cb11-11" title="11"><span class="co">#&gt; 2 AT2G21140.1      0       0   4   5           31           46</span></a>
+<a class="sourceLine" id="cb11-12" title="12"><span class="co">#&gt; 3 AT2G23130.1      0       0   0  32           57           31</span></a>
+<a class="sourceLine" id="cb11-13" title="13"><span class="co">#&gt; 4 AT2G23130.2      0       0   0  32           59           34</span></a>
+<a class="sourceLine" id="cb11-14" title="14"><span class="co">#&gt; 5 AT2G32300.1      0       1   0  16           47           24</span></a>
+<a class="sourceLine" id="cb11-15" title="15"><span class="co">#&gt; 6 AT2G34870.1      0       0   0   6           47           32</span></a>
+<a class="sourceLine" id="cb11-16" title="16"><span class="co">#&gt;   psky_percent p_percent coverage maab_class</span></a>
+<a class="sourceLine" id="cb11-17" title="17"><span class="co">#&gt; 1           32        21     0.35          1</span></a>
+<a class="sourceLine" id="cb11-18" title="18"><span class="co">#&gt; 2           43        20     0.11         24</span></a>
+<a class="sourceLine" id="cb11-19" title="19"><span class="co">#&gt; 3           37        21     0.37          1</span></a>
+<a class="sourceLine" id="cb11-20" title="20"><span class="co">#&gt; 4           40        23     0.42          4</span></a>
+<a class="sourceLine" id="cb11-21" title="21"><span class="co">#&gt; 5           29        13     0.14         24</span></a>
+<a class="sourceLine" id="cb11-22" title="22"><span class="co">#&gt; 6           34        26     0.14         24</span></a></code></pre></div>
 <p>To compare how many sequences are classified to one of the HRGP classes when proline hydroxylation is not considered:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#when considering only sequences with at least 3 predicted hydroxyprolins</span>
-maab_at <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span>nrow
-<span class="co">#&gt; [1] 71</span>
-
-<span class="co">#when considering all sequences predicted to be secreted</span>
-maab_at2 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/maab.html">maab</a></span>(at_nsp_filtered,
-                 sequence,
-                 Transcript.id,
-                 <span class="dt">get_gpi =</span> <span class="st">"bigpi"</span>)
-
-maab_at2 <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove maab_class 0 - not HRGP</span>
-<span class="st">  </span>nrow
-<span class="co">#&gt; [1] 72</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co">#when considering only sequences with at least 3 predicted hydroxyprolins</span></a>
+<a class="sourceLine" id="cb12-2" title="2">maab_at <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb12-3" title="3"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb12-4" title="4"><span class="st">  </span>nrow</a>
+<a class="sourceLine" id="cb12-5" title="5"><span class="co">#&gt; [1] 71</span></a>
+<a class="sourceLine" id="cb12-6" title="6"></a>
+<a class="sourceLine" id="cb12-7" title="7"><span class="co">#when considering all sequences predicted to be secreted</span></a>
+<a class="sourceLine" id="cb12-8" title="8">maab_at2 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/maab.html">maab</a></span>(at_nsp_filtered,</a>
+<a class="sourceLine" id="cb12-9" title="9">                 sequence,</a>
+<a class="sourceLine" id="cb12-10" title="10">                 Transcript.id,</a>
+<a class="sourceLine" id="cb12-11" title="11">                 <span class="dt">get_gpi =</span> <span class="st">"bigpi"</span>)</a>
+<a class="sourceLine" id="cb12-12" title="12"></a>
+<a class="sourceLine" id="cb12-13" title="13">maab_at2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb12-14" title="14"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove maab_class 0 - not HRGP</span></a>
+<a class="sourceLine" id="cb12-15" title="15"><span class="st">  </span>nrow</a>
+<a class="sourceLine" id="cb12-16" title="16"><span class="co">#&gt; [1] 72</span></a></code></pre></div>
 <p>Out of the 2126 sequences in <code>at_nsp_filtered</code>, 72 are predicted to belong to any MAAB class, one less compared to when proline hydroxylation prediction was incorporated. To check which sequence differs between <code>maab_at</code> and <code>maab_at2</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">maab_at2 <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="op">!</span>id <span class="op">%in%</span><span class="st"> </span>(maab_at <span class="op">%&gt;%</span>
-<span class="st">                     </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span>
-<span class="st">                     </span><span class="kw">pull</span>(id))) 
-<span class="co">#&gt;            id ext_sp ext_tyr prp agp past_percent pvyk_percent</span>
-<span class="co">#&gt; 1 AT5G09530.1      0       0   0  23           35           49</span>
-<span class="co">#&gt;   psky_percent p_percent coverage maab_class</span>
-<span class="co">#&gt; 1           46        29     0.12         24</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">maab_at2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="op">!</span>id <span class="op">%in%</span><span class="st"> </span>(maab_at <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb13-4" title="4"><span class="st">                     </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb13-5" title="5"><span class="st">                     </span><span class="kw">pull</span>(id))) </a>
+<a class="sourceLine" id="cb13-6" title="6"><span class="co">#&gt;            id ext_sp ext_tyr prp agp past_percent pvyk_percent</span></a>
+<a class="sourceLine" id="cb13-7" title="7"><span class="co">#&gt; 1 AT5G09530.1      0       0   0  23           35           49</span></a>
+<a class="sourceLine" id="cb13-8" title="8"><span class="co">#&gt;   psky_percent p_percent coverage maab_class</span></a>
+<a class="sourceLine" id="cb13-9" title="9"><span class="co">#&gt; 1           46        29     0.12         24</span></a></code></pre></div>
 <p>The differing sequence belongs to MAAB class 24 - sequences with HRGP bias and low motif coverege (&lt;15%).</p>
 </div>
 <div id="domain-annotation-and-go-enrichment" class="section level2">
 <h2 class="hasAnchor">
 <a href="#domain-annotation-and-go-enrichment" class="anchor"></a>Domain annotation and GO enrichment</h2>
 <p>Domain annotation is a fundamental research tool in protein sequence analyses. In many occasions domain annotation has already been performed prior to HRGP mining, either by using <a href="http://hmmer.org/">hmmer</a> <span class="citation">(Eddy 2011)</span>, <a href="https://www.ebi.ac.uk/interpro/interproscan.html">InterProScan</a> <span class="citation">(Jones et al. 2014)</span> or some other resource. In such circumstances the annotation can be imported into <code>R</code> and joined with the filtered sequences. When this is not the case <code>ragp</code> offers the function <code><a href="../../reference/get_hmm.html">get_hmm()</a></code> which queries the <a href="https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan">hmmscan</a> web server <span class="citation">(Finn, Clements, and Eddy 2011)</span>. Domain annotation is not necessary for AGP prediction although it enhances interpretation, but it is a fundamental part of the MAAB classification scheme. As with other <code>ragp</code> functions the first argument is the <code>data</code>, followed by the names of the columns containing the protein sequences and corresponding identifiers:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">at_hmm &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_hmm.html">get_hmm</a></span>(at_nsp_3hyp,
-                  sequence,
-                  Transcript.id)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">at_hmm &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_hmm.html">get_hmm</a></span>(at_nsp_3hyp,</a>
+<a class="sourceLine" id="cb14-2" title="2">                  sequence,</a>
+<a class="sourceLine" id="cb14-3" title="3">                  Transcript.id)</a></code></pre></div>
 <p>The resulting data frame resembles the web server’s output, or for those familiar with the <a href="http://hmmer.org/"><code>hmmer</code></a> software the domain hits table produced by using the argument <code>--domtblout</code>. First few rows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(at_hmm)
-<span class="co">#&gt;            id           name        acc                       desc   clan</span>
-<span class="co">#&gt; 1 AT2G43620.1 Glyco_hydro_19 PF00182.19          Chitinase class I CL0037</span>
-<span class="co">#&gt; 2 AT2G43620.1 Glyco_hydro_19 PF00182.19          Chitinase class I CL0037</span>
-<span class="co">#&gt; 3 AT2G43620.1  Chitin_bind_1 PF00187.19 Chitin recognition protein   &lt;NA&gt;</span>
-<span class="co">#&gt; 4 AT2G43620.1  Chitin_bind_1 PF00187.19 Chitin recognition protein   &lt;NA&gt;</span>
-<span class="co">#&gt; 5 AT2G43945.1           &lt;NA&gt;       &lt;NA&gt;                       &lt;NA&gt;   &lt;NA&gt;</span>
-<span class="co">#&gt; 6 AT2G30933.1             X8 PF07983.13                  X8 domain   &lt;NA&gt;</span>
-<span class="co">#&gt;   align_start align_end model_start model_end ievalue cevalue bitscore</span>
-<span class="co">#&gt; 1          94       228           2       155 1.3e-37 1.5e-41    129.9</span>
-<span class="co">#&gt; 2         237       283         185       232 1.6e-06 1.8e-10     28.2</span>
-<span class="co">#&gt; 3          30        64           5        38 1.9e-08 2.1e-12     34.7</span>
-<span class="co">#&gt; 4         164       168          28        32 8.5e+03 9.5e-01     -2.7</span>
-<span class="co">#&gt; 5          NA        NA          NA        NA      NA      NA       NA</span>
-<span class="co">#&gt; 6          81       151           1        75 2.6e-21 1.4e-25     76.1</span>
-<span class="co">#&gt;   reported</span>
-<span class="co">#&gt; 1     TRUE</span>
-<span class="co">#&gt; 2     TRUE</span>
-<span class="co">#&gt; 3     TRUE</span>
-<span class="co">#&gt; 4    FALSE</span>
-<span class="co">#&gt; 5    FALSE</span>
-<span class="co">#&gt; 6     TRUE</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(at_hmm)</a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="co">#&gt;            id           name        acc                       desc   clan</span></a>
+<a class="sourceLine" id="cb15-3" title="3"><span class="co">#&gt; 1 AT2G43620.1 Glyco_hydro_19 PF00182.19          Chitinase class I CL0037</span></a>
+<a class="sourceLine" id="cb15-4" title="4"><span class="co">#&gt; 2 AT2G43620.1 Glyco_hydro_19 PF00182.19          Chitinase class I CL0037</span></a>
+<a class="sourceLine" id="cb15-5" title="5"><span class="co">#&gt; 3 AT2G43620.1  Chitin_bind_1 PF00187.19 Chitin recognition protein   &lt;NA&gt;</span></a>
+<a class="sourceLine" id="cb15-6" title="6"><span class="co">#&gt; 4 AT2G43620.1  Chitin_bind_1 PF00187.19 Chitin recognition protein   &lt;NA&gt;</span></a>
+<a class="sourceLine" id="cb15-7" title="7"><span class="co">#&gt; 5 AT2G43945.1           &lt;NA&gt;       &lt;NA&gt;                       &lt;NA&gt;   &lt;NA&gt;</span></a>
+<a class="sourceLine" id="cb15-8" title="8"><span class="co">#&gt; 6 AT2G30933.1             X8 PF07983.13                  X8 domain   &lt;NA&gt;</span></a>
+<a class="sourceLine" id="cb15-9" title="9"><span class="co">#&gt;   align_start align_end model_start model_end ievalue cevalue bitscore</span></a>
+<a class="sourceLine" id="cb15-10" title="10"><span class="co">#&gt; 1          94       228           2       155 1.3e-37 1.5e-41    129.9</span></a>
+<a class="sourceLine" id="cb15-11" title="11"><span class="co">#&gt; 2         237       283         185       232 1.6e-06 1.8e-10     28.2</span></a>
+<a class="sourceLine" id="cb15-12" title="12"><span class="co">#&gt; 3          30        64           5        38 1.9e-08 2.1e-12     34.7</span></a>
+<a class="sourceLine" id="cb15-13" title="13"><span class="co">#&gt; 4         164       168          28        32 8.5e+03 9.5e-01     -2.7</span></a>
+<a class="sourceLine" id="cb15-14" title="14"><span class="co">#&gt; 5          NA        NA          NA        NA      NA      NA       NA</span></a>
+<a class="sourceLine" id="cb15-15" title="15"><span class="co">#&gt; 6          81       151           1        75 2.6e-21 1.4e-25     76.1</span></a>
+<a class="sourceLine" id="cb15-16" title="16"><span class="co">#&gt;   reported</span></a>
+<a class="sourceLine" id="cb15-17" title="17"><span class="co">#&gt; 1     TRUE</span></a>
+<a class="sourceLine" id="cb15-18" title="18"><span class="co">#&gt; 2     TRUE</span></a>
+<a class="sourceLine" id="cb15-19" title="19"><span class="co">#&gt; 3     TRUE</span></a>
+<a class="sourceLine" id="cb15-20" title="20"><span class="co">#&gt; 4    FALSE</span></a>
+<a class="sourceLine" id="cb15-21" title="21"><span class="co">#&gt; 5    FALSE</span></a>
+<a class="sourceLine" id="cb15-22" title="22"><span class="co">#&gt; 6     TRUE</span></a></code></pre></div>
 <p>To check if any of the sequence with MAAB classes contain domains the output of <code><a href="../../reference/get_hmm.html">get_hmm()</a></code>, in this case the <code>at_hmm</code> data frame can be merged (<code><a href="https://dplyr.tidyverse.org/reference/join.html">dplyr::left_join()</a></code>) with the output of <code><a href="../../reference/maab.html">maab()</a></code> - the <code>maab_at</code> data frame. After some data cleaning we can plot the frequency of domains using <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">ggplot2::geom_col()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">maab_at <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove maab_class 0 - not HRGP</span>
-<span class="st">  </span><span class="kw">left_join</span>(at_hmm) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#join hmmscan annotation by protein id (only common column name)</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(ievalue <span class="op">&lt;</span><span class="st"> </span><span class="fl">1e-10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#keep domains with independent e-value lower then 1e-10</span>
-<span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#group by sequence identifier</span>
-<span class="st">  </span><span class="kw">distinct</span>(name) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove duplicated domains per sequnce</span>
-<span class="st">  </span><span class="kw">group_by</span>(name) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#group by domain name</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#count number of sequences per domain</span>
-<span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span><span class="co">#plot the frequency</span>
-<span class="st">  </span><span class="kw">geom_col</span>(<span class="kw">aes</span>(<span class="dt">x =</span> name, <span class="dt">y =</span> n)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span><span class="st"> </span><span class="co">#style the plot</span>
-<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">45</span>,
-                                   <span class="dt">hjust =</span> <span class="dv">1</span>)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">ylab</span>(<span class="st">"number of sequences"</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">xlab</span>(<span class="st">"domain name"</span>)</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">maab_at <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(maab_class <span class="op">!=</span><span class="st"> "0"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove maab_class 0 - not HRGP</span></a>
+<a class="sourceLine" id="cb16-3" title="3"><span class="st">  </span><span class="kw">left_join</span>(at_hmm) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#join hmmscan annotation by protein id (only common column name)</span></a>
+<a class="sourceLine" id="cb16-4" title="4"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(ievalue <span class="op">&lt;</span><span class="st"> </span><span class="fl">1e-10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#keep domains with independent e-value lower then 1e-10</span></a>
+<a class="sourceLine" id="cb16-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#group by sequence identifier</span></a>
+<a class="sourceLine" id="cb16-6" title="6"><span class="st">  </span><span class="kw">distinct</span>(name) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove duplicated domains per sequnce</span></a>
+<a class="sourceLine" id="cb16-7" title="7"><span class="st">  </span><span class="kw">group_by</span>(name) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#group by domain name</span></a>
+<a class="sourceLine" id="cb16-8" title="8"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#count number of sequences per domain</span></a>
+<a class="sourceLine" id="cb16-9" title="9"><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span><span class="co">#plot the frequency</span></a>
+<a class="sourceLine" id="cb16-10" title="10"><span class="st">  </span><span class="kw">geom_col</span>(<span class="kw">aes</span>(<span class="dt">x =</span> name, <span class="dt">y =</span> n)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb16-11" title="11"><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span><span class="st"> </span><span class="co">#style the plot</span></a>
+<a class="sourceLine" id="cb16-12" title="12"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">45</span>,</a>
+<a class="sourceLine" id="cb16-13" title="13">                                   <span class="dt">hjust =</span> <span class="dv">1</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb16-14" title="14"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">"number of sequences"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb16-15" title="15"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">"domain name"</span>)</a></code></pre></div>
 <center>
-<div class="figure">
-<img src="https://missuse.github.io/ragp/articles/hmmscan3.svg">
-</div>
+<p><img src="https://missuse.github.io/ragp/articles/hmmscan3.svg"></p>
 </center>
 <p>Several sequences contain domains such as plastocyanin-like domain (Cu_bind_like), hydrophobic seed protein, probable lipid transfer (LTP_2), X8 and others. In the original MAAB description <span class="citation">(Johnson et al. 2017)</span> the authors suggested removal of sequences with identified domains prior to MAAB however we trust it is more informative to first run MAAB and then check if any of the sequences contain domains.</p>
 <p>Similarly, to check the domain frequencies in sequences identified as AGPs:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scaned_at6 <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(total_length <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove sequences without motif spans</span>
-<span class="st">  </span><span class="kw">left_join</span>(at_hmm) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#join hmmscan annotation by protein id (only common column name)</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(ievalue <span class="op">&lt;</span><span class="st"> </span><span class="fl">1e-10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove domains with independent e-value higher then 1e-10</span>
-<span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#group by sequence identifier</span>
-<span class="st">  </span><span class="kw">distinct</span>(name) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove duplicated domains per sequnce</span>
-<span class="st">  </span><span class="kw">group_by</span>(name) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#group by domain name</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#count number of sequences per domain</span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#arrenge by count</span>
-<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#select top ten</span>
-<span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span><span class="co">#plot the frequency</span>
-<span class="st">  </span><span class="kw">geom_col</span>(<span class="kw">aes</span>(<span class="dt">x =</span> name, <span class="dt">y =</span> n)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span><span class="st"> </span><span class="co">#style the plot</span>
-<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">45</span>,
-                                   <span class="dt">hjust =</span> <span class="dv">1</span>)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">ylab</span>(<span class="st">"number of sequences"</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">xlab</span>(<span class="st">"domain name"</span>)</code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">scaned_at6 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb17-2" title="2"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(total_length <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove sequences without motif spans</span></a>
+<a class="sourceLine" id="cb17-3" title="3"><span class="st">  </span><span class="kw">left_join</span>(at_hmm) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#join hmmscan annotation by protein id (only common column name)</span></a>
+<a class="sourceLine" id="cb17-4" title="4"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(ievalue <span class="op">&lt;</span><span class="st"> </span><span class="fl">1e-10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove domains with independent e-value higher then 1e-10</span></a>
+<a class="sourceLine" id="cb17-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#group by sequence identifier</span></a>
+<a class="sourceLine" id="cb17-6" title="6"><span class="st">  </span><span class="kw">distinct</span>(name) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove duplicated domains per sequnce</span></a>
+<a class="sourceLine" id="cb17-7" title="7"><span class="st">  </span><span class="kw">group_by</span>(name) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#group by domain name</span></a>
+<a class="sourceLine" id="cb17-8" title="8"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#count number of sequences per domain</span></a>
+<a class="sourceLine" id="cb17-9" title="9"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#arrenge by count</span></a>
+<a class="sourceLine" id="cb17-10" title="10"><span class="st">  </span><span class="kw">top_n</span>(<span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#select top ten</span></a>
+<a class="sourceLine" id="cb17-11" title="11"><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span><span class="co">#plot the frequency</span></a>
+<a class="sourceLine" id="cb17-12" title="12"><span class="st">  </span><span class="kw">geom_col</span>(<span class="kw">aes</span>(<span class="dt">x =</span> name, <span class="dt">y =</span> n)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb17-13" title="13"><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span><span class="st"> </span><span class="co">#style the plot</span></a>
+<a class="sourceLine" id="cb17-14" title="14"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">45</span>,</a>
+<a class="sourceLine" id="cb17-15" title="15">                                   <span class="dt">hjust =</span> <span class="dv">1</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb17-16" title="16"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">"number of sequences"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb17-17" title="17"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">"domain name"</span>)</a></code></pre></div>
 <center>
-<div class="figure">
-<img src="https://missuse.github.io/ragp/articles/hmmscan4.svg">
-</div>
+<p><img src="https://missuse.github.io/ragp/articles/hmmscan4.svg"></p>
 </center>
 <p>As evident from the above examples an especially effective way to manipulate objects returned by <code>ragp</code> functions is to utilize the <code>tidyverse</code> collection of packages (<code>dplyr</code> and <code>ggplot2</code> are used above).</p>
 <p>Gene ontology enrichment can be performed with <code><a href="../../reference/pfam2go.html">pfam2go()</a></code> which maps Pfam accessions to GO terms based on <a href="http://geneontology.org/external2go/pfam2go" class="uri">http://geneontology.org/external2go/pfam2go</a>. The function is called on the output of <code><a href="../../reference/get_hmm.html">get_hmm()</a></code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">go_enriched &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/pfam2go.html">pfam2go</a></span>(at_hmm)
-
-<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(go_enriched) <span class="co">#first few rows</span>
-<span class="co">#&gt;            id           name        acc              desc   clan</span>
-<span class="co">#&gt; 1 AT2G43620.1 Glyco_hydro_19 PF00182.19 Chitinase class I CL0037</span>
-<span class="co">#&gt; 2 AT2G43620.1 Glyco_hydro_19 PF00182.19 Chitinase class I CL0037</span>
-<span class="co">#&gt; 3 AT2G43620.1 Glyco_hydro_19 PF00182.19 Chitinase class I CL0037</span>
-<span class="co">#&gt; 4 AT2G43620.1 Glyco_hydro_19 PF00182.19 Chitinase class I CL0037</span>
-<span class="co">#&gt; 5 AT2G43620.1 Glyco_hydro_19 PF00182.19 Chitinase class I CL0037</span>
-<span class="co">#&gt; 6 AT2G43620.1 Glyco_hydro_19 PF00182.19 Chitinase class I CL0037</span>
-<span class="co">#&gt;   align_start align_end model_start model_end ievalue cevalue bitscore</span>
-<span class="co">#&gt; 1          94       228           2       155 1.3e-37 1.5e-41      130</span>
-<span class="co">#&gt; 2          94       228           2       155 1.3e-37 1.5e-41      130</span>
-<span class="co">#&gt; 3          94       228           2       155 1.3e-37 1.5e-41      130</span>
-<span class="co">#&gt; 4         237       283         185       232 1.6e-06 1.8e-10       28</span>
-<span class="co">#&gt; 5         237       283         185       232 1.6e-06 1.8e-10       28</span>
-<span class="co">#&gt; 6         237       283         185       232 1.6e-06 1.8e-10       28</span>
-<span class="co">#&gt;   reported      Pfam_name                                      GO_name</span>
-<span class="co">#&gt; 1     TRUE Glyco_hydro_19                  GO:chitin catabolic process</span>
-<span class="co">#&gt; 2     TRUE Glyco_hydro_19 GO:cell wall macromolecule catabolic process</span>
-<span class="co">#&gt; 3     TRUE Glyco_hydro_19                        GO:chitinase activity</span>
-<span class="co">#&gt; 4     TRUE Glyco_hydro_19                  GO:chitin catabolic process</span>
-<span class="co">#&gt; 5     TRUE Glyco_hydro_19 GO:cell wall macromolecule catabolic process</span>
-<span class="co">#&gt; 6     TRUE Glyco_hydro_19                        GO:chitinase activity</span>
-<span class="co">#&gt;       GO_acc</span>
-<span class="co">#&gt; 1 GO:0006032</span>
-<span class="co">#&gt; 2 GO:0016998</span>
-<span class="co">#&gt; 3 GO:0004568</span>
-<span class="co">#&gt; 4 GO:0006032</span>
-<span class="co">#&gt; 5 GO:0016998</span>
-<span class="co">#&gt; 6 GO:0004568</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">go_enriched &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/pfam2go.html">pfam2go</a></span>(at_hmm)</a>
+<a class="sourceLine" id="cb18-2" title="2"></a>
+<a class="sourceLine" id="cb18-3" title="3"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(go_enriched) <span class="co">#first few rows</span></a>
+<a class="sourceLine" id="cb18-4" title="4"><span class="co">#&gt;            id           name        acc              desc   clan</span></a>
+<a class="sourceLine" id="cb18-5" title="5"><span class="co">#&gt; 1 AT2G43620.1 Glyco_hydro_19 PF00182.19 Chitinase class I CL0037</span></a>
+<a class="sourceLine" id="cb18-6" title="6"><span class="co">#&gt; 2 AT2G43620.1 Glyco_hydro_19 PF00182.19 Chitinase class I CL0037</span></a>
+<a class="sourceLine" id="cb18-7" title="7"><span class="co">#&gt; 3 AT2G43620.1 Glyco_hydro_19 PF00182.19 Chitinase class I CL0037</span></a>
+<a class="sourceLine" id="cb18-8" title="8"><span class="co">#&gt; 4 AT2G43620.1 Glyco_hydro_19 PF00182.19 Chitinase class I CL0037</span></a>
+<a class="sourceLine" id="cb18-9" title="9"><span class="co">#&gt; 5 AT2G43620.1 Glyco_hydro_19 PF00182.19 Chitinase class I CL0037</span></a>
+<a class="sourceLine" id="cb18-10" title="10"><span class="co">#&gt; 6 AT2G43620.1 Glyco_hydro_19 PF00182.19 Chitinase class I CL0037</span></a>
+<a class="sourceLine" id="cb18-11" title="11"><span class="co">#&gt;   align_start align_end model_start model_end ievalue cevalue bitscore</span></a>
+<a class="sourceLine" id="cb18-12" title="12"><span class="co">#&gt; 1          94       228           2       155 1.3e-37 1.5e-41      130</span></a>
+<a class="sourceLine" id="cb18-13" title="13"><span class="co">#&gt; 2          94       228           2       155 1.3e-37 1.5e-41      130</span></a>
+<a class="sourceLine" id="cb18-14" title="14"><span class="co">#&gt; 3          94       228           2       155 1.3e-37 1.5e-41      130</span></a>
+<a class="sourceLine" id="cb18-15" title="15"><span class="co">#&gt; 4         237       283         185       232 1.6e-06 1.8e-10       28</span></a>
+<a class="sourceLine" id="cb18-16" title="16"><span class="co">#&gt; 5         237       283         185       232 1.6e-06 1.8e-10       28</span></a>
+<a class="sourceLine" id="cb18-17" title="17"><span class="co">#&gt; 6         237       283         185       232 1.6e-06 1.8e-10       28</span></a>
+<a class="sourceLine" id="cb18-18" title="18"><span class="co">#&gt;   reported      Pfam_name                                      GO_name</span></a>
+<a class="sourceLine" id="cb18-19" title="19"><span class="co">#&gt; 1     TRUE Glyco_hydro_19                  GO:chitin catabolic process</span></a>
+<a class="sourceLine" id="cb18-20" title="20"><span class="co">#&gt; 2     TRUE Glyco_hydro_19                        GO:chitinase activity</span></a>
+<a class="sourceLine" id="cb18-21" title="21"><span class="co">#&gt; 3     TRUE Glyco_hydro_19 GO:cell wall macromolecule catabolic process</span></a>
+<a class="sourceLine" id="cb18-22" title="22"><span class="co">#&gt; 4     TRUE Glyco_hydro_19                  GO:chitin catabolic process</span></a>
+<a class="sourceLine" id="cb18-23" title="23"><span class="co">#&gt; 5     TRUE Glyco_hydro_19                        GO:chitinase activity</span></a>
+<a class="sourceLine" id="cb18-24" title="24"><span class="co">#&gt; 6     TRUE Glyco_hydro_19 GO:cell wall macromolecule catabolic process</span></a>
+<a class="sourceLine" id="cb18-25" title="25"><span class="co">#&gt;       GO_acc</span></a>
+<a class="sourceLine" id="cb18-26" title="26"><span class="co">#&gt; 1 GO:0006032</span></a>
+<a class="sourceLine" id="cb18-27" title="27"><span class="co">#&gt; 2 GO:0004568</span></a>
+<a class="sourceLine" id="cb18-28" title="28"><span class="co">#&gt; 3 GO:0016998</span></a>
+<a class="sourceLine" id="cb18-29" title="29"><span class="co">#&gt; 4 GO:0006032</span></a>
+<a class="sourceLine" id="cb18-30" title="30"><span class="co">#&gt; 5 GO:0004568</span></a>
+<a class="sourceLine" id="cb18-31" title="31"><span class="co">#&gt; 6 GO:0016998</span></a></code></pre></div>
 </div>
 <div id="gpi-prediction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#gpi-prediction" class="anchor"></a>GPI prediction</h2>
-<p>HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor <span class="citation">(Ellis et al. 2010)</span>. Attachment of the GPI moiety to the carboxyl terminus (omega-site) of the polypeptide occurs after proteolytic cleavage of a C-terminal propeptide. In order to predict the presence of the omega sites in the filtered sequences two functions are available: <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code> which queries the <a href="http://mendel.imp.ac.at/gpi/plant_server.html">big-PI Plant Predictor</a> <span class="citation">(B. Eisenhaber et al. 2003)</span> server and <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> which queries the <a href="http://gpcr.biocomp.unibo.it/predgpi/">PredGPI</a> <span class="citation">(Pierleoni, Martelli, and Casadio 2008)</span> server.</p>
+<p>HRGPs, and especially AGPs are often linked to the membrane by a glycosylphosphatidylinositol (GPI) anchor <span class="citation">(Ellis et al. 2010)</span>. Attachment of the GPI moiety to the carboxyl terminus (omega-site) of the polypeptide occurs after proteolytic cleavage of a C-terminal propeptide. In order to predict the presence of the omega sites in the filtered sequences two functions are available: <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code> which queries the <a href="http://mendel.imp.ac.at/gpi/plant_server.html">big-PI Plant Predictor</a> <span class="citation">(Eisenhaber et al. 2003)</span> server, and <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> which queries the <a href="http://gpcr.biocomp.unibo.it/predgpi/">PredGPI</a> <span class="citation">(Pierleoni, Martelli, and Casadio 2008)</span> server and <code><a href="../../reference/get_netGPI.html">get_netGPI()</a></code> which queries the <a href="https://services.healthtech.dtu.dk/service.php?NetGPI-1.0">NetGPI</a> server.</p>
 <p>To query <a href="http://mendel.imp.ac.at/gpi/plant_server.html">big-PI Plant Predictor</a>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">at_gpi &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_big_pi.html">get_big_pi</a></span>(at_nsp_3hyp,
-                     sequence,
-                     Transcript.id)</code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">at_gpi &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_big_pi.html">get_big_pi</a></span>(at_nsp_3hyp,</a>
+<a class="sourceLine" id="cb19-2" title="2">                     sequence,</a>
+<a class="sourceLine" id="cb19-3" title="3">                     Transcript.id)</a></code></pre></div>
 <p>This function provides detailed per sequence output when the argument <code>simplify</code> is set to <code>FALSE</code>, by default <code>simplify</code> is set to <code>TRUE</code> and the resulting data frame has one row per sequence:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(at_gpi)
-<span class="co">#&gt;             omega_site Quality  PValue          id is.bigpi</span>
-<span class="co">#&gt; AT2G43620.1        257    None 1.1e-01 AT2G43620.1    FALSE</span>
-<span class="co">#&gt; AT2G43945.1        265    None 4.6e-01 AT2G43945.1    FALSE</span>
-<span class="co">#&gt; AT2G30933.1        200       P 6.8e-05 AT2G30933.1     TRUE</span>
-<span class="co">#&gt; AT2G30933.2        141    None 3.1e-01 AT2G30933.2    FALSE</span>
-<span class="co">#&gt; AT2G22470.1        107       P 3.4e-08 AT2G22470.1     TRUE</span>
-<span class="co">#&gt; AT2G43610.1        255    None 3.2e-01 AT2G43610.1    FALSE</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(at_gpi)</a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="co">#&gt;             omega_site Quality  PValue          id is.bigpi</span></a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="co">#&gt; AT2G43620.1        257    None 1.1e-01 AT2G43620.1    FALSE</span></a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="co">#&gt; AT2G43945.1        265    None 4.6e-01 AT2G43945.1    FALSE</span></a>
+<a class="sourceLine" id="cb20-5" title="5"><span class="co">#&gt; AT2G30933.1        200       P 6.8e-05 AT2G30933.1     TRUE</span></a>
+<a class="sourceLine" id="cb20-6" title="6"><span class="co">#&gt; AT2G30933.2        141    None 3.1e-01 AT2G30933.2    FALSE</span></a>
+<a class="sourceLine" id="cb20-7" title="7"><span class="co">#&gt; AT2G22470.1        107       P 3.4e-08 AT2G22470.1     TRUE</span></a>
+<a class="sourceLine" id="cb20-8" title="8"><span class="co">#&gt; AT2G43610.1        255    None 3.2e-01 AT2G43610.1    FALSE</span></a></code></pre></div>
 <p>similarly to query <a href="http://gpcr.biocomp.unibo.it/predgpi/">PredGPI</a>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">at_gpi_pred &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_pred_gpi.html">get_pred_gpi</a></span>(at_nsp_3hyp,
-                            sequence,
-                            Transcript.id)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(at_gpi_pred)
-<span class="co">#&gt;            id omega_site specificity is.gpi</span>
-<span class="co">#&gt; 1 AT2G43620.1        252        0.42  FALSE</span>
-<span class="co">#&gt; 2 AT2G43945.1        268        0.48  FALSE</span>
-<span class="co">#&gt; 3 AT2G30933.1        197        1.00   TRUE</span>
-<span class="co">#&gt; 4 AT2G30933.2        139        0.48  FALSE</span>
-<span class="co">#&gt; 5 AT2G22470.1        107        1.00   TRUE</span>
-<span class="co">#&gt; 6 AT2G43610.1        260        0.16  FALSE</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">at_gpi_pred &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_pred_gpi.html">get_pred_gpi</a></span>(at_nsp_3hyp,</a>
+<a class="sourceLine" id="cb21-2" title="2">                            sequence,</a>
+<a class="sourceLine" id="cb21-3" title="3">                            Transcript.id)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(at_gpi_pred)</a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="co">#&gt;            id omega_site specificity is.gpi</span></a>
+<a class="sourceLine" id="cb22-3" title="3"><span class="co">#&gt; 1 AT2G43620.1        252        0.42  FALSE</span></a>
+<a class="sourceLine" id="cb22-4" title="4"><span class="co">#&gt; 2 AT2G43945.1        268        0.48  FALSE</span></a>
+<a class="sourceLine" id="cb22-5" title="5"><span class="co">#&gt; 3 AT2G30933.1        197        1.00   TRUE</span></a>
+<a class="sourceLine" id="cb22-6" title="6"><span class="co">#&gt; 4 AT2G30933.2        139        0.48  FALSE</span></a>
+<a class="sourceLine" id="cb22-7" title="7"><span class="co">#&gt; 5 AT2G22470.1        107        1.00   TRUE</span></a>
+<a class="sourceLine" id="cb22-8" title="8"><span class="co">#&gt; 6 AT2G43610.1        260        0.16  FALSE</span></a></code></pre></div>
 <p>To check which of the predicted AGPs using <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> are also predicted to be anchored by a GPI the output of <code>get_pred_gp()</code> will be merged with <code>scaned_at6</code> data frame using <code><a href="https://dplyr.tidyverse.org/reference/join.html">dplyr::left_join()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scaned_at6 <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(total_length <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#filter out non AGPs</span>
-<span class="st">  </span><span class="kw">left_join</span>(at_gpi_pred) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#merge GPI predictions</span>
-<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">with_gpi =</span> <span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(is.gpi), <span class="co">#sum TRUE instances</span>
-            <span class="dt">without_gpi =</span> <span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="op">!</span>is.gpi)) <span class="co">#sum FALSE instances</span>
-<span class="co">#&gt; Joining, by = "id"</span>
-<span class="co">#&gt;   with_gpi without_gpi</span>
-<span class="co">#&gt; 1       88         129</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">scaned_at6 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(total_length <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#filter out non AGPs</span></a>
+<a class="sourceLine" id="cb23-3" title="3"><span class="st">  </span><span class="kw">left_join</span>(at_gpi_pred) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#merge GPI predictions</span></a>
+<a class="sourceLine" id="cb23-4" title="4"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">with_gpi =</span> <span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(is.gpi), <span class="co">#sum TRUE instances</span></a>
+<a class="sourceLine" id="cb23-5" title="5">            <span class="dt">without_gpi =</span> <span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="op">!</span>is.gpi)) <span class="co">#sum FALSE instances</span></a>
+<a class="sourceLine" id="cb23-6" title="6"><span class="co">#&gt; Joining, by = "id"</span></a>
+<a class="sourceLine" id="cb23-7" title="7"><span class="co">#&gt;   with_gpi without_gpi</span></a>
+<a class="sourceLine" id="cb23-8" title="8"><span class="co">#&gt; 1       88         129</span></a></code></pre></div>
 </div>
 <div id="disorder-prediction" class="section level2">
 <h2 class="hasAnchor">
@@ -469,10 +465,10 @@ maab_at2 <span class="op">%&gt;%</span>
 <li>‘NMR’ - based on NMR mobility. NMR flexibility is calculated using the <a href="http://protein.bio.unipd.it/mobi/">Mobi server</a> <span class="citation">(Martin, Walsh, and Tosatto 2010)</span> optimized to replicate the ordered-disordered NMR definition used in CASP8.</li>
 </ul>
 <p>These models provide quite different predictions. To query ESpritz:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">at_espritz &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_espritz.html">get_espritz</a></span>(at_nsp_3hyp,
-                          sequence,
-                          Transcript.id,
-                          <span class="dt">model =</span> <span class="st">"NMR"</span>)</code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">at_espritz &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_espritz.html">get_espritz</a></span>(at_nsp_3hyp,</a>
+<a class="sourceLine" id="cb24-2" title="2">                          sequence,</a>
+<a class="sourceLine" id="cb24-3" title="3">                          Transcript.id,</a>
+<a class="sourceLine" id="cb24-4" title="4">                          <span class="dt">model =</span> <span class="st">"NMR"</span>)</a></code></pre></div>
 <pre><code>#&gt;   start end          id
 #&gt; 1     1   7 AT2G43620.1
 #&gt; 2    49  92 AT2G43620.1
@@ -481,11 +477,11 @@ maab_at2 <span class="op">%&gt;%</span>
 #&gt; 5   168 170 AT2G43620.1
 #&gt; 6   175 178 AT2G43620.1</code></pre>
 <p>The output of the function depends on the <code>simplify</code> argument. If <code>simplify = TRUE</code> (default) the output is a <code>data.frame</code> (one row per disordered region) with columns <code>start</code> and <code>end</code> which indicate the start and end of the predicted disordered region as well as the column <code>id</code> which is a protein identifier. When <code>simplify = FALSE</code> the output contains predicted probabilities of disorder for each amino acid.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">at_espritz &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_espritz.html">get_espritz</a></span>(at_nsp_3hyp,
-                          sequence,
-                          Transcript.id,
-                          <span class="dt">model =</span> <span class="st">"NMR"</span>,
-                          <span class="dt">simplify =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">at_espritz &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_espritz.html">get_espritz</a></span>(at_nsp_3hyp,</a>
+<a class="sourceLine" id="cb26-2" title="2">                          sequence,</a>
+<a class="sourceLine" id="cb26-3" title="3">                          Transcript.id,</a>
+<a class="sourceLine" id="cb26-4" title="4">                          <span class="dt">model =</span> <span class="st">"NMR"</span>,</a>
+<a class="sourceLine" id="cb26-5" title="5">                          <span class="dt">simplify =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code>#&gt;            id  probability
 #&gt; 1 AT2G43620.1 0.477693....
 #&gt; 2 AT2G43945.1 0.8773, ....
@@ -506,31 +502,31 @@ maab_at2 <span class="op">%&gt;%</span>
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-eddy_accelerated_2011">
-<p>Eddy, Sean R. 2011. “Accelerated Profile HMM Searches.” <em>PLOS Computational Biology</em> 7 (10): 1–16. doi:<a href="https://doi.org/10.1371/journal.pcbi.1002195">10.1371/journal.pcbi.1002195</a>.</p>
+<p>Eddy, Sean R. 2011. “Accelerated Profile HMM Searches.” <em>PLOS Computational Biology</em> 7 (10): 1–16. <a href="https://doi.org/10.1371/journal.pcbi.1002195">https://doi.org/10.1371/journal.pcbi.1002195</a>.</p>
 </div>
 <div id="ref-eisenhaber_glycosylphosphatidylinositol_2003">
-<p>Eisenhaber, Birgit, Michael Wildpaner, Carolyn J. Schultz, Georg H. H. Borner, Paul Dupree, and Frank Eisenhaber. 2003. “Glycosylphosphatidylinositol Lipid Anchoring of Plant Proteins. Sensitive Prediction from Sequence- and Genome-Wide Studies for Arabidopsis and Rice.” <em>Plant Physiology</em> 133 (4): 1691–1701. doi:<a href="https://doi.org/10.1104/pp.103.023580">10.1104/pp.103.023580</a>.</p>
+<p>Eisenhaber, Birgit, Michael Wildpaner, Carolyn J. Schultz, Georg H. H. Borner, Paul Dupree, and Frank Eisenhaber. 2003. “Glycosylphosphatidylinositol Lipid Anchoring of Plant Proteins. Sensitive Prediction from Sequence- and Genome-Wide Studies for Arabidopsis and Rice.” <em>Plant Physiology</em> 133 (4): 1691–1701. <a href="https://doi.org/10.1104/pp.103.023580">https://doi.org/10.1104/pp.103.023580</a>.</p>
 </div>
 <div id="ref-ellis_arabinogalactan-proteins:_2010">
-<p>Ellis, Miriam, Jack Egelund, Carolyn J. Schultz, and Antony Bacic. 2010. “Arabinogalactan-Proteins: Key Regulators at the Cell Surface?” <em>Plant Physiology</em> 153 (2): 403–19. doi:<a href="https://doi.org/10.1104/pp.110.156000">10.1104/pp.110.156000</a>.</p>
+<p>Ellis, Miriam, Jack Egelund, Carolyn J. Schultz, and Antony Bacic. 2010. “Arabinogalactan-Proteins: Key Regulators at the Cell Surface?” <em>Plant Physiology</em> 153 (2): 403–19. <a href="https://doi.org/10.1104/pp.110.156000">https://doi.org/10.1104/pp.110.156000</a>.</p>
 </div>
 <div id="ref-finn_hmmer_2011">
-<p>Finn, Robert D., Jody Clements, and Sean R. Eddy. 2011. “HMMER Web Server: Interactive Sequence Similarity Searching.” <em>Nucleic Acids Research</em> 39 (Web Server issue): W29–W37. doi:<a href="https://doi.org/10.1093/nar/gkr367">10.1093/nar/gkr367</a>.</p>
+<p>Finn, Robert D., Jody Clements, and Sean R. Eddy. 2011. “HMMER Web Server: Interactive Sequence Similarity Searching.” <em>Nucleic Acids Research</em> 39 (Web Server issue): W29–W37. <a href="https://doi.org/10.1093/nar/gkr367">https://doi.org/10.1093/nar/gkr367</a>.</p>
 </div>
 <div id="ref-johnson_pipeline_2017">
-<p>Johnson, Kim L., Andrew M. Cassin, Andrew Lonsdale, Antony Bacic, Monika S. Doblin, and Carolyn J. Schultz. 2017. “Pipeline to Identify Hydroxyproline-Rich Glycoproteins.” <em>Plant Physiology</em> 174 (2): 886–903. doi:<a href="https://doi.org/10.1104/pp.17.00294">10.1104/pp.17.00294</a>.</p>
+<p>Johnson, Kim L., Andrew M. Cassin, Andrew Lonsdale, Antony Bacic, Monika S. Doblin, and Carolyn J. Schultz. 2017. “Pipeline to Identify Hydroxyproline-Rich Glycoproteins.” <em>Plant Physiology</em> 174 (2): 886–903. <a href="https://doi.org/10.1104/pp.17.00294">https://doi.org/10.1104/pp.17.00294</a>.</p>
 </div>
 <div id="ref-jones_interproscan_2014">
-<p>Jones, Philip, David Binns, Hsin-Yu Chang, Matthew Fraser, Weizhong Li, Craig McAnulla, Hamish McWilliam, et al. 2014. “InterProScan 5: Genome-Scale Protein Function Classification.” <em>Bioinformatics</em> 30 (9): 1236–40. doi:<a href="https://doi.org/10.1093/bioinformatics/btu031">10.1093/bioinformatics/btu031</a>.</p>
+<p>Jones, Philip, David Binns, Hsin-Yu Chang, Matthew Fraser, Weizhong Li, Craig McAnulla, Hamish McWilliam, et al. 2014. “InterProScan 5: Genome-Scale Protein Function Classification.” <em>Bioinformatics</em> 30 (9): 1236–40. <a href="https://doi.org/10.1093/bioinformatics/btu031">https://doi.org/10.1093/bioinformatics/btu031</a>.</p>
 </div>
 <div id="ref-martin_mobi_2010">
-<p>Martin, Alberto J. M., Ian Walsh, and Silvio C. E. Tosatto. 2010. “MOBI: A Web Server to Define and Visualize Structural Mobility in NMR Protein Ensembles.” <em>Bioinformatics</em> 26 (22): 2916–7. doi:<a href="https://doi.org/10.1093/bioinformatics/btq537">10.1093/bioinformatics/btq537</a>.</p>
+<p>Martin, Alberto J. M., Ian Walsh, and Silvio C. E. Tosatto. 2010. “MOBI: A Web Server to Define and Visualize Structural Mobility in NMR Protein Ensembles.” <em>Bioinformatics</em> 26 (22): 2916–7. <a href="https://doi.org/10.1093/bioinformatics/btq537">https://doi.org/10.1093/bioinformatics/btq537</a>.</p>
 </div>
 <div id="ref-pierleoni_predgpi_2008">
-<p>Pierleoni, Andrea, Pier Luigi Martelli, and Rita Casadio. 2008. “PredGPI: A GPI-Anchor Predictor.” <em>BMC Bioinformatics</em> 9 (September): 392. doi:<a href="https://doi.org/10.1186/1471-2105-9-392">10.1186/1471-2105-9-392</a>.</p>
+<p>Pierleoni, Andrea, Pier Luigi Martelli, and Rita Casadio. 2008. “PredGPI: A GPI-Anchor Predictor.” <em>BMC Bioinformatics</em> 9 (September): 392. <a href="https://doi.org/10.1186/1471-2105-9-392">https://doi.org/10.1186/1471-2105-9-392</a>.</p>
 </div>
 <div id="ref-walsh_espritz_2012">
-<p>Walsh, Ian, Alberto J. M. Martin, Tomàs Di Domenico, and Silvio C. E. Tosatto. 2012. “ESpritz: Accurate and Fast Prediction of Protein Disorder.” <em>Bioinformatics</em> 28 (4): 503–9. doi:<a href="https://doi.org/10.1093/bioinformatics/btr682">10.1093/bioinformatics/btr682</a>.</p>
+<p>Walsh, Ian, Alberto J. M. Martin, Tomàs Di Domenico, and Silvio C. E. Tosatto. 2012. “ESpritz: Accurate and Fast Prediction of Protein Disorder.” <em>Bioinformatics</em> 28 (4): 503–9. <a href="https://doi.org/10.1093/bioinformatics/btr682">https://doi.org/10.1093/bioinformatics/btr682</a>.</p>
 </div>
 </div>
 </div>
@@ -561,7 +557,7 @@ maab_at2 <span class="op">%&gt;%</span>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>

@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1.0</span>
       </span>
     </div>
 
@@ -106,15 +106,18 @@
 <p><img src="https://missuse.github.io/ragp/reference/figures/ragp_flow_chart.svg" style="display: block; margin-left: auto; margin-right: auto;"></p>
 <p>The filtering layer:</p>
 <ul>
-<li>predict the presence of secretory signals (N-sp) and filter sequences containing them. Since several prediction algorithms are utilized (<code><a href="reference/get_signalp.html">get_signalp()</a></code>, <code><a href="reference/get_targetp.html">get_targetp()</a></code> and <code><a href="reference/get_phobius.html">get_phobius()</a></code>) this decision is reached by a majority vote.</li>
+<li>predict the presence of secretory signals (N-sp) and filter sequences containing them. Since several prediction algorithms are utilized (<code><a href="reference/get_signalp.html">get_signalp()</a></code>, <code><a href="reference/get_targetp.html">get_targetp()</a></code> and <code><a href="reference/get_phobius.html">get_phobius()</a></code>) this decision is reached by a majority vote.<br>
+</li>
 <li>predict proline hydroxylation (<code><a href="reference/predict_hyp.html">predict_hyp()</a></code>) and filter sequences containing at least three potential hydroxyprolines.</li>
 </ul>
 <p>The analysis layer:</p>
 <ul>
 <li>find localized clusters of characteristic arabinogalactan motifs (AG glycomodules) to identify potential AGPs (<code><a href="reference/scan_ag.html">scan_ag()</a></code>) among the hydroxyproline containing sequences.</li>
-<li>perform motif and amino acid bias (MAAB, (Johnson et al. 2017)) classification scheme (<code><a href="reference/maab.html">maab()</a></code>) to classify hydroxyproline containing sequences.</li>
-<li>annotate domains using <a href="https://pfam.xfam.org/">Pfam</a> (<code><a href="reference/get_hmm.html">get_hmm()</a></code>) and enrich with gene ontology (GO) terms (<code><a href="reference/pfam2go.html">pfam2go()</a></code>).</li>
-<li>predict the presence of potential glycosylphosphatidylinositol attachment sites (<code><a href="reference/get_big_pi.html">get_big_pi()</a></code> and <code><a href="reference/get_pred_gpi.html">get_pred_gpi()</a></code>).</li>
+<li>perform motif and amino acid bias (MAAB, (Johnson et al. 2017)) classification scheme (<code><a href="reference/maab.html">maab()</a></code>) to classify hydroxyproline containing sequences.</li>
+<li>annotate domains using <a href="https://pfam.xfam.org/">Pfam</a> (<code><a href="reference/get_hmm.html">get_hmm()</a></code>) and enrich with gene ontology (GO) terms (<code><a href="reference/pfam2go.html">pfam2go()</a></code>).<br>
+</li>
+<li>predict the presence of potential glycosylphosphatidylinositol attachment sites (<code><a href="reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="reference/get_pred_gpi.html">get_pred_gpi()</a></code> and <code><a href="reference/get_netGPI.html">get_netGPI()</a></code>).<br>
+</li>
 <li>predict disordered regions in proteins (<code><a href="reference/get_espritz.html">get_espritz()</a></code>).</li>
 </ul>
 <p>Additionally <code>ragp</code> provides tools for visualization of the mentioned attributes via <code><a href="reference/plot_prot.html">plot_prot()</a></code>.</p>
@@ -122,14 +125,14 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>To install <code>ragp</code> run:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/reexports.html">install_github</a></span>(<span class="st">"missuse/ragp"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("devtools")</span></a>
+<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"missuse/ragp"</span>)</a></code></pre></div>
 <p>alternatively run:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/reexports.html">install_github</a></span>(<span class="st">"missuse/ragp"</span>,
-                         <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># install.packages("devtools")</span></a>
+<a class="sourceLine" id="cb2-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"missuse/ragp"</span>,</a>
+<a class="sourceLine" id="cb2-3" title="3">                         <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>to build vignettes which can be viewed by:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span>(<span class="st">"ragp"</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span>(<span class="st">"ragp"</span>)</a></code></pre></div>
 </div>
 <div id="bug-reports" class="section level2">
 <h2 class="hasAnchor">
@@ -144,21 +147,21 @@ devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/
 <div id="citation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#citation" class="anchor"></a>Citation</h2>
-<p>If you find <code>ragp</code> useful in your own research please cite our Glycobiology <a href="https://academic.oup.com/glycob/advance-article-abstract/doi/10.1093/glycob/cwz072/5567434">paper</a> (Preprint).</p>
+<p>If you find <code>ragp</code> useful in your own research please cite our Glycobiology <a href="https://doi.org/10.1093/glycob/cwz072">paper</a>.</p>
 <blockquote>
 <p>Milan B Dragićević, Danijela M Paunović, Milica D Bogdanović, Slađana I Todorović, Ana D Simonović (2019) ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R, Glycobiology, cwz072, <a href="https://doi.org/10.1093/glycob/cwz072" class="uri">https://doi.org/10.1093/glycob/cwz072</a></p>
 </blockquote>
 <p>You can get citation info via <code><a href="https://rdrr.io/r/utils/citation.html">citation("ragp")</a></code> or by copying the following BibTex entry:</p>
-<div class="sourceCode"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><span class="va">@article</span>{<span class="ot">10</span>.<span class="ot">1093</span>/<span class="ot">glycob</span>/<span class="ot">cwz072</span>,
-    <span class="dt">author</span> = {Dragićević, Milan B and Paunović, Danijela M and Bogdanović, Milica D and Todorović, Slađana I and Simonović, Ana D},
-    <span class="dt">title</span> = "<span class="st">{ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R}</span>",
-    <span class="dt">journal</span> = {Glycobiology},
-    <span class="dt">year</span> = {2019},
-    <span class="dt">month</span> = {09},
-    <span class="dt">issn</span> = {1460-2423},
-    <span class="dt">doi</span> = {10.1093/glycob/cwz072},
-    <span class="dt">url</span> = {https://doi.org/10.1093/glycob/cwz072}
-}</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><a class="sourceLine" id="cb4-1" title="1"><span class="va">@article</span>{<span class="ot">10</span>.<span class="ot">1093</span>/<span class="ot">glycob</span>/<span class="ot">cwz072</span>,</a>
+<a class="sourceLine" id="cb4-2" title="2">    <span class="dt">author</span> = {Dragićević, Milan B and Paunović, Danijela M and Bogdanović, Milica D and Todorović, Slađana I and Simonović, Ana D},</a>
+<a class="sourceLine" id="cb4-3" title="3">    <span class="dt">title</span> = "<span class="st">{ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R}</span>",</a>
+<a class="sourceLine" id="cb4-4" title="4">    <span class="dt">journal</span> = {Glycobiology},</a>
+<a class="sourceLine" id="cb4-5" title="5">    <span class="dt">year</span> = {2019},</a>
+<a class="sourceLine" id="cb4-6" title="6">    <span class="dt">month</span> = {09},</a>
+<a class="sourceLine" id="cb4-7" title="7">    <span class="dt">issn</span> = {1460-2423},</a>
+<a class="sourceLine" id="cb4-8" title="8">    <span class="dt">doi</span> = {10.1093/glycob/cwz072},</a>
+<a class="sourceLine" id="cb4-9" title="9">    <span class="dt">url</span> = {https://doi.org/10.1093/glycob/cwz072}</a>
+<a class="sourceLine" id="cb4-10" title="10">}</a></code></pre></div>
 </div>
 <div id="acknowledgements" class="section level2">
 <h2 class="hasAnchor">
@@ -168,7 +171,7 @@ devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
-<p>Johnson, Kim L., Andrew M. Cassin, Andrew Lonsdale, Antony Bacic, Monika S. Doblin, and Carolyn J. Schultz. 2017. “Pipeline to Identify Hydroxyproline-Rich Glycoproteins.” <em>Plant Physiology</em> 174 (2): 886–903. <a href="doi:%5B10.1104/pp.17.00294%5D(https://doi.org/10.1104/pp.17.00294)" class="uri">doi:[10.1104/pp.17.00294](https://doi.org/10.1104/pp.17.00294)</a>.</p>
+<p>Johnson, Kim L., Andrew M. Cassin, Andrew Lonsdale, Antony Bacic, Monika S. Doblin, and Carolyn J. Schultz. 2017. “Pipeline to Identify Hydroxyproline-Rich Glycoproteins.” <em>Plant Physiology</em> 174 (2): 886–903. <a href="https://doi.org/10.1104/pp.17.00294" class="uri">https://doi.org/10.1104/pp.17.00294</a>.</p>
 </div>
 </div>
   </div>
@@ -222,7 +225,7 @@ devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>

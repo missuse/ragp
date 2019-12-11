@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Query PredGPI web server. — get_pred_gpi • ragp</title>
+<title>Query NetGPI - 1.0 web server. — get_netGPI • ragp</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Query PredGPI web server. — get_pred_gpi" />
-<meta property="og:description" content="PredGPI web server is a predictor of GPI modification sites." />
+<meta property="og:title" content="Query NetGPI - 1.0 web server. — get_netGPI" />
+<meta property="og:description" content="NetGPI server offers GPI Anchor predictions" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -132,29 +132,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Query PredGPI web server.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/missuse/ragp/blob/master/R/get_pred_gpi.R'><code>R/get_pred_gpi.R</code></a></small>
-    <div class="hidden name"><code>get_pred_gpi.Rd</code></div>
+    <h1>Query NetGPI - 1.0 web server.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/missuse/ragp/blob/master/R/get_netGPI.R'><code>R/get_netGPI.R</code></a></small>
+    <div class="hidden name"><code>get_netGPI.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>PredGPI web server is a predictor of GPI modification sites.</p>
+    <p>NetGPI server offers GPI Anchor predictions</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_pred_gpi</span>(<span class='no'>data</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>get_netGPI</span>(<span class='no'>data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>get_pred_gpi</span>(<span class='no'>data</span>, <span class='kw'>spec</span> <span class='kw'>=</span> <span class='fl'>0.99</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>)
+<span class='fu'>get_netGPI</span>(<span class='no'>data</span>, <span class='kw'>splitter</span> <span class='kw'>=</span> <span class='fl'>250L</span>, <span class='kw'>attempts</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>get_pred_gpi</span>(<span class='no'>data</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='no'>...</span>)
+<span class='fu'>get_netGPI</span>(<span class='no'>data</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>get_pred_gpi</span>(<span class='no'>data</span>, <span class='no'>...</span>)
+<span class='fu'>get_netGPI</span>(<span class='no'>data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>get_pred_gpi</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>get_netGPI</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,8 +168,12 @@
       <td><p>currently no additional arguments are accepted apart the ones documented bellow.</p></td>
     </tr>
     <tr>
-      <th>spec</th>
-      <td><p>Numeric in the 0-1 range, indicating the threshold specificity.</p></td>
+      <th>splitter</th>
+      <td><p>An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 250. Change only in case of a server side error. Accepted values are in range of 1 to 5000.</p></td>
+    </tr>
+    <tr>
+      <th>attempts</th>
+      <td><p>Integer, number of attempts if server unresponsive, at default set to 2.</p></td>
     </tr>
     <tr>
       <th>progress</th>
@@ -187,55 +191,43 @@
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='http://gpcr.biocomp.unibo.it/predgpi/pred.htm'>http://gpcr.biocomp.unibo.it/predgpi/pred.htm</a></p>
+    <p><a href='https://services.healthtech.dtu.dk/service.php?NetGPI-1.0'>https://services.healthtech.dtu.dk/service.php?NetGPI-1.0</a></p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data frame with columns:</p><dl class='dl-horizontal'>
-<dt>id</dt><dd><p>Character, name of the submitted sequence truncated to 30 characters.</p></dd>
-<dt>omega_site</dt><dd><p>Integer, indicating the sequence position of the omega-site.</p></dd>
-<dt>specificity</dt><dd><p>Numeric, indicating the specificity of the prediction.</p></dd>
-<dt>is.gpi</dt><dd><p>Logical, is the specificity of the prediction higher than the set threshold specificity</p></dd>
-
+  <dt>id</dt><dd><p>Character, as from input</p></dd>
+  <dt>length</dt><dd><p>Integer, length of the protein sequence</p></dd>
+  <dt>is.gpi</dt><dd><p>Logical, is the protein predicted to be GPI anchored.</p></dd>
+  <dt>omega_site</dt><dd><p>Integer, indicating the sequence position of the omega-site.</p></dd>
+  <dt>likelihood</dt><dd><p>Numeric, likelihood of the prediction.</p></dd>
 </dl>
 
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>This function creates temporary files in the working directory. If the server is unable to make a prediction due to non-amino acid letters or length of the sequence, the returned prediction is NA (is.gpi column). Protein ids should be shorter then 30 characters.</p>
+    <p>This function creates temporary files in the working directory.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Pierleoni A. Martelli P. L. Casadio R. (2008) PredGPI: a GPI-anchor predictor. BMC Bioinformatics 9: 392</p>
+    <p>Gislason MH. Nielsen H. Armenteros JA. AR Johansen AR. (2019) Prediction of GPI-Anchored proteins with pointer neural networks. bioRxiv. doi: https://doi.org/10.1101/838680</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_big_pi.html'>get_big_pi</a></code></p></div>
+    <div class='dont-index'><p><code><a href='get_big_pi.html'>get_big_pi</a></code> <code><a href='get_pred_gpi.html'>get_pred_gpi</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ragp</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>at_nsp</span>)
-
-<span class='no'>gpi_pred</span> <span class='kw'>&lt;-</span> <span class='fu'>get_pred_gpi</span>(<span class='no'>at_nsp</span>[<span class='fl'>1</span>:<span class='fl'>20</span>,],
-                         <span class='no'>sequence</span>,
-                         <span class='no'>Transcript.id</span>)
-<span class='no'>gpi_pred</span></div><div class='output co'>#&gt;             id omega_site specificity is.gpi
-#&gt; 1  ATCG00660.1         96       0.073  FALSE
-#&gt; 2  AT2G43600.1        251       0.091  FALSE
-#&gt; 3  AT2G28410.1         90       0.995   TRUE
-#&gt; 4  AT2G22960.1        160       0.145  FALSE
-#&gt; 5  AT2G19580.1        250       0.677  FALSE
-#&gt; 6  AT2G19690.2        120       0.373  FALSE
-#&gt; 7  AT2G19690.1        119       0.227  FALSE
-#&gt; 8  AT2G33130.1         83       0.425  FALSE
-#&gt; 9  AT2G05520.1        123       0.478  FALSE
-#&gt; 10 AT2G05520.2        116       0.452  FALSE
-#&gt; 11 AT2G05520.3        103       0.425  FALSE
-#&gt; 12 AT2G05520.4        102       0.425  FALSE
-#&gt; 13 AT2G05520.6         95       0.425  FALSE
-#&gt; 14 AT2G05520.5         89       0.396  FALSE
-#&gt; 15 AT2G04031.1        128       0.193  FALSE
-#&gt; 16 AT2G43620.1        252       0.425  FALSE
-#&gt; 17 AT2G37390.1        239       0.211  FALSE
-#&gt; 18 AT2G37390.2        238       0.211  FALSE
-#&gt; 19 AT2G35250.1        321       0.325  FALSE
-#&gt; 20 AT2G38390.1        328       0.712  FALSE</div><div class='input'>
+<span class='no'>netGPI_pred</span> <span class='kw'>&lt;-</span> <span class='fu'>get_netGPI</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>[<span class='fl'>1</span>:<span class='fl'>10</span>,],
+                          <span class='no'>sequence</span>,
+                          <span class='no'>Transcript.id</span>)
+<span class='no'>netGPI_pred</span></div><div class='output co'>#&gt;             id length is.gpi omega_site likelihood
+#&gt; 1  ATCG00660.1    117  FALSE         NA      0.999
+#&gt; 2  AT2G43600.1    273  FALSE         NA      0.998
+#&gt; 3  AT2G28410.1    115   TRUE         95      0.307
+#&gt; 4  AT2G22960.1    184  FALSE         NA      0.998
+#&gt; 5  AT2G19580.1    270  FALSE         NA      0.996
+#&gt; 6  AT2G19690.2    148  FALSE         NA      0.998
+#&gt; 7  AT2G19690.1    147  FALSE         NA      0.999
+#&gt; 8  AT2G33130.1    103  FALSE         NA      0.997
+#&gt; 9  AT2G05520.1    145  FALSE         NA      0.999
+#&gt; 10 AT2G05520.2    138  FALSE         NA      0.999</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
