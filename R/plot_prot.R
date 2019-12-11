@@ -9,15 +9,15 @@
 #' @param nsp_col Plotting color of the N-terminal signal peptide. At default set to: '#CD534CFF'.
 #' @param ag_col Plotting color of the AG glycomodul spans. At default set to: '#E5E5E5FF'.
 #' @param tm_col Plotting color of the transmembrane regions. At default set to: '#EFC000FF'.
-#' @param hyp Bolean, should hydroxyprolines be plotted.
-#' @param gpi A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi") or \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi".
-#' @param nsp Bolean, should the N-terminal signal peptide be plotted.
-#' @param ag Bolean, should the AG glycomodul spans be plotted.
-#' @param tm Bolean, should the transmembrane regions be plotted. 
-#' @param domain Bolean, should the domains be plotted. 
-#' @param disorder Bolean, should disordered regions be plotted. 
+#' @param hyp Boolean, should hydroxyprolines be plotted.
+#' @param gpi A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi"), \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") or \code{\link[ragp]{get_netGPI}} (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi".
+#' @param nsp Boolean, should the N-terminal signal peptide be plotted.
+#' @param ag Boolean, should the AG glycomodul spans be plotted.
+#' @param tm Boolean, should the transmembrane regions be plotted. 
+#' @param domain Boolean, should the domains be plotted. 
+#' @param disorder Boolean, should disordered regions be plotted. 
 #' @param dom_sort One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.
-#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
+#' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.
 #'
 #' @return A ggplot2 plot object
@@ -52,7 +52,7 @@ plot_prot <- function(sequence,
                       ag_col = "#E5E5E5FF",
                       tm_col = "#EFC000FF",
                       hyp = TRUE,
-                      gpi = c("bigpi", "predgpi", "none"),
+                      gpi = c("bigpi", "predgpi", "netgpi", "none"),
                       nsp = TRUE,
                       ag = TRUE,
                       tm = TRUE,
@@ -299,10 +299,10 @@ plot_prot <- function(sequence,
   if(missing(gpi)){
     gpi <- 'bigpi'
   }
-  if(!gpi %in% c("bigpi", "predgpi", "none")){
+  if(!gpi %in% c("bigpi", "predgpi", "netgpi", "none")){
     gpi <- 'bigpi'
     warning(paste("gpi should be one of",
-                  "'bigpi', 'predgpi', 'none',",
+                  "'bigpi', 'predgpi', 'netgpi', 'none',",
                   "setting to default: gpi = 'bigpi'"),
             call. = FALSE)
   }
@@ -523,6 +523,23 @@ plot_prot <- function(sequence,
                                   sequence = "sequence",
                                   id = "id",
                                   progress = progress)
+    
+    seq_gpi <- seq_gpi[seq_gpi$is.gpi,]
+    
+    
+    if (nrow(seq_gpi) == 0) {
+      seq_gpi <- NULL
+    }
+  }
+  
+  if (gpi == 'netgpi') {
+    if(progress){
+      message("querying NetGPI")
+    }
+    seq_gpi <- ragp::get_netGPI(dat,
+                                sequence = "sequence",
+                                id = "id",
+                                progress = progress)
     
     seq_gpi <- seq_gpi[seq_gpi$is.gpi,]
     

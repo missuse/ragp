@@ -7,13 +7,13 @@
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
-#' @param verbose Bolean, whether to print out the output for each sequence, defaults to FALSE.
+#' @param verbose Boolean, whether to print out the output for each sequence, defaults to FALSE.
 #' @param sleep Numeric indicating the pause in seconds between server calls, at default set to 1.
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
 #' @param timeout Numeric, time in seconds to wait for server response.
 #' @param ievalue Numeric, all sequences with independent E-value lower or equal to this value will be retained in the function output. Used to filter out low similarity matches. If set some queried sequences might be discarded from the output. Suggested values: 1e-2 - 1e-5.
 #' @param bitscore Numeric, all sequences with bitscore greater or equal to this value will be retained in the function output. Used to filter out low similarity. If set some queried sequences might be discarded from the output. Suggested values: 10 - 20.
-#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
+#' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
 #' @return A data frame with columns:

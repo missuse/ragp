@@ -1,10 +1,21 @@
+#ragp 0.3.1.0000
+
+##New Features
+
+*  New `get_netGPI()` queries NetGPI web server (https://services.healthtech.dtu.dk/service.php?NetGPI-1.0) for predictions of GPI-anchored proteins.  
+
+* `maab()` argument `get_gpi` has an additional option `"netgpi"`. When set, the function will query NetGPI web server to resolve ambiguities in maab classes depending on GPI-anchoring predictions. 
+
+* `plot_prot()` argument `gpi` has an additional option `"netgpi"`. When set, the function will query NetGPI web server for prediction of omega sites.
+
+
 #ragp 0.3.0.0002
 
 ##Bug Fixes and Improvements
 
-* `maab()` now correctly performes when only a single protein sequence is provided as an argument. 
+* `maab()` now correctly performs when only a single protein sequence is provided as an argument. 
 
-* `get_hmm()` receives additional numeric arguments: `ievalue` and `bitscore`. These arguments are used to filter sequnces with lower or equal `ievalue` and higher or equal `bitscore` in the output. This is usefull when used from `plot_prot()` to avoid ploting weakly identified domains. 
+* `get_hmm()` receives additional numeric arguments: `ievalue` and `bitscore`. These arguments are used to filter sequences with lower or equal `ievalue` and higher or equal `bitscore` in the output. This is useful when used from `plot_prot()` to avoid plotting weakly identified domains. 
 
 
 #ragp 0.3.0.0001
@@ -115,10 +126,10 @@ and omega site location.
   as input `gpi = c("bigpi", "predgpi", "none")` which indicate whether
   to query Big Pi or PredGPI server or not to plot GPI positions.
   
-* fixed a bug in `plot_prot()` which caused extracellular regions to start at 0
+* fixed a bug in `plot_prot()` which caused extra-cellular regions to start at 0
   instead of 1.
 
-* fixed a bug in `get_big_pi()` when shorter than 55 amino acid sequnces 
+* fixed a bug in `get_big_pi()` when shorter than 55 amino acid sequences 
   were provided.
 
   

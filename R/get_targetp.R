@@ -15,7 +15,7 @@
 #' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 200. Change only in case of a server side error. Accepted values are in range of 1 to 2000.
 #' @param sleep A numeric indicating the pause in seconds between server calls, at default set to 1
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
-#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
+#' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
 #' @return  A data frame with columns:

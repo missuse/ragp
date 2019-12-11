@@ -8,9 +8,9 @@
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param order Order of motif counting, the default is as in Johnson et al. (2017).
 #' @param gpi A Boolean vector indicating if the corresponding id contains a GPI or not. Can be the 'is.bigpi' column from the output of get_big_pi.
-#' @param get_gpi A string indicating if \code{\link[ragp]{get_big_pi}} or \code{\link[ragp]{get_pred_gpi}} should be called on sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge. At default set to 'none'.
+#' @param get_gpi A string indicating if \code{\link[ragp]{get_big_pi}},  \code{\link[ragp]{get_pred_gpi}} or \code{\link[ragp]{get_netGPI}} should be called on sequences that belong to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge. At default set to 'none'.
 #' @param spec Numeric in the 0-1 range, indicating the threshold specificity of \code{\link[ragp]{get_pred_gpi}}. Only valid if argument get_gpi = "predgpi".
-#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
+#' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
 #' @return A data frame with columns:
@@ -162,7 +162,7 @@ maab.default <- function(data = NULL,
                          id,
                          order = c("ext", "tyr", "prp", "agp"),
                          gpi = NULL,
-                         get_gpi = c("bigpi", "predgpi", "none"),
+                         get_gpi = c("bigpi", "predgpi", "netgpi", "none"),
                          spec = 0.99,
                          progress = FALSE,
                          ...){
@@ -187,10 +187,10 @@ maab.default <- function(data = NULL,
   if(missing(get_gpi)){
     get_gpi <- 'none'
   }
-  if(!get_gpi %in% c("bigpi", "predgpi", "none")){
+  if(!get_gpi %in% c("bigpi", "predgpi", "netgpi", "none")){
     get_gpi <- 'none'
     warning("get_gpi should be one of ",
-            "'bigpi', 'predgpi', 'none', ",
+            "'bigpi', 'predgpi', 'netgpi', 'none', ",
             "setting to default: get_gpi = 'none'",
             call. = FALSE)
   }
@@ -562,6 +562,36 @@ maab.default <- function(data = NULL,
                          id = id_gpi,
                          order = order,
                          gpi = gpi_big_pi)
+      out3 <- out[!out$id %in% out2$id,]
+      out <- rbind(out3, out2)
+      out <- merge(data.frame(id = id,
+                              stringsAsFactors = FALSE),
+                   out,
+                   all.x = TRUE,
+                   sort = FALSE)
+      out$maab_class <- factor(out$maab_class)
+    }
+  }
+  if(get_gpi == "netgpi"){
+    if(!missing(gpi)){
+      warning("get_gpi will override the gpi argument with PredGPI predictions",
+              call. = FALSE)
+    }
+    out_gpi <- out[out$maab_class != "0",]
+    if(nrow(out_gpi) != 0){
+      seq_gpi <- sequence[out$maab_class != "0"]
+      id_gpi <- id[out$maab_class != "0"]
+      if(progress){
+        message("querying NetGPI")
+      }
+      gpi_netgpi <- ragp::get_netGPI(sequence = seq_gpi,
+                                     id = id_gpi,
+                                     progress = progress)
+      gpi_netgpi <- gpi_netgpi$is.gpi
+      out2 <- ragp::maab(sequence = seq_gpi,
+                         id = id_gpi,
+                         order = order,
+                         gpi = gpi_netgpi)
       out3 <- out[!out$id %in% out2$id,]
       out <- rbind(out3, out2)
       out <- merge(data.frame(id = id,

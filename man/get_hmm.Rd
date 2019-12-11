@@ -32,7 +32,7 @@ get_hmm(data, ...)
 
 \item{id}{A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{verbose}{Bolean, whether to print out the output for each sequence, defaults to FALSE.}
+\item{verbose}{Boolean, whether to print out the output for each sequence, defaults to FALSE.}
 
 \item{sleep}{Numeric indicating the pause in seconds between server calls, at default set to 1.}
 
@@ -40,7 +40,7 @@ get_hmm(data, ...)
 
 \item{timeout}{Numeric, time in seconds to wait for server response.}
 
-\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
+\item{progress}{Boolean, whether to show the progress bar, at default set to FALSE.}
 
 \item{ievalue}{Numeric, all sequences with independent E-value lower or equal to this value will be retained in the function output. Used to filter out low similarity matches. If set some queried sequences might be discarded from the output. Suggested values: 1e-2 - 1e-5.}
 

@@ -26,7 +26,7 @@ get_phobius(data, ...)
 
 \item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 
-\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
+\item{progress}{Boolean, whether to show the progress bar, at default set to FALSE.}
 
 \item{sequence}{A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 

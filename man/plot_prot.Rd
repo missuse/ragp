@@ -6,9 +6,10 @@
 \usage{
 plot_prot(sequence, id, hyp_col = "#868686FF", gpi_col = "#0073C2FF",
   nsp_col = "#CD534CFF", ag_col = "#E5E5E5FF", tm_col = "#EFC000FF",
-  hyp = TRUE, gpi = c("bigpi", "predgpi", "none"), nsp = TRUE,
-  ag = TRUE, tm = TRUE, domain = TRUE, disorder = FALSE,
-  dom_sort = c("ievalue", "abc", "cba"), progress = FALSE, ...)
+  hyp = TRUE, gpi = c("bigpi", "predgpi", "netgpi", "none"),
+  nsp = TRUE, ag = TRUE, tm = TRUE, domain = TRUE,
+  disorder = FALSE, dom_sort = c("ievalue", "abc", "cba"),
+  progress = FALSE, ...)
 }
 \arguments{
 \item{sequence}{String representing a protein amino acid sequence.}
@@ -25,23 +26,23 @@ plot_prot(sequence, id, hyp_col = "#868686FF", gpi_col = "#0073C2FF",
 
 \item{tm_col}{Plotting color of the transmembrane regions. At default set to: '#EFC000FF'.}
 
-\item{hyp}{Bolean, should hydroxyprolines be plotted.}
+\item{hyp}{Boolean, should hydroxyprolines be plotted.}
 
-\item{gpi}{A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi") or \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi".}
+\item{gpi}{A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi"), \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") or \code{\link[ragp]{get_netGPI}} (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi".}
 
-\item{nsp}{Bolean, should the N-terminal signal peptide be plotted.}
+\item{nsp}{Boolean, should the N-terminal signal peptide be plotted.}
 
-\item{ag}{Bolean, should the AG glycomodul spans be plotted.}
+\item{ag}{Boolean, should the AG glycomodul spans be plotted.}
 
-\item{tm}{Bolean, should the transmembrane regions be plotted.}
+\item{tm}{Boolean, should the transmembrane regions be plotted.}
 
-\item{domain}{Bolean, should the domains be plotted.}
+\item{domain}{Boolean, should the domains be plotted.}
 
-\item{disorder}{Bolean, should disordered regions be plotted.}
+\item{disorder}{Boolean, should disordered regions be plotted.}
 
 \item{dom_sort}{One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.}
 
-\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
+\item{progress}{Boolean, whether to show the progress bar, at default set to FALSE.}
 
 \item{...}{Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.}
 }

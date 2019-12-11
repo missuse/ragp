@@ -31,11 +31,11 @@ get_big_pi(data, ...)
 
 \item{id}{An appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.}
 
-\item{simplify}{A bolean indicating the type of returned object, defaults to TRUE.}
+\item{simplify}{A boolean indicating the type of returned object, defaults to TRUE.}
 
 \item{sleep}{A numeric indicating the pause in seconds between server calls, at default set to 1.}
 
-\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
+\item{progress}{Boolean, whether to show the progress bar, at default set to FALSE.}
 }
 \value{
 If simplify == TRUE:

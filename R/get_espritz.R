@@ -9,7 +9,7 @@
 #' @param model One of c('X-Ray', 'Disprot', 'NMR'), default is 'X-Ray'. Determines the model to be used for prediction. See details.
 #' @param FPR One of c('best Sw', '5"\%" FPR'). default is 'best Sw'. Determines the cutoff probability for prediction. 'best Sw' maximizes a weighted score rewarding correctly disorder prediction more than order prediction.
 #' @param simplify A Boolean indicating the type of returned object, defaults to TRUE.
-#' @param progress Bolean, whether to show the progress bar, at default set to FALSE.
+#' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #'
 #' @return If simplify == TRUE:

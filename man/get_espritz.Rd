@@ -38,7 +38,7 @@ get_espritz(data, ...)
 
 \item{simplify}{A Boolean indicating the type of returned object, defaults to TRUE.}
 
-\item{progress}{Bolean, whether to show the progress bar, at default set to FALSE.}
+\item{progress}{Boolean, whether to show the progress bar, at default set to FALSE.}
 }
 \value{
 If simplify == TRUE:
