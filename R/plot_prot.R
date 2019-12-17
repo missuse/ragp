@@ -1,27 +1,28 @@
 #' Protein structure diagram.
 #' 
 #' Plots a diagram of protein structure based on hmmscan domain annotation and several types of predictions.
-#'
+#' 
 #' @param sequence String representing a protein amino acid sequence.
-#' @param id String representing a protein identifier. Will be converted using \code{\link[base]{make.names}} 
+#' @param id String representing a protein identifier. Will be converted using \code{\link[base]{make.names}}.
 #' @param hyp_col Plotting color of predicted hydroxyproline positions. At default set to: '#868686FF'.
 #' @param gpi_col Plotting color of the predicted omega site (glycosylphosphatidylinositol attachment). At default set to: '#0073C2FF'.
 #' @param nsp_col Plotting color of the N-terminal signal peptide. At default set to: '#CD534CFF'.
 #' @param ag_col Plotting color of the AG glycomodul spans. At default set to: '#E5E5E5FF'.
 #' @param tm_col Plotting color of the transmembrane regions. At default set to: '#EFC000FF'.
 #' @param hyp Boolean, should hydroxyprolines be plotted.
-#' @param gpi A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi"), \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") or \code{\link[ragp]{get_netGPI}} (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi".
-#' @param nsp Boolean, should the N-terminal signal peptide be plotted.
+#' @param gpi A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi"), \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") or \code{\link[ragp]{get_netGPI}} (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi". Alternatively the output data frame of the mentioned functions (called with simplify = TRUE) can be supplied.
+#' @param nsp Boolean, should the N-terminal signal peptide predictions obtained using \code{\link[ragp]{get_signalp}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_signalp}} can be supplied. 
 #' @param ag Boolean, should the AG glycomodul spans be plotted.
-#' @param tm Boolean, should the transmembrane regions be plotted. 
-#' @param domain Boolean, should the domains be plotted. 
-#' @param disorder Boolean, should disordered regions be plotted. 
+#' @param tm Boolean, should the transmembrane region predictions obtained using \code{\link[ragp]{get_phobius}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_phobius}} can be supplied. 
+#' @param domain Boolean, should the domain predictions obtained using \code{\link[ragp]{get_hmm}}  be plotted. Alternatively the output data frame from \code{\link[ragp]{get_hmm}} can be supplied.
+#' @param disorder Boolean, should disordered region predictions obtained using \code{\link[ragp]{get_espritz}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_espritz}} (called with simplify = TRUE) can be supplied.
 #' @param dom_sort One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.
 #' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.
 #'
-#' @return A ggplot2 plot object
 #'
+#' @return A ggplot2 plot object
+#' 
 #' @seealso \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{get_espritz}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
 #'
 #' @examples
@@ -29,20 +30,51 @@
 #' library(ggplot2)
 #' ind <- c(23, 5, 80, 81, 345)
 #' pred <- plot_prot(sequence = at_nsp$sequence[ind],
-#'                   id = at_nsp$Transcript.id[ind])
+#'                   id = at_nsp$Transcript.id[ind],
+#'                   bitscore = 30) #passed to get_hmm
 #' pred +
 #'   theme(legend.position = "bottom",
 #'         legend.direction = "vertical")
 #'         
-#' pred <- plot_prot(sequence = at_nsp$sequence[ind],
-#'                   id = at_nsp$Transcript.id[ind],
-#'                   bitscore = 30,
-#'                   dim = 7)
-#' pred +
+#' #alternatively:      
+#' nsp <- get_signalp(data = at_nsp[ind,],
+#'                    id = Transcript.id,
+#'                    sequence = sequence)
+#'                     
+#' hmm <- get_hmm(data = at_nsp[ind,],
+#'                id = Transcript.id,
+#'                sequence = sequence)
+#'                
+#' gpi <- get_netGPI(data = at_nsp[ind,],
+#'                  id = Transcript.id,
+#'                  sequence = sequence)                                    
+#'
+#' tm <- get_phobius(data = at_nsp[ind,],
+#'                   id = Transcript.id,
+#'                   sequence = sequence)                                                        
+#'  
+#' disorder <- get_espritz(data = at_nsp[ind,],
+#'                         id = Transcript.id,
+#'                         sequence = sequence)          
+#'         
+#' pred2 <- plot_prot(sequence = at_nsp$sequence[ind],
+#'                    id = at_nsp$Transcript.id[ind],
+#'                    tm = tm,
+#'                    nsp = nsp,
+#'                    gpi = gpi,
+#'                    hmm = hmm,
+#'                    disorder = disorder,
+#'                    bitscore = 30)
+#'                    
+#'                    
+#' pred2 +
 #'   theme(legend.position = "bottom",
 #'         legend.direction = "vertical")
+#'         
+#' #mixing both methods is also a possibility
 #'         
 #' @export
+
 
 plot_prot <- function(sequence,
                       id,
@@ -186,57 +218,37 @@ plot_prot <- function(sequence,
   if (missing(tm)){
     tm <- TRUE
   }
-  if (length(tm) > 1){
-    tm <- TRUE
-    warning("tm should be of length 1, setting to default: tm = TRUE",
-            call. = FALSE)
+  
+  if (is.logical(tm)){
+    if (length(tm) > 1){
+      tm <- TRUE
+      warning("tm should be of length 1, setting to default: tm = FALSE",
+              call. = FALSE)
+    }
   }
-  if (!is.logical(tm)){
-    tm <- as.logical(tm)
-    warning("tm is not logical, converting using 'as.logical'",
-            call. = FALSE)
-  }
-  if (is.na(tm)){
-    tm <- TRUE
-    warning("tm was set to NA, setting to default: tm = TRUE",
-            call. = FALSE)
-  }
+  
   if (missing(disorder)){
     disorder <- FALSE
   }
-  if (length(disorder) > 1){
-    disorder <- FALSE
-    warning("disorder should be of length 1, setting to default: disorder = FALSE",
-            call. = FALSE)
-  }
-  if (!is.logical(disorder)){
-    disorder <- as.logical(disorder)
-    warning("disorder is not logical, converting using 'as.logical'",
-            call. = FALSE)
-  }
-  if (is.na(disorder)){
-    disorder <- FALSE
-    warning("disorder was set to NA, setting to default: disorder = FALSE",
-            call. = FALSE)
+  
+  if (is.logical(disorder)){
+    if (length(disorder) > 1){
+      disorder <- FALSE
+      warning("disorder should be of length 1, setting to default: disorder = FALSE",
+              call. = FALSE)
+    }
   }
   
   if (missing(nsp)){
     nsp <- TRUE
   }
-  if (length(nsp) > 1){
-    nsp <- TRUE
-    warning("nsp should be of length 1, setting to default: nsp = TRUE",
-            call. = FALSE)
-  }
-  if (!is.logical(nsp)){
-    nsp <- as.logical(nsp)
-    warning("nsp is not logical, converting using 'as.logical'",
-            call. = FALSE)
-  }
-  if (is.na(nsp)){
-    nsp <- TRUE
-    warning("nsp was set to NA, setting to default: nsp = TRUE",
-            call. = FALSE)
+  
+  if (is.logical(nsp)){
+    if (length(nsp) > 1){
+      nsp <- TRUE
+      warning("nsp should be of length 1, setting to default: nsp = TRUE",
+              call. = FALSE)
+    }
   }
   
   if (missing(ag)){
@@ -280,43 +292,38 @@ plot_prot <- function(sequence,
   if (missing(domain)){
     domain <- TRUE
   }
-  if (length(domain) > 1){
-    domain <- TRUE
-    warning("domain should be of length 1, setting to default: domain = TRUE",
-            call. = FALSE)
-  }
-  if (!is.logical(domain)){
-    domain <- as.logical(domain)
-    warning("domain is not logical, converting using 'as.logical'",
-            call. = FALSE)
-  }
-  if (is.na(domain)){
-    domain <- TRUE
-    warning("domain was set to NA, setting to default: domain = TRUE",
-            call. = FALSE)
+  
+  if (is.logical(domain)){
+    if (length(domain) > 1){
+      domain <- TRUE
+      warning("domain should be of length 1, setting to default: domain = TRUE",
+              call. = FALSE)
+    }
   }
   
   if(missing(gpi)){
     gpi <- 'bigpi'
   }
-  if(!gpi %in% c("bigpi", "predgpi", "netgpi", "none")){
-    gpi <- 'bigpi'
-    warning(paste("gpi should be one of",
-                  "'bigpi', 'predgpi', 'netgpi', 'none',",
-                  "setting to default: gpi = 'bigpi'"),
-            call. = FALSE)
-  }
-  if (length(gpi) > 1){
-    gpi <- 'bigpi'
-    warning("gpi should be of length 1, setting to default: gpi = 'bigpi'",
-            call. = FALSE)
+  if(is.character(gpi)){
+    if(!gpi %in% c("bigpi", "predgpi", "netgpi", "none")){
+      gpi <- 'bigpi'
+      warning(paste("gpi should be one of",
+                    "'bigpi', 'predgpi', 'netgpi', 'none',",
+                    "setting to default: gpi = 'bigpi'"),
+              call. = FALSE)
+    }
+    if (length(gpi) > 1){
+      gpi <- 'bigpi'
+      warning("gpi should be of length 1, setting to default: gpi = 'bigpi'",
+              call. = FALSE)
+    }
   }
   args_signalp <- names(formals(get_signalp.character))[2:8]
   args_scanag <- names(formals(scan_ag.default))[4:7]
   args_espritz <- names(formals(get_espritz.default))[4:5]
   args_hmm <- names(formals(get_hmm.default))[9:10]
   dots <- list(...)
-
+  
   dat <- data.frame(sequence = sequence,
                     id = id,
                     nchar = nchar(sequence),
@@ -327,7 +334,8 @@ plot_prot <- function(sequence,
   
   dat$id_num <- as.numeric(dat$id)
   
-  if (domain) {
+  seq_hmm <- NULL
+  if (isTRUE(domain)) {
     if(progress){
       message("querying hmmscan")
     }
@@ -337,7 +345,7 @@ plot_prot <- function(sequence,
                               id = "id",
                               progress = progress),
                          dots[names(dots) %in% args_hmm]))
-
+    
     seq_hmm <- seq_hmm[seq_hmm$reported,]
     
     if(nrow(seq_hmm) != 0){
@@ -377,7 +385,68 @@ plot_prot <- function(sequence,
     seq_hmm <- NULL
   }
   
-  if (nsp) {
+  
+  if(is.data.frame(domain)){
+    seq_hmm <- domain
+    if(any(!c("id",
+              "name",
+              "acc",
+              "desc",
+              "align_start",
+              "align_end",
+              "ievalue",
+              "bitscore") %in% colnames(seq_hmm))){
+      stop("domain is not the output from get_hmm function")
+    }
+    seq_hmm$id <- make.names(seq_hmm$id)
+    if(!all(seq_hmm$id %in% id)){
+      stop("protein ids from domain do not match with id argument")
+    }
+    seq_hmm <- seq_hmm[seq_hmm$reported,]
+    if(any(names(dots) == "ievalue")){
+      seq_hmm <- seq_hmm[seq_hmm$ievalue <= dots[names(dots) == "ievalue"],]
+    }
+    if(any(names(dots) == "bitscore")){
+      seq_hmm <- seq_hmm[seq_hmm$bitscore >= dots[names(dots) == "bitscore"],]
+    }
+    
+    if(nrow(seq_hmm) != 0){
+      seq_hmm <- seq_hmm[!is.na(seq_hmm$align_start),]
+      
+      seq_hmm$id <- factor(seq_hmm$id,
+                           levels = unique(dat$id))
+      
+      seq_hmm$id_num <- as.numeric(seq_hmm$id)
+      
+      seq_hmm$domain <- with(seq_hmm,
+                             paste(desc,
+                                   " (",
+                                   acc,
+                                   ") ",
+                                   sep = ""))
+      if (dom_sort == "ievalue"){
+        seq_hmm <- seq_hmm[with(seq_hmm, order(id_num,
+                                               as.numeric(ievalue),
+                                               decreasing = c(FALSE, TRUE),
+                                               method = "radix")),]
+      }
+      
+      if (dom_sort == "abc"){
+        seq_hmm <- seq_hmm[with(seq_hmm, order(id_num, name)),]
+      }
+      if (dom_sort == "cba"){
+        seq_hmm <- seq_hmm[with(seq_hmm, order(id_num,
+                                               name,
+                                               decreasing = c(FALSE, TRUE),
+                                               method = "radix")),]
+      }
+    } else {
+      seq_hmm <- NULL
+    }
+  }
+  
+  seq_signalp <- NULL
+  if (isTRUE(nsp)) {
     if(progress){
       message("querying signalp")
     }
@@ -399,11 +468,34 @@ plot_prot <- function(sequence,
     } else {
       seq_signalp <- NULL
     }
-  } else {
-    seq_signalp <- NULL
   }
   
-  if (tm) {
+  if(is.data.frame(nsp)){
+    seq_signalp <- nsp
+    if(any(!c("id", "is.signalp", "Ymax.pos") %in% colnames(seq_signalp))){
+      stop("nsp is not the output from get_signalp function")
+    }
+    seq_signalp$id <- make.names(seq_signalp$id)
+    if(!all(seq_signalp$id %in% id)){
+      stop("protein ids from nsp do not match with id argument")
+    }
+    if(!is.logical(seq_signalp$is.signalp)){
+      stop("is.signalp column is not logical")
+    }
+    seq_signalp <- seq_signalp[seq_signalp$is.signalp,]
+    if(nrow(seq_signalp) != 0){
+      seq_signalp$Ymax.pos <- as.numeric(
+        as.character(
+          seq_signalp$Ymax.pos
+        )
+      )
+    } else {
+      seq_signalp <- NULL
+    }
+  }
+  
+  phobius_seq <- NULL
+  if (isTRUE(tm)) {
     if(progress){
       message("querying phobius")
     }
@@ -411,7 +503,25 @@ plot_prot <- function(sequence,
                                      sequence = sequence,
                                      id = id,
                                      progress = progress)
-    
+  }
+  if(is.data.frame(tm)){
+    phobius_seq <- tm
+    if(any(!c("Name",
+              "tm",
+              "prediction",
+              "cut_site",
+              "is.phobius") %in% colnames(phobius_seq))){
+      stop("tm is not the output from get_phobius function")
+    }
+    phobius_seq$Name <- make.names(phobius_seq$Name)
+    if(!all(phobius_seq$Name %in% id)){
+      stop("protein ids from tm do not match with id argument")
+    }
+    if(!is.logical(phobius_seq$is.phobius)){
+      stop("is.phobius column is not logical")
+    }
+  }
+  if (!is.null(phobius_seq)){
     phobius_seq <- merge(dat,
                          phobius_seq,
                          by.x = "id",
@@ -432,7 +542,6 @@ plot_prot <- function(sequence,
         }
       )
     )
-    
     phobius_seq <- data.frame(id = phobius_seq$id, 
                               id_num = phobius_seq$id_num,
                               pred = phobius_seq_pred,
@@ -493,62 +602,79 @@ plot_prot <- function(sequence,
                                   seq_inside,
                                   inside$inside_end)
     }
-  } else {
-    phobius_seq <- NULL
   }
   
   seq_gpi <- NULL
-  if (gpi == 'bigpi') {
-    if(progress){
-      message("querying big pi")
-    }
-    seq_gpi <- ragp::get_big_pi(data = dat,
-                                sequence = "sequence",
-                                id = "id",
-                                progress = progress)
-    
-    seq_gpi <- seq_gpi[seq_gpi$is.bigpi,]
-    seq_gpi$omega_site <- as.numeric(seq_gpi$omega_site)
-    
-    if (nrow(seq_gpi) == 0) {
-      seq_gpi <- NULL
-    }
-  }
-
-  if (gpi == 'predgpi') {
-    if(progress){
-      message("querying predGPI")
-    }
-    seq_gpi <- ragp::get_pred_gpi(dat,
+  if(is.character(gpi)){
+    if (gpi == 'bigpi') {
+      if(progress){
+        message("querying big pi")
+      }
+      seq_gpi <- ragp::get_big_pi(data = dat,
                                   sequence = "sequence",
                                   id = "id",
                                   progress = progress)
+      
+      seq_gpi$omega_site <- as.numeric(seq_gpi$omega_site)
+      seq_gpi <- seq_gpi[seq_gpi$is.gpi,]
+      if (nrow(seq_gpi) == 0) {
+        seq_gpi <- NULL
+      }
+    }
     
-    seq_gpi <- seq_gpi[seq_gpi$is.gpi,]
+    if (gpi == 'predgpi') {
+      if(progress){
+        message("querying predGPI")
+      }
+      seq_gpi <- ragp::get_pred_gpi(dat,
+                                    sequence = "sequence",
+                                    id = "id",
+                                    progress = progress)
+      seq_gpi <- seq_gpi[seq_gpi$is.gpi,]
+      
+      if (nrow(seq_gpi) == 0) {
+        seq_gpi <- NULL
+      }
+    }
     
-    
-    if (nrow(seq_gpi) == 0) {
-      seq_gpi <- NULL
+    if (gpi == 'netgpi') {
+      if(progress){
+        message("querying NetGPI")
+      }
+      seq_gpi <- ragp::get_netGPI(dat,
+                                  sequence = "sequence",
+                                  id = "id",
+                                  progress = progress)
+      seq_gpi <- seq_gpi[seq_gpi$is.gpi,]
+      
+      if (nrow(seq_gpi) == 0) {
+        seq_gpi <- NULL
+      }
     }
   }
   
-  if (gpi == 'netgpi') {
-    if(progress){
-      message("querying NetGPI")
+  if(is.data.frame(gpi)){
+    seq_gpi <- gpi
+    if(any(!c("id",
+              "omega_site",
+              "is.gpi") %in% colnames(seq_gpi))){
+      stop("gpi is not the output from get_big_pi, get_pred_gpi or get_netGPI functions")
     }
-    seq_gpi <- ragp::get_netGPI(dat,
-                                sequence = "sequence",
-                                id = "id",
-                                progress = progress)
-    
+    seq_gpi$id <- make.names(seq_gpi$id)
+    if(!all(seq_gpi$id %in% id)){
+      stop("protein ids from gpi do not match with id argument")
+    }
+    if(!is.logical(seq_gpi$is.gpi)){
+      stop("is.gpi column is not logical")
+    }
     seq_gpi <- seq_gpi[seq_gpi$is.gpi,]
-    
     
     if (nrow(seq_gpi) == 0) {
       seq_gpi <- NULL
     }
-  }
-
+  } 
+  
+  
   if (hyp) {
     seq_hyp <- do.call(ragp::predict_hyp,
                        c(list(data = dat,
@@ -587,9 +713,9 @@ plot_prot <- function(sequence,
   } else {
     seq_scan <- NULL
   }
-
+  
   seq_espritz <- NULL
-  if (disorder) {
+  if (isTRUE(disorder)) {
     if(progress){
       message("querying espritz")
     }
@@ -657,7 +783,93 @@ plot_prot <- function(sequence,
       seq_espritz <- NULL
     }
   }
- 
+  if(is.data.frame(disorder)){
+    seq_espritz <- disorder
+    if(any(!c("start",
+              "end",
+              "id") %in% colnames(seq_espritz))){
+      stop("disorder is not the output from get_espritz function")
+    }
+    seq_espritz$id <- make.names(seq_espritz$id)
+    if(!all(seq_espritz$id %in% id)){
+      stop("protein ids from disorder do not match with id argument")
+    }
+    seq_espritz$id <- factor(seq_espritz$id,
+                             levels = unique(dat$id))
+    seq_espritz$id_num <- as.numeric(seq_espritz$id)
+    seq_espritz$start[is.na(seq_espritz$start)] <- 0
+    seq_espritz$end[is.na(seq_espritz$end)] <- 0
+    
+    seq_espritz <- merge(seq_espritz,
+                         dat[,c(2,3)],
+                         by.x = "id",
+                         by.y = "id",
+                         all.y = TRUE,
+                         all.x = TRUE,
+                         sort = FALSE) 
+    
+    seq_espritz <- split(seq_espritz ,
+                         seq_espritz$id)
+    
+    seq_espritz <- lapply(seq_espritz, function(x){
+      start <-  x$start
+      end <- x$end
+      id <- unique(x$id)
+      id_num <- unique(x$id_num)
+      resD <- lapply(seq_along(start), function(i){
+        start[i]:end[i]
+      })
+      groups <- rep(seq_along(resD), times = lengths(resD))
+      data.frame(residue = unlist(resD),
+                 groups = groups,
+                 id = id,
+                 id_num = id_num,
+                 nchar = unique(x$nchar))
+    })
+    
+    rle_predO <- lapply(seq_espritz, function(x){
+      n <- unique(x$nchar)
+      n <- 1:n
+      n <- setdiff(n, x$residue)
+      if(length(n) != 0){
+        s <- split(n, cumsum(c(0, diff(n) != 1)))
+        groups <- rep(seq_along(s), times = lengths(s))
+      } else {
+        n <- NA
+        groups <- 1
+      }
+      rle_dat <- data.frame(residue = n,
+                            id = unique(x$id),
+                            id_num = unique(x$id_num),
+                            group = groups)
+      
+      rle_dat <- split(rle_dat, rle_dat$group)
+      rle_dat <- lapply(rle_dat, function(x){
+        data.frame(start = min(x$residue),
+                   end = max(x$residue),
+                   id = unique(x$id),
+                   id_num = unique(x$id_num))
+      })
+      rle_dat <- do.call(rbind, rle_dat)
+      rle_dat
+    })
+    
+    rle_predO <- do.call(rbind, rle_predO)
+    rownames(rle_predO) <- NULL
+    
+    plot_segments <- rle_predO[!is.na(rle_predO$start),]
+    
+    seq_espritz <- do.call(rbind, seq_espritz) 
+    
+    seq_espritz <- seq_espritz[seq_espritz$residue != 0,]
+    rownames(seq_espritz) <- NULL
+    seq_espritz$y <- rep(c(0, -0.1, 0, 0.1),
+                         length.out = nrow(seq_espritz))
+    seq_espritz$y_plot <- seq_espritz$y + seq_espritz$id_num
+    seq_espritz$inter <- interaction(seq_espritz$group,
+                                     seq_espritz$id_num)
+  }
+  
   if (!is.null(seq_gpi)){
     for_plot <- merge(x = dat,
                       y = seq_gpi,
@@ -668,7 +880,7 @@ plot_prot <- function(sequence,
   } else {
     for_plot <- dat
   }
-
+  
   if (!is.null(seq_signalp)){
     for_plot <- merge(for_plot,
                       seq_signalp,
@@ -726,17 +938,17 @@ plot_prot <- function(sequence,
   rat <- rat/20
   
   if(!is.null(seq_espritz)){
-  p <- ggplot2::ggplot(plot_segments)+
-    ggplot2::geom_segment(ggplot2::aes_(y = ~id_num,
-                                        yend = ~id_num,
-                                        x = ~start,
-                                        xend = ~end))
+    p <- ggplot2::ggplot(plot_segments)+
+      ggplot2::geom_segment(ggplot2::aes_(y = ~id_num,
+                                          yend = ~id_num,
+                                          x = ~start,
+                                          xend = ~end))
   } else {
-  p <-ggplot2::ggplot(for_plot)+
-    ggplot2::geom_segment(ggplot2::aes_(y = ~id_num,
-                                        yend = ~id_num,
-                                        x = 1,
-                                        xend = ~nchar))
+    p <- ggplot2::ggplot(for_plot)+
+      ggplot2::geom_segment(ggplot2::aes_(y = ~id_num,
+                                          yend = ~id_num,
+                                          x = 1,
+                                          xend = ~nchar))
   }
   
   p <- p  +
@@ -752,9 +964,9 @@ plot_prot <- function(sequence,
                    axis.line.x = ggplot2::element_line()) +
     ggplot2::coord_equal(ratio = rat,
                          expand = FALSE)
-
+  
   if(!is.null(phobius_seq)){
-    p <-  p +
+    p <- p +
       ggplot2::geom_rect(data = tm,
                          ggplot2::aes_(ymin = ~id_tm - 0.35,
                                        ymax = ~id_tm + 0.35,
@@ -827,16 +1039,17 @@ plot_prot <- function(sequence,
                              na.rm = TRUE)
   }
   
-
+  
   if(!is.null(seq_espritz)){
-    p <- p +  ggplot2::geom_path(data = seq_espritz,
-                                 ggplot2::aes_(x = ~residue,
-                                               y = ~y_plot,
-                                               group = ~inter),
-                                 size = 0.7,
+    p <- p + ggplot2::geom_path(data = seq_espritz,
+                                ggplot2::aes_(x = ~residue,
+                                              y = ~y_plot,
+                                              group = ~inter),
+                                size = 0.7,
+                                
                                  color = "grey25") 
   }
-
+  
   if(!is.null(seq_gpi)) {
     p <- p +
       ggplot2::geom_point(data = for_plot,
@@ -846,15 +1059,15 @@ plot_prot <- function(sequence,
                           shape = 18,
                           size = 4,
                           na.rm = TRUE) 
-
+    
   } 
- 
+  
   if (any(subs)){
     p <- p +
-    ggplot2::scale_color_manual("feature",
-                                limits = lims,
-                                values = vals,
-                                labels = labs)
+      ggplot2::scale_color_manual("feature",
+                                  limits = lims,
+                                  values = vals,
+                                  labels = labs)
     p <- p + 
       ggplot2::guides(color = ggplot2::guide_legend(keywidth = 1,
                                                     keyheight = 1,

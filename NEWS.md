@@ -1,3 +1,19 @@
+ragp 0.3.2.0000
+===============
+
+New Features
+------------
+
+* `plot_prot()` arguments `nsp`, `domain`, `tm`, `gpi` and `disorder` can also be user supplied data frames obtained by calling `get_signalp()`, `get_hmm()`, `get_phobius()`, `get_big_pi()`, `get_pred_gpi()`, `get_netGPI()` and `get_espritz()` on the same sequences supplied to `plot_prot()`.  
+
+
+Bug Fixes and Improvements
+--------------------------
+
+* `get_big_pi()` output column `is.bigpi` has been renamed to `is.gpi` to bring the output in line with other gpi predicting functions. **BREAKING CHANGE**.  
+* `get_big_pi()` output column order has been changed to:  `id`, `is.gpi`, `Quality`, `omega_site` and `PValue`. **BREAKING CHANGE**.
+
+
 ragp 0.3.1.0000
 ===============
 

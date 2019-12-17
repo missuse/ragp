@@ -557,7 +557,7 @@ maab.default <- function(data = NULL,
                                      id = id_gpi,
                                      simplify = TRUE,
                                      progress = progress)
-      gpi_big_pi <- gpi_big_pi$is.bigpi
+      gpi_big_pi <- gpi_big_pi$is.gpi
       out2 <- ragp::maab(sequence = seq_gpi,
                          id = id_gpi,
                          order = order,

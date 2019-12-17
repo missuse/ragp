@@ -41,11 +41,11 @@ get_big_pi(data, ...)
 If simplify == TRUE:
 A data frame with columns:
 \describe{
-  \item{omega_site}{Character, indicating the sequence position of the highest scoring omega-site}
-  \item{Quality}{Character, indicating the quality of the highest scoring omega-site}
-  \item{PValue}{Numeric, indicating the p-value for the prediction of the highest scoring omega-site}
   \item{id}{Character, indicating the protein identifier}
-  \item{is.bigpi}{Logical, did big-Pi predict the presence of a GPI}
+  \item{is.gpi}{Logical, did big-Pi predict the presence of a GPI}
+  \item{Quality}{Character, indicating the quality of the highest scoring omega-site}
+  \item{omega_site}{Integer, indicating the sequence position of the highest scoring omega-site}
+  \item{PValue}{Numeric, indicating the p-value for the prediction of the highest scoring omega-site}
   }
 
 If simplify == FALSE:

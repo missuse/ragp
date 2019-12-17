@@ -14,7 +14,7 @@ plot_prot(sequence, id, hyp_col = "#868686FF", gpi_col = "#0073C2FF",
 \arguments{
 \item{sequence}{String representing a protein amino acid sequence.}
 
-\item{id}{String representing a protein identifier. Will be converted using \code{\link[base]{make.names}}}
+\item{id}{String representing a protein identifier. Will be converted using \code{\link[base]{make.names}}.}
 
 \item{hyp_col}{Plotting color of predicted hydroxyproline positions. At default set to: '#868686FF'.}
 
@@ -28,17 +28,17 @@ plot_prot(sequence, id, hyp_col = "#868686FF", gpi_col = "#0073C2FF",
 
 \item{hyp}{Boolean, should hydroxyprolines be plotted.}
 
-\item{gpi}{A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi"), \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") or \code{\link[ragp]{get_netGPI}} (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi".}
+\item{gpi}{A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi"), \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") or \code{\link[ragp]{get_netGPI}} (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi". Alternatively the output data frame of the mentioned functions (called with simplify = TRUE) can be supplied.}
 
-\item{nsp}{Boolean, should the N-terminal signal peptide be plotted.}
+\item{nsp}{Boolean, should the N-terminal signal peptide predictions obtained using \code{\link[ragp]{get_signalp}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_signalp}} can be supplied.}
 
 \item{ag}{Boolean, should the AG glycomodul spans be plotted.}
 
-\item{tm}{Boolean, should the transmembrane regions be plotted.}
+\item{tm}{Boolean, should the transmembrane region predictions obtained using \code{\link[ragp]{get_phobius}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_phobius}} can be supplied.}
 
-\item{domain}{Boolean, should the domains be plotted.}
+\item{domain}{Boolean, should the domain predictions obtained using \code{\link[ragp]{get_hmm}}  be plotted. Alternatively the output data frame from \code{\link[ragp]{get_hmm}} can be supplied.}
 
-\item{disorder}{Boolean, should disordered regions be plotted.}
+\item{disorder}{Boolean, should disordered region predictions obtained using \code{\link[ragp]{get_espritz}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_espritz}} (called with simplify = TRUE) can be supplied.}
 
 \item{dom_sort}{One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.}
 
@@ -57,18 +57,48 @@ library(ragp)
 library(ggplot2)
 ind <- c(23, 5, 80, 81, 345)
 pred <- plot_prot(sequence = at_nsp$sequence[ind],
-                  id = at_nsp$Transcript.id[ind])
+                  id = at_nsp$Transcript.id[ind],
+                  bitscore = 30) #passed to get_hmm
 pred +
   theme(legend.position = "bottom",
         legend.direction = "vertical")
         
-pred <- plot_prot(sequence = at_nsp$sequence[ind],
-                  id = at_nsp$Transcript.id[ind],
-                  bitscore = 30,
-                  dim = 7)
-pred +
+#alternatively:      
+nsp <- get_signalp(data = at_nsp[ind,],
+                   id = Transcript.id,
+                   sequence = sequence)
+                    
+hmm <- get_hmm(data = at_nsp[ind,],
+               id = Transcript.id,
+               sequence = sequence)
+               
+gpi <- get_netGPI(data = at_nsp[ind,],
+                 id = Transcript.id,
+                 sequence = sequence)                                    
+
+tm <- get_phobius(data = at_nsp[ind,],
+                  id = Transcript.id,
+                  sequence = sequence)                                                        
+ 
+disorder <- get_espritz(data = at_nsp[ind,],
+                        id = Transcript.id,
+                        sequence = sequence)          
+        
+pred2 <- plot_prot(sequence = at_nsp$sequence[ind],
+                   id = at_nsp$Transcript.id[ind],
+                   tm = tm,
+                   nsp = nsp,
+                   gpi = gpi,
+                   hmm = hmm,
+                   disorder = disorder,
+                   bitscore = 30)
+                   
+                   
+pred2 +
   theme(legend.position = "bottom",
         legend.direction = "vertical")
+        
+#mixing both methods is also a possibility
         
 }
 \seealso{

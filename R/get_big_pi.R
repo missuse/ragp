@@ -13,11 +13,11 @@
 #' @return If simplify == TRUE:
 #' A data frame with columns:
 #' \describe{
-#'   \item{omega_site}{Character, indicating the sequence position of the highest scoring omega-site}
-#'   \item{Quality}{Character, indicating the quality of the highest scoring omega-site}
-#'   \item{PValue}{Numeric, indicating the p-value for the prediction of the highest scoring omega-site}
 #'   \item{id}{Character, indicating the protein identifier}
-#'   \item{is.bigpi}{Logical, did big-Pi predict the presence of a GPI}
+#'   \item{is.gpi}{Logical, did big-Pi predict the presence of a GPI}
+#'   \item{Quality}{Character, indicating the quality of the highest scoring omega-site}
+#'   \item{omega_site}{Integer, indicating the sequence position of the highest scoring omega-site}
+#'   \item{PValue}{Numeric, indicating the p-value for the prediction of the highest scoring omega-site}
 #'   }
 #'
 #' If simplify == FALSE:
@@ -489,10 +489,13 @@ get_big_pi.default <- function(data = NULL,
     })
     res_out <- do.call(rbind, res_out)
     res_out$id <- id
-    res_out$is.bigpi <- res_out$Quality != "None"
-    res_out$is.bigpi <- ifelse(is.na(res_out$PValue),
-                               NA, 
-                               res_out$is.bigpi)
+    res_out$is.gpi <- res_out$Quality != "None"
+    res_out$is.gpi <- ifelse(is.na(res_out$PValue),
+                             NA, 
+                             res_out$is.gpi)
+    res_out$omega_site <- as.integer(res_out$omega_site)
+    rownames(res_out) <- NULL
+    res_out <- res_out[,c(4,5,2,1,3)]
   }
   return(res_out)
 }
