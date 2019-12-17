@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0</span>
       </span>
     </div>
 
@@ -157,7 +157,7 @@
     </tr>
     <tr>
       <th>id</th>
-      <td><p>String representing a protein identifier. Will be converted using <code><a href='https://rdrr.io/r/base/make.names.html'>make.names</a></code></p></td>
+      <td><p>String representing a protein identifier. Will be converted using <code><a href='https://rdrr.io/r/base/make.names.html'>make.names</a></code>.</p></td>
     </tr>
     <tr>
       <th>hyp_col</th>
@@ -185,11 +185,11 @@
     </tr>
     <tr>
       <th>gpi</th>
-      <td><p>A string indicating if <code><a href='get_big_pi.html'>get_big_pi</a></code> (gpi = "bigpi"), <code><a href='get_pred_gpi.html'>get_pred_gpi</a></code> (gpi = "predgpi") or <code><a href='get_netGPI.html'>get_netGPI</a></code> (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi".</p></td>
+      <td><p>A string indicating if <code><a href='get_big_pi.html'>get_big_pi</a></code> (gpi = "bigpi"), <code><a href='get_pred_gpi.html'>get_pred_gpi</a></code> (gpi = "predgpi") or <code><a href='get_netGPI.html'>get_netGPI</a></code> (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi". Alternatively the output data frame of the mentioned functions (called with simplify = TRUE) can be supplied.</p></td>
     </tr>
     <tr>
       <th>nsp</th>
-      <td><p>Boolean, should the N-terminal signal peptide be plotted.</p></td>
+      <td><p>Boolean, should the N-terminal signal peptide predictions obtained using <code><a href='get_signalp.html'>get_signalp</a></code> be plotted. Alternatively the output data frame from <code><a href='get_signalp.html'>get_signalp</a></code> can be supplied.</p></td>
     </tr>
     <tr>
       <th>ag</th>
@@ -197,15 +197,15 @@
     </tr>
     <tr>
       <th>tm</th>
-      <td><p>Boolean, should the transmembrane regions be plotted.</p></td>
+      <td><p>Boolean, should the transmembrane region predictions obtained using <code><a href='get_phobius.html'>get_phobius</a></code> be plotted. Alternatively the output data frame from <code><a href='get_phobius.html'>get_phobius</a></code> can be supplied.</p></td>
     </tr>
     <tr>
       <th>domain</th>
-      <td><p>Boolean, should the domains be plotted.</p></td>
+      <td><p>Boolean, should the domain predictions obtained using <code><a href='get_hmm.html'>get_hmm</a></code>  be plotted. Alternatively the output data frame from <code><a href='get_hmm.html'>get_hmm</a></code> can be supplied.</p></td>
     </tr>
     <tr>
       <th>disorder</th>
-      <td><p>Boolean, should disordered regions be plotted.</p></td>
+      <td><p>Boolean, should disordered region predictions obtained using <code><a href='get_espritz.html'>get_espritz</a></code> be plotted. Alternatively the output data frame from <code><a href='get_espritz.html'>get_espritz</a></code> (called with simplify = TRUE) can be supplied.</p></td>
     </tr>
     <tr>
       <th>dom_sort</th>
@@ -233,17 +233,47 @@
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
 <span class='no'>ind</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>23</span>, <span class='fl'>5</span>, <span class='fl'>80</span>, <span class='fl'>81</span>, <span class='fl'>345</span>)
 <span class='no'>pred</span> <span class='kw'>&lt;-</span> <span class='fu'>plot_prot</span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>[<span class='no'>ind</span>],
-                  <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='no'>ind</span>])
+                  <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='no'>ind</span>],
+                  <span class='kw'>bitscore</span> <span class='kw'>=</span> <span class='fl'>30</span>) <span class='co'>#passed to get_hmm</span>
 <span class='no'>pred</span> +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>legend.position</span> <span class='kw'>=</span> <span class='st'>"bottom"</span>,
         <span class='kw'>legend.direction</span> <span class='kw'>=</span> <span class='st'>"vertical"</span>)</div><div class='img'><img src='plot_prot-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='no'>pred</span> <span class='kw'>&lt;-</span> <span class='fu'>plot_prot</span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>[<span class='no'>ind</span>],
-                  <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='no'>ind</span>],
-                  <span class='kw'>bitscore</span> <span class='kw'>=</span> <span class='fl'>30</span>,
-                  <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fl'>7</span>)
-<span class='no'>pred</span> +
+<span class='co'>#alternatively:      </span>
+<span class='no'>nsp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_signalp.html'>get_signalp</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>[<span class='no'>ind</span>,],
+                   <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>Transcript.id</span>,
+                   <span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>sequence</span>)
+
+<span class='no'>hmm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_hmm.html'>get_hmm</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>[<span class='no'>ind</span>,],
+               <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>Transcript.id</span>,
+               <span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>sequence</span>)
+
+<span class='no'>gpi</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_netGPI.html'>get_netGPI</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>[<span class='no'>ind</span>,],
+                 <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>Transcript.id</span>,
+                 <span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>sequence</span>)
+
+<span class='no'>tm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_phobius.html'>get_phobius</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>[<span class='no'>ind</span>,],
+                  <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>Transcript.id</span>,
+                  <span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>sequence</span>)
+
+<span class='no'>disorder</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_espritz.html'>get_espritz</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>[<span class='no'>ind</span>,],
+                        <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>Transcript.id</span>,
+                        <span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>sequence</span>)
+
+<span class='no'>pred2</span> <span class='kw'>&lt;-</span> <span class='fu'>plot_prot</span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>[<span class='no'>ind</span>],
+                   <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='no'>ind</span>],
+                   <span class='kw'>tm</span> <span class='kw'>=</span> <span class='no'>tm</span>,
+                   <span class='kw'>nsp</span> <span class='kw'>=</span> <span class='no'>nsp</span>,
+                   <span class='kw'>gpi</span> <span class='kw'>=</span> <span class='no'>gpi</span>,
+                   <span class='kw'>hmm</span> <span class='kw'>=</span> <span class='no'>hmm</span>,
+                   <span class='kw'>disorder</span> <span class='kw'>=</span> <span class='no'>disorder</span>,
+                   <span class='kw'>bitscore</span> <span class='kw'>=</span> <span class='fl'>30</span>)
+
+
+<span class='no'>pred2</span> +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span>(<span class='kw'>legend.position</span> <span class='kw'>=</span> <span class='st'>"bottom"</span>,
         <span class='kw'>legend.direction</span> <span class='kw'>=</span> <span class='st'>"vertical"</span>)</div><div class='img'><img src='plot_prot-2.png' alt='' width='700' height='433' /></div><div class='input'>        
+#mixing both methods is also a possibility
+        
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

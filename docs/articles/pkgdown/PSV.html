@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0</span>
       </span>
     </div>
 
@@ -159,6 +159,32 @@ code.r{ /* Code block */
 <a class="sourceLine" id="cb5-4" title="4">p1</a></code></pre></div>
 <p><img src="https://missuse.github.io/ragp/articles/PSV_p2.svg"></p>
 <p>Plotting can take a while since <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> first obtains the appropriate predictions using <code><a href="../../reference/get_hmm.html">get_hmm()</a></code>, <code><a href="../../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../../reference/get_phobius.html">get_phobius()</a></code>, <code><a href="../../reference/get_espritz.html">get_espritz()</a></code>, <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> and <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> and then generates the plot. To check what actions the function is performing set the argument <code>progress</code> to <code>TRUE</code>.</p>
+<p>Alternatively the outputs of <code><a href="../../reference/get_hmm.html">get_hmm()</a></code>, <code><a href="../../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../../reference/get_phobius.html">get_phobius()</a></code>, <code><a href="../../reference/get_espritz.html">get_espritz()</a></code>, <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> or <code><a href="../../reference/get_netGPI.html">get_netGPI()</a></code> can be supplied as <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> arguments <code>domain</code>, <code>nsp</code>, <code>tm</code>, <code>disorder</code> and <code>gpi</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">domains &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_hmm.html">get_hmm</a></span>(<span class="dt">sequence =</span> seqs,</a>
+<a class="sourceLine" id="cb6-2" title="2">                   <span class="dt">id =</span> ids)</a>
+<a class="sourceLine" id="cb6-3" title="3"></a>
+<a class="sourceLine" id="cb6-4" title="4">tm &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_phobius.html">get_phobius</a></span>(<span class="dt">sequence =</span> seqs,</a>
+<a class="sourceLine" id="cb6-5" title="5">                  <span class="dt">id =</span> ids)</a>
+<a class="sourceLine" id="cb6-6" title="6"></a>
+<a class="sourceLine" id="cb6-7" title="7">nsp &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_signalp.html">get_signalp</a></span>(<span class="dt">sequence =</span> seqs,</a>
+<a class="sourceLine" id="cb6-8" title="8">                   <span class="dt">id =</span> ids)</a>
+<a class="sourceLine" id="cb6-9" title="9"></a>
+<a class="sourceLine" id="cb6-10" title="10">gpi &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/get_big_pi.html">get_big_pi</a></span>(<span class="dt">sequence =</span> seqs,</a>
+<a class="sourceLine" id="cb6-11" title="11">                  <span class="dt">id =</span> ids)</a>
+<a class="sourceLine" id="cb6-12" title="12"></a>
+<a class="sourceLine" id="cb6-13" title="13">disorder &lt;-<span class="st"> </span>ragp<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ragp/man/get_espritz.html">get_espritz</a></span>(<span class="dt">sequence =</span> seqs,</a>
+<a class="sourceLine" id="cb6-14" title="14">                              <span class="dt">id =</span> ids)</a>
+<a class="sourceLine" id="cb6-15" title="15"></a>
+<a class="sourceLine" id="cb6-16" title="16">p1_df &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,</a>
+<a class="sourceLine" id="cb6-17" title="17">                   <span class="dt">id =</span> ids,</a>
+<a class="sourceLine" id="cb6-18" title="18">                   <span class="dt">domain =</span> domains,</a>
+<a class="sourceLine" id="cb6-19" title="19">                   <span class="dt">tm =</span> tm,</a>
+<a class="sourceLine" id="cb6-20" title="20">                   <span class="dt">nsp =</span> nsp,</a>
+<a class="sourceLine" id="cb6-21" title="21">                   <span class="dt">gpi =</span> gpi,</a>
+<a class="sourceLine" id="cb6-22" title="22">                   <span class="dt">disorder =</span> disorder)</a>
+<a class="sourceLine" id="cb6-23" title="23"></a>
+<a class="sourceLine" id="cb6-24" title="24">p1_df</a></code></pre></div>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p2.svg"></p>
 </div>
 <div id="plot_prot-options" class="section level2">
 <h2 class="hasAnchor">
@@ -167,48 +193,48 @@ code.r{ /* Code block */
 <li>
 <strong>determining what features to plot</strong>: to turn off some elements from being plotted use the appropriate argument, for instance <code>hyp = FALSE</code> will result in hydroxyproline predictions to not be plotted (check full list of options: <code><a href="../../reference/plot_prot.html">?plot_prot</a></code>):</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">p1 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,</a>
-<a class="sourceLine" id="cb6-2" title="2">                <span class="dt">id =</span> ids,</a>
-<a class="sourceLine" id="cb6-3" title="3">                <span class="dt">disorder =</span> <span class="ot">TRUE</span>, <span class="co">#plot disordered regions</span></a>
-<a class="sourceLine" id="cb6-4" title="4">                <span class="dt">hyp =</span> <span class="ot">FALSE</span>, <span class="co">#do not plot hydroxyprolines</span></a>
-<a class="sourceLine" id="cb6-5" title="5">                <span class="dt">ag =</span> <span class="ot">FALSE</span>, <span class="co">#do not plot arabinogalactan motifs</span></a>
-<a class="sourceLine" id="cb6-6" title="6">                <span class="dt">gpi =</span> <span class="st">"predgpi"</span>)  <span class="co">#use `get_pred_gpi()` to obtain GPI predictions</span></a>
-<a class="sourceLine" id="cb6-7" title="7">p1</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">p1 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,</a>
+<a class="sourceLine" id="cb7-2" title="2">                <span class="dt">id =</span> ids,</a>
+<a class="sourceLine" id="cb7-3" title="3">                <span class="dt">disorder =</span> <span class="ot">TRUE</span>, <span class="co">#plot disordered regions</span></a>
+<a class="sourceLine" id="cb7-4" title="4">                <span class="dt">hyp =</span> <span class="ot">FALSE</span>, <span class="co">#do not plot hydroxyprolines</span></a>
+<a class="sourceLine" id="cb7-5" title="5">                <span class="dt">ag =</span> <span class="ot">FALSE</span>, <span class="co">#do not plot arabinogalactan motifs</span></a>
+<a class="sourceLine" id="cb7-6" title="6">                <span class="dt">gpi =</span> <span class="st">"predgpi"</span>)  <span class="co">#use `get_pred_gpi()` to obtain GPI predictions</span></a>
+<a class="sourceLine" id="cb7-7" title="7">p1</a></code></pre></div>
 <p><img src="https://missuse.github.io/ragp/articles/PSV_p3.svg"></p>
 <ul>
 <li>
 <strong>feature specific options</strong>: passing appropriate function arguments to functions called by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> such as <code>dim</code> and <code>div</code> for <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> or <code>tprob</code> for <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> to change the rules of arabinogalactan motif scan and the threshold for decision if the proline is hydroxylated is supported:</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">p2 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,</a>
-<a class="sourceLine" id="cb7-2" title="2">                <span class="dt">id =</span> ids,</a>
-<a class="sourceLine" id="cb7-3" title="3">                <span class="dt">disorder =</span> <span class="ot">TRUE</span>, <span class="co">#plot disordered regions</span></a>
-<a class="sourceLine" id="cb7-4" title="4">                <span class="dt">dim =</span> <span class="dv">5</span>, <span class="co">#`scan_ag()` argument, minimum number of dipeptides for a motif</span></a>
-<a class="sourceLine" id="cb7-5" title="5">                <span class="dt">div =</span> <span class="dv">5</span>, <span class="co">#`scan_ag()` argument, maximum number of amino acids between dipeptides </span></a>
-<a class="sourceLine" id="cb7-6" title="6">                <span class="dt">tprob =</span> <span class="fl">0.9</span>, <span class="co">#`predict_hyp()` argument, threshold probability for prediction</span></a>
-<a class="sourceLine" id="cb7-7" title="7">                <span class="dt">model =</span> <span class="st">"Disprot"</span>) <span class="co">#use the 'Disprot' model when calling `get_espritz()`</span></a>
-<a class="sourceLine" id="cb7-8" title="8">p2</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">p2 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,</a>
+<a class="sourceLine" id="cb8-2" title="2">                <span class="dt">id =</span> ids,</a>
+<a class="sourceLine" id="cb8-3" title="3">                <span class="dt">disorder =</span> <span class="ot">TRUE</span>, <span class="co">#plot disordered regions</span></a>
+<a class="sourceLine" id="cb8-4" title="4">                <span class="dt">dim =</span> <span class="dv">5</span>, <span class="co">#`scan_ag()` argument, minimum number of dipeptides for a motif</span></a>
+<a class="sourceLine" id="cb8-5" title="5">                <span class="dt">div =</span> <span class="dv">5</span>, <span class="co">#`scan_ag()` argument, maximum number of amino acids between dipeptides </span></a>
+<a class="sourceLine" id="cb8-6" title="6">                <span class="dt">tprob =</span> <span class="fl">0.9</span>, <span class="co">#`predict_hyp()` argument, threshold probability for prediction</span></a>
+<a class="sourceLine" id="cb8-7" title="7">                <span class="dt">model =</span> <span class="st">"Disprot"</span>) <span class="co">#use the 'Disprot' model when calling `get_espritz()`</span></a>
+<a class="sourceLine" id="cb8-8" title="8">p2</a></code></pre></div>
 <p><img src="https://missuse.github.io/ragp/articles/PSV_p4.svg"></p>
 <ul>
 <li>
 <strong>change feature colors</strong>:</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">p3 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,</a>
-<a class="sourceLine" id="cb8-2" title="2">                <span class="dt">id =</span> ids,</a>
-<a class="sourceLine" id="cb8-3" title="3">                <span class="dt">hyp_col =</span> <span class="st">"chocolate2"</span>,</a>
-<a class="sourceLine" id="cb8-4" title="4">                <span class="dt">gpi_col =</span> <span class="st">"lightsalmon4"</span>,</a>
-<a class="sourceLine" id="cb8-5" title="5">                <span class="dt">nsp_col =</span> <span class="st">"sienna1"</span>,</a>
-<a class="sourceLine" id="cb8-6" title="6">                <span class="dt">ag_col =</span> <span class="st">"bisque2"</span>,</a>
-<a class="sourceLine" id="cb8-7" title="7">                <span class="dt">tm_col =</span> <span class="st">"aquamarine"</span>) </a>
-<a class="sourceLine" id="cb8-8" title="8">p3</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">p3 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,</a>
+<a class="sourceLine" id="cb9-2" title="2">                <span class="dt">id =</span> ids,</a>
+<a class="sourceLine" id="cb9-3" title="3">                <span class="dt">hyp_col =</span> <span class="st">"chocolate2"</span>,</a>
+<a class="sourceLine" id="cb9-4" title="4">                <span class="dt">gpi_col =</span> <span class="st">"lightsalmon4"</span>,</a>
+<a class="sourceLine" id="cb9-5" title="5">                <span class="dt">nsp_col =</span> <span class="st">"sienna1"</span>,</a>
+<a class="sourceLine" id="cb9-6" title="6">                <span class="dt">ag_col =</span> <span class="st">"bisque2"</span>,</a>
+<a class="sourceLine" id="cb9-7" title="7">                <span class="dt">tm_col =</span> <span class="st">"aquamarine"</span>) </a>
+<a class="sourceLine" id="cb9-8" title="8">p3</a></code></pre></div>
 <p><img src="https://missuse.github.io/ragp/articles/PSV_p5.svg"></p>
 <ul>
 <li>
 <strong>change the order of domain plotting</strong>: in the above images it can be observed there are more entries in the legend then can be seen in the plot. Some domains cover other domains. By default the domains with the lowest I-evalue (independent e-value) are plotted on top. To change this the argument <code>dom_sort</code> can be used. This argument can take the following values: <code>"ievalue"</code> (default), <code>"abc"</code> (alphabetically sorted by domain names), <code>"cba"</code> (reverse of <code>"abc"</code>).</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">p4 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,</a>
-<a class="sourceLine" id="cb9-2" title="2">                <span class="dt">id =</span> ids,</a>
-<a class="sourceLine" id="cb9-3" title="3">                <span class="dt">dom_sort =</span> <span class="st">"cba"</span>)</a>
-<a class="sourceLine" id="cb9-4" title="4">p4</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">p4 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/plot_prot.html">plot_prot</a></span>(<span class="dt">sequence =</span> seqs,</a>
+<a class="sourceLine" id="cb10-2" title="2">                <span class="dt">id =</span> ids,</a>
+<a class="sourceLine" id="cb10-3" title="3">                <span class="dt">dom_sort =</span> <span class="st">"cba"</span>)</a>
+<a class="sourceLine" id="cb10-4" title="4">p4</a></code></pre></div>
 <p><img src="https://missuse.github.io/ragp/articles/PSV_dom_sort.svg"></p>
 <p>Ureide permease domain overlaps with TMEM144 transmembrane transporter domain and also protein kinase and protein tyrosine kinase domains overlap.</p>
 </div>
@@ -220,62 +246,62 @@ code.r{ /* Code block */
 <li>
 <strong>change theme elements</strong>:</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">p1 <span class="op">+</span></a>
-<a class="sourceLine" id="cb10-2" title="2"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,</a>
-<a class="sourceLine" id="cb10-3" title="3">        <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">p1 <span class="op">+</span></a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,</a>
+<a class="sourceLine" id="cb11-3" title="3">        <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>)</a></code></pre></div>
 <p><img src="https://missuse.github.io/ragp/articles/PSV_p6.svg"></p>
 <ul>
 <li>
 <strong>add annotations</strong>:</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">p1 <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,</a>
-<a class="sourceLine" id="cb11-3" title="3">        <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-4" title="4"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">"text"</span>,</a>
-<a class="sourceLine" id="cb11-5" title="5">           <span class="dt">y =</span> <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb11-6" title="6">           <span class="dt">x =</span> <span class="dv">90</span>,</a>
-<a class="sourceLine" id="cb11-7" title="7">           <span class="dt">label =</span> <span class="st">"FAS domain"</span>)</a></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_p7.svg"></p>
-<p>The <code>y</code> axis is continuous - <code>1</code> on the plot corresponds to Q9C7T7, <code>2</code> corresponds to Q9ZPR7 and 3 to Q9ZQ23. The <code>x</code> axis represents amino acids in the sequence. This enables adding annotations anywhere on the plot.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">p1 <span class="op">+</span></a>
 <a class="sourceLine" id="cb12-2" title="2"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,</a>
 <a class="sourceLine" id="cb12-3" title="3">        <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb12-4" title="4"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">"text"</span>,</a>
-<a class="sourceLine" id="cb12-5" title="5">           <span class="dt">y =</span> <span class="fl">1.6</span>,</a>
-<a class="sourceLine" id="cb12-6" title="6">           <span class="dt">x =</span> <span class="dv">530</span>,</a>
-<a class="sourceLine" id="cb12-7" title="7">           <span class="dt">label =</span> <span class="st">"annotation 1"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb12-5" title="5">           <span class="dt">y =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb12-6" title="6">           <span class="dt">x =</span> <span class="dv">90</span>,</a>
+<a class="sourceLine" id="cb12-7" title="7">           <span class="dt">label =</span> <span class="st">"FAS domain"</span>)</a></code></pre></div>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p7.svg"></p>
+<p>The <code>y</code> axis is continuous - <code>1</code> on the plot corresponds to Q9C7T7, <code>2</code> corresponds to Q9ZPR7 and 3 to Q9ZQ23. The <code>x</code> axis represents amino acids in the sequence. This enables adding annotations anywhere on the plot.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">p1 <span class="op">+</span></a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,</a>
+<a class="sourceLine" id="cb13-3" title="3">        <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb13-4" title="4"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">"text"</span>,</a>
+<a class="sourceLine" id="cb13-5" title="5">           <span class="dt">y =</span> <span class="fl">1.6</span>,</a>
+<a class="sourceLine" id="cb13-6" title="6">           <span class="dt">x =</span> <span class="dv">530</span>,</a>
+<a class="sourceLine" id="cb13-7" title="7">           <span class="dt">label =</span> <span class="st">"annotation 1"</span>)</a></code></pre></div>
 <p><img src="https://missuse.github.io/ragp/articles/PSV_p8.svg"></p>
 <ul>
 <li>
 <strong>change plot ratio</strong>: the ratio of the axes is determined automatically by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> and scales with the longest sequence plotted. To change this use the <code>ratio</code> argument to <code>coord_equal()</code>:</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">p1 <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-2" title="2"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,</a>
-<a class="sourceLine" id="cb13-3" title="3">        <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-4" title="4"><span class="st">  </span><span class="kw">coord_equal</span>(<span class="dt">ratio =</span> <span class="dv">80</span>,</a>
-<a class="sourceLine" id="cb13-5" title="5">              <span class="dt">expand =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">p1 <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-2" title="2"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,</a>
+<a class="sourceLine" id="cb14-3" title="3">        <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="st">  </span><span class="kw">coord_equal</span>(<span class="dt">ratio =</span> <span class="dv">80</span>,</a>
+<a class="sourceLine" id="cb14-5" title="5">              <span class="dt">expand =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p><img src="https://missuse.github.io/ragp/articles/PSV_p9.svg"></p>
 <ul>
 <li>
 <strong>change domain colors</strong>: use another fill palette:</li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">p1 <span class="op">+</span></a>
-<a class="sourceLine" id="cb14-2" title="2"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,</a>
-<a class="sourceLine" id="cb14-3" title="3">        <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">type =</span> <span class="st">"div"</span>)</a></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_p10.svg"></p>
-<p>or create a manual palette:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">p1 <span class="op">+</span></a>
 <a class="sourceLine" id="cb15-2" title="2"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,</a>
 <a class="sourceLine" id="cb15-3" title="3">        <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb15-4" title="4"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"orange"</span>,</a>
-<a class="sourceLine" id="cb15-5" title="5">                               <span class="st">"red"</span>,</a>
-<a class="sourceLine" id="cb15-6" title="6">                               <span class="st">"yellow"</span>,</a>
-<a class="sourceLine" id="cb15-7" title="7">                               <span class="st">"dodgerblue"</span>,</a>
-<a class="sourceLine" id="cb15-8" title="8">                               <span class="st">"green"</span>,</a>
-<a class="sourceLine" id="cb15-9" title="9">                               <span class="st">"blue"</span>,</a>
-<a class="sourceLine" id="cb15-10" title="10">                               <span class="st">"purple"</span>,</a>
-<a class="sourceLine" id="cb15-11" title="11">                               <span class="st">"grey30"</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb15-4" title="4"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">type =</span> <span class="st">"div"</span>)</a></code></pre></div>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p10.svg"></p>
+<p>or create a manual palette:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">p1 <span class="op">+</span></a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>,</a>
+<a class="sourceLine" id="cb16-3" title="3">        <span class="dt">legend.direction =</span> <span class="st">"vertical"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb16-4" title="4"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"orange"</span>,</a>
+<a class="sourceLine" id="cb16-5" title="5">                               <span class="st">"red"</span>,</a>
+<a class="sourceLine" id="cb16-6" title="6">                               <span class="st">"yellow"</span>,</a>
+<a class="sourceLine" id="cb16-7" title="7">                               <span class="st">"dodgerblue"</span>,</a>
+<a class="sourceLine" id="cb16-8" title="8">                               <span class="st">"green"</span>,</a>
+<a class="sourceLine" id="cb16-9" title="9">                               <span class="st">"blue"</span>,</a>
+<a class="sourceLine" id="cb16-10" title="10">                               <span class="st">"purple"</span>,</a>
+<a class="sourceLine" id="cb16-11" title="11">                               <span class="st">"grey30"</span>))</a></code></pre></div>
 <p><img src="https://missuse.github.io/ragp/articles/PSV_p11.svg"></p>
 </div>
   </div>
