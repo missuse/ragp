@@ -9,10 +9,13 @@ bibentry(
     person("Slađana", "Todorović"),
     person("Ana", "Simonović")),
   journal = "Glycobiology",
-  eprint = "cwz072",
+  issn = "1460-2423",
   publisher = "Oxford University Press",
-  year = "2019",
-  date = "2019-09-11",  
-  url = "https://academic.oup.com/glycob/advance-article-abstract/doi/10.1093/glycob/cwz072/5567434",
-  doi = "https://doi.org/10.1093/glycob/cwz072"
+  year = "2020",
+  volume = "30",  
+  number = "1",
+  pages = "49-57",
+  url = "https://doi.org/10.1093/glycob/cwz072",
+  doi = "10.1093/glycob/cwz072",
+  eprint = "https://academic.oup.com/glycob/article-pdf/30/1/49/31954261/cwz072.pdf"
 )

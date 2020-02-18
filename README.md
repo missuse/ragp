@@ -82,13 +82,12 @@ ideas how to improve them please open an issue at:
 # Citation
 
 If you find `ragp` useful in your own research please cite our
-Glycobiology
-[paper](https://academic.oup.com/glycob/advance-article-abstract/doi/10.1093/glycob/cwz072/5567434).
+Glycobiology [paper](https://doi.org/10.1093/glycob/cwz072).
 
 > Milan B Dragićević, Danijela M Paunović, Milica D Bogdanović, Slađana
-> I Todorović, Ana D Simonović (2019) ragp: Pipeline for mining of plant
+> I Todorović, Ana D Simonović (2020) ragp: Pipeline for mining of plant
 > hydroxyproline-rich glycoproteins with implementation in R,
-> Glycobiology, cwz072, <https://doi.org/10.1093/glycob/cwz072>
+> Glycobiology 30(1) 49-57, <https://doi.org/10.1093/glycob/cwz072>
 
 You can get citation info via `citation("ragp")` or by copying the
 following BibTex entry:
@@ -97,13 +96,17 @@ following BibTex entry:
 @article{10.1093/glycob/cwz072,
     author = {Dragićević, Milan B and Paunović, Danijela M and Bogdanović, Milica D and Todorović, Slađana I and Simonović, Ana D},
     title = "{ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R}",
-    journal = {Glycobiology},
-    year = {2019},
-    month = {09},
-    issn = {1460-2423},
-    doi = {10.1093/glycob/cwz072},
-    url = {https://doi.org/10.1093/glycob/cwz072}
-}
+    journal = "{Glycobiology}",
+    issn = "{1460-2423}",
+    publisher = "{Oxford University Press}",
+    year = "{2020}",
+    volume = "{30}",  
+    number = "{1}",
+    pages = "{49-57}",
+    url = "{https://doi.org/10.1093/glycob/cwz072}",
+    doi = "{10.1093/glycob/cwz072}",
+    eprint = "{https://academic.oup.com/glycob/article-pdf/30/1/49/31954261/cwz072.pdf}"
+)
 ```
 
 # Acknowledgements
