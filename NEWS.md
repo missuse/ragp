@@ -5,6 +5,8 @@ Bug Fixes and Improvements
 --------------------------
 
 * `get_espritz()` has been removed since Espritz server is no longer available for obtaining predictions. **BREAKING CHANGE**.
+* xgboost models used by ragp were re-saved using xgboost 1.1.1.1 to increase compatibility.
+* xgboost models used by ragp are now stored in the inst directory instead of internal sysdata.rda.
 
 
 ragp 0.3.2.0000
