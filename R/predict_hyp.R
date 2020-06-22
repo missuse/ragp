@@ -293,13 +293,15 @@ predict_hyp.default <- function (data = NULL,
         QSO_lag12_13 <- QSOlevel(kmer13[,2])
         ATC_13 <- getAAindex(kmer13[,2], Atchley)
         CTDC_13 <- do.call(rbind, lapply(kmer13[,2], function(x) CTDC(x)))
-        
-        dtest13 <- data.matrix(cbind(ATC_13,
-                                     MoreauBroto_lag6_13,
-                                     QSO_lag12_13 ,
-                                     MBI_13,
-                                     CTDC_13))
-        model_13 <- xgboost::xgb.Booster.complete(model_13)
+ 
+        dtest13 <- xgboost::xgb.DMatrix(data = cbind(ATC_13,
+                                                     MoreauBroto_lag6_13,
+                                                     QSO_lag12_13,
+                                                     MBI_13,
+                                                     CTDC_13))
+        model_13 <- xgboost::xgb.load(system.file("extdata",
+                                                  "model_kmer13.model",
+                                                  package = "ragp"))
         
         prob_13 <- predict(model_13, dtest13)
         HYP_13 <- ifelse(prob_13 >= 0.3, "Yes", "No")
@@ -318,12 +320,15 @@ predict_hyp.default <- function (data = NULL,
       ATC_21 <- getAAindex(kmer21[,2], Atchley)
       CTDC_21 <- do.call(rbind, lapply(kmer21[,2],
                                        function(x) CTDC(x)))
-      dtest21 <- data.matrix(cbind(ATC_21,
-                                   MoreauBroto_lag6_21,
-                                   QSO_lag12_21,
-                                   MBI_21,
-                                   CTDC_21))
-      model_21 <- xgboost::xgb.Booster.complete(model_21)
+      dtest21 <- xgboost::xgb.DMatrix(data = cbind(ATC_21,
+                                                   MoreauBroto_lag6_21,
+                                                   QSO_lag12_21,
+                                                   MBI_21,
+                                                   CTDC_21))
+      model_21 <- xgboost::xgb.load(system.file("extdata",
+                                                "model_kmer21.model",
+                                                package = "ragp"))
+        
       prob_21 <- predict(model_21, dtest21)
       HYP_21 <- ifelse(prob_21 >= tprob, "Yes", "No")
       prediction21 <- cbind(id = as.character(kmer21[,1]),
@@ -367,11 +372,14 @@ predict_hyp.default <- function (data = NULL,
         MoreauBroto_lag12_15_atc <- extractMBdesc(kmer15[,2], nlag = 12, Atchley[,-21])
         QSO_lag12_15 <- QSOlevel(kmer15[,2])
         
-        dtest15 <- data.matrix(cbind(MBI_15,
-                                     QSO_lag12_15,
-                                     MoreauBroto_lag12_15_mbi,
-                                     MoreauBroto_lag12_15_atc))
-        model15_v2 <- xgboost::xgb.Booster.complete(model15_v2)
+        dtest15 <- xgboost::xgb.DMatrix(data = cbind(MBI_15,
+                                                     QSO_lag12_15,
+                                                     MoreauBroto_lag12_15_mbi,
+                                                     MoreauBroto_lag12_15_atc))
+        
+        model15_v2 <- xgboost::xgb.load(system.file("extdata",
+                                                    "model15_v2.model",
+                                                    package = "ragp"))
         
         prob_15 <- predict(model15_v2, dtest15)
         HYP_15 <- ifelse(prob_15 >= 0.22, "Yes", "No")
@@ -388,11 +396,13 @@ predict_hyp.default <- function (data = NULL,
       MoreauBroto_lag12_21_mbi <- extractMBdesc(kmer21[,2], nlag = 12, aaidx)
       MoreauBroto_lag12_21_atc <- extractMBdesc(kmer21[,2], nlag = 12, Atchley[,-21])
       QSO_lag12_21 <- QSOlevel(kmer21[,2])
-      dtest21 <- data.matrix(cbind(MBI_21,
-                                   QSO_lag12_21,
-                                   MoreauBroto_lag12_21_mbi,
-                                   MoreauBroto_lag12_21_atc))
-      model21_v2 <- xgboost::xgb.Booster.complete(model21_v2)
+      dtest21 <- xgboost::xgb.DMatrix(data = cbind(MBI_21,
+                                                   QSO_lag12_21,
+                                                   MoreauBroto_lag12_21_mbi,
+                                                   MoreauBroto_lag12_21_atc))
+      model21_v2 <- xgboost::xgb.load(system.file("extdata",
+                                                  "model21_v2.model",
+                                                  package = "ragp"))
       prob_21 <- predict(model21_v2, dtest21)
       HYP_21 <- ifelse(prob_21 >= tprob, "Yes", "No")
       prediction21 <- cbind(id = as.character(kmer21[,1]),

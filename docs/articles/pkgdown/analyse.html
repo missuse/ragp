@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0001</span>
       </span>
     </div>
 
@@ -167,9 +167,7 @@ code.r{ /* Code block */
 </ul>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">at_hyp</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/predict_hyp.html">predict_hyp</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">at_nsp_filtered</span>,
                       <span class="kw">sequence</span> <span class="kw">=</span> <span class="no">sequence</span>,
-                      <span class="kw">id</span> <span class="kw">=</span> <span class="no">Transcript.id</span>)
-<span class="co">#&gt; [17:55:14] WARNING: amalgamation/../src/learner.cc:556: Loading model from XGBoost &lt; 1.0.0, consider saving it again for improved compatibility</span>
-<span class="co">#&gt; [17:55:25] WARNING: amalgamation/../src/learner.cc:556: Loading model from XGBoost &lt; 1.0.0, consider saving it again for improved compatibility</span></pre></body></html></div>
+                      <span class="kw">id</span> <span class="kw">=</span> <span class="no">Transcript.id</span>)</pre></body></html></div>
 <ul>
 <li>Then <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> will be called on the output <code>at_hyp$sequence</code>:</li>
 </ul>
@@ -432,7 +430,7 @@ code.r{ /* Code block */
 <div id="disorder-prediction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#disorder-prediction" class="anchor"></a>Disorder prediction</h2>
-<p>A key structural feature of HRGPs, based on abundance of disorder-promoting residues, is that they are intrinsically disordered proteins. To identify potential disordered regions in proteins <code>ragp</code> previously contained <code><a href="../../reference/get_espritz.html">get_espritz()</a></code> which queried <a href="http://protein.bio.unipd.it/espritz/">ESpritz</a> <span class="citation">(Walsh et al. 2012)</span> web server. This server has been retired hence no longer available. When a suitable replacement server is found an appropriate function will be added to ragp.</p>
+<p>A key structural feature of HRGPs, based on abundance of disorder-promoting residues, is that they are intrinsically disordered proteins. To identify potential disordered regions in proteins <code>ragp</code> previously contained <code>get_espritz()</code> which queried <a href="http://protein.bio.unipd.it/espritz/">ESpritz</a> <span class="citation">(Walsh et al. 2012)</span> web server. This server has been retired hence no longer available. When a suitable replacement server is found an appropriate function will be added to ragp.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
