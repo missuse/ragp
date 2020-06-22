@@ -8,7 +8,7 @@ Authors@R: c(
   person("Danijela", "Paunovic", role = "aut"),
   person("Milica", "Bogdanovic", role = "ctb"),
   person("Ana", "Simonovic", role = "ctb"),
-  person("Sladana", "Todorovic", role = "ctb")
+  person("Sladjana", "Todorovic", role = "ctb")
   )
 Description: Identification of plant hydroxyproline rich glycoprotein sequences
     by performing sequence bias and motif search, prediction of

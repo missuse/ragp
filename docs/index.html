@@ -6,22 +6,22 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mining for Hydroxyproline rich glycoprotein sequences • ragp</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Mining for Hydroxyproline rich glycoprotein sequences">
 <meta property="og:description" content="Identification of plant hydroxyproline rich glycoprotein sequences
     by performing sequence bias and motif search, prediction of
     hydroxylated proline residues and scraping relevant data from
     web based prediction services.">
-<meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-home">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0000</span>
       </span>
     </div>
 
@@ -125,14 +125,14 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>To install <code>ragp</code> run:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("devtools")</span></a>
-<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"missuse/ragp"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install.packages("devtools")</span>
+<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"missuse/ragp"</span>)</pre></div>
 <p>alternatively run:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># install.packages("devtools")</span></a>
-<a class="sourceLine" id="cb2-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"missuse/ragp"</span>,</a>
-<a class="sourceLine" id="cb2-3" title="3">                         <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="r"><span class="co"># install.packages("devtools")</span>
+<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"missuse/ragp"</span>,
+                         <span class="kw">build_vignettes</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></div>
 <p>to build vignettes which can be viewed by:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span>(<span class="st">"ragp"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span>(<span class="st">"ragp"</span>)</pre></div>
 </div>
 <div id="bug-reports" class="section level2">
 <h2 class="hasAnchor">
@@ -149,24 +149,23 @@
 <a href="#citation" class="anchor"></a>Citation</h2>
 <p>If you find <code>ragp</code> useful in your own research please cite our Glycobiology <a href="https://doi.org/10.1093/glycob/cwz072">paper</a>.</p>
 <blockquote>
-<p>Milan B Dragićević, Danijela M Paunović, Milica D Bogdanović, Slađana I Todorović, Ana D Simonović (2020) ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R, Glycobiology 30(1) 49-57, <a href="https://doi.org/10.1093/glycob/cwz072" class="uri">https://doi.org/10.1093/glycob/cwz072</a></p>
+<p>Milan B Dragićević, Danijela M Paunović, Milica D Bogdanović, Slađana I Todorović, Ana D Simonović (2020) ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R, Glycobiology 30(1) 19–35, <a href="https://doi.org/10.1093/glycob/cwz072" class="uri">https://doi.org/10.1093/glycob/cwz072</a></p>
 </blockquote>
 <p>You can get citation info via <code><a href="https://rdrr.io/r/utils/citation.html">citation("ragp")</a></code> or by copying the following BibTex entry:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><a class="sourceLine" id="cb4-1" title="1"><span class="va">@article</span>{<span class="ot">10</span>.<span class="ot">1093</span>/<span class="ot">glycob</span>/<span class="ot">cwz072</span>,</a>
-<a class="sourceLine" id="cb4-2" title="2">    <span class="dt">author</span> = {Dragićević, Milan B and Paunović, Danijela M and Bogdanović, Milica D and Todorović, Slađana I and Simonović, Ana D},</a>
-<a class="sourceLine" id="cb4-3" title="3">    <span class="dt">title</span> = "<span class="st">{ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R}</span>",</a>
-<a class="sourceLine" id="cb4-4" title="4">    <span class="dt">journal</span> = "<span class="st">{Glycobiology}</span>",</a>
-<a class="sourceLine" id="cb4-5" title="5">    <span class="dt">issn</span> = "<span class="st">{1460-2423}</span>",</a>
-<a class="sourceLine" id="cb4-6" title="6">    <span class="dt">publisher</span> = "<span class="st">{Oxford University Press}</span>",</a>
-<a class="sourceLine" id="cb4-7" title="7">    <span class="dt">year</span> = "<span class="st">{2020}</span>",</a>
-<a class="sourceLine" id="cb4-8" title="8">    <span class="dt">volume</span> = "<span class="st">{30}</span>",  </a>
-<a class="sourceLine" id="cb4-9" title="9">    <span class="dt">number</span> = "<span class="st">{1}</span>",</a>
-<a class="sourceLine" id="cb4-10" title="10">    <span class="dt">pages</span> = "<span class="st">{49-57}</span>",</a>
-<a class="sourceLine" id="cb4-11" title="11">    <span class="dt">url</span> = "<span class="st">{https://doi.org/10.1093/glycob/cwz072}</span>",</a>
-<a class="sourceLine" id="cb4-12" title="12">    <span class="dt">doi</span> = "<span class="st">{10.1093/glycob/cwz072}</span>",</a>
-<a class="sourceLine" id="cb4-13" title="13">    <span class="dt">eprint</span> = "<span class="st">{https://academic.oup.com/glycob/article-pdf/30/1/49/31954261/cwz072.pdf}</span>"</a>
-<a class="sourceLine" id="cb4-14" title="14"><span class="er">)</span></a>
-<a class="sourceLine" id="cb4-15" title="15">}</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb4-1"><a href="#cb4-1"></a><span class="va">@article</span>{<span class="ot">10</span>.<span class="ot">1093</span>/<span class="ot">glycob</span>/<span class="ot">cwz072</span>,</span>
+<span id="cb4-2"><a href="#cb4-2"></a>    <span class="dt">author</span> = {Dragićević, Milan B and Paunović, Danijela M and Bogdanović, Milica D and Todorović, Slađana I and Simonović, Ana D},</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    <span class="dt">title</span> = "<span class="st">{ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R}</span>",</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="dt">journal</span> = "<span class="st">{Glycobiology}</span>",</span>
+<span id="cb4-5"><a href="#cb4-5"></a>    <span class="dt">issn</span> = "<span class="st">{1460-2423}</span>",</span>
+<span id="cb4-6"><a href="#cb4-6"></a>    <span class="dt">publisher</span> = "<span class="st">{Oxford University Press}</span>",</span>
+<span id="cb4-7"><a href="#cb4-7"></a>    <span class="dt">year</span> = "<span class="st">{2020}</span>",</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    <span class="dt">volume</span> = "<span class="st">{30}</span>",  </span>
+<span id="cb4-9"><a href="#cb4-9"></a>    <span class="dt">number</span> = "<span class="st">{1}</span>",</span>
+<span id="cb4-10"><a href="#cb4-10"></a>    <span class="dt">pages</span> = "<span class="st">{19–35}</span>",</span>
+<span id="cb4-11"><a href="#cb4-11"></a>    <span class="dt">url</span> = "<span class="st">{https://doi.org/10.1093/glycob/cwz072}</span>",</span>
+<span id="cb4-12"><a href="#cb4-12"></a>    <span class="dt">doi</span> = "<span class="st">{10.1093/glycob/cwz072}</span>",</span>
+<span id="cb4-13"><a href="#cb4-13"></a>    <span class="dt">eprint</span> = "<span class="st">{https://academic.oup.com/glycob/article-pdf/30/1/19/5567434/cwz072.pdf}</span>"</span>
+<span id="cb4-14"><a href="#cb4-14"></a>}</span></code></pre></div>
 </div>
 <div id="acknowledgements" class="section level2">
 <h2 class="hasAnchor">
@@ -181,11 +180,11 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/missuse/ragp">https://​github.com/​missuse/​ragp</a>
+<li>Browse source code at <br><a href="https://github.com/missuse/ragp/">https://​github.com/​missuse/​ragp/​</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/missuse/ragp/issues">https://​github.com/​missuse/​ragp/​issues</a>
 </li>
@@ -230,7 +229,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

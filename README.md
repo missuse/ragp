@@ -87,7 +87,7 @@ Glycobiology [paper](https://doi.org/10.1093/glycob/cwz072).
 > Milan B Dragićević, Danijela M Paunović, Milica D Bogdanović, Slađana
 > I Todorović, Ana D Simonović (2020) ragp: Pipeline for mining of plant
 > hydroxyproline-rich glycoproteins with implementation in R,
-> Glycobiology 30(1) 49-57, <https://doi.org/10.1093/glycob/cwz072>
+> Glycobiology 30(1) 19–35, <https://doi.org/10.1093/glycob/cwz072>
 
 You can get citation info via `citation("ragp")` or by copying the
 following BibTex entry:
@@ -102,14 +102,14 @@ following BibTex entry:
     year = "{2020}",
     volume = "{30}",  
     number = "{1}",
-    pages = "{49-57}",
+    pages = "{19–35}",
     url = "{https://doi.org/10.1093/glycob/cwz072}",
     doi = "{10.1093/glycob/cwz072}",
-    eprint = "{https://academic.oup.com/glycob/article-pdf/30/1/49/31954261/cwz072.pdf}"
-)
+    eprint = "{https://academic.oup.com/glycob/article-pdf/30/1/19/5567434/cwz072.pdf}"
+}
 ```
 
-# Acknowledgements
+# Acknowledgments
 
 This software was developed with funding from the Ministry of Education,
 Science and Technological Development of the Republic of Serbia
