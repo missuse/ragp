@@ -188,8 +188,8 @@ code.r{ /* Code block */
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">at_hyp</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/predict_hyp.html">predict_hyp</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">at_nsp_filtered</span>,
                       <span class="kw">sequence</span> <span class="kw">=</span> <span class="no">sequence</span>,
                       <span class="kw">id</span> <span class="kw">=</span> <span class="no">Transcript.id</span>)
-<span class="co">#&gt; [17:45:39] WARNING: amalgamation/../src/learner.cc:556: Loading model from XGBoost &lt; 1.0.0, consider saving it again for improved compatibility</span>
-<span class="co">#&gt; [17:45:50] WARNING: amalgamation/../src/learner.cc:556: Loading model from XGBoost &lt; 1.0.0, consider saving it again for improved compatibility</span></pre></body></html></div>
+<span class="co">#&gt; [17:55:44] WARNING: amalgamation/../src/learner.cc:556: Loading model from XGBoost &lt; 1.0.0, consider saving it again for improved compatibility</span>
+<span class="co">#&gt; [17:55:55] WARNING: amalgamation/../src/learner.cc:556: Loading model from XGBoost &lt; 1.0.0, consider saving it again for improved compatibility</span></pre></body></html></div>
 <p>The object returned by <code>predict_hyp</code> is a list with two elements <code>prediction</code> and <code>sequence</code>. The <code>prediction</code> element is a data frame containing the probability of hydroxylation for each P in each sequence along with the amino acid span used for prediction. First few rows of this element:</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">at_hyp</span>$<span class="no">prediction</span>)</pre></body></html></div>
 <pre><code>#&gt;            id                substr P_pos  prob HYP
