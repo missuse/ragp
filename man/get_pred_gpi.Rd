@@ -13,8 +13,7 @@
 \usage{
 get_pred_gpi(data, ...)
 
-\method{get_pred_gpi}{character}(data, spec = 0.99, progress = FALSE,
-  ...)
+\method{get_pred_gpi}{character}(data, spec = 0.99, progress = FALSE, ...)
 
 \method{get_pred_gpi}{data.frame}(data, sequence, id, ...)
 

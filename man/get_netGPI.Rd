@@ -13,8 +13,7 @@
 \usage{
 get_netGPI(data, ...)
 
-\method{get_netGPI}{character}(data, splitter = 250L, attempts = 2,
-  progress = FALSE, ...)
+\method{get_netGPI}{character}(data, splitter = 250L, attempts = 2, progress = FALSE, ...)
 
 \method{get_netGPI}{data.frame}(data, sequence, id, ...)
 

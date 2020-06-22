@@ -16,9 +16,17 @@ maab(data, ...)
 
 \method{maab}{list}(data, ...)
 
-\method{maab}{default}(data = NULL, sequence, id, order = c("ext",
-  "tyr", "prp", "agp"), gpi = NULL, get_gpi = c("bigpi", "predgpi",
-  "netgpi", "none"), spec = 0.99, progress = FALSE, ...)
+\method{maab}{default}(
+  data = NULL,
+  sequence,
+  id,
+  order = c("ext", "tyr", "prp", "agp"),
+  gpi = NULL,
+  get_gpi = c("bigpi", "predgpi", "netgpi", "none"),
+  spec = 0.99,
+  progress = FALSE,
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}

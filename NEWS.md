@@ -1,3 +1,12 @@
+ragp 0.3.2.0001
+===============
+
+Bug Fixes and Improvements
+--------------------------
+
+* `get_espritz()` has been removed since Espritz server is no longer available for obtaining predictions. **BREAKING CHANGE**.
+
+
 ragp 0.3.2.0000
 ===============
 
