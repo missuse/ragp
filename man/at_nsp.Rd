@@ -4,13 +4,15 @@
 \name{at_nsp}
 \alias{at_nsp}
 \title{2700 Arabidopsis thaliana protein sequences.}
-\format{A data frame with 2706 rows and 4 variables:
+\format{
+A data frame with 2706 rows and 4 variables:
 \describe{
   \item{Transcript.id}{TAIR Gene Model id}
   \item{sequence}{amino acid sequence of the protein}
   \item{is.signalP}{logical, predicted as N-sp by SignalP 4.1}
   \item{phobius}{logical, predicted as N-sp by phobius web server}
-}}
+}
+}
 \source{
 \url{http://genome.jgi.doe.gov/pages/dynamicOrganismDownload.jsf?organism=Phytozome}
 }

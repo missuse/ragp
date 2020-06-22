@@ -13,10 +13,20 @@
 \usage{
 get_targetp(data, ...)
 
-\method{get_targetp}{character}(data, org_type = c("non_plant", "plant"),
+\method{get_targetp}{character}(
+  data,
+  org_type = c("non_plant", "plant"),
   cutoffs = c("winner_takes_all", "spec95", "spec90", "custom"),
-  tcut = NULL, pcut = NULL, scut = NULL, ocut = NULL,
-  splitter = 200, sleep = 3, attempts = 2, progress = FALSE, ...)
+  tcut = NULL,
+  pcut = NULL,
+  scut = NULL,
+  ocut = NULL,
+  splitter = 200,
+  sleep = 3,
+  attempts = 2,
+  progress = FALSE,
+  ...
+)
 
 \method{get_targetp}{data.frame}(data, sequence, id, ...)
 

@@ -101,7 +101,7 @@
 <a href="#ragp---hydroxyproline-aware-filtering-of-hydroxyproline-rich-glycoprotein-sequences" class="anchor"></a>ragp - hydroxyproline aware filtering of hydroxyproline rich glycoprotein sequences</h1></div>
 
 <p>Hydroxyproline rich glycoproteins (HRGPs) are one of the most complex families of macromolecules found in plants, due to the diversity of glycans decorating the protein backbone, as well as the heterogeneity of the protein backbones. While this diversity is responsible for the wide array of physiological functions associated with HRGPs, it hinders attempts for homology based identification. Current approaches, based on identifying sequences with characteristic motifs and biased amino acid composition, are limited to prototypical sequences.</p>
-<p><code>ragp</code> is an R package for mining and analyses of HRGPs, with emphasis on arabinogalactan protein sequences (AGPs). The <code>ragp</code> filtering pipeline exploits one of the HRGPs key features, the presence of hydroxyprolines which represent glycosylation sites. Main package features include prediction of proline hydroxylation sites, amino acid motif and bias analyses, efficient communication with web servers for prediction of N-terminal signal peptides, glycosylphosphatidylinositol modification sites and protein disorder, as well as the ability to annotate sequences through <a href="https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan">hmmscan</a> and subsequent <a href="http://www.geneontology.org/">GO</a> enrichment, based on predicted <a href="https://pfam.xfam.org/">Pfam</a> domains.</p>
+<p><code>ragp</code> is an R package for mining and analyses of HRGPs, with emphasis on arabinogalactan protein sequences (AGPs). The <code>ragp</code> filtering pipeline exploits one of the HRGPs key features, the presence of hydroxyprolines which represent glycosylation sites. Main package features include prediction of proline hydroxylation sites, amino acid motif and bias analyses, efficient communication with web servers for prediction of N-terminal signal peptides and glycosylphosphatidylinositol modification sites, as well as the ability to annotate sequences through <a href="https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan">hmmscan</a> and subsequent <a href="http://www.geneontology.org/">GO</a> enrichment, based on predicted <a href="https://pfam.xfam.org/">Pfam</a> domains.</p>
 <p>The workflow in <code>ragp</code> is illustrated with the following diagram (<code>ragp</code> functions to be used for each of the tasks are boxed grey):</p>
 <p><img src="https://missuse.github.io/ragp/reference/figures/ragp_flow_chart.svg" style="display: block; margin-left: auto; margin-right: auto;"></p>
 <p>The filtering layer:</p>
@@ -118,7 +118,8 @@
 </li>
 <li>predict the presence of potential glycosylphosphatidylinositol attachment sites (<code><a href="reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="reference/get_pred_gpi.html">get_pred_gpi()</a></code> and <code><a href="reference/get_netGPI.html">get_netGPI()</a></code>).<br>
 </li>
-<li>predict disordered regions in proteins (<code><a href="reference/get_espritz.html">get_espritz()</a></code>).</li>
+<li>predict disordered regions in proteins (<code><a href="reference/get_espritz.html">get_espritz()</a></code>). <strong>This feature has been removed because Espritz server has been retired. When a suitable replacement server is found an appropriate function will be added to ragp.</strong>
+</li>
 </ul>
 <p>Additionally <code>ragp</code> provides tools for visualization of the mentioned attributes via <code><a href="reference/plot_prot.html">plot_prot()</a></code>.</p>
 <div id="installation" class="section level2">
@@ -153,7 +154,7 @@
 </blockquote>
 <p>You can get citation info via <code><a href="https://rdrr.io/r/utils/citation.html">citation("ragp")</a></code> or by copying the following BibTex entry:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb4-1"><a href="#cb4-1"></a><span class="va">@article</span>{<span class="ot">10</span>.<span class="ot">1093</span>/<span class="ot">glycob</span>/<span class="ot">cwz072</span>,</span>
-<span id="cb4-2"><a href="#cb4-2"></a>    <span class="dt">author</span> = {Dragićević, Milan B and Paunović, Danijela M and Bogdanović, Milica D and Todorović, Slađana I and Simonović, Ana D},</span>
+<span id="cb4-2"><a href="#cb4-2"></a>    <span class="dt">author</span> = "<span class="st">{Dragićević, Milan B and Paunović, Danijela M and Bogdanović, Milica D and Todorović, Slađana I and Simonović, Ana D}</span>",</span>
 <span id="cb4-3"><a href="#cb4-3"></a>    <span class="dt">title</span> = "<span class="st">{ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R}</span>",</span>
 <span id="cb4-4"><a href="#cb4-4"></a>    <span class="dt">journal</span> = "<span class="st">{Glycobiology}</span>",</span>
 <span id="cb4-5"><a href="#cb4-5"></a>    <span class="dt">issn</span> = "<span class="st">{1460-2423}</span>",</span>

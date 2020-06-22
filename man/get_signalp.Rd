@@ -13,11 +13,21 @@
 \usage{
 get_signalp(data, ...)
 
-\method{get_signalp}{character}(data, org_type = c("euk", "gram-",
-  "gram+"), Dcut_type = c("default", "sensitive", "user"),
-  Dcut_noTM = 0.45, Dcut_TM = 0.5, method = c("best", "notm"),
-  minlen = NULL, trunc = 70L, splitter = 500L, sleep = 3,
-  attempts = 2, progress = FALSE, ...)
+\method{get_signalp}{character}(
+  data,
+  org_type = c("euk", "gram-", "gram+"),
+  Dcut_type = c("default", "sensitive", "user"),
+  Dcut_noTM = 0.45,
+  Dcut_TM = 0.5,
+  method = c("best", "notm"),
+  minlen = NULL,
+  trunc = 70L,
+  splitter = 500L,
+  sleep = 3,
+  attempts = 2,
+  progress = FALSE,
+  ...
+)
 
 \method{get_signalp}{data.frame}(data, sequence, id, ...)
 

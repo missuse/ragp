@@ -19,8 +19,7 @@ scan_nglc(data, ...)
 
 \method{scan_nglc}{list}(data, ...)
 
-\method{scan_nglc}{default}(data = NULL, sequence, id, span = 5L,
-  cutoff = 0, nsp = 15L, ...)
+\method{scan_nglc}{default}(data = NULL, sequence, id, span = 5L, cutoff = 0, nsp = 15L, ...)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}

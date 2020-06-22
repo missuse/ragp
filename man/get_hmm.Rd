@@ -19,9 +19,19 @@ get_hmm(data, ...)
 
 \method{get_hmm}{list}(data, ...)
 
-\method{get_hmm}{default}(data = NULL, sequence, id, verbose = FALSE,
-  sleep = 1, attempts = 2L, timeout = 10, progress = FALSE,
-  ievalue = NULL, bitscore = NULL, ...)
+\method{get_hmm}{default}(
+  data = NULL,
+  sequence,
+  id,
+  verbose = FALSE,
+  sleep = 1,
+  attempts = 2L,
+  timeout = 10,
+  progress = FALSE,
+  ievalue = NULL,
+  bitscore = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
