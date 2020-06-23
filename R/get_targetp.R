@@ -34,7 +34,7 @@
 #'
 #' @note This function creates temporary files in the working directory. Protein ids should be shorter then 20 characters due to server side truncation.
 #'
-#' @source \url{http://www.cbs.dtu.dk/services/TargetP/}
+#' @source \url{http://www.cbs.dtu.dk/services/TargetP-1.1/}
 #' @references Emanuelsson O, Nielsen H, Brunak S,von Heijne G. (2000) Predicting subcellular localization of proteins based on their N-terminal amino acid sequence. J. Mol. Biol.300: 1005-1016
 #'
 #' @seealso \code{\link[ragp]{get_signalp}}

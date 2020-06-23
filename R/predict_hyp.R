@@ -24,7 +24,8 @@
 #'   sequence - sequences with prolines - P substituted with hydroxyprolines - O according to the prediction;
 #'   id - corresponding id's}
 #' }
-#'
+#' 
+#' @details Previously trained xgboost models were re-saved using xgboost 1.1.1.1 to increase compatibility. While using the mentioned xgboost version the returned predictions are equal to previous. However, using earlier xgboost versions with the new models will result in slightly different predicted probabilities.
 #'
 #' @examples
 #' library(ragp)
