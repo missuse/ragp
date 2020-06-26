@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0002</span>
       </span>
     </div>
 
@@ -430,7 +430,50 @@ code.r{ /* Code block */
 <div id="disorder-prediction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#disorder-prediction" class="anchor"></a>Disorder prediction</h2>
-<p>A key structural feature of HRGPs, based on abundance of disorder-promoting residues, is that they are intrinsically disordered proteins. To identify potential disordered regions in proteins <code>ragp</code> previously contained <code>get_espritz()</code> which queried <a href="http://protein.bio.unipd.it/espritz/">ESpritz</a> <span class="citation">(Walsh et al. 2012)</span> web server. This server has been retired hence no longer available. When a suitable replacement server is found an appropriate function will be added to ragp.</p>
+</div>
+<div id="disorder-prediction-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#disorder-prediction-1" class="anchor"></a>Disorder prediction</h2>
+<p>A key structural feature of HRGPs, based on abundance of disorder-promoting residues, is that they are intrinsically disordered proteins. To identify potential disordered regions in proteins <code>ragp</code> contains <code><a href="../../reference/get_espritz.html">get_espritz()</a></code> which queries <a href="http://protein.bio.unipd.it/espritz/">ESpritz</a> <span class="citation">(Walsh et al. 2012)</span> web server. Three models trained on different data sets are available and can be selected via the argument <code>model</code>:</p>
+<ul>
+<li>‘X-Ray’ - based on missing atoms from the <a href="http://www.wwpdb.org/">Protein Data Bank</a> (PDB) X-ray solved structures. If this option is chosen then the predictors with short disorder options are executed.<br>
+</li>
+<li>‘Disprot’ - contains longer disorder segments compared to x-ray. In particular, <a href="http://www.disprot.org/">disprot</a> is a manually curated database which is often based on functional attributes of the disordered region was used for this definition. Disorder residues are defined if the disprot curators consider the residue to be disordered at least once. All other residues are considered ordered. If this option is chosen then the predictors with long disorder options are executed.<br>
+</li>
+<li>‘NMR’ - based on NMR mobility. NMR flexibility is calculated using the <a href="http://protein.bio.unipd.it/mobi/">Mobi server</a> <span class="citation">(Martin, Walsh, and Tosatto 2010)</span> optimized to replicate the ordered-disordered NMR definition used in CASP8.</li>
+</ul>
+<p>These models provide quite different predictions. To query ESpritz:</p>
+<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="no">at_espritz</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/get_espritz.html">get_espritz</a></span>(<span class="no">at_nsp_3hyp</span>,
+                          <span class="no">sequence</span>,
+                          <span class="no">Transcript.id</span>,
+                          <span class="kw">model</span> <span class="kw">=</span> <span class="st">"NMR"</span>)</pre></body></html></div>
+<pre><code>#&gt;   start end          id
+#&gt; 1     1   7 AT2G43620.1
+#&gt; 2    49  92 AT2G43620.1
+#&gt; 3   103 116 AT2G43620.1
+#&gt; 4   149 152 AT2G43620.1
+#&gt; 5   168 170 AT2G43620.1
+#&gt; 6   175 178 AT2G43620.1</code></pre>
+<p>The output of the function depends on the <code>simplify</code> argument. If <code>simplify = TRUE</code> (default) the output is a <code>data.frame</code> (one row per disordered region) with columns <code>start</code> and <code>end</code> which indicate the start and end of the predicted disordered region as well as the column <code>id</code> which is a protein identifier. When <code>simplify = FALSE</code> the output contains predicted probabilities of disorder for each amino acid.</p>
+<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">at_espritz</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/get_espritz.html">get_espritz</a></span>(<span class="no">at_nsp_3hyp</span>,
+                          <span class="no">sequence</span>,
+                          <span class="no">Transcript.id</span>,
+                          <span class="kw">model</span> <span class="kw">=</span> <span class="st">"NMR"</span>,
+                          <span class="kw">simplify</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
+<pre><code>#&gt;            id  probability
+#&gt; 1 AT2G43620.1 0.477693....
+#&gt; 2 AT2G43945.1 0.8773, ....
+#&gt; 3 AT2G30933.1 0.636924....
+#&gt; 4 AT2G30933.2 0.631344....
+#&gt; 5 AT2G22470.1 0.743908....
+#&gt; 6 AT2G43610.1 0.742569....
+#&gt;                                                                                                                                                                                                                                                                                          prediction
+#&gt; 1       DDDDDDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOODDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDOOOOOOOOOODDDDDDDDDDDDDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOODDDDOOOOOOOOOOOOOOODDDOOOODDDDOOOOOOOOOOOOOOOOOOOOOOOOOODDDDDDDDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOODDDDDDDDOOOOOOOOOOOOOOOOOOOODDDDDDDDD
+#&gt; 2 DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDOOOOOOOOODDDDDDDDDDDDDDDDDDOOOODDDDDDDDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOODDDDDDDDDDDDDDDDOOOOOOOOOOOOOOOOOOOOODDDDDDDDDOOOOOOOOOOOOOOOOOOOOODDDDDDDDDDDOOOOOOOOOOOOODDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+#&gt; 3                                                               DDDDDDDOOOOOOOOOOOODDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDOOODDDOOOOOOOOOOOOOOOOOOOOOOOODDDDOOOOODDDDDDDDDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOODDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDOOOOOOOOOOOOOOODDDD
+#&gt; 4                                                                                                                                   DDDDDDDOOOOOOOOOOOODDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOODDDD
+#&gt; 5                                                                                                                                                               DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDOOOOOOOOOOOOOOODDD
+#&gt; 6         DDDDDDDDOOOOOOOOOOOOOOOODDDDDDDDDDDDDDDDOOOOOODDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDOOOOOOOOOOOOODDDDDDDDDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOODDDDDDDOOOOOOOOOOOOODDDDDDDDDDDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOODDDDDDDDD</code></pre>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
@@ -453,6 +496,9 @@ code.r{ /* Code block */
 </div>
 <div id="ref-jones_interproscan_2014">
 <p>Jones, Philip, David Binns, Hsin-Yu Chang, Matthew Fraser, Weizhong Li, Craig McAnulla, Hamish McWilliam, et al. 2014. “InterProScan 5: Genome-Scale Protein Function Classification.” <em>Bioinformatics</em> 30 (9): 1236–40. <a href="https://doi.org/10.1093/bioinformatics/btu031">https://doi.org/10.1093/bioinformatics/btu031</a>.</p>
+</div>
+<div id="ref-martin_mobi_2010">
+<p>Martin, Alberto J. M., Ian Walsh, and Silvio C. E. Tosatto. 2010. “MOBI: A Web Server to Define and Visualize Structural Mobility in NMR Protein Ensembles.” <em>Bioinformatics</em> 26 (22): 2916–7. <a href="https://doi.org/10.1093/bioinformatics/btq537">https://doi.org/10.1093/bioinformatics/btq537</a>.</p>
 </div>
 <div id="ref-pierleoni_predgpi_2008">
 <p>Pierleoni, Andrea, Pier Luigi Martelli, and Rita Casadio. 2008. “PredGPI: A GPI-Anchor Predictor.” <em>BMC Bioinformatics</em> 9 (September): 392. <a href="https://doi.org/10.1186/1471-2105-9-392">https://doi.org/10.1186/1471-2105-9-392</a>.</p>

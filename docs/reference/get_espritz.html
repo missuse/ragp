@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0002</span>
       </span>
     </div>
 
@@ -156,9 +156,16 @@
 <span class='fu'>get_espritz</span>(<span class='no'>data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>get_espritz</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>sequence</span>, <span class='no'>id</span>,
-  <span class='kw'>model</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"X-Ray"</span>, <span class='st'>"Disprot"</span>, <span class='st'>"NMR"</span>), <span class='kw'>FPR</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"best Sw"</span>, <span class='st'>"5% FPR"</span>),
-  <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>get_espritz</span>(
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>sequence</span>,
+  <span class='no'>id</span>,
+  <span class='kw'>model</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"X-Ray"</span>, <span class='st'>"Disprot"</span>, <span class='st'>"NMR"</span>),
+  <span class='kw'>FPR</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"best Sw"</span>, <span class='st'>"5% FPR"</span>),
+  <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -199,7 +206,7 @@
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='http://protein.bio.unipd.it/espritz/'>http://protein.bio.unipd.it/espritz/</a></p>
+    <p><a href='http://old.protein.bio.unipd.it/espritz/'>http://old.protein.bio.unipd.it/espritz/</a></p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>If simplify == TRUE:
@@ -220,7 +227,7 @@ A data frame (one row per protein) with columns:</p><dl'>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Three models trained on different data sets are available and can be selected via the argument model: X-Ray - based on missing atoms from the Protein Data Bank (PDB) X-ray solved structures. If this option is chosen then the predictors with short disorder options are executed. Disprot -  contains longer disorder segments compared to x-ray. In particular, disprot a manually curetted database which is often based on functional attributes of the disordered region was used for this definition. Disorder residues are defined if the disprot curators consider the residue to be disordered at least once. All other residues are considered ordered. If this option is chosen then the predictors with long disorder options are executed. 'NMR' - based on NMR mobility. NMR flexibility is calculated using the Mobi server optimized to replicate the ordered-disordered NMR definition used in CASP8. These models provide quite different predictions. For further details visit <a href='http://protein.bio.unipd.it/espritz/help_pages/help.html'>http://protein.bio.unipd.it/espritz/help_pages/help.html</a> and <a href='http://protein.bio.unipd.it/espritz/help_pages/methods.html'>http://protein.bio.unipd.it/espritz/help_pages/methods.html</a>.</p>
+    <p>Three models trained on different data sets are available and can be selected via the argument model: X-Ray - based on missing atoms from the Protein Data Bank (PDB) X-ray solved structures. If this option is chosen then the predictors with short disorder options are executed. Disprot -  contains longer disorder segments compared to x-ray. In particular, disprot a manually curetted database which is often based on functional attributes of the disordered region was used for this definition. Disorder residues are defined if the disprot curators consider the residue to be disordered at least once. All other residues are considered ordered. If this option is chosen then the predictors with long disorder options are executed. 'NMR' - based on NMR mobility. NMR flexibility is calculated using the Mobi server optimized to replicate the ordered-disordered NMR definition used in CASP8. These models provide quite different predictions. For further details visit <a href='http://old.protein.bio.unipd.it/espritz/help_pages/help.html'>http://old.protein.bio.unipd.it/espritz/help_pages/help.html</a> and <a href='http://old.protein.bio.unipd.it/espritz/help_pages/methods.html'>http://old.protein.bio.unipd.it/espritz/help_pages/methods.html</a>.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>The Espritz web server has a limit on the amount of daily queries by ip. The function will inform the user when the limit has been exceeded.</p>
@@ -234,7 +241,34 @@ A data frame (one row per protein) with columns:</p><dl'>
 <span class='no'>espritz_test</span> <span class='kw'>&lt;-</span> <span class='fu'>get_espritz</span>(<span class='no'>at_nsp</span>[<span class='fl'>1</span>:<span class='fl'>10</span>,],
                             <span class='no'>sequence</span>,
                             <span class='no'>Transcript.id</span>)
-<span class='no'>espritz_test</span></div><div class='output co'>#&gt; data frame with 0 columns and 0 rows</div><div class='input'>
+<span class='no'>espritz_test</span></div><div class='output co'>#&gt;    start end          id
+#&gt; 1      1  12 ATCG00660.1
+#&gt; 2     49  54 ATCG00660.1
+#&gt; 3    111 117 ATCG00660.1
+#&gt; 4      1   9 AT2G43600.1
+#&gt; 5    266 273 AT2G43600.1
+#&gt; 6      1   8 AT2G28410.1
+#&gt; 7     47  61 AT2G28410.1
+#&gt; 8    115 115 AT2G28410.1
+#&gt; 9      1   8 AT2G22960.1
+#&gt; 10    16  19 AT2G22960.1
+#&gt; 11   178 184 AT2G22960.1
+#&gt; 12     1   9 AT2G19580.1
+#&gt; 13    83  88 AT2G19580.1
+#&gt; 14   256 270 AT2G19580.1
+#&gt; 15     1  12 AT2G19690.2
+#&gt; 16   104 108 AT2G19690.2
+#&gt; 17   143 148 AT2G19690.2
+#&gt; 18     1  12 AT2G19690.1
+#&gt; 19   104 109 AT2G19690.1
+#&gt; 20   139 147 AT2G19690.1
+#&gt; 21     1  10 AT2G33130.1
+#&gt; 22    15  17 AT2G33130.1
+#&gt; 23    65 103 AT2G33130.1
+#&gt; 24     1 128 AT2G05520.1
+#&gt; 25   130 145 AT2G05520.1
+#&gt; 26     1 118 AT2G05520.2
+#&gt; 27   123 138 AT2G05520.2</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
