@@ -18,6 +18,7 @@ plot_prot(
   ag = TRUE,
   tm = TRUE,
   domain = TRUE,
+  disorder = FALSE,
   dom_sort = c("ievalue", "abc", "cba"),
   progress = FALSE,
   ...
@@ -50,11 +51,13 @@ plot_prot(
 
 \item{domain}{Boolean, should the domain predictions obtained using \code{\link[ragp]{get_hmm}}  be plotted. Alternatively the output data frame from \code{\link[ragp]{get_hmm}} can be supplied.}
 
+\item{disorder}{Boolean, should disordered region predictions obtained using \code{\link[ragp]{get_espritz}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_espritz}} (called with simplify = TRUE) can be supplied.}
+
 \item{dom_sort}{One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.}
 
 \item{progress}{Boolean, whether to show the progress bar, at default set to FALSE.}
 
-\item{...}{Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.}
+\item{...}{Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.}
 }
 \value{
 A ggplot2 plot object
@@ -90,13 +93,17 @@ tm <- get_phobius(data = at_nsp[ind,],
                   id = Transcript.id,
                   sequence = sequence)                                                        
  
+disorder <- get_espritz(data = at_nsp[ind,],	
+                        id = Transcript.id,	
+                        sequence = sequence)
         
 pred2 <- plot_prot(sequence = at_nsp$sequence[ind],
                    id = at_nsp$Transcript.id[ind],
                    tm = tm,
                    nsp = nsp,
                    gpi = gpi,
-                   hmm = hmm,
+                   domain = hmm,
+                   disorder = disorder,
                    bitscore = 30)
                    
                    
@@ -108,5 +115,5 @@ pred2 +
         
 }
 \seealso{
-\code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
+\code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{get_espritz}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
 }

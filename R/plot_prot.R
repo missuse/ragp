@@ -15,14 +15,15 @@
 #' @param ag Boolean, should the AG glycomodul spans be plotted.
 #' @param tm Boolean, should the transmembrane region predictions obtained using \code{\link[ragp]{get_phobius}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_phobius}} can be supplied. 
 #' @param domain Boolean, should the domain predictions obtained using \code{\link[ragp]{get_hmm}}  be plotted. Alternatively the output data frame from \code{\link[ragp]{get_hmm}} can be supplied.
+#' @param disorder Boolean, should disordered region predictions obtained using \code{\link[ragp]{get_espritz}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_espritz}} (called with simplify = TRUE) can be supplied.
 #' @param dom_sort One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.
 #' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
-#' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.
+#' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.
 #'
 #'
 #' @return A ggplot2 plot object
 #' 
-#' @seealso \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
+#' @seealso \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{get_espritz}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
 #'
 #' @examples
 #' library(ragp)
@@ -52,13 +53,17 @@
 #'                   id = Transcript.id,
 #'                   sequence = sequence)                                                        
 #'  
+#' disorder <- get_espritz(data = at_nsp[ind,],	
+#'                         id = Transcript.id,	
+#'                         sequence = sequence)
 #'         
 #' pred2 <- plot_prot(sequence = at_nsp$sequence[ind],
 #'                    id = at_nsp$Transcript.id[ind],
 #'                    tm = tm,
 #'                    nsp = nsp,
 #'                    gpi = gpi,
-#'                    hmm = hmm,
+#'                    domain = hmm,
+#'                    disorder = disorder,
 #'                    bitscore = 30)
 #'                    
 #'                    
@@ -84,6 +89,7 @@ plot_prot <- function(sequence,
                       ag = TRUE,
                       tm = TRUE,
                       domain = TRUE,
+                      disorder = FALSE,
                       dom_sort = c("ievalue", "abc", "cba"),
                       progress = FALSE,
                       ...) {
@@ -221,6 +227,18 @@ plot_prot <- function(sequence,
     }
   }
   
+  if (missing(disorder)){	
+    disorder <- FALSE	
+  }	
+  
+  if (is.logical(disorder)){	
+    if (length(disorder) > 1){	
+      disorder <- FALSE	
+      warning("disorder should be of length 1, setting to default: disorder = FALSE",	
+              call. = FALSE)	
+    }	
+  }
+  
   if (missing(nsp)){
     nsp <- TRUE
   }
@@ -302,6 +320,7 @@ plot_prot <- function(sequence,
   }
   args_signalp <- names(formals(get_signalp.character))[2:8]
   args_scanag <- names(formals(scan_ag.default))[4:7]
+  args_espritz <- names(formals(get_espritz.default))[4:5]
   args_hmm <- names(formals(get_hmm.default))[9:10]
   dots <- list(...)
   
@@ -695,6 +714,190 @@ plot_prot <- function(sequence,
     seq_scan <- NULL
   }
   
+  seq_espritz <- NULL	
+  if (isTRUE(disorder)) {	
+    if(progress){	
+      message("querying espritz")	
+    }	
+    seq_espritz <- do.call(get_espritz,	
+                           c(list(data = dat,	
+                                  sequence = "sequence",	
+                                  id = "id",	
+                                  progress = progress),	
+                             dots[names(dots) %in% args_espritz]))	
+    
+    seq_espritz$id <- factor(seq_espritz$id,	
+                             levels = unique(dat$id))	
+    
+    seq_espritz$id_num <- as.numeric(seq_espritz$id)	
+    seq_espritz$start[is.na(seq_espritz$start)] <- 0	
+    seq_espritz$end[is.na(seq_espritz$end)] <- 0	
+    
+    seq_espritz <- merge(seq_espritz,	
+                         dat[,c(2,3)],	
+                         by.x = "id",	
+                         by.y = "id",	
+                         all.y = TRUE,	
+                         all.x = TRUE,	
+                         sort = FALSE) 	
+    
+    seq_espritz <- split(seq_espritz ,	
+                         seq_espritz$id)	
+    
+    seq_espritz <- lapply(seq_espritz, function(x){	
+      start <-  x$start	
+      end <- x$end	
+      id <- unique(x$id)	
+      id_num <- unique(x$id_num)	
+      resD <- lapply(seq_along(start), function(i){	
+        start[i]:end[i]	
+      })	
+      groups <- rep(seq_along(resD), times = lengths(resD))	
+      data.frame(residue = unlist(resD),	
+                 groups = groups,	
+                 id = id,	
+                 id_num = id_num,	
+                 nchar = unique(x$nchar))	
+    })	
+    
+    rle_predO <- lapply(seq_espritz, function(x){	
+      n <- unique(x$nchar)	
+      n <- 1:n	
+      n <- setdiff(n, x$residue)	
+      if(length(n) != 0){	
+        s <- split(n, cumsum(c(0, diff(n) != 1)))	
+        groups <- rep(seq_along(s), times = lengths(s))	
+      } else {	
+        n <- NA	
+        groups <- 1	
+      }	
+      rle_dat <- data.frame(residue = n,	
+                            id = unique(x$id),	
+                            id_num = unique(x$id_num),	
+                            group = groups)	
+      
+      rle_dat <- split(rle_dat, rle_dat$group)	
+      rle_dat <- lapply(rle_dat, function(x){	
+        data.frame(start = min(x$residue),	
+                   end = max(x$residue),	
+                   id = unique(x$id),	
+                   id_num = unique(x$id_num))	
+      })	
+      rle_dat <- do.call(rbind, rle_dat)	
+      rle_dat	
+    })	
+    
+    rle_predO <- do.call(rbind, rle_predO)	
+    rownames(rle_predO) <- NULL	
+    
+    plot_segments <- rle_predO[!is.na(rle_predO$start),]	
+    
+    seq_espritz <- do.call(rbind, seq_espritz) 	
+    
+    seq_espritz <- seq_espritz[seq_espritz$residue != 0,]	
+    if (nrow(seq_espritz) != 0){	
+      rownames(seq_espritz) <- NULL	
+      seq_espritz$y <- rep(c(0, -0.1, 0, 0.1),	
+                           length.out = nrow(seq_espritz))	
+      seq_espritz$y_plot <- seq_espritz$y + seq_espritz$id_num	
+      seq_espritz$inter <- interaction(seq_espritz$group,	
+                                       seq_espritz$id_num)
+    } else {	
+      seq_espritz <- NULL	
+    }	
+  }	
+  
+  if(is.data.frame(disorder)){	
+    seq_espritz <- disorder	
+    if(any(!c("start",	
+              "end",	
+              "id") %in% colnames(seq_espritz))){	
+      stop("disorder is not the output from get_espritz function")	
+    }	
+    seq_espritz$id <- make.names(seq_espritz$id)	
+    if(!all(seq_espritz$id %in% id)){	
+      stop("protein ids from disorder do not match with id argument")	
+    }	
+    seq_espritz$id <- factor(seq_espritz$id,	
+                             levels = unique(dat$id))	
+    seq_espritz$id_num <- as.numeric(seq_espritz$id)	
+    seq_espritz$start[is.na(seq_espritz$start)] <- 0	
+    seq_espritz$end[is.na(seq_espritz$end)] <- 0	
+    
+    seq_espritz <- merge(seq_espritz,	
+                         dat[,c(2,3)],	
+                         by.x = "id",	
+                         by.y = "id",	
+                         all.y = TRUE,	
+                         all.x = TRUE,	
+                         sort = FALSE) 	
+    
+    seq_espritz <- split(seq_espritz ,	
+                         seq_espritz$id)	
+    
+    seq_espritz <- lapply(seq_espritz, function(x){	
+      start <-  x$start	
+      end <- x$end	
+      id <- unique(x$id)	
+      id_num <- unique(x$id_num)	
+      resD <- lapply(seq_along(start), function(i){	
+        start[i]:end[i]	
+      })	
+      groups <- rep(seq_along(resD), times = lengths(resD))	
+      data.frame(residue = unlist(resD),	
+                 groups = groups,	
+                 id = id,	
+                 id_num = id_num,	
+                 nchar = unique(x$nchar))	
+    })	
+    
+    rle_predO <- lapply(seq_espritz, function(x){	
+      n <- unique(x$nchar)	
+      n <- 1:n	
+      n <- setdiff(n, x$residue)	
+      if(length(n) != 0){	
+        s <- split(n, cumsum(c(0, diff(n) != 1)))	
+        groups <- rep(seq_along(s), times = lengths(s))	
+      } else {	
+        n <- NA	
+        groups <- 1	
+      }	
+      rle_dat <- data.frame(residue = n,	
+                            id = unique(x$id),	
+                            id_num = unique(x$id_num),	
+                            group = groups)	
+      
+      rle_dat <- split(rle_dat, rle_dat$group)	
+      rle_dat <- lapply(rle_dat, function(x){	
+        data.frame(start = min(x$residue),	
+                   end = max(x$residue),	
+                   id = unique(x$id),	
+                   id_num = unique(x$id_num))	
+      })	
+      rle_dat <- do.call(rbind, rle_dat)	
+      rle_dat	
+    })	
+    
+    rle_predO <- do.call(rbind, rle_predO)	
+    rownames(rle_predO) <- NULL	
+    
+    plot_segments <- rle_predO[!is.na(rle_predO$start),]	
+    
+    seq_espritz <- do.call(rbind, seq_espritz) 	
+    
+    seq_espritz <- seq_espritz[seq_espritz$residue != 0,]	
+    if (nrow(seq_espritz) != 0){	
+      rownames(seq_espritz) <- NULL	
+      seq_espritz$y <- rep(c(0, -0.1, 0, 0.1),	
+                           length.out = nrow(seq_espritz))	
+      seq_espritz$y_plot <- seq_espritz$y + seq_espritz$id_num	
+      seq_espritz$inter <- interaction(seq_espritz$group,	
+                                       seq_espritz$id_num)
+    } else {	
+      seq_espritz <- NULL	
+    }	
+  }
+  
   if (!is.null(seq_gpi)){
     for_plot <- merge(x = dat,
                       y = seq_gpi,
@@ -762,14 +965,20 @@ plot_prot <- function(sequence,
   rat <- round(rat/100, 0)*100
   rat <- rat/20
   
-
-  p <- ggplot2::ggplot(for_plot)+
-     ggplot2::geom_segment(ggplot2::aes_(y = ~id_num,
+  if(!is.null(seq_espritz)){
+    p <- ggplot2::ggplot(plot_segments)+
+      ggplot2::geom_segment(ggplot2::aes_(y = ~id_num,
+                                          yend = ~id_num,
+                                          x = ~start,
+                                          xend = ~end))
+  } else {
+    p <- ggplot2::ggplot(for_plot)+
+      ggplot2::geom_segment(ggplot2::aes_(y = ~id_num,
                                           yend = ~id_num,
                                           x = 1,
                                           xend = ~nchar))
+  }
 
-  
   p <- p  +
     ggplot2::xlab("residue") +
     ggplot2::ylab("id") +
@@ -858,7 +1067,14 @@ plot_prot <- function(sequence,
                              na.rm = TRUE)
   }
   
-  
+  if(!is.null(seq_espritz)){	
+    p <- p + ggplot2::geom_path(data = seq_espritz,	
+                                ggplot2::aes_(x = ~residue,	
+                                              y = ~y_plot,	
+                                              group = ~inter),	
+                                size = 0.7,	
+                                color = "grey25") 	
+  }
 
   if(!is.null(seq_gpi)) {
     p <- p +

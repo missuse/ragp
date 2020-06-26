@@ -16,9 +16,10 @@ reference:
       - get_netGPI
   - title: "Annotate protein sequences"
     desc: >
-      Functions for domain prediction based on protein sequence.
+      Functions for domain and disorder prediction based on protein sequence.
     contents:
       - get_hmm      
+      - get_espritz
       - pfam2go
   - title: "Proline hydroxylation prediction"
     desc: ~

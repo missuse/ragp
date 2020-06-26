@@ -1,3 +1,7 @@
+ragp 0.3.2.0002
+===============
+* `get_espritz()` has been restored since Espritz server is again available at http://old.protein.bio.unipd.it/espritz/
+
 ragp 0.3.2.0001
 ===============
 
