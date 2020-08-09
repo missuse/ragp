@@ -21,7 +21,7 @@
 #'
 #' @note This function creates temporary files in the working directory.
 #'
-#' @source \url{https://services.healthtech.dtu.dk/service.php?NetGPI-1.0}
+#' @source \url{https://services.healthtech.dtu.dk/service.php?NetGPI-1.1}
 #' @references Gislason MH. Nielsen H. Armenteros JA. AR Johansen AR. (2019) Prediction of GPI-Anchored proteins with pointer neural networks. bioRxiv. doi: https://doi.org/10.1101/838680
 # 
 #' @seealso \code{\link[ragp]{get_big_pi}} \code{\link[ragp]{get_pred_gpi}}
@@ -130,7 +130,7 @@ get_netGPI.character <- function(data,
          call. = FALSE)
   }
   url <- "https://services.healthtech.dtu.dk/cgi-bin/webface2.fcgi"
-  cfg_file <- "/var/www/html/services/NetGPI-1.0/webface.cf"
+  cfg_file <- "/var/www/html/services/NetGPI-1.1/webface.cf"
   file_list <- ragp::split_fasta(path_in = file_name,
                                  path_out = "tmp_netGPI_",
                                  num_seq = splitter,
@@ -336,7 +336,7 @@ get_netGPI.character <- function(data,
         return(output)
       }
       unlink(x[i])
-      url_dll <- paste0("https://services.healthtech.dtu.dk/services/NetGPI-1.0/tmp/",
+      url_dll <- paste0("https://services.healthtech.dtu.dk/services/NetGPI-1.1/tmp/",
                         jobidi,
                         "/output_protein_type.txt")
 

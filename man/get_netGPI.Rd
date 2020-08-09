@@ -8,7 +8,7 @@
 \alias{get_netGPI.list}
 \title{Query NetGPI - 1.0 web server.}
 \source{
-\url{https://services.healthtech.dtu.dk/service.php?NetGPI-1.0}
+\url{https://services.healthtech.dtu.dk/service.php?NetGPI-1.1}
 }
 \usage{
 get_netGPI(data, ...)
