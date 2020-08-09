@@ -384,7 +384,7 @@ get_netGPI.character <- function(data,
                     by = "id",
                    sort = FALSE)
   
-  if(nrow(output_m != output)){
+  if(nrow(output_m) != nrow(output)){
     warning("Server changed sequence id's because they contained special characters, returning servers output")
     return(output)
   }
