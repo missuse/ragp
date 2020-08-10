@@ -115,10 +115,10 @@ split_fasta <- function (path_in,
   }
   temp_file <- seqinr::read.fasta(file = path_in, seqtype = "AA")
   name <- names(temp_file)
-  if(length(names) != length(unique(names))){
+  if(length(name) != length(unique(name))){
     stop("There are duplicated sequence names. Please change them so all are unique")
   }
-  if(!all(names == make.names(names))){
+  if(!all(name == make.names(name))){
     warning("Sequence names contain special characters, this can cause problems in downstream functions.")
   }
   if (!missing(trunc)) {
