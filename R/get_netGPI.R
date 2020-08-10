@@ -376,19 +376,20 @@ get_netGPI.character <- function(data,
   
   output <- do.call(rbind,
                     output)
-  output_m <- merge(data.frame(id = fasta_ids,
-                             stringsAsFactors = FALSE),
+  
+  if(all(fasta_ids %in% output$id)){
+    output <- merge(data.frame(id = fasta_ids,
+                               stringsAsFactors = FALSE),
                     output,
                     all.x = TRUE,
                     all.y = TRUE,
                     by = "id",
-                   sort = FALSE)
-  
-  if(nrow(output_m) != nrow(output)){
+                    sort = FALSE)
+    return(output)
+  } else {
     warning("Server changed sequence id's because they contained special characters, returning servers output")
     return(output)
   }
-  return(output_m)
 }
 
 #' @rdname get_netGPI
