@@ -344,7 +344,7 @@ get_big_pi.default <- function(data = NULL,
   splt <- 0:(nrow(mat)-1) %/% 100
   mat_split <- split(mat, splt)
   sleep <- 2
-  url <- "http://mendel.imp.ac.at/gpi/cgi-bin/gpi_pred_plants.cgi"
+  url <- "https://mendel.imp.ac.at/gpi/cgi-bin/gpi_pred_plants.cgi"
   tot <- length(mat_split)
   if(progress){
     pb <- utils::txtProgressBar(min = 0,
