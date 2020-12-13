@@ -3,13 +3,16 @@
 
 # ragp - hydroxyproline aware filtering of hydroxyproline rich glycoprotein sequences
 
-[![Build
-Status](https://travis-ci.org/missuse/ragp.svg?branch=master)](https://travis-ci.org/missuse/ragp)
+<!-- badges: start -->
+
+[![R build
+status](https://github.com/missuse/ragp/workflows/R-CMD-check/badge.svg)](https://github.com/missuse/ragp/actions)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+<!-- badges: end -->
 
 `ragp` is an R package primarily designed for mining and analysis of
 plant hydroxyproline rich glycoproteins. It incorporates a novel concept

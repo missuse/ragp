@@ -2,7 +2,6 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README-.*\.png$
-^\.travis\.yml$
 ^README_cache$
 ^_pkgdown\.yml$
 ^docs$
@@ -10,3 +9,4 @@
 ^index\.md$
 ^index\.Rmd$
 ^vignettes/pkgdown$
+^\.github$
