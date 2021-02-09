@@ -1,11 +1,11 @@
-pandoc: 2.7.3
-pkgdown: 1.5.1
+pandoc: 2.11.2
+pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  analyse: pkgdown/analyse.html
-  filter: pkgdown/filter.html
-  PSV: pkgdown/PSV.html
-  start: pkgdown/start.html
+  pkgdown/analyse: analyse.html
+  pkgdown/filter: filter.html
+  pkgdown/PSV: PSV.html
+  pkgdown/start: start.html
   ragp-vignette: ragp-vignette.html
-last_built: 2020-06-26T08:11Z
+last_built: 2021-02-09T14:02Z
 

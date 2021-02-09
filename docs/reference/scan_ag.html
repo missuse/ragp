@@ -81,7 +81,7 @@ Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine a
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -119,7 +119,7 @@ Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine a
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/missuse/ragp/">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -146,30 +146,30 @@ Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine a
 Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine and V - valine. This function attempts to find the mentioned dipeptides according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead. If any sequence from the supplied contains "O" the function will consider only true AG glycomodules.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>scan_ag</span>(<span class='no'>data</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>scan_ag</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>scan_ag</span>(<span class='no'>data</span>, <span class='no'>...</span>)
+<span class='fu'>scan_ag</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>scan_ag</span>(<span class='no'>data</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='no'>...</span>)
+<span class='fu'>scan_ag</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>scan_ag</span>(<span class='no'>data</span>, <span class='no'>...</span>)
+<span class='fu'>scan_ag</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>scan_ag</span>(
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>sequence</span>,
-  <span class='no'>id</span>,
-  <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fl'>3L</span>,
-  <span class='kw'>div</span> <span class='kw'>=</span> <span class='fl'>10L</span>,
-  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"conservative"</span>, <span class='st'>"extended"</span>),
-  <span class='kw'>exclude_ext</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"no"</span>, <span class='st'>"yes"</span>, <span class='st'>"all"</span>),
-  <span class='kw'>simplify</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>tidy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
-)</pre>
+<span class='fu'>scan_ag</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>sequence</span>,
+  <span class='va'>id</span>,
+  dim <span class='op'>=</span> <span class='fl'>3L</span>,
+  div <span class='op'>=</span> <span class='fl'>10L</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"conservative"</span>, <span class='st'>"extended"</span><span class='op'>)</span>,
+  exclude_ext <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"no"</span>, <span class='st'>"yes"</span>, <span class='st'>"all"</span><span class='op'>)</span>,
+  simplify <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  tidy <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -218,7 +218,7 @@ Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine a
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If simplify = TRUE, a data frame with one row per sequence, containing columns:</p><dl'>
+    <p>If simplify = TRUE, a data frame with one row per sequence, containing columns:</p><dl>
   <dt>id</dt><dd><p>Character, as supplied in the function call.</p></dd>
   <dt>sequence</dt><dd><p>Character, input sequence with amino acids in dipeptides (which satisfy the user set conditions) in uppercase.</p></dd>
   <dt>AG_aa</dt><dd><p>Integer, number of matched amino acids in dipeptides.</p></dd>
@@ -227,7 +227,7 @@ Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine a
 
 </dl>
 
-<p>if simplify = FALSE and tidy = TRUE, a data frame with one row per match, with columns:</p><dl'>
+<p>if simplify = FALSE and tidy = TRUE, a data frame with one row per match, with columns:</p><dl>
   <dt>id</dt><dd><p>Character, as supplied in the function call.</p></dd>
   <dt>sequence</dt><dd><p>Character, input sequence with amino acids in dipeptides that satisfy the user set conditions in uppercase</p></dd>
   <dt>location.start</dt><dd><p>Integer, start of a match.</p></dd>
@@ -238,7 +238,7 @@ Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine a
 </dl>
 
 <p>If simplify = FALSE and tidy = FALSE, a list with elements:</p>
-<dl'>
+<dl>
   <dt>id</dt><dd><p>Character vector, as supplied in the function call.</p></dd>
   <dt>sequence</dt><dd><p>Character vector, each element corresponding to one input sequence, with matched letters (amino acids in dipeptides that satisfy the user set conditions) in uppercase</p></dd>
   <dt>AG_aa</dt><dd><p>Integer vector, each element corresponding to the number of matched letters (amino acids in dipeptides that satisfy the user set conditions) in each input sequence</p></dd>
@@ -263,39 +263,40 @@ Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine a
     <div class='dont-index'><p><code><a href='maab.html'>maab</a></code> <code><a href='predict_hyp.html'>predict_hyp</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>at_nsp</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>at_nsp</span><span class='op'>)</span>
 
 <span class='co'># find all stretches of AP, SP, TP, PA, PS and PT dipeptides where there are at least</span>
 <span class='co'># 3 dipeptides separated by a maximum of 10 amino acids between each two dipeptides</span>
-<span class='no'>at_nsp_ag</span> <span class='kw'>&lt;-</span> <span class='fu'>scan_ag</span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>[<span class='fl'>1</span>:<span class='fl'>20</span>],
-                     <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='fl'>1</span>:<span class='fl'>20</span>],
-                     <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-                     <span class='kw'>div</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-                     <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"conservative"</span>)
+<span class='va'>at_nsp_ag</span> <span class='op'>&lt;-</span> <span class='fu'>scan_ag</span><span class='op'>(</span>sequence <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>$</span><span class='va'>sequence</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>20</span><span class='op'>]</span>,
+                     id <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>$</span><span class='va'>Transcript.id</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>20</span><span class='op'>]</span>,
+                     dim <span class='op'>=</span> <span class='fl'>3</span>,
+                     div <span class='op'>=</span> <span class='fl'>10</span>,
+                     type <span class='op'>=</span> <span class='st'>"conservative"</span><span class='op'>)</span>
 
 <span class='co'># find all stretches of AP, SP, TP, GP, VP, PA, PS, PT PG, and PV dipeptides where there</span>
 <span class='co'># are at least 2 dipeptides separated by a maximum of 4 amino acids between them</span>
-<span class='no'>at_nsp_ag</span> <span class='kw'>&lt;-</span> <span class='fu'>scan_ag</span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>[<span class='fl'>1</span>:<span class='fl'>20</span>],
-                     <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>[<span class='fl'>1</span>:<span class='fl'>20</span>],
-                     <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-                     <span class='kw'>div</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-                     <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"extended"</span>)
+<span class='va'>at_nsp_ag</span> <span class='op'>&lt;-</span> <span class='fu'>scan_ag</span><span class='op'>(</span>sequence <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>$</span><span class='va'>sequence</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>20</span><span class='op'>]</span>,
+                     id <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>$</span><span class='va'>Transcript.id</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>20</span><span class='op'>]</span>,
+                     dim <span class='op'>=</span> <span class='fl'>2</span>,
+                     div <span class='op'>=</span> <span class='fl'>4</span>,
+                     type <span class='op'>=</span> <span class='st'>"extended"</span><span class='op'>)</span>
 
 <span class='co'># check how much the results differ when extensin regions are excluded</span>
-<span class='no'>at_sp_ag</span> <span class='kw'>&lt;-</span> <span class='fu'>scan_ag</span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>,
-                     <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>,
-                     <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-                     <span class='kw'>div</span> <span class='kw'>=</span> <span class='fl'>6</span>,
-                     <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"extended"</span>)
+<span class='va'>at_sp_ag</span> <span class='op'>&lt;-</span> <span class='fu'>scan_ag</span><span class='op'>(</span>sequence <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>$</span><span class='va'>sequence</span>,
+                     id <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>$</span><span class='va'>Transcript.id</span>,
+                     dim <span class='op'>=</span> <span class='fl'>3</span>,
+                     div <span class='op'>=</span> <span class='fl'>6</span>,
+                     type <span class='op'>=</span> <span class='st'>"extended"</span><span class='op'>)</span>
 
 
-<span class='no'>at_sp_ag_ext</span> <span class='kw'>&lt;-</span> <span class='fu'>scan_ag</span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>,
-                     <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>,
-                     <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-                     <span class='kw'>div</span> <span class='kw'>=</span> <span class='fl'>6</span>,
-                     <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"extended"</span>, <span class='kw'>exclude_ext</span> <span class='kw'>=</span> <span class='st'>"yes"</span>)
+<span class='va'>at_sp_ag_ext</span> <span class='op'>&lt;-</span> <span class='fu'>scan_ag</span><span class='op'>(</span>sequence <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>$</span><span class='va'>sequence</span>,
+                     id <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>$</span><span class='va'>Transcript.id</span>,
+                     dim <span class='op'>=</span> <span class='fl'>3</span>,
+                     div <span class='op'>=</span> <span class='fl'>6</span>,
+                     type <span class='op'>=</span> <span class='st'>"extended"</span>, exclude_ext <span class='op'>=</span> <span class='st'>"yes"</span><span class='op'>)</span>
 
-<span class='no'>at_sp_ag_ext</span>$<span class='no'>sequence</span>[<span class='no'>at_sp_ag_ext</span>$<span class='no'>sequence</span> <span class='kw'>!=</span> <span class='no'>at_sp_ag</span>$<span class='no'>sequence</span>]</div><div class='output co'>#&gt;  [1] "matpawshakaqwvvamlallvgsamatepyyyssppppyeyksppppvksppppyeyksppppvksppppyyyhsppppvksppppyvyssppppvksppppyyyhsppppvksppppyyyhsppppvksppppyyyhsppppvksppppyyyhsppppvksppppyyyhsppppvksppppylyssppppvksppppvyiyasppppthy"                                                                                                                                                                                         
+<span class='va'>at_sp_ag_ext</span><span class='op'>$</span><span class='va'>sequence</span><span class='op'>[</span><span class='va'>at_sp_ag_ext</span><span class='op'>$</span><span class='va'>sequence</span> <span class='op'>!=</span> <span class='va'>at_sp_ag</span><span class='op'>$</span><span class='va'>sequence</span><span class='op'>]</span>
+</div><div class='output co'>#&gt;  [1] "matpawshakaqwvvamlallvgsamatepyyyssppppyeyksppppvksppppyeyksppppvksppppyyyhsppppvksppppyvyssppppvksppppyyyhsppppvksppppyyyhsppppvksppppyyyhsppppvksppppyyyhsppppvksppppyyyhsppppvksppppylyssppppvksppppvyiyasppppthy"                                                                                                                                                                                         
 #&gt;  [2] "mrgmvsfavwalfaallsqqlfasvasvrfedaktyylSPPSgshgTPPShTPPSsncgSPpydPSPSTPShPSPPShTPTPSTPShTPTPhTPShTPTPhTPpcncgSPPShPSTPShPSTPShPTPShpPSggyyssppprTPVvvTPPSPivdPGTPiiggSPPTPiidPGTPGTPfiPAPfppitgtcdywrnhptliwgllgwwgtvggafgtvsipssipgfdphmnllqalsntrsdpigalyregtaswlnsmvnhkfpfttpqvrdhfvaglssnkaatkqahtfklanegrlkprv"                                                                                           
 #&gt;  [3] "marsfaiavicivliagvtgqAPTSPPTaTPAPPTPTTPpPAaTPpPVsAPpPVttspppvttAPpPAnpppPVsspppaspppatpppvasppppvaspppaTPpPVaTPpPAPlaSPPAqVPAPAPTtkpdSPSPSPSsSPplPSsdAPGPStdsiSPAPSPTdvndqngaskmvsslvfgsvlvwfmi"                                                                                                                                                                                                              
 #&gt;  [4] "marsfaiavicivliagvtgqAPTSPPTaTPAPPTPTTPpPAaTPpPVsAPpPVttspppvttAPpPAnpppPVsspppaspppatpppvasppppvaspppaTPpPVaTPpPAPlaSPPAqVPAPAPTtkpdSPSPSPSsSPplPSsdAPGPStdsiSPAPSPTdvndqvsnlff"                                                                                                                                                                                                                             
@@ -351,7 +352,7 @@ Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine a
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
