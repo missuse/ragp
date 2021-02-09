@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/missuse/ragp/">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,29 +144,29 @@
     <p>Perform Motif and amino acid bias classification of hydroxyproline rich glycoproteins according to Johnson et al. (2017)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>maab</span>(<span class='no'>data</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>maab</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>maab</span>(<span class='no'>data</span>, <span class='no'>...</span>)
+<span class='fu'>maab</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>maab</span>(<span class='no'>data</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='no'>...</span>)
+<span class='fu'>maab</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>maab</span>(<span class='no'>data</span>, <span class='no'>...</span>)
+<span class='fu'>maab</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>maab</span>(
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>sequence</span>,
-  <span class='no'>id</span>,
-  <span class='kw'>order</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ext"</span>, <span class='st'>"tyr"</span>, <span class='st'>"prp"</span>, <span class='st'>"agp"</span>),
-  <span class='kw'>gpi</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>get_gpi</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"bigpi"</span>, <span class='st'>"predgpi"</span>, <span class='st'>"netgpi"</span>, <span class='st'>"none"</span>),
-  <span class='kw'>spec</span> <span class='kw'>=</span> <span class='fl'>0.99</span>,
-  <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
-)</pre>
+<span class='fu'>maab</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>sequence</span>,
+  <span class='va'>id</span>,
+  order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ext"</span>, <span class='st'>"tyr"</span>, <span class='st'>"prp"</span>, <span class='st'>"agp"</span><span class='op'>)</span>,
+  gpi <span class='op'>=</span> <span class='cn'>NULL</span>,
+  get_gpi <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"bigpi"</span>, <span class='st'>"predgpi"</span>, <span class='st'>"netgpi"</span>, <span class='st'>"none"</span><span class='op'>)</span>,
+  spec <span class='op'>=</span> <span class='fl'>0.99</span>,
+  progress <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -237,13 +237,14 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ragp</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>at_nsp</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/missuse/ragp'>ragp</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>at_nsp</span><span class='op'>)</span>
 
-<span class='no'>maab_class</span> <span class='kw'>&lt;-</span> <span class='fu'>maab</span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>sequence</span>,
-                   <span class='kw'>id</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>)
+<span class='va'>maab_class</span> <span class='op'>&lt;-</span> <span class='fu'>maab</span><span class='op'>(</span>sequence <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>$</span><span class='va'>sequence</span>,
+                   id <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>$</span><span class='va'>Transcript.id</span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>maab_class</span>)</div><div class='output co'>#&gt;            id ext_sp ext_tyr prp agp past_percent pvyk_percent psky_percent
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>maab_class</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;            id ext_sp ext_tyr prp agp past_percent pvyk_percent psky_percent
 #&gt; 1 ATCG00660.1      0       1   0   0     18.80342     14.52991     17.94872
 #&gt; 2 AT2G43600.1      0       6   0   4     21.61172     23.44322     26.73993
 #&gt; 3 AT2G28410.1      0       0   0   4     37.39130     18.26087     22.60870
@@ -273,7 +274,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

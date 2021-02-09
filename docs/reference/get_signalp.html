@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/missuse/ragp/">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,33 +144,33 @@
     <p>SignalP 4.1 server predicts the presence and location of signal peptide cleavage sites in amino acid sequences from different organisms: Gram-positive prokaryotes, Gram-negative prokaryotes, and eukaryotes. The method incorporates a prediction of cleavage sites and a signal peptide/non-signal peptide prediction based on a combination of several artificial neural networks.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_signalp</span>(<span class='no'>data</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>get_signalp</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>get_signalp</span>(
-  <span class='no'>data</span>,
-  <span class='kw'>org_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"euk"</span>, <span class='st'>"gram-"</span>, <span class='st'>"gram+"</span>),
-  <span class='kw'>Dcut_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"default"</span>, <span class='st'>"sensitive"</span>, <span class='st'>"user"</span>),
-  <span class='kw'>Dcut_noTM</span> <span class='kw'>=</span> <span class='fl'>0.45</span>,
-  <span class='kw'>Dcut_TM</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"best"</span>, <span class='st'>"notm"</span>),
-  <span class='kw'>minlen</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>trunc</span> <span class='kw'>=</span> <span class='fl'>70L</span>,
-  <span class='kw'>splitter</span> <span class='kw'>=</span> <span class='fl'>500L</span>,
-  <span class='kw'>sleep</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>attempts</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
-)
+<span class='fu'>get_signalp</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  org_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"euk"</span>, <span class='st'>"gram-"</span>, <span class='st'>"gram+"</span><span class='op'>)</span>,
+  Dcut_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"default"</span>, <span class='st'>"sensitive"</span>, <span class='st'>"user"</span><span class='op'>)</span>,
+  Dcut_noTM <span class='op'>=</span> <span class='fl'>0.45</span>,
+  Dcut_TM <span class='op'>=</span> <span class='fl'>0.5</span>,
+  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"best"</span>, <span class='st'>"notm"</span><span class='op'>)</span>,
+  minlen <span class='op'>=</span> <span class='cn'>NULL</span>,
+  trunc <span class='op'>=</span> <span class='fl'>70L</span>,
+  splitter <span class='op'>=</span> <span class='fl'>500L</span>,
+  sleep <span class='op'>=</span> <span class='fl'>3</span>,
+  attempts <span class='op'>=</span> <span class='fl'>2</span>,
+  progress <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>get_signalp</span>(<span class='no'>data</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='no'>...</span>)
+<span class='fu'>get_signalp</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>get_signalp</span>(<span class='no'>data</span>, <span class='no'>...</span>)
+<span class='fu'>get_signalp</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>get_signalp</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>get_signalp</span><span class='op'>(</span>data <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -242,7 +242,7 @@
     <p><a href='http://www.cbs.dtu.dk/services/SignalP-4.1/'>http://www.cbs.dtu.dk/services/SignalP-4.1/</a></p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame with columns:</p><dl'>
+    <p>A data frame with columns:</p><dl>
   <dt>id</dt><dd><p>Character, as from input</p></dd>
   <dt>Cmax</dt><dd><p>Numeric, C-score (raw cleavage site score). The output from the CS networks, which are trained to distinguish signal peptide cleavage sites from everything else. Note the position numbering of the cleavage site: the C-score is trained to be high at the position immediately after the cleavage site (the first residue in the mature protein).</p></dd>
   <dt>Cmax.pos</dt><dd><p>Integer, position of Cmax. position immediately after the cleavage site (the first residue in the mature protein).</p></dd>
@@ -270,11 +270,12 @@
     <div class='dont-index'><p><code><a href='get_phobius.html'>get_phobius</a></code> <code><a href='get_targetp.html'>get_targetp</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ragp</span>)
-<span class='no'>signalp_pred</span> <span class='kw'>&lt;-</span> <span class='fu'>get_signalp</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>[<span class='fl'>1</span>:<span class='fl'>10</span>,],
-                            <span class='no'>sequence</span>,
-                            <span class='no'>Transcript.id</span>)
-<span class='no'>signalp_pred</span></div><div class='output co'>#&gt;             id  Cmax Cmax.pos  Ymax Ymax.pos  Smax Smax.pos Smean Dmean is.sp
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/missuse/ragp'>ragp</a></span><span class='op'>)</span>
+<span class='va'>signalp_pred</span> <span class='op'>&lt;-</span> <span class='fu'>get_signalp</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>,<span class='op'>]</span>,
+                            <span class='va'>sequence</span>,
+                            <span class='va'>Transcript.id</span><span class='op'>)</span>
+<span class='va'>signalp_pred</span>
+</div><div class='output co'>#&gt;             id  Cmax Cmax.pos  Ymax Ymax.pos  Smax Smax.pos Smean Dmean is.sp
 #&gt; 1  ATCG00660.1 0.210       30 0.162       30 0.260        2 0.146 0.154     N
 #&gt; 2  AT2G43600.1 0.860       23 0.894       23 0.984       13 0.930 0.913     Y
 #&gt; 3  AT2G28410.1 0.779       23 0.826       23 0.940       15 0.877 0.853     Y
@@ -312,7 +313,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/missuse/ragp/">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,19 +144,19 @@
     <p>PredGPI web server is a predictor of GPI modification sites.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_pred_gpi</span>(<span class='no'>data</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>get_pred_gpi</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>get_pred_gpi</span>(<span class='no'>data</span>, <span class='kw'>spec</span> <span class='kw'>=</span> <span class='fl'>0.99</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'>get_pred_gpi</span><span class='op'>(</span><span class='va'>data</span>, spec <span class='op'>=</span> <span class='fl'>0.99</span>, progress <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>get_pred_gpi</span>(<span class='no'>data</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='no'>...</span>)
+<span class='fu'>get_pred_gpi</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>get_pred_gpi</span>(<span class='no'>data</span>, <span class='no'>...</span>)
+<span class='fu'>get_pred_gpi</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>get_pred_gpi</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>sequence</span>, <span class='no'>id</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>get_pred_gpi</span><span class='op'>(</span>data <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -192,7 +192,7 @@
     <p><a href='http://gpcr.biocomp.unibo.it/predgpi/pred.htm'>http://gpcr.biocomp.unibo.it/predgpi/pred.htm</a></p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame with columns:</p><dl'>
+    <p>A data frame with columns:</p><dl>
 <dt>id</dt><dd><p>Character, name of the submitted sequence truncated to 30 characters.</p></dd>
 <dt>omega_site</dt><dd><p>Integer, indicating the sequence position of the omega-site.</p></dd>
 <dt>specificity</dt><dd><p>Numeric, indicating the specificity of the prediction.</p></dd>
@@ -211,13 +211,14 @@
     <div class='dont-index'><p><code><a href='get_big_pi.html'>get_big_pi</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ragp</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>at_nsp</span>)
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/missuse/ragp'>ragp</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>at_nsp</span><span class='op'>)</span>
 
-<span class='no'>gpi_pred</span> <span class='kw'>&lt;-</span> <span class='fu'>get_pred_gpi</span>(<span class='no'>at_nsp</span>[<span class='fl'>1</span>:<span class='fl'>20</span>,],
-                         <span class='no'>sequence</span>,
-                         <span class='no'>Transcript.id</span>)
-<span class='no'>gpi_pred</span></div><div class='output co'>#&gt;             id omega_site specificity is.gpi
+<span class='va'>gpi_pred</span> <span class='op'>&lt;-</span> <span class='fu'>get_pred_gpi</span><span class='op'>(</span><span class='va'>at_nsp</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>20</span>,<span class='op'>]</span>,
+                         <span class='va'>sequence</span>,
+                         <span class='va'>Transcript.id</span><span class='op'>)</span>
+<span class='va'>gpi_pred</span>
+</div><div class='output co'>#&gt;             id omega_site specificity is.gpi
 #&gt; 1  ATCG00660.1         96       0.073  FALSE
 #&gt; 2  AT2G43600.1        251       0.091  FALSE
 #&gt; 3  AT2G28410.1         90       0.995   TRUE
@@ -254,7 +255,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

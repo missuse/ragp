@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/missuse/ragp/">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,14 +144,14 @@
     <p>The function splits a fasta formatted file to a defined number of smaller .fasta files for further processing.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>split_fasta</span>(
-  <span class='no'>path_in</span>,
-  <span class='no'>path_out</span>,
-  <span class='kw'>num_seq</span> <span class='kw'>=</span> <span class='fl'>20000</span>,
-  <span class='kw'>trim</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>trunc</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>id</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>split_fasta</span><span class='op'>(</span>
+  <span class='va'>path_in</span>,
+  <span class='va'>path_out</span>,
+  num_seq <span class='op'>=</span> <span class='fl'>20000</span>,
+  trim <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  trunc <span class='op'>=</span> <span class='cn'>NULL</span>,
+  id <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -185,7 +185,7 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>if id = FALSE, A Character vector of the paths to the resulting .FASTA formatted files.</p>
-<p>if id = TRUE, A list with two elements:</p><dl'>
+<p>if id = TRUE, A list with two elements:</p><dl>
   <dt>id</dt><dd><p>Character, protein identifiers.</p></dd>
   <dt>file_list</dt><dd><p>Character, paths to the resulting .FASTA formatted files.</p></dd>
   
@@ -193,20 +193,22 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ragp</span>)
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/missuse/ragp'>ragp</a></span><span class='op'>)</span>
 <span class='co'>#create a fasta file to be processed, not needed if the input file is already present</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>at_nsp</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>seqinr</span>)
-<span class='fu'><a href='https://rdrr.io/pkg/seqinr/man/write.fasta.html'>write.fasta</a></span>(<span class='kw'>sequence</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/strsplit.html'>strsplit</a></span>(<span class='no'>at_nsp</span>$<span class='no'>sequence</span>, <span class='st'>""</span>),
-            <span class='kw'>name</span> <span class='kw'>=</span> <span class='no'>at_nsp</span>$<span class='no'>Transcript.id</span>,
-            <span class='kw'>file</span> <span class='kw'>=</span> <span class='st'>"at_nsp.fasta"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>at_nsp</span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://seqinr.r-forge.r-project.org/'>seqinr</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/seqinr/man/write.fasta.html'>write.fasta</a></span><span class='op'>(</span>sequence <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/strsplit.html'>strsplit</a></span><span class='op'>(</span><span class='va'>at_nsp</span><span class='op'>$</span><span class='va'>sequence</span>, <span class='st'>""</span><span class='op'>)</span>,
+            name <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>$</span><span class='va'>Transcript.id</span>,
+            file <span class='op'>=</span> <span class='st'>"at_nsp.fasta"</span><span class='op'>)</span>
 
 <span class='co'>#assumes input/output file are in working directory:</span>
-<span class='no'>file_paths</span> <span class='kw'>&lt;-</span> <span class='fu'>split_fasta</span>(<span class='kw'>path_in</span> <span class='kw'>=</span> <span class='st'>"at_nsp.fasta"</span>,
-                          <span class='kw'>path_out</span> <span class='kw'>=</span> <span class='st'>"at_nsp_split"</span>,
-                          <span class='kw'>num_seq</span> <span class='kw'>=</span> <span class='fl'>500</span>)
-}</div></pre>
+<span class='va'>file_paths</span> <span class='op'>&lt;-</span> <span class='fu'>split_fasta</span><span class='op'>(</span>path_in <span class='op'>=</span> <span class='st'>"at_nsp.fasta"</span>,
+                          path_out <span class='op'>=</span> <span class='st'>"at_nsp_split"</span>,
+                          num_seq <span class='op'>=</span> <span class='fl'>500</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -222,7 +224,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

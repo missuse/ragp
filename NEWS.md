@@ -1,7 +1,7 @@
 ragp 0.3.2.0002
 ===============
 * `get_espritz()` has been restored since Espritz server is again available at http://old.protein.bio.unipd.it/espritz/.  
-* `get_plot()` has new arguments `gpi_size` - controls the size of the gpi symbol and `gpi_shape`- controls the shape of the gpi symbol.  
+* `plot_prot()` has new arguments `gpi_size` - controls the size of the gpi symbol and `gpi_shape`- controls the shape of the gpi symbol.  
 
 ragp 0.3.2.0001
 ===============

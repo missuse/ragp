@@ -42,7 +42,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -80,7 +80,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/missuse/ragp/">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -125,14 +125,17 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>To install <code>ragp</code> run:</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install.packages("devtools")</span>
-<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"missuse/ragp"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"missuse/ragp"</span><span class="op">)</span></code></pre></div>
 <p>alternatively run:</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="co"># install.packages("devtools")</span>
-<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"missuse/ragp"</span>,
-                         <span class="kw">build_vignettes</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"missuse/ragp"</span>,
+                         build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>to build vignettes which can be viewed by:</p>
-<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span>(<span class="st">"ragp"</span>)</pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span><span class="op">(</span><span class="st">"ragp"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="bug-reports" class="section level2">
 <h2 class="hasAnchor">
@@ -152,20 +155,20 @@
 <p>Milan B Dragićević, Danijela M Paunović, Milica D Bogdanović, Slađana I Todorović, Ana D Simonović (2020) ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R, Glycobiology 30(1) 19–35, <a href="https://doi.org/10.1093/glycob/cwz072" class="uri">https://doi.org/10.1093/glycob/cwz072</a></p>
 </blockquote>
 <p>You can get citation info via <code><a href="https://rdrr.io/r/utils/citation.html">citation("ragp")</a></code> or by copying the following BibTex entry:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb4-1"><a href="#cb4-1"></a><span class="va">@article</span>{<span class="ot">10</span>.<span class="ot">1093</span>/<span class="ot">glycob</span>/<span class="ot">cwz072</span>,</span>
-<span id="cb4-2"><a href="#cb4-2"></a>    <span class="dt">author</span> = "<span class="st">{Dragićević, Milan B and Paunović, Danijela M and Bogdanović, Milica D and Todorović, Slađana I and Simonović, Ana D}</span>",</span>
-<span id="cb4-3"><a href="#cb4-3"></a>    <span class="dt">title</span> = "<span class="st">{ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R}</span>",</span>
-<span id="cb4-4"><a href="#cb4-4"></a>    <span class="dt">journal</span> = "<span class="st">{Glycobiology}</span>",</span>
-<span id="cb4-5"><a href="#cb4-5"></a>    <span class="dt">issn</span> = "<span class="st">{1460-2423}</span>",</span>
-<span id="cb4-6"><a href="#cb4-6"></a>    <span class="dt">publisher</span> = "<span class="st">{Oxford University Press}</span>",</span>
-<span id="cb4-7"><a href="#cb4-7"></a>    <span class="dt">year</span> = "<span class="st">{2020}</span>",</span>
-<span id="cb4-8"><a href="#cb4-8"></a>    <span class="dt">volume</span> = "<span class="st">{30}</span>",  </span>
-<span id="cb4-9"><a href="#cb4-9"></a>    <span class="dt">number</span> = "<span class="st">{1}</span>",</span>
-<span id="cb4-10"><a href="#cb4-10"></a>    <span class="dt">pages</span> = "<span class="st">{19–35}</span>",</span>
-<span id="cb4-11"><a href="#cb4-11"></a>    <span class="dt">url</span> = "<span class="st">{https://doi.org/10.1093/glycob/cwz072}</span>",</span>
-<span id="cb4-12"><a href="#cb4-12"></a>    <span class="dt">doi</span> = "<span class="st">{10.1093/glycob/cwz072}</span>",</span>
-<span id="cb4-13"><a href="#cb4-13"></a>    <span class="dt">eprint</span> = "<span class="st">{https://academic.oup.com/glycob/article-pdf/30/1/19/5567434/cwz072.pdf}</span>"</span>
-<span id="cb4-14"><a href="#cb4-14"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">@article</span>{<span class="ot">10</span>.<span class="ot">1093</span>/<span class="ot">glycob</span>/<span class="ot">cwz072</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">author</span> = "<span class="st">{Dragićević, Milan B and Paunović, Danijela M and Bogdanović, Milica D and Todorović, Slađana I and Simonović, Ana D}</span>",</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">title</span> = "<span class="st">{ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R}</span>",</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">journal</span> = "<span class="st">{Glycobiology}</span>",</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">issn</span> = "<span class="st">{1460-2423}</span>",</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">publisher</span> = "<span class="st">{Oxford University Press}</span>",</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">year</span> = "<span class="st">{2020}</span>",</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">volume</span> = "<span class="st">{30}</span>",  </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">number</span> = "<span class="st">{1}</span>",</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">pages</span> = "<span class="st">{19–35}</span>",</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">url</span> = "<span class="st">{https://doi.org/10.1093/glycob/cwz072}</span>",</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">doi</span> = "<span class="st">{10.1093/glycob/cwz072}</span>",</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">eprint</span> = "<span class="st">{https://academic.oup.com/glycob/article-pdf/30/1/19/5567434/cwz072.pdf}</span>"</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="acknowledgements" class="section level2">
 <h2 class="hasAnchor">
@@ -229,7 +232,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
