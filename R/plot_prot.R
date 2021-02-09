@@ -18,6 +18,8 @@
 #' @param disorder Boolean, should disordered region predictions obtained using \code{\link[ragp]{get_espritz}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_espritz}} (called with simplify = TRUE) can be supplied.
 #' @param dom_sort One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.
 #' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
+#' @param gpi_size Integer, the size of the gpi symbol. Appropriate values are 1 - 10.
+#' @param gpi_shape Integer, the shape of the gpi symbol. Appropriate values are 0 - 25
 #' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.
 #'
 #'
@@ -92,6 +94,8 @@ plot_prot <- function(sequence,
                       disorder = FALSE,
                       dom_sort = c("ievalue", "abc", "cba"),
                       progress = FALSE,
+                      gpi_size = 4,
+                      gpi_shape = 18,
                       ...) {
   
   if (missing(sequence)){
@@ -318,6 +322,29 @@ plot_prot <- function(sequence,
               call. = FALSE)
     }
   }
+  
+  if(length(gpi_size) != 1){
+    gpi_size <- 4
+    warning("gpi_size should be of length 1, setting to default: gpi_size = 4",
+            call. = FALSE)
+  }
+  if(!gpi_size %in% 1:10) {
+    gpi_size <- 4
+    warning("gpi_size can have values from 1 - 10, setting to default: gpi_size = 4",
+            call. = FALSE)
+  }
+  
+  if(length(gpi_shape) != 1){
+    gpi_shape <- 18
+    warning("gpi_shape should be of length 1, setting to default: gpi_shape = 18",
+            call. = FALSE)
+  }
+  if(!gpi_shape %in% 0:25) {
+    gpi_shape <- 18
+    warning("gpi_shape can have values from 0 - 25, setting to default: gpi_shape = 18",
+            call. = FALSE)
+  }
+  
   args_signalp <- names(formals(get_signalp.character))[2:8]
   args_scanag <- names(formals(scan_ag.default))[4:7]
   args_espritz <- names(formals(get_espritz.default))[4:5]
@@ -1082,8 +1109,8 @@ plot_prot <- function(sequence,
                           ggplot2::aes_(y = ~id_num,
                                         x = ~omega_site,
                                         color = "omega site (gpi)"),
-                          shape = 18,
-                          size = 4,
+                          shape = gpi_shape,
+                          size = gpi_size,
                           na.rm = TRUE) 
     
   } 

@@ -21,6 +21,8 @@ plot_prot(
   disorder = FALSE,
   dom_sort = c("ievalue", "abc", "cba"),
   progress = FALSE,
+  gpi_size = 4,
+  gpi_shape = 18,
   ...
 )
 }
@@ -56,6 +58,10 @@ plot_prot(
 \item{dom_sort}{One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.}
 
 \item{progress}{Boolean, whether to show the progress bar, at default set to FALSE.}
+
+\item{gpi_size}{Integer, the size of the gpi symbol. Appropriate values are 1 - 10.}
+
+\item{gpi_shape}{Integer, the shape of the gpi symbol. Appropriate values are 0 - 25}
 
 \item{...}{Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.}
 }
