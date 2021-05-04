@@ -344,6 +344,8 @@ get_netGPI.character <- function(data,
                                header = FALSE,
                                stringsAsFactors = FALSE,
                                sep = "\t")
+      res2_split <- res2_split[,1:5]
+      
       colnames(res2_split) <- c("id",
                                 "length",
                                 "is.gpi",
