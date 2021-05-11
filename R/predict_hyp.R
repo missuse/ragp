@@ -280,7 +280,7 @@ predict_hyp.default <- function (data = NULL,
       seq_non_aa <- NULL
     }
     if(version == "V1"){
-      kmer21 <- seq_kmer[nchar(seq_kmer[,2]) == 21,]
+      kmer21 <- seq_kmer[nchar(seq_kmer[,2]) == 21,,drop = FALSE]
       kmer13 <- seq_kmer[nchar(seq_kmer[,2]) < 21 &
                            nchar(seq_kmer[,2]) >= 17 &
                            as.numeric(seq_kmer[,3]) > 10, ,
@@ -360,7 +360,7 @@ predict_hyp.default <- function (data = NULL,
       return(res)
     }
     if( version == "V2"){
-      kmer21 <- seq_kmer[nchar(seq_kmer[,2]) == 21,]
+      kmer21 <- seq_kmer[nchar(seq_kmer[,2]) == 21, ,drop = FALSE]
       kmer15 <- seq_kmer[nchar(seq_kmer[,2]) < 21 &
                            nchar(seq_kmer[,2]) >= 18 &
                            as.numeric(seq_kmer[,3]) > 10, ,
