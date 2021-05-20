@@ -46,6 +46,7 @@ get_big_pi(data, ...)
 }
 \value{
 If simplify == TRUE:
+
 A data frame with columns:
 \describe{
   \item{id}{Character, indicating the protein identifier}
@@ -56,6 +57,7 @@ A data frame with columns:
   }
 
 If simplify == FALSE:
+
 A list of predictions, each element named according to the sequence id, containing a two element list:
 \describe{
   \item{prediction}{data frame, resembling the one returned by simplify == TRUE, along with alternative site predictions (if present)}

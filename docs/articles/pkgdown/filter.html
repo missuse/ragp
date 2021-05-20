@@ -91,7 +91,7 @@
 
       
 
-      </header><script src="filter_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><script src="filter_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Filtering hydroxyproline rich glycoproteins</h1>
@@ -129,8 +129,8 @@ code.r{ /* Code block */
 <div id="predicting-n-terminal-secretory-signal-sequences-n-sp" class="section level2">
 <h2 class="hasAnchor">
 <a href="#predicting-n-terminal-secretory-signal-sequences-n-sp" class="anchor"></a>Predicting N-terminal secretory signal sequences (N-sp)</h2>
-<p>Hydroxyproline rich glycoproteins (HRGPs) are secreted proteins, therefore they are expected to contain a secretory signal sequence on the N-terminus (N-sp). <code>ragp</code> incorporates N-sp prediction by querying <a href="http://www.cbs.dtu.dk/services/SignalP/">SignalP</a>, <a href="http://www.cbs.dtu.dk/services/TargetP/">TargetP</a> <span class="citation">(Emanuelsson et al. 2000)</span> and <a href="http://phobius.sbc.su.se/">Phobius</a> <span class="citation">(Käll, Krogh, and Sonnhammer 2007)</span> in an efficient manner via the functions: <code><a href="../../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../../reference/get_targetp.html">get_targetp()</a></code> and <code><a href="../../reference/get_phobius.html">get_phobius()</a></code>.</p>
-<p>To query <a href="http://www.cbs.dtu.dk/services/SignalP/">SignalP</a> predictions:</p>
+<p>Hydroxyproline rich glycoproteins (HRGPs) are secreted proteins, therefore they are expected to contain a secretory signal sequence on the N-terminus (N-sp). <code>ragp</code> incorporates N-sp prediction by querying <a href="https://services.healthtech.dtu.dk/service.php?SignalP-4.1">SignalP 4.1</a>, <a href="https://services.healthtech.dtu.dk/service.php?TargetP-1.1">TargetP 1.1</a> <span class="citation">(Emanuelsson et al. 2000)</span> and <a href="http://phobius.sbc.su.se/">Phobius</a> <span class="citation">(Käll, Krogh, and Sonnhammer 2007)</span> in an efficient manner via the functions: <code><a href="../../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../../reference/get_targetp.html">get_targetp()</a></code> and <code><a href="../../reference/get_phobius.html">get_phobius()</a></code>.</p>
+<p>To query <a href="https://services.healthtech.dtu.dk/service.php?SignalP-4.1">SignalP</a> predictions:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nsp_signalp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_signalp.html">get_signalp</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">at_nsp</span>, <span class="co">#data frame name</span>
                            sequence <span class="op">=</span> <span class="va">sequence</span>, <span class="co">#column containing the sequences</span>
@@ -152,7 +152,7 @@ code.r{ /* Code block */
 <span class="co">#&gt; 4   0.450  SignalP-noTM       TRUE</span>
 <span class="co">#&gt; 5   0.500    SignalP-TM       TRUE</span>
 <span class="co">#&gt; 6   0.450  SignalP-noTM       TRUE</span></code></pre></div>
-<p>similarly <a href="http://www.cbs.dtu.dk/services/TargetP/">TargetP</a> and <a href="http://phobius.sbc.su.se/">Phobius</a> can be queried by:</p>
+<p>similarly <a href="https://services.healthtech.dtu.dk/service.php?TargetP-1.1">TargetP</a> and <a href="http://phobius.sbc.su.se/">Phobius</a> can be queried by:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nsp_targetp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_targetp.html">get_targetp</a></span><span class="op">(</span><span class="va">at_nsp</span>,
                            <span class="va">sequence</span>,

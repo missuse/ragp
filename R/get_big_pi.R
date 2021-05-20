@@ -10,7 +10,9 @@
 #' @param sleep A numeric indicating the pause in seconds between server calls, at default set to 1.
 #' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
+#' 
 #' @return If simplify == TRUE:
+#' 
 #' A data frame with columns:
 #' \describe{
 #'   \item{id}{Character, indicating the protein identifier}
@@ -21,6 +23,7 @@
 #'   }
 #'
 #' If simplify == FALSE:
+#' 
 #' A list of predictions, each element named according to the sequence id, containing a two element list:
 #' \describe{
 #'   \item{prediction}{data frame, resembling the one returned by simplify == TRUE, along with alternative site predictions (if present)}

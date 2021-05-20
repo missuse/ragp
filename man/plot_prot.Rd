@@ -19,6 +19,7 @@ plot_prot(
   tm = TRUE,
   domain = TRUE,
   disorder = FALSE,
+  hyp_scan = if (ag == TRUE && hyp == TRUE) TRUE else FALSE,
   dom_sort = c("ievalue", "abc", "cba"),
   progress = FALSE,
   gpi_size = 4,
@@ -54,6 +55,8 @@ plot_prot(
 \item{domain}{Boolean, should the domain predictions obtained using \code{\link[ragp]{get_hmm}}  be plotted. Alternatively the output data frame from \code{\link[ragp]{get_hmm}} can be supplied.}
 
 \item{disorder}{Boolean, should disordered region predictions obtained using \code{\link[ragp]{get_espritz}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_espritz}} (called with simplify = TRUE) can be supplied.}
+
+\item{hyp_scan}{Boolean, if ag = TRUE, should \code{\link[ragp]{scan_ag}} be performed on \code{\link[ragp]{predict_hyp}} output thus scanning only arabinogalactan motifs which contain predicted hydroxyprolines.}
 
 \item{dom_sort}{One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.}
 

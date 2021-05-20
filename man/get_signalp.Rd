@@ -8,7 +8,7 @@
 \alias{get_signalp.list}
 \title{Query SignalP web server.}
 \source{
-\url{http://www.cbs.dtu.dk/services/SignalP-4.1/}
+\url{https://services.healthtech.dtu.dk/service.php?SignalP-4.1}
 }
 \usage{
 get_signalp(data, ...)

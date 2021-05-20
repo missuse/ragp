@@ -1,4 +1,4 @@
-#' Query NetGPI - 1.0 web server.
+#' Query NetGPI - 1.1 web server.
 #'
 #' NetGPI server offers GPI Anchor predictions
 #'

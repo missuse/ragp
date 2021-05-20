@@ -2,6 +2,8 @@ ragp 0.3.2.0002
 ===============
 * `get_espritz()` has been restored since Espritz server is again available at http://old.protein.bio.unipd.it/espritz/.  
 * `plot_prot()` has new arguments `gpi_size` - controls the size of the gpi symbol and `gpi_shape`- controls the shape of the gpi symbol.  
+* `plot_prot()` has new argument `hyp_scan` - which is a logical and determines if `scan_ag()` (when `ag = TRUE`) should scan for arabinogalactan motifs containing only predicted hydroxyprolines. This argument changes the previous default behavior of `plot_prot()` which was equivalent to `hyp_scan = FALSE`.
+* `get_phobius()` and `get_big_pi()` now use https web server addresses. #6
 
 ragp 0.3.2.0001
 ===============

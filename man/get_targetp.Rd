@@ -8,7 +8,7 @@
 \alias{get_targetp.list}
 \title{Query TargetP web server.}
 \source{
-\url{http://www.cbs.dtu.dk/services/TargetP-1.1/}
+\url{https://services.healthtech.dtu.dk/service.php?TargetP-1.1}
 }
 \usage{
 get_targetp(data, ...)

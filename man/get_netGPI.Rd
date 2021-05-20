@@ -6,7 +6,7 @@
 \alias{get_netGPI.character}
 \alias{get_netGPI.data.frame}
 \alias{get_netGPI.list}
-\title{Query NetGPI - 1.0 web server.}
+\title{Query NetGPI - 1.1 web server.}
 \source{
 \url{https://services.healthtech.dtu.dk/service.php?NetGPI-1.1}
 }

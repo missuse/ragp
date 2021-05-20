@@ -20,6 +20,7 @@
 #' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
 #' @param gpi_size Integer, the size of the gpi symbol. Appropriate values are 1 - 10.
 #' @param gpi_shape Integer, the shape of the gpi symbol. Appropriate values are 0 - 25
+#' @param hyp_scan Boolean, if ag = TRUE, should \code{\link[ragp]{scan_ag}} be performed on \code{\link[ragp]{predict_hyp}} output thus scanning only arabinogalactan motifs which contain predicted hydroxyprolines.
 #' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.
 #'
 #'
@@ -92,6 +93,7 @@ plot_prot <- function(sequence,
                       tm = TRUE,
                       domain = TRUE,
                       disorder = FALSE,
+                      hyp_scan = if(ag == TRUE && hyp == TRUE) TRUE else FALSE,
                       dom_sort = c("ievalue", "abc", "cba"),
                       progress = FALSE,
                       gpi_size = 4,
@@ -291,6 +293,30 @@ plot_prot <- function(sequence,
     hyp <- TRUE
     warning("hyp was set to NA, setting to default: hyp = TRUE",
             call. = FALSE)
+  }
+  
+  if (length(hyp_scan) > 1){
+    hyp_scan <- if(ag == TRUE && hyp == TRUE) TRUE else FALSE
+    warning("hyp_scan should be of length 1, setting to default: hyp_scan = if(ag == TRUE && hyp == TRUE) TRUE else FALSE",
+            call. = FALSE)
+  }
+  if (!is.logical(hyp_scan)){
+    hyp_scan <- as.logical(hyp_scan)
+    warning("hyp_scan is not logical, converting using 'as.logical'",
+            call. = FALSE)
+  }
+  if (is.na(hyp_scan)){
+    hyp_scan <- if(ag == TRUE && hyp == TRUE) TRUE else FALSE
+    warning("hyp_scan was set to NA, setting to default: hyp_scan = if(ag == TRUE && hyp == TRUE) TRUE else FALSE",
+            call. = FALSE)
+  }
+  
+  if (!hyp && isTRUE(hyp_scan)) {
+    stop("hyp must be TRUE if scan_ag is to use hydroxyproline predictions for motif scan")
+  }
+  
+  if (!ag && isTRUE(hyp_scan)) {
+    warning("hyp_scan = TRUE and ag = FALSE, arabinogalactan motif scan will not be performed")
   }
   
   if (missing(domain)){
@@ -709,7 +735,11 @@ plot_prot <- function(sequence,
                               id = "id"),
                          dots[names(dots) == "tprob"],
                          dots[names(dots) == "version"])
-    )$prediction
+    )
+    
+    if (hyp_scan) hyp_ag_scan <- seq_hyp$sequence
+    
+    seq_hyp <- seq_hyp$prediction
     
     if (!is.null(seq_hyp)) {
       seq_hyp <- seq_hyp[seq_hyp$HYP == "Yes",]
@@ -722,7 +752,22 @@ plot_prot <- function(sequence,
     seq_hyp <- NULL
   }
   
-  if (ag) {
+  if (ag && hyp_scan) {
+    seq_scan <- do.call(ragp::scan_ag,
+                        c(list(data = hyp_ag_scan,
+                               sequence = "sequence",
+                               id = "id",
+                               simplify = FALSE,
+                               tidy = TRUE),
+                          dots[names(dots) %in% args_scanag]))
+    
+    seq_scan <- seq_scan[, -5]
+    seq_scan <- seq_scan[!is.na(seq_scan$location.start),]
+    
+    if (nrow(seq_scan) == 0) {
+      seq_scan <- NULL
+    }
+  } else if (ag && !hyp_scan) {
     seq_scan <- do.call(ragp::scan_ag,
                         c(list(data = dat,
                                sequence = "sequence",

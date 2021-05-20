@@ -38,7 +38,7 @@
 #'
 #' @note This function creates temporary files in the working directory.
 #'
-#' @source \url{http://www.cbs.dtu.dk/services/SignalP-4.1/}
+#' @source \url{https://services.healthtech.dtu.dk/service.php?SignalP-4.1}
 #' @references Petersen TN. Brunak S. Heijne G. Nielsen H. (2011) SignalP 4.0: discriminating signal peptides from transmembrane regions. Nature Methods 8: 785-786
 #'
 #' @seealso \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_targetp}}
