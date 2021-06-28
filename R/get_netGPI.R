@@ -27,12 +27,13 @@
 #' @seealso \code{\link[ragp]{get_big_pi}} \code{\link[ragp]{get_pred_gpi}}
 #'
 #' @examples
+#' \dontrun{
 #' library(ragp)
 #' netGPI_pred <- get_netGPI(data = at_nsp[1:10,],
 #'                           sequence,
 #'                           Transcript.id)
 #' netGPI_pred
-#'
+#' }
 #' @import seqinr
 #' @import httr
 #' @import xml2

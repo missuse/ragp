@@ -81,7 +81,9 @@ extractMBdesc <- function(x, mat, nlag){
 
 QSOlevel <- function (m){
   QSObabe <- function(x) {
+    p <- FALSE
     if (length(x) == 1) {
+      p <- TRUE
       x <- c(x, x)
     }
     w <- 0.1
@@ -152,7 +154,7 @@ QSOlevel <- function (m){
                            1:nlag,
                            sep = "")
     QSO <- cbind(Xr1, Xr2, Xd1, Xd2)
-    if (length(unique(x)) == 1) {
+    if (p) {
       QSO <- QSO[1, , drop = FALSE]
     }
     return(QSO)

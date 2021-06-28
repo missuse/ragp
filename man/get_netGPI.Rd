@@ -52,12 +52,13 @@ NetGPI server offers GPI Anchor predictions
 This function creates temporary files in the working directory.
 }
 \examples{
+\dontrun{
 library(ragp)
 netGPI_pred <- get_netGPI(data = at_nsp[1:10,],
                           sequence,
                           Transcript.id)
 netGPI_pred
-
+}
 }
 \references{
 Gislason MH. Nielsen H. Armenteros JA. AR Johansen AR. (2019) Prediction of GPI-Anchored proteins with pointer neural networks. bioRxiv. doi: https://doi.org/10.1101/838680
