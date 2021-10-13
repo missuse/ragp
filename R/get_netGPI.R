@@ -27,13 +27,13 @@
 #' @seealso \code{\link[ragp]{get_big_pi}} \code{\link[ragp]{get_pred_gpi}}
 #'
 #' @examples
-#' \dontrun{
+#' 
 #' library(ragp)
 #' netGPI_pred <- get_netGPI(data = at_nsp[1:10,],
 #'                           sequence,
 #'                           Transcript.id)
 #' netGPI_pred
-#' }
+#' 
 #' @import seqinr
 #' @import httr
 #' @import xml2
@@ -149,227 +149,214 @@ get_netGPI.character <- function(data,
                                 max = for_pb,
                                 style = 3)
   }
-  splt <- (seq_along(file_list) - 1) %/% 10
-  file_list <- split(file_list,
-                     splt)
-  output <- vector("list", length(file_list)*10)
+  output <- vector("list", length(file_list))
   for(k in seq_along(file_list)){
-    x <- file_list[[k]]
-    jobid <- vector("character", 10)
-    for (i in seq_along(x)) {
-      file_up <- httr::upload_file(x[i])
-      res <- httr::POST(configfile = cfg_file,
-                        url = url,
-                        encode = "multipart",
-                        body = list(configfile = cfg_file,
-                                    uploadfile = file_up,
-                                    format = "short"))
-
-      if(!grepl("jobid=", res$url)){
-        stop("something went wrong on server side")
-      }
-      res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
-                 "",
-                 res$url,
-                 fixed = TRUE)
-      
-      res <- sub("&wait=20",
-                 "",
-                 res,
-                 fixed = TRUE)
-      jobid[i] <- res
-      if(progress){
-        utils::setTxtProgressBar(pb,
-                                 floor(i/2) + (10 * (k - 1)))
-      }
+    x <- file_list[k]
+    file_up <- httr::upload_file(x)
+    res <- httr::POST(configfile = cfg_file,
+                      url = url,
+                      encode = "multipart",
+                      body = list(configfile = cfg_file,
+                                  uploadfile = file_up,
+                                  format = "short"))
+    if(!grepl("jobid=", res$url)){
+      stop("something went wrong on server side")
     }
+    res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
+               "",
+               res$url,
+               fixed = TRUE)
     
-    collected_res <- vector("list", length(x))
-    for (i in seq_along(x)) {
-      time1 <- Sys.time()
-      repeat {
-        jobidi <- jobid[i]
-        res2 <- httr::GET(url = url,
-                          query = list(jobid = jobidi,
-                                       wait = "20"))
-        bad <- xml2::xml_text(
+    res <- sub("&wait=20",
+               "",
+               res,
+               fixed = TRUE)
+    jobid <- res
+
+    
+    time1 <- Sys.time()
+    
+    repeat {
+      res2 <- httr::GET(url = url,
+                        query = list(jobid = jobid,
+                                     wait = "20"))
+      bad <- xml2::xml_text(
+        xml2::xml_find_all(
+          httr::content(res2,
+                        as = "parsed"),
+          "//head")
+      )
+      if (grepl("Illegal", bad)) {
+        prt <- xml2::xml_text(
           xml2::xml_find_all(
             httr::content(res2,
                           as = "parsed"),
-            "//head")
+            "//li")
         )
-        if (grepl("Illegal", bad)) {
-          prt <- xml2::xml_text(
+        stop(paste0(prt, ". Problem in file: ", "temp_",
+                    i, ".fa"),
+             call. = FALSE)
+      }
+      res2 <- as.character(
+        xml2::xml_find_all(
+          httr::content(res2,
+                        as = "parsed"),
+          xpath = "//div[@ng-controller='ResultsCtrl']")
+      )
+      res2_split <- unlist(
+        strsplit(res2,
+                 "\n")
+      )
+      Sys.sleep(1)
+      if (any(grepl("Prediction summary", res2_split))) {
+        break
+      }
+      
+      time2 <- Sys.time()
+      
+      max.time <- as.difftime(pmax(50, splitter),
+                              units = "secs")
+      
+      if ((time2 - time1) > max.time) {
+        res2_split <- NULL
+        if(progress) message(
+          "file",
+          x,
+          "took longer then expected")
+        break
+      }
+    }
+    if (is.null(res2_split)) {
+      tms <- 0
+      while(tms < attempts && is.null(res2_split)){
+        if(progress) message(
+          "reattempting file",
+          x)
+        file_up <-  httr::upload_file(x)
+        
+        res <- httr::POST(configfile = cfg_file,
+                          url = url,
+                          encode = "multipart",
+                          body = list(configfile = cfg_file,
+                                      uploadfile = file_up,
+                                      format = "short"))
+        if(!grepl("jobid=", res$url)){
+          stop("something went wrong on server side")
+        }
+        res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
+                   "",
+                   res$url,
+                   fixed = TRUE)
+        
+        res <- sub("&wait=20",
+                   "",
+                   res,
+                   fixed = TRUE)
+        jobid <- res
+        
+        time1 <- Sys.time()
+        
+        repeat {
+          res2 <- httr::GET(url = url,
+                            query = list(jobid = jobid,
+                                         wait = "20"))
+          bad <- xml2::xml_text(
             xml2::xml_find_all(
               httr::content(res2,
                             as = "parsed"),
-              "//li")
+              "//head")
           )
-          stop(paste0(prt, ". Problem in file: ", "temp_",
-                      i, ".fa"),
-               call. = FALSE)
-        }
-        res2 <- as.character(
-          xml2::xml_find_all(
-            httr::content(res2,
-                          as = "parsed"),
-            xpath = "//div[@ng-controller='ResultsCtrl']")
-        )
-        res2_split <- unlist(
-          strsplit(res2,
-                   "\n")
-        )
-        Sys.sleep(1)
-        if (any(grepl("Prediction summary", res2_split))) {
-          break
-        }
-        
-        time2 <- Sys.time()
-        
-        max.time <- as.difftime(pmax(50, splitter),
-                                units = "secs")
-        
-        if ((time2 - time1) > max.time) {
-          res2_split <- NULL
-          if(progress) message(
-            "file",
-            x[i],
-            "took longer then expected")
-          break
-        }
-      }
-      if (is.null(res2_split)) {
-        tms <- 0
-        while(tms < attempts && is.null(res2_split)){
-          if(progress) message(
-            "reattempting file",
-            x[i])
-          file_up <-  httr::upload_file(x[i])
-
-          res <- httr::POST(configfile = cfg_file,
-                            url = url,
-                            encode = "multipart",
-                            body = list(configfile = cfg_file,
-                                        uploadfile = file_up,
-                                        format = "short"))
-
-          if(!grepl("jobid=", res$url)){
-            stop("something went wrong on server side")
-          }
-          res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
-                     "",
-                     res$url,
-                     fixed = TRUE)
-          
-          res <- sub("&wait=20",
-                     "",
-                     res,
-                     fixed = TRUE)
-          jobidi <- res
-          
-          time1 <- Sys.time()
-          
-          repeat {
-            res2 <- httr::GET(url = url,
-                              query = list(jobid = jobidi,
-                                           wait = "20"))
-            bad <- xml2::xml_text(
+          if (grepl("Illegal", bad)) {
+            prt <- xml2::xml_text(
               xml2::xml_find_all(
                 httr::content(res2,
                               as = "parsed"),
-                "//head")
+                "//li")
             )
-            if (grepl("Illegal", bad)) {
-              prt <- xml2::xml_text(
-                xml2::xml_find_all(
-                  httr::content(res2,
-                                as = "parsed"),
-                  "//li")
-              )
-              stop(paste0(prt,
-                          ". Problem in file: ",
-                          "temp_",
-                          i,
-                          ".fa"),
-                   call. = FALSE)
-            }
-            res2 <- as.character(
-              xml2::xml_find_all(
-                httr::content(res2,
-                              as = "parsed"),
-                xpath = "//div[@ng-controller='ResultsCtrl']")
-            )
-            res2_split <- unlist(
-              strsplit(res2,
-                       "\n")
-            )
-            Sys.sleep(1)
-            if (any(grepl("Prediction summary", res2_split))) {
-              break
-            }
-            
-            time2 <- Sys.time()
-            
-            max.time <- as.difftime(pmax(100, splitter * 1.5),
-                                    units = "secs")
-            
-            if ((time2 - time1) > max.time) {
-              res2_split <- NULL
-              break
-            }
+            stop(paste0(prt,
+                        ". Problem in file: ",
+                        "temp_",
+                        i,
+                        ".fa"),
+                 call. = FALSE)
           }
-          tms <- tms + 1
+          res2 <- as.character(
+            xml2::xml_find_all(
+              httr::content(res2,
+                            as = "parsed"),
+              xpath = "//div[@ng-controller='ResultsCtrl']")
+          )
+          res2_split <- unlist(
+            strsplit(res2,
+                     "\n")
+          )
+          Sys.sleep(1)
+          if (any(grepl("Prediction summary", res2_split))) {
+            break
+          }
+          
+          time2 <- Sys.time()
+          
+          max.time <- as.difftime(pmax(100, splitter * 1.5),
+                                  units = "secs")
+          
+          if ((time2 - time1) > max.time) {
+            res2_split <- NULL
+            break
+          }
         }
+        tms <- tms + 1
       }
-      if (is.null(res2_split)){
-        output <- do.call(rbind,
-                          output)
-        if(progress){
-          utils::setTxtProgressBar(pb,
-                                   for_pb)
-          close(pb)
-        }
-        warning(
-          "maximum attempts reached at",
-          x[i],
-          "returning finished queries",
-          call. = FALSE)
-        return(output)
-      }
-      unlink(x[i])
-      url_dll <- paste0("https://services.healthtech.dtu.dk/services/NetGPI-1.1/tmp/",
-                        jobidi,
-                        "/output_protein_type.txt")
-
-      res2_split <- read.table(file = url_dll,
-                               header = FALSE,
-                               stringsAsFactors = FALSE,
-                               sep = "\t")
-      res2_split <- res2_split[,1:5]
-      
-      colnames(res2_split) <- c("id",
-                                "length",
-                                "is.gpi",
-                                "omega_site",
-                                "likelihood")
-      
-      res2_split[,3] <- !grepl("Not",
-                               res2_split[,3],
-                               fixed = TRUE)
-      res2_split[,2] <- as.integer(res2_split[,2])
-      
-      res2_split[grepl("-",
-                       res2_split[,4],
-                       fixed = TRUE),4] <- "0"
-      res2_split[,4] <- as.integer(res2_split[,4])
-      res2_split[res2_split[,4] == 0,4] <- NA_integer_
-      res2_split[,5] <- as.numeric(res2_split[,5])
+    }
+    if (is.null(res2_split)){
+      output <- do.call(rbind,
+                        output)
       if(progress){
         utils::setTxtProgressBar(pb,
-                                 floor(i/2) + 5 + (10 * (k - 1)))
+                                 for_pb)
+        close(pb)
       }
-      output[[((k*10)-10)+i]] <- res2_split
+      warning(
+        "maximum attempts reached at",
+        x,
+        "returning finished queries",
+        call. = FALSE)
+      return(output)
     }
+    unlink(x)
+    url_dll <- paste0("https://services.healthtech.dtu.dk/services/NetGPI-1.1/tmp/",
+                      jobid,
+                      "/output_protein_type.txt")
+    
+    res2_split <- read.table(file = url_dll,
+                             header = FALSE,
+                             stringsAsFactors = FALSE,
+                             sep = "\t")
+    res2_split <- res2_split[,1:5]
+    
+    colnames(res2_split) <- c("id",
+                              "length",
+                              "is.gpi",
+                              "omega_site",
+                              "likelihood")
+    
+    res2_split[,3] <- !grepl("Not",
+                             res2_split[,3],
+                             fixed = TRUE)
+    res2_split[,2] <- as.integer(res2_split[,2])
+    
+    res2_split[grepl("-",
+                     res2_split[,4],
+                     fixed = TRUE),4] <- "0"
+    res2_split[,4] <- as.integer(res2_split[,4])
+    res2_split[res2_split[,4] == 0,4] <- NA_integer_
+    res2_split[,5] <- as.numeric(res2_split[,5])
+    
+    if(progress){
+      utils::setTxtProgressBar(pb,
+                               k)
+    }
+    output[[k]] <- res2_split
   }
   if(progress){
     utils::setTxtProgressBar(pb,

@@ -1,6 +1,8 @@
 ragp 0.3.2.0002
 ===============
 
+* `get_netGPI()` now now runs one job at a time. 
+
 * `get_netGPI()` splitter argument default value has been changed to 2500.
 
 * `get_targetp()` has been fixed to work with `org_type = "non_plant"`.  
