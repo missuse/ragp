@@ -10,3 +10,4 @@
 ^index\.Rmd$
 ^vignettes/pkgdown$
 ^\.github$
+^codecov\.yml$

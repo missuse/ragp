@@ -13,7 +13,7 @@
 \usage{
 get_netGPI(data, ...)
 
-\method{get_netGPI}{character}(data, splitter = 250L, attempts = 2, progress = FALSE, ...)
+\method{get_netGPI}{character}(data, splitter = 2500L, attempts = 2, progress = FALSE, ...)
 
 \method{get_netGPI}{data.frame}(data, sequence, id, ...)
 
@@ -26,7 +26,7 @@ get_netGPI(data, ...)
 
 \item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 
-\item{splitter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 250. Change only in case of a server side error. Accepted values are in range of 1 to 5000.}
+\item{splitter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 2500. Change only in case of a server side error. Accepted values are in range of 1 to 5000.}
 
 \item{attempts}{Integer, number of attempts if server unresponsive, at default set to 2.}
 
@@ -52,13 +52,13 @@ NetGPI server offers GPI Anchor predictions
 This function creates temporary files in the working directory.
 }
 \examples{
-\dontrun{
+
 library(ragp)
 netGPI_pred <- get_netGPI(data = at_nsp[1:10,],
                           sequence,
                           Transcript.id)
 netGPI_pred
-}
+
 }
 \references{
 Gislason MH. Nielsen H. Armenteros JA. AR Johansen AR. (2019) Prediction of GPI-Anchored proteins with pointer neural networks. bioRxiv. doi: https://doi.org/10.1101/838680

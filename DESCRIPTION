@@ -31,7 +31,8 @@ Suggests:
     knitr,
     rmarkdown,
     dplyr,
-    eulerr
+    eulerr,
+    covr
 URL: https://github.com/missuse/ragp
 BugReports: https://github.com/missuse/ragp/issues
 Encoding: UTF-8
