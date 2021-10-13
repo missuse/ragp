@@ -471,7 +471,7 @@ get_targetp.character <-   function(data,
                    "\n")
         )
         Sys.sleep(1)
-        if (any(grepl("cTP", res2_split))){
+        if (any(grepl("mTP", res2_split))){
           break
         }
         
@@ -564,7 +564,7 @@ get_targetp.character <-   function(data,
                        "\n")
             )
             Sys.sleep(1)
-            if (any(grepl("cTP", res2_split))){
+            if (any(grepl("mTP", res2_split))){
               break
             }
             
@@ -598,7 +598,7 @@ get_targetp.character <-   function(data,
         return(output)
       }
       unlink(x[i])
-      res2_split <- res2_split[(which(grepl("cTP",
+      res2_split <- res2_split[(which(grepl("mTP",
                                             res2_split))[1]+2):(which(grepl("cutoff",
                                                                             res2_split))[1] - 2)]
       res2_split <- strsplit(res2_split,
@@ -610,6 +610,7 @@ get_targetp.character <-   function(data,
       res2_split <- as.data.frame(res2_split,
                                   stringsAsFactors = FALSE)
       
+      if(org_type == "plant"){
       colnames(res2_split) <- c("Name",
                                 "Len",
                                 "cTP",
@@ -619,6 +620,18 @@ get_targetp.character <-   function(data,
                                 "Loc",
                                 "RC",
                                 "TPlen")
+      }
+      
+    if(org_type == "non_plant"){
+      colnames(res2_split) <- c("Name",
+                                "Len",
+                                "mTP",
+                                "SP",
+                                "other",
+                                "Loc",
+                                "RC",
+                                "TPlen")
+    }
       
       if(progress){
         utils::setTxtProgressBar(pb,
