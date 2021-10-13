@@ -6,7 +6,7 @@
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
-#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 250. Change only in case of a server side error. Accepted values are in range of 1 to 5000.
+#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 2500. Change only in case of a server side error. Accepted values are in range of 1 to 5000.
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
 #' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
@@ -49,16 +49,16 @@ get_netGPI <- function(data, ...){
 #' @export
 
 get_netGPI.character <- function(data,
-                                 splitter = 250L,
+                                 splitter = 2500L,
                                  attempts = 2,
                                  progress = FALSE,
                                  ...){
   if (missing(splitter)) {
-    splitter <- 250L
+    splitter <- 2500L
   }
   if (length(splitter) > 1){
-    splitter <- 250L
-    warning("splitter should be of length 1, setting to default: splitter = 250",
+    splitter <- 2500L
+    warning("splitter should be of length 1, setting to default: splitter = 2500",
             call. = FALSE)
   }
   if (!is.numeric(splitter)){
@@ -67,16 +67,16 @@ get_netGPI.character <- function(data,
             call. = FALSE)
   }
   if (is.na(splitter)){
-    splitter <- 250L
-    warning("splitter was set to NA, setting to default: splitter = 250",
+    splitter <- 2500L
+    warning("splitter was set to NA, setting to default: splitter = 2500",
             call. = FALSE)
   }
   if (is.numeric(splitter)) {
     splitter <- floor(splitter)
   }
   if (!(splitter %in% 1:5000)) {
-    splitter <- 250L
-    warning("Illegal splitter input, splitter will be set to 500",
+    splitter <- 2500L
+    warning("Illegal splitter input, splitter will be set to 2500",
             call. = FALSE)
   }
   if (length(attempts) > 1){

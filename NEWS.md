@@ -1,6 +1,8 @@
 ragp 0.3.2.0002
 ===============
 
+* `get_netGPI()` splitter argument default value has been changed to 2500.
+
 * `get_targetp()` has been fixed to work with `org_type = "non_plant"`.  
 
 * `get_espritz()` has been restored since Espritz server is again available at http://old.protein.bio.unipd.it/espritz/.  
