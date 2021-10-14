@@ -26,8 +26,8 @@ Imports:
     utils (>= 3.3),
     graphics (>= 3.3),
     ggplot2 (>= 2.2.1),
-    Biostrings (>= 2.6),
-	BiocGenerics (>= 0.3)
+    Biostrings,
+    BiocGenerics
 RoxygenNote: 7.1.1
 Suggests:
     protr,
@@ -40,6 +40,6 @@ URL: https://github.com/missuse/ragp
 BugReports: https://github.com/missuse/ragp/issues
 Encoding: UTF-8
 VignetteBuilder: knitr
-Remotes:
-    bioc::release/Biostrings
-	bioc::release/BiocGenerics
+Remotes: 
+    bioc::release/Biostrings,
+    bioc::release/BiocGenerics
