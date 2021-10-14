@@ -154,7 +154,7 @@
   tm_col <span class='op'>=</span> <span class='st'>"#EFC000FF"</span>,
   hyp <span class='op'>=</span> <span class='cn'>TRUE</span>,
   gpi <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"bigpi"</span>, <span class='st'>"predgpi"</span>, <span class='st'>"netgpi"</span>, <span class='st'>"none"</span><span class='op'>)</span>,
-  nsp <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"signalp"</span>, <span class='st'>"signal5"</span>, <span class='st'>"none"</span><span class='op'>)</span>,
+  nsp <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"signalp"</span>, <span class='st'>"signalp5"</span>, <span class='st'>"none"</span><span class='op'>)</span>,
   ag <span class='op'>=</span> <span class='cn'>TRUE</span>,
   tm <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"phobius"</span>, <span class='st'>"tmhmm"</span>, <span class='st'>"none"</span><span class='op'>)</span>,
   domain <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -208,7 +208,7 @@
     </tr>
     <tr>
       <th>nsp</th>
-      <td><p>A string indicating if <code><a href='get_signalp5.html'>get_signalp5</a></code> or <code><a href='get_signalp.html'>get_signalp</a></code> should eb used to obtain N-sp predictions. Alternatively a data frame containing three columns: a character column "id" indicating the protein id as from input, a logical column "is.signalp" and an integer column "sp.length". See <code><a href='get_signalp5.html'>get_signalp5</a></code> or <code><a href='get_signalp.html'>get_signalp</a></code> for details.</p></td>
+      <td><p>A string indicating if <code><a href='get_signalp5.html'>get_signalp5</a></code> (nsp = "signalp5") or <code><a href='get_signalp.html'>get_signalp</a></code> (nsp = "signalp") should be used to obtain N-sp predictions. Alternatively a data frame containing three columns: a character column "id" indicating the protein id as from input, a logical column "is.signalp" and an integer column "sp.length". See <code><a href='get_signalp5.html'>get_signalp5</a></code> or <code><a href='get_signalp.html'>get_signalp</a></code> for details.</p></td>
     </tr>
     <tr>
       <th>ag</th>
@@ -248,7 +248,7 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Appropriate arguments passed to <code><a href='get_signalp.html'>get_signalp</a></code>, <code><a href='get_espritz.html'>get_espritz</a></code>, <code><a href='predict_hyp.html'>predict_hyp</a></code>, <code><a href='get_hmm.html'>get_hmm</a></code> and <code><a href='scan_ag.html'>scan_ag</a></code>.</p></td>
+      <td><p>Appropriate arguments passed to <code><a href='get_signalp5.html'>get_signalp5</a></code>, <code><a href='get_signalp.html'>get_signalp</a></code>, <code><a href='get_espritz.html'>get_espritz</a></code>, <code><a href='predict_hyp.html'>predict_hyp</a></code>, <code><a href='get_hmm.html'>get_hmm</a></code> and <code><a href='scan_ag.html'>scan_ag</a></code>.</p></td>
     </tr>
     </table>
 
@@ -257,7 +257,9 @@
     <p>A ggplot2 plot object</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_signalp.html'>get_signalp</a></code> <code><a href='get_phobius.html'>get_phobius</a></code> <code><a href='get_hmm.html'>get_hmm</a></code> <code><a href='get_espritz.html'>get_espritz</a></code> <code><a href='predict_hyp.html'>predict_hyp</a></code> <code><a href='scan_ag.html'>scan_ag</a></code></p></div>
+    <div class='dont-index'>
+
+</div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/missuse/ragp'>ragp</a></span><span class='op'>)</span>
