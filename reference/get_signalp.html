@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5</span>
       </span>
     </div>
 
@@ -256,6 +256,7 @@
   <dt>Dmaxcut</dt><dd><p>Numeric, as from input, Dcut_noTM if SignalP-noTM network used and Dcut_TM if SignalP-TM network used</p></dd>
   <dt>Networks.used</dt><dd><p>Character, which network was used for the prediction: SignalP-noTM or SignalP-TM</p></dd>
   <dt>is.signalp</dt><dd><p>Logical, did SignalP predict the presence of a signal peptide</p></dd>
+  <dt>sp.length</dt><dd><p>Integer, length of the predicted signal peptide.</p></dd>
   
 </dl>
 
@@ -286,17 +287,17 @@
 #&gt; 8  AT2G33130.1 0.318       33 0.530       27 0.990       16 0.933 0.748     Y
 #&gt; 9  AT2G05520.1 0.633       24 0.782       24 0.990       16 0.966 0.881     Y
 #&gt; 10 AT2G05520.2 0.633       24 0.782       24 0.990       16 0.966 0.881     Y
-#&gt;    Dmaxcut Networks.used is.signalp
-#&gt; 1    0.450  SignalP-noTM      FALSE
-#&gt; 2    0.450  SignalP-noTM       TRUE
-#&gt; 3    0.450  SignalP-noTM       TRUE
-#&gt; 4    0.450  SignalP-noTM       TRUE
-#&gt; 5    0.500    SignalP-TM       TRUE
-#&gt; 6    0.450  SignalP-noTM       TRUE
-#&gt; 7    0.450  SignalP-noTM       TRUE
-#&gt; 8    0.450  SignalP-noTM       TRUE
-#&gt; 9    0.450  SignalP-noTM       TRUE
-#&gt; 10   0.450  SignalP-noTM       TRUE</div><div class='input'>
+#&gt;    Dmaxcut Networks.used is.signalp sp.length
+#&gt; 1    0.450  SignalP-noTM      FALSE        30
+#&gt; 2    0.450  SignalP-noTM       TRUE        23
+#&gt; 3    0.450  SignalP-noTM       TRUE        23
+#&gt; 4    0.450  SignalP-noTM       TRUE        23
+#&gt; 5    0.500    SignalP-TM       TRUE        26
+#&gt; 6    0.450  SignalP-noTM       TRUE        29
+#&gt; 7    0.450  SignalP-noTM       TRUE        29
+#&gt; 8    0.450  SignalP-noTM       TRUE        27
+#&gt; 9    0.450  SignalP-noTM       TRUE        24
+#&gt; 10   0.450  SignalP-noTM       TRUE        24</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

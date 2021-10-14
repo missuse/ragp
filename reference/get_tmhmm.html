@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Query NetGPI - 1.1 web server. — get_netGPI • ragp</title>
+<title>Query TMHMM-2.0 web server. — get_tmhmm • ragp</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Query NetGPI - 1.1 web server. — get_netGPI" />
-<meta property="og:description" content="NetGPI server offers GPI Anchor predictions" />
+<meta property="og:title" content="Query TMHMM-2.0 web server. — get_tmhmm" />
+<meta property="og:description" content="TMHMM server offers prediction of transmembrane helices in proteins" />
 
 
 
@@ -135,28 +135,28 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Query NetGPI - 1.1 web server.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/missuse/ragp/blob/master/R/get_netGPI.R'><code>R/get_netGPI.R</code></a></small>
-    <div class="hidden name"><code>get_netGPI.Rd</code></div>
+    <h1>Query TMHMM-2.0 web server.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/missuse/ragp/blob/master/R/get_tmhmm.R'><code>R/get_tmhmm.R</code></a></small>
+    <div class="hidden name"><code>get_tmhmm.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>NetGPI server offers GPI Anchor predictions</p>
+    <p>TMHMM server offers prediction of transmembrane helices in proteins</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_netGPI</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>get_tmhmm</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>get_netGPI</span><span class='op'>(</span><span class='va'>data</span>, splitter <span class='op'>=</span> <span class='fl'>2500L</span>, attempts <span class='op'>=</span> <span class='fl'>2</span>, progress <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>get_tmhmm</span><span class='op'>(</span><span class='va'>data</span>, splitter <span class='op'>=</span> <span class='fl'>2500L</span>, attempts <span class='op'>=</span> <span class='fl'>2</span>, progress <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>get_netGPI</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>get_tmhmm</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>get_netGPI</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>get_tmhmm</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>get_netGPI</span><span class='op'>(</span>data <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'>get_tmhmm</span><span class='op'>(</span>data <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -171,7 +171,7 @@
     </tr>
     <tr>
       <th>splitter</th>
-      <td><p>An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 2500. Change only in case of a server side error. Accepted values are in range of 1 to 5000.</p></td>
+      <td><p>An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Default is 2500. Change only in case of a server side error. Accepted values are in range of 1 to 10000.</p></td>
     </tr>
     <tr>
       <th>attempts</th>
@@ -179,7 +179,7 @@
     </tr>
     <tr>
       <th>progress</th>
-      <td><p>Boolean, whether to show the progress bar, at default set to FALSE.</p></td>
+      <td><p>Boolean, whether to show messages of the job id for each batch. Default is FALSE</p></td>
     </tr>
     <tr>
       <th>sequence</th>
@@ -193,45 +193,45 @@
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='https://services.healthtech.dtu.dk/service.php?NetGPI-1.1'>https://services.healthtech.dtu.dk/service.php?NetGPI-1.1</a></p>
+    <p><a href='https://services.healthtech.dtu.dk/service.php?TMHMM-2.0'>https://services.healthtech.dtu.dk/service.php?TMHMM-2.0</a></p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data frame with columns:</p><dl>
-  <dt>id</dt><dd><p>Character, as from input</p></dd>
+  <dt>id</dt><dd><p>Character, name of the submitted sequence.</p></dd>
   <dt>length</dt><dd><p>Integer, length of the protein sequence</p></dd>
-  <dt>is.gpi</dt><dd><p>Logical, is the protein predicted to be GPI anchored.</p></dd>
-  <dt>omega_site</dt><dd><p>Integer, indicating the sequence position of the omega-site.</p></dd>
-  <dt>likelihood</dt><dd><p>Numeric, likelihood of the prediction.</p></dd>
+  <dt>ExpAA</dt><dd><p>Numeric, the expected number of amino acids in transmembrane helices.</p></dd>
+  <dt>First60</dt><dd><p>Numeric, the expected number of amino acids in transmembrane helices in the first 60 amino acids of the protein.</p></dd>
+  <dt>tm</dt><dd><p>Integer, the number of predicted transmembrane segments.</p></dd>
+  <dt>prediction</dt><dd><p>Character string, predicted topology of the protein.</p></dd>
 </dl>
 
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>This function creates temporary files in the working directory.</p>
+    <p>This function creates temporary files in the working directory. If something goes wrong during communication with the server and progress was set to TRUE, predictions can be obtained using the web address `paste("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=", jobid, "&amp;wait=20", sep = "")`.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Gislason MH. Nielsen H. Armenteros JA. AR Johansen AR. (2019) Prediction of GPI-Anchored proteins with pointer neural networks. bioRxiv. doi: https://doi.org/10.1101/838680</p>
+    <p>Krogh A, Larsson B, von Heijne G, Sonnhammer EL (2001) Predicting transmembrane protein topology with a hidden Markov model: application to complete genomes. J Mol Biol 305(3):567-80.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_big_pi.html'>get_big_pi</a></code> <code><a href='get_pred_gpi.html'>get_pred_gpi</a></code></p></div>
+    <div class='dont-index'><p><code><a href='get_phobius.html'>get_phobius</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/missuse/ragp'>ragp</a></span><span class='op'>)</span>
-<span class='va'>netGPI_pred</span> <span class='op'>&lt;-</span> <span class='fu'>get_netGPI</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>,<span class='op'>]</span>,
-                          <span class='va'>sequence</span>,
-                          <span class='va'>Transcript.id</span><span class='op'>)</span>
-<span class='va'>netGPI_pred</span>
-</div><div class='output co'>#&gt;             id length is.gpi omega_site likelihood
-#&gt; 1  ATCG00660.1    117  FALSE         NA      0.996
-#&gt; 2  AT2G43600.1    273  FALSE         NA      0.992
-#&gt; 3  AT2G28410.1    115   TRUE         95      0.321
-#&gt; 4  AT2G22960.1    184  FALSE         NA      0.993
-#&gt; 5  AT2G19580.1    270  FALSE         NA      0.988
-#&gt; 6  AT2G19690.2    148  FALSE         NA      0.992
-#&gt; 7  AT2G19690.1    147  FALSE         NA      0.994
-#&gt; 8  AT2G33130.1    103  FALSE         NA      0.987
-#&gt; 9  AT2G05520.1    145  FALSE         NA      0.993
-#&gt; 10 AT2G05520.2    138  FALSE         NA      0.993</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/missuse/ragp'>ragp</a></span><span class='op'>)</span>
+<span class='va'>tmhmm_pred</span> <span class='op'>&lt;-</span> <span class='fu'>get_tmhmm</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>,<span class='op'>]</span>,
+                        <span class='va'>sequence</span>,
+                        <span class='va'>Transcript.id</span><span class='op'>)</span>
+<span class='va'>tmhmm_pred</span>
+</div><div class='output co'>#&gt;             id length ExpAA First60 tm                 prediction
+#&gt; 1  ATCG00660.1    117 12.93    0.59  0                          i
+#&gt; 2  AT2G43600.1    273  6.17    6.13  0                          o
+#&gt; 3  AT2G28410.1    115 12.94    9.53  0                          o
+#&gt; 4  AT2G22960.1    184  0.01    0.01  0                          o
+#&gt; 5  AT2G19580.1    270 90.00   41.19  4 i9-31o41-63i70-92o231-253i
+#&gt; 6  AT2G19690.2    148 21.89   19.81  1                     i7-26o
+#&gt; 7  AT2G19690.1    147 20.76   19.79  1                     i7-26o
+#&gt; 8  AT2G33130.1    103 20.43   20.43  1                     i7-26o
+#&gt; 9  AT2G05520.1    145 20.20   20.20  1                     i7-29o
+#&gt; 10 AT2G05520.2    138 20.28   20.27  1                     i7-29o</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5</span>
       </span>
     </div>
 
@@ -154,9 +154,9 @@
   tm_col <span class='op'>=</span> <span class='st'>"#EFC000FF"</span>,
   hyp <span class='op'>=</span> <span class='cn'>TRUE</span>,
   gpi <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"bigpi"</span>, <span class='st'>"predgpi"</span>, <span class='st'>"netgpi"</span>, <span class='st'>"none"</span><span class='op'>)</span>,
-  nsp <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  nsp <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"signalp"</span>, <span class='st'>"signal5"</span>, <span class='st'>"none"</span><span class='op'>)</span>,
   ag <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  tm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  tm <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"phobius"</span>, <span class='st'>"tmhmm"</span>, <span class='st'>"none"</span><span class='op'>)</span>,
   domain <span class='op'>=</span> <span class='cn'>TRUE</span>,
   disorder <span class='op'>=</span> <span class='cn'>FALSE</span>,
   hyp_scan <span class='op'>=</span> <span class='kw'>if</span> <span class='op'>(</span><span class='va'>ag</span> <span class='op'>==</span> <span class='cn'>TRUE</span> <span class='op'>&amp;&amp;</span> <span class='va'>hyp</span> <span class='op'>==</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='cn'>TRUE</span> <span class='kw'>else</span> <span class='cn'>FALSE</span>,
@@ -204,11 +204,11 @@
     </tr>
     <tr>
       <th>gpi</th>
-      <td><p>A string indicating if <code><a href='get_big_pi.html'>get_big_pi</a></code> (gpi = "bigpi"), <code><a href='get_pred_gpi.html'>get_pred_gpi</a></code> (gpi = "predgpi") or <code><a href='get_netGPI.html'>get_netGPI</a></code> (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi". Alternatively the output data frame of the mentioned functions (called with simplify = TRUE) can be supplied.</p></td>
+      <td><p>A string indicating if <code><a href='get_big_pi.html'>get_big_pi</a></code> (gpi = "bigpi"), <code><a href='get_pred_gpi.html'>get_pred_gpi</a></code> (gpi = "predgpi") or <code><a href='get_netGPI.html'>get_netGPI</a></code> (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "netgpi". Alternatively the output data frame of the mentioned functions (called with simplify = TRUE) can be supplied.</p></td>
     </tr>
     <tr>
       <th>nsp</th>
-      <td><p>Boolean, should the N-terminal signal peptide predictions obtained using <code><a href='get_signalp.html'>get_signalp</a></code> be plotted. Alternatively the output data frame from <code><a href='get_signalp.html'>get_signalp</a></code> can be supplied.</p></td>
+      <td><p>A string indicating if <code><a href='get_signalp5.html'>get_signalp5</a></code> or <code><a href='get_signalp.html'>get_signalp</a></code> should eb used to obtain N-sp predictions. Alternatively a data frame containing three columns: a character column "id" indicating the protein id as from input, a logical column "is.signalp" and an integer column "sp.length". See <code><a href='get_signalp5.html'>get_signalp5</a></code> or <code><a href='get_signalp.html'>get_signalp</a></code> for details.</p></td>
     </tr>
     <tr>
       <th>ag</th>
@@ -216,7 +216,7 @@
     </tr>
     <tr>
       <th>tm</th>
-      <td><p>Boolean, should the transmembrane region predictions obtained using <code><a href='get_phobius.html'>get_phobius</a></code> be plotted. Alternatively the output data frame from <code><a href='get_phobius.html'>get_phobius</a></code> can be supplied.</p></td>
+      <td><p>A string indicating if <code><a href='get_phobius.html'>get_phobius</a></code> (tm = "phobius") or <code><a href='get_tmhmm.html'>get_tmhmm</a></code> (tm = "tmhmm") should be used to obtain transmembrane region predictions. Alternatively a data frame with two columns:  a character column "id" indicating the protein id as from input and a "prediction" column containing the topology of the transmembrane regions (example "42o81-101i108-126o"). To turn off tm prediction use tm = "none".</p></td>
     </tr>
     <tr>
       <th>domain</th>

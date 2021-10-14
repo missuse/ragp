@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5</span>
       </span>
     </div>
 
@@ -189,12 +189,13 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data frame with columns:</p><dl>
-<dt>Name</dt><dd><p>Character, name of the submitted sequence.</p></dd>
+<dt>id</dt><dd><p>Character, name of the submitted sequence.</p></dd>
 <dt>tm</dt><dd><p>Integer, the number of predicted transmembrane segments.</p></dd>
 <dt>sp</dt><dd><p>Character, Y/0 indicator if a signal peptide was predicted or not.</p></dd>
 <dt>prediction</dt><dd><p>Character string, predicted topology of the protein.</p></dd>
 <dt>cut_site</dt><dd><p>Integer, first amino acid after removal of the signal peptide</p></dd>
 <dt>is.phobius</dt><dd><p>Logical, did Phobius predict the presence of a signal peptide</p></dd>
+<dt>sp.length</dt><dd><p>Integer, length of the predicted signal peptide.</p></dd>
 
 </dl>
 
@@ -219,7 +220,7 @@
                             <span class='va'>sequence</span>,
                             <span class='va'>Transcript.id</span><span class='op'>)</span>
 <span class='va'>phobius_pred</span>
-</div><div class='output co'>#&gt;           Name tm sp                       prediction cut_site is.phobius
+</div><div class='output co'>#&gt;             id tm sp                       prediction cut_site is.phobius
 #&gt; 1  ATCG00660.1  0  Y                    n17-24c29/30o       30       TRUE
 #&gt; 2  AT2G43600.1  0  Y                     n6-17c22/23o       23       TRUE
 #&gt; 3  AT2G28410.1  0  Y                     n6-17c22/23o       23       TRUE
@@ -239,7 +240,28 @@
 #&gt; 17 AT2G37390.1  0  Y                     n6-16c24/25o       25       TRUE
 #&gt; 18 AT2G37390.2  0  Y                     n6-16c24/25o       25       TRUE
 #&gt; 19 AT2G35250.1  0  Y                     n5-16c21/22o       22       TRUE
-#&gt; 20 AT2G38390.1  0  Y                     n7-22c29/30o       30       TRUE</div><div class='input'>
+#&gt; 20 AT2G38390.1  0  Y                     n7-22c29/30o       30       TRUE
+#&gt;    sp.length
+#&gt; 1         29
+#&gt; 2         22
+#&gt; 3         22
+#&gt; 4         20
+#&gt; 5         26
+#&gt; 6         28
+#&gt; 7         28
+#&gt; 8         26
+#&gt; 9         23
+#&gt; 10        23
+#&gt; 11        23
+#&gt; 12        23
+#&gt; 13        23
+#&gt; 14        23
+#&gt; 15        24
+#&gt; 16        28
+#&gt; 17        24
+#&gt; 18        24
+#&gt; 19        21
+#&gt; 20        29</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
