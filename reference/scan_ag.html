@@ -169,14 +169,17 @@ Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine a
   simplify <span class='op'>=</span> <span class='cn'>TRUE</span>,
   tidy <span class='op'>=</span> <span class='cn'>FALSE</span>,
   <span class='va'>...</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span>
+
+<span class='co'># S3 method for AAStringSet</span>
+<span class='fu'>scan_ag</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from <code><a href='https://rdrr.io/pkg/seqinr/man/read.fasta.html'>read.fasta</a></code> call. Should be left blank if vectors are provided to sequence and id arguments.</p></td>
+      <td><p>A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from <code><a href='https://rdrr.io/pkg/seqinr/man/read.fasta.html'>read.fasta</a></code> call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.</p></td>
     </tr>
     <tr>
       <th>...</th>

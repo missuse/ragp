@@ -150,11 +150,11 @@
 <li>added new function <code><a href="../reference/get_tmhmm.html">get_tmhmm()</a></code> which queries TMHMM v. 2.0 web server (<a href="http://www.cbs.dtu.dk/services/TMHMM/" class="uri">http://www.cbs.dtu.dk/services/TMHMM/</a>)<br>
 </li>
 <li>
-<code><a href="../reference/plot_prot.html">plot_prot()</a></code> <code>nsp</code> argument can now be <code>"signalp"</code>, <code>"signalp5"</code> or <code>"none"</code>. Default is <code>"signalp5"</code>. This argument determines if <code><a href="../reference/get_signalp.html">get_signalp()</a></code> or <code><a href="../reference/get_signalp5.html">get_signalp5()</a></code> are used for N-sp prediction. <strong>BREAKING CHANGE</strong>
-</li>
+<code><a href="../reference/plot_prot.html">plot_prot()</a></code> <code>nsp</code> argument can now be <code>"signalp"</code>, <code>"signalp5"</code> or <code>"none"</code>. Default is <code>"signalp5"</code>. This argument determines if <code><a href="../reference/get_signalp.html">get_signalp()</a></code> or <code><a href="../reference/get_signalp5.html">get_signalp5()</a></code> are used for N-sp prediction.</li>
 <li>
-<code><a href="../reference/plot_prot.html">plot_prot()</a></code> <code>tm</code> argument can now be <code>"phobius"</code>, <code>"tmhmm"</code> or <code>"none"</code>. Default is <code>"phobius"</code>. This argument determines if <code><a href="../reference/get_phobius.html">get_phobius()</a></code> or <code><a href="../reference/get_tmhmm.html">get_tmhmm()</a></code> are used for TM prediction. <strong>BREAKING CHANGE</strong>
+<code><a href="../reference/plot_prot.html">plot_prot()</a></code> <code>tm</code> argument can now be <code>"phobius"</code>, <code>"tmhmm"</code> or <code>"none"</code>. Default is <code>"phobius"</code>. This argument determines if <code><a href="../reference/get_phobius.html">get_phobius()</a></code> or <code><a href="../reference/get_tmhmm.html">get_tmhmm()</a></code> are used for TM prediction.<br>
 </li>
+<li>all <code>get_*</code> and <code>scan_*</code> functions, as well as <code><a href="../reference/maab.html">maab()</a></code> now work with <code>AAStringSet</code> class objects. <a href='https://github.com/missuse/ragp/issues/5'>#5</a></li>
 </ul>
 </div>
 <div id="bug-fixes-and-improvements" class="section level2">
