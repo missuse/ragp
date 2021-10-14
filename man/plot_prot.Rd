@@ -14,9 +14,9 @@ plot_prot(
   tm_col = "#EFC000FF",
   hyp = TRUE,
   gpi = c("bigpi", "predgpi", "netgpi", "none"),
-  nsp = TRUE,
+  nsp = c("signalp", "signal5", "none"),
   ag = TRUE,
-  tm = TRUE,
+  tm = c("phobius", "tmhmm", "none"),
   domain = TRUE,
   disorder = FALSE,
   hyp_scan = if (ag == TRUE && hyp == TRUE) TRUE else FALSE,
@@ -44,13 +44,13 @@ plot_prot(
 
 \item{hyp}{Boolean, should hydroxyprolines be plotted.}
 
-\item{gpi}{A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi"), \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") or \code{\link[ragp]{get_netGPI}} (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi". Alternatively the output data frame of the mentioned functions (called with simplify = TRUE) can be supplied.}
+\item{gpi}{A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi"), \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") or \code{\link[ragp]{get_netGPI}} (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "netgpi". Alternatively the output data frame of the mentioned functions (called with simplify = TRUE) can be supplied.}
 
-\item{nsp}{Boolean, should the N-terminal signal peptide predictions obtained using \code{\link[ragp]{get_signalp}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_signalp}} can be supplied.}
+\item{nsp}{A string indicating if \code{\link[ragp]{get_signalp5}} or \code{\link[ragp]{get_signalp}} should eb used to obtain N-sp predictions. Alternatively a data frame containing three columns: a character column "id" indicating the protein id as from input, a logical column "is.signalp" and an integer column "sp.length". See \code{\link[ragp]{get_signalp5}} or \code{\link[ragp]{get_signalp}} for details.}
 
 \item{ag}{Boolean, should the AG glycomodul spans be plotted.}
 
-\item{tm}{Boolean, should the transmembrane region predictions obtained using \code{\link[ragp]{get_phobius}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_phobius}} can be supplied.}
+\item{tm}{A string indicating if \code{\link[ragp]{get_phobius}} (tm = "phobius") or \code{\link[ragp]{get_tmhmm}} (tm = "tmhmm") should be used to obtain transmembrane region predictions. Alternatively a data frame with two columns:  a character column "id" indicating the protein id as from input and a "prediction" column containing the topology of the transmembrane regions (example "42o81-101i108-126o"). To turn off tm prediction use tm = "none".}
 
 \item{domain}{Boolean, should the domain predictions obtained using \code{\link[ragp]{get_hmm}}  be plotted. Alternatively the output data frame from \code{\link[ragp]{get_hmm}} can be supplied.}
 

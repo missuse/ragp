@@ -11,12 +11,13 @@
 #'
 #' @return  A data frame with columns:
 #' \describe{
-#' \item{Name}{Character, name of the submitted sequence.}
+#' \item{id}{Character, name of the submitted sequence.}
 #' \item{tm}{Integer, the number of predicted transmembrane segments.}
 #' \item{sp}{Character, Y/0 indicator if a signal peptide was predicted or not.}
 #' \item{prediction}{Character string, predicted topology of the protein.}
 #' \item{cut_site}{Integer, first amino acid after removal of the signal peptide}
 #' \item{is.phobius}{Logical, did Phobius predict the presence of a signal peptide}
+#' \item{sp.length}{Integer, length of the predicted signal peptide.}
 #'}
 #'
 #' @details
@@ -120,7 +121,7 @@ get_phobius.character <- function(data,
                    res)
     res <- as.data.frame(res,
                          stringsAsFactors = FALSE)
-    colnames(res) <- c("Name",
+    colnames(res) <- c("id",
                        "tm",
                        "sp",
                        "prediction")
@@ -135,10 +136,13 @@ get_phobius.character <- function(data,
   }
   collected_res <- do.call(rbind,
                            collected_res)
-  collected_res$cut_site <- stringr::str_extract(
-    collected_res$prediction,
-    "(?<=/)\\d+")
+  collected_res$cut_site <- as.integer(
+    stringr::str_extract(
+      collected_res$prediction,
+      "(?<=/)\\d+")
+  )
   collected_res$is.phobius <- collected_res$sp == "Y"
+  collected_res$sp.length <- collected_res$cut_site - 1
   return(collected_res)
 }
 

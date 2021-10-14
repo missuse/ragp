@@ -34,6 +34,7 @@
 #'   \item{Dmaxcut}{Numeric, as from input, Dcut_noTM if SignalP-noTM network used and Dcut_TM if SignalP-TM network used}
 #'   \item{Networks.used}{Character, which network was used for the prediction: SignalP-noTM or SignalP-TM}
 #'   \item{is.signalp}{Logical, did SignalP predict the presence of a signal peptide}
+#'   \item{sp.length}{Integer, length of the predicted signal peptide.}
 #'   }
 #'
 #' @note This function creates temporary files in the working directory.
@@ -538,6 +539,15 @@ get_signalp.character <- function(data,
                                 "is.sp",
                                 "Dmaxcut",
                                 "Networks.used")
+      res2_split$Ymax.pos <- as.integer(as.character(res2_split$Ymax.pos))
+      res2_split$Cmax.pos <- as.integer(as.character(res2_split$Cmax.pos)) 
+      res2_split$Smax.pos <- as.integer(as.character(res2_split$Smax.pos)) 
+      res2_split$Cmax <- as.numeric(as.character(res2_split$Cmax))
+      res2_split$Ymax <- as.numeric(as.character(res2_split$Ymax)) 
+      res2_split$Smax <- as.numeric(as.character(res2_split$Smax)) 
+      res2_split$Smean <- as.numeric(as.character(res2_split$Smean)) 
+      res2_split$Dmean <- as.numeric(as.character(res2_split$Dmean)) 
+      
       if(progress){
         utils::setTxtProgressBar(pb,
                                  floor(i/2) + 5 + (10 * (k - 1)))
@@ -555,6 +565,7 @@ get_signalp.character <- function(data,
                     output)
   
   output$is.signalp <- output$is.sp == "Y"
+  output$sp.length <- output$Ymax.pos
   return(output)
 }
 

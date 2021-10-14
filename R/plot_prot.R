@@ -10,10 +10,10 @@
 #' @param ag_col Plotting color of the AG glycomodul spans. At default set to: '#E5E5E5FF'.
 #' @param tm_col Plotting color of the transmembrane regions. At default set to: '#EFC000FF'.
 #' @param hyp Boolean, should hydroxyprolines be plotted.
-#' @param gpi A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi"), \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") or \code{\link[ragp]{get_netGPI}} (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "bigpi". Alternatively the output data frame of the mentioned functions (called with simplify = TRUE) can be supplied.
-#' @param nsp Boolean, should the N-terminal signal peptide predictions obtained using \code{\link[ragp]{get_signalp}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_signalp}} can be supplied. 
+#' @param gpi A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi"), \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") or \code{\link[ragp]{get_netGPI}} (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "netgpi". Alternatively the output data frame of the mentioned functions (called with simplify = TRUE) can be supplied.
+#' @param nsp A string indicating if \code{\link[ragp]{get_signalp5}} or \code{\link[ragp]{get_signalp}} should eb used to obtain N-sp predictions. Alternatively a data frame containing three columns: a character column "id" indicating the protein id as from input, a logical column "is.signalp" and an integer column "sp.length". See \code{\link[ragp]{get_signalp5}} or \code{\link[ragp]{get_signalp}} for details.
 #' @param ag Boolean, should the AG glycomodul spans be plotted.
-#' @param tm Boolean, should the transmembrane region predictions obtained using \code{\link[ragp]{get_phobius}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_phobius}} can be supplied. 
+#' @param tm A string indicating if \code{\link[ragp]{get_phobius}} (tm = "phobius") or \code{\link[ragp]{get_tmhmm}} (tm = "tmhmm") should be used to obtain transmembrane region predictions. Alternatively a data frame with two columns:  a character column "id" indicating the protein id as from input and a "prediction" column containing the topology of the transmembrane regions (example "42o81-101i108-126o"). To turn off tm prediction use tm = "none".
 #' @param domain Boolean, should the domain predictions obtained using \code{\link[ragp]{get_hmm}}  be plotted. Alternatively the output data frame from \code{\link[ragp]{get_hmm}} can be supplied.
 #' @param disorder Boolean, should disordered region predictions obtained using \code{\link[ragp]{get_espritz}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_espritz}} (called with simplify = TRUE) can be supplied.
 #' @param dom_sort One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.
@@ -88,9 +88,9 @@ plot_prot <- function(sequence,
                       tm_col = "#EFC000FF",
                       hyp = TRUE,
                       gpi = c("bigpi", "predgpi", "netgpi", "none"),
-                      nsp = TRUE,
+                      nsp = c("signalp", "signal5", "none"),
                       ag = TRUE,
-                      tm = TRUE,
+                      tm = c('phobius', "tmhmm", "none"),
                       domain = TRUE,
                       disorder = FALSE,
                       hyp_scan = if(ag == TRUE && hyp == TRUE) TRUE else FALSE,
@@ -221,14 +221,20 @@ plot_prot <- function(sequence,
             call. = FALSE)
   }
   
-  if (missing(tm)){
-    tm <- TRUE
+  if(missing(tm)){
+    tm <-  "phobius"
   }
-  
-  if (is.logical(tm)){
+  if(is.character(tm)){
+    if(!tm %in% c("phobius", "tmhmm", "none")){
+      tm <-  "phobius"
+      warning(paste("tm should be one of",
+                    "'phobius'", "'tmhmm'", "'none';",
+                    "setting to default: tm = 'phobius'"),
+              call. = FALSE)
+    }
     if (length(tm) > 1){
-      tm <- TRUE
-      warning("tm should be of length 1, setting to default: tm = FALSE",
+      tm <-  "phobius"
+      warning("tm should be of length 1, setting to default: tm = 'phobius'",
               call. = FALSE)
     }
   }
@@ -245,14 +251,20 @@ plot_prot <- function(sequence,
     }	
   }
   
-  if (missing(nsp)){
-    nsp <- TRUE
+  if(missing(nsp)){
+    nsp <-  "signalp5"
   }
-  
-  if (is.logical(nsp)){
+  if(is.character(nsp)){
+    if(!nsp %in% c("signalp5", "signalp", "none")){
+      nsp <-  "signalp5"
+      warning(paste("nsp should be one of",
+                    "'signalp5'", "'signalp'", "'none';",
+                    "setting to default: nsp = 'signalp5'"),
+              call. = FALSE)
+    }
     if (length(nsp) > 1){
-      nsp <- TRUE
-      warning("nsp should be of length 1, setting to default: nsp = TRUE",
+      nsp <-  "signalp5"
+      warning("nsp should be of length 1, setting to default: nsp = 'signalp5'",
               call. = FALSE)
     }
   }
@@ -332,19 +344,19 @@ plot_prot <- function(sequence,
   }
   
   if(missing(gpi)){
-    gpi <- 'bigpi'
+    gpi <- 'netgpi'
   }
   if(is.character(gpi)){
     if(!gpi %in% c("bigpi", "predgpi", "netgpi", "none")){
-      gpi <- 'bigpi'
+      gpi <- 'netgpi'
       warning(paste("gpi should be one of",
                     "'bigpi', 'predgpi', 'netgpi', 'none',",
-                    "setting to default: gpi = 'bigpi'"),
+                    "setting to default: gpi = 'netgpi'"),
               call. = FALSE)
     }
     if (length(gpi) > 1){
-      gpi <- 'bigpi'
-      warning("gpi should be of length 1, setting to default: gpi = 'bigpi'",
+      gpi <- 'netgpi'
+      warning("gpi should be of length 1, setting to default: gpi = 'netgpi'",
               call. = FALSE)
     }
   }
@@ -372,6 +384,7 @@ plot_prot <- function(sequence,
   }
   
   args_signalp <- names(formals(get_signalp.character))[2:8]
+  args_signalp5 <- names(formals(get_signalp5.character))[2]
   args_scanag <- names(formals(scan_ag.default))[4:7]
   args_espritz <- names(formals(get_espritz.default))[4:5]
   args_hmm <- names(formals(get_hmm.default))[9:10]
@@ -499,34 +512,62 @@ plot_prot <- function(sequence,
   }
   
   seq_signalp <- NULL
-  if (isTRUE(nsp)) {
-    if(progress){
-      message("querying signalp")
-    }
-    seq_signalp <- do.call(ragp::get_signalp,
-                           c(list(data = dat,
-                                  sequence = "sequence",
-                                  id = "id",
-                                  progress = progress),
-                             dots[names(dots) %in% args_signalp]))
-    
-    seq_signalp <- seq_signalp[seq_signalp$is.signalp,]
-    
-    if (nrow(seq_signalp) != 0){
-      seq_signalp$Ymax.pos <- as.numeric(
-        as.character(
-          seq_signalp$Ymax.pos
+  if (is.character(nsp)){
+    if (nsp == "signalp5") {
+      if(progress){
+        message("querying signalp5")
+      }
+      seq_signalp <- do.call(ragp::get_signalp5,
+                             c(list(data = dat,
+                                    sequence = "sequence",
+                                    id = "id",
+                                    progress = progress),
+                               dots[names(dots) %in% args_signalp5]))
+      
+      seq_signalp <- seq_signalp[seq_signalp$is.signalp,]
+      
+      if (nrow(seq_signalp) != 0){
+        seq_signalp$sp.length <- as.numeric(
+          as.character(
+            seq_signalp$sp.length
+          )
         )
-      )
-    } else {
-      seq_signalp <- NULL
+      } else {
+        seq_signalp <- NULL
+      }
+    }
+    
+    if (nsp == "signalp") {
+      if(progress){
+        message("querying signalp")
+      }
+      seq_signalp <- do.call(ragp::get_signalp,
+                             c(list(data = dat,
+                                    sequence = "sequence",
+                                    id = "id",
+                                    progress = progress),
+                               dots[names(dots) %in% args_signalp]))
+      
+      seq_signalp <- seq_signalp[seq_signalp$is.signalp,]
+      
+      if (nrow(seq_signalp) != 0){
+        seq_signalp$sp.length <- as.numeric(
+          as.character(
+            seq_signalp$sp.length
+          )
+        )
+      } else {
+        seq_signalp <- NULL
+      }
     }
   }
   
+  
+
   if(is.data.frame(nsp)){
     seq_signalp <- nsp
-    if(any(!c("id", "is.signalp", "Ymax.pos") %in% colnames(seq_signalp))){
-      stop("nsp is not the output from get_signalp function")
+    if(any(!c("id", "is.signalp", "sp.length") %in% colnames(seq_signalp))){
+      stop(paste("nsp does not contain columns", "'id'", "'is.signalp'",  "and", "'sp.length'"))
     }
     seq_signalp$id <- make.names(seq_signalp$id)
     if(!all(seq_signalp$id %in% id)){
@@ -535,11 +576,14 @@ plot_prot <- function(sequence,
     if(!is.logical(seq_signalp$is.signalp)){
       stop("is.signalp column is not logical")
     }
+    if(!is.numeric(seq_signalp$sp.length)){
+      stop("sp.length column is not numeric")
+    }
     seq_signalp <- seq_signalp[seq_signalp$is.signalp,]
     if(nrow(seq_signalp) != 0){
-      seq_signalp$Ymax.pos <- as.numeric(
+      seq_signalp$sp.length <- as.numeric(
         as.character(
-          seq_signalp$Ymax.pos
+          seq_signalp$sp.length
         )
       )
     } else {
@@ -548,37 +592,47 @@ plot_prot <- function(sequence,
   }
   
   phobius_seq <- NULL
-  if (isTRUE(tm)) {
-    if(progress){
-      message("querying phobius")
+  if (is.character(tm)){
+    if (tm == "phobius") {
+      if(progress){
+        message("querying phobius")
+      }
+      phobius_seq <- ragp::get_phobius(data = dat,
+                                       sequence = sequence,
+                                       id = id,
+                                       progress = progress)
     }
-    phobius_seq <- ragp::get_phobius(data = dat,
+    
+    if (tm == "tmhmm") {
+      if(progress){
+        message("querying tmhmm")
+      }
+      phobius_seq <- ragp::get_tmhmm(data = dat,
                                      sequence = sequence,
                                      id = id,
                                      progress = progress)
+    }
   }
+  
+  
+  
   if(is.data.frame(tm)){
     phobius_seq <- tm
-    if(any(!c("Name",
-              "tm",
-              "prediction",
-              "cut_site",
-              "is.phobius") %in% colnames(phobius_seq))){
-      stop("tm is not the output from get_phobius function")
+    if(any(!c("id",
+              "prediction") %in% colnames(phobius_seq))){
+      stop("tm does not contain the columns 'id' and 'prediction'")
     }
-    phobius_seq$Name <- make.names(phobius_seq$Name)
-    if(!all(phobius_seq$Name %in% id)){
+    phobius_seq$id <- make.names(phobius_seq$id)
+    if(!all(phobius_seq$id %in% id)){
       stop("protein ids from tm do not match with id argument")
     }
-    if(!is.logical(phobius_seq$is.phobius)){
-      stop("is.phobius column is not logical")
-    }
   }
+  
   if (!is.null(phobius_seq)){
     phobius_seq <- merge(dat,
                          phobius_seq,
                          by.x = "id",
-                         by.y = "Name",
+                         by.y = "id",
                          sort = FALSE)
     
     phobius_seq_pred <- unlist(
@@ -1109,7 +1163,7 @@ plot_prot <- function(sequence,
                             ggplot2::aes_(y = ~id_num,
                                           yend = ~id_num,
                                           x = 1,
-                                          xend = ~Ymax.pos,
+                                          xend = ~sp.length,
                                           color = "N-sp"),
                             size = 2,
                             na.rm = TRUE)

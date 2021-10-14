@@ -1,58 +1,58 @@
-#' Query NetGPI - 1.1 web server.
+#' Query TMHMM-2.0 web server.
 #'
-#' NetGPI server offers GPI Anchor predictions
+#' TMHMM server offers prediction of transmembrane helices in proteins
 #'
-#' @aliases get_netGPI get_netGPI.default get_netGPI.character get_netGPI.data.frame get_netGPI.list
+#' @aliases get_tmhmm get_tmhmm.default get_tmhmm.character get_tmhmm.data.frame get_tmhmm.list
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
-#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 2500. Change only in case of a server side error. Accepted values are in range of 1 to 5000.
+#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Default is 2500. Change only in case of a server side error. Accepted values are in range of 1 to 10000.
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
-#' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
+#' @param progress Boolean, whether to show messages of the job id for each batch. Default is FALSE
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #' 
 #' @return  A data frame with columns:
 #' \describe{
-#'   \item{id}{Character, as from input}
+#'   \item{id}{Character, name of the submitted sequence.}
 #'   \item{length}{Integer, length of the protein sequence}
-#'   \item{is.gpi}{Logical, is the protein predicted to be GPI anchored.}
-#'   \item{omega_site}{Integer, indicating the sequence position of the omega-site.}
-#'   \item{likelihood}{Numeric, likelihood of the prediction.}}
+#'   \item{ExpAA}{Numeric, the expected number of amino acids in transmembrane helices.}
+#'   \item{First60}{Numeric, the expected number of amino acids in transmembrane helices in the first 60 amino acids of the protein.}
+#'   \item{tm}{Integer, the number of predicted transmembrane segments.}
+#'   \item{prediction}{Character string, predicted topology of the protein.}}
 #'
-#' @note This function creates temporary files in the working directory.
+#' @note This function creates temporary files in the working directory. If something goes wrong during communication with the server and progress was set to TRUE, predictions can be obtained using the web address `paste("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=", jobid, "&wait=20", sep = "")`.
 #'
-#' @source \url{https://services.healthtech.dtu.dk/service.php?NetGPI-1.1}
-#' @references Gislason MH. Nielsen H. Armenteros JA. AR Johansen AR. (2019) Prediction of GPI-Anchored proteins with pointer neural networks. bioRxiv. doi: https://doi.org/10.1101/838680
+#' @source \url{https://services.healthtech.dtu.dk/service.php?TMHMM-2.0}
+#' @references Krogh A, Larsson B, von Heijne G, Sonnhammer EL (2001) Predicting transmembrane protein topology with a hidden Markov model: application to complete genomes. J Mol Biol 305(3):567-80.
 # 
-#' @seealso \code{\link[ragp]{get_big_pi}} \code{\link[ragp]{get_pred_gpi}}
+#' @seealso \code{\link[ragp]{get_phobius}} 
 #'
 #' @examples
-#' 
 #' library(ragp)
-#' netGPI_pred <- get_netGPI(data = at_nsp[1:10,],
-#'                           sequence,
-#'                           Transcript.id)
-#' netGPI_pred
-#' 
+#' tmhmm_pred <- get_tmhmm(data = at_nsp[1:10,],
+#'                         sequence,
+#'                         Transcript.id)
+#' tmhmm_pred
+#'
 #' @import seqinr
 #' @import httr
 #' @import xml2
 #' @export
 
-get_netGPI <- function(data, ...){
-  if (missing(data) || is.null(data)) get_netGPI.default(...)
-  else UseMethod("get_netGPI")
+get_tmhmm <- function(data, ...){
+  if (missing(data) || is.null(data)) get_tmhmm.default(...)
+  else UseMethod("get_tmhmm")
 }
 
-#' @rdname get_netGPI
-#' @method get_netGPI character
+#' @rdname get_tmhmm
+#' @method get_tmhmm character
 #' @export
 
-get_netGPI.character <- function(data,
-                                 splitter = 2500L,
-                                 attempts = 2,
-                                 progress = FALSE,
-                                 ...){
+get_tmhmm.character <- function(data,
+                                splitter = 2500L,
+                                attempts = 2,
+                                progress = FALSE,
+                                ...){
   if (missing(splitter)) {
     splitter <- 2500L
   }
@@ -130,38 +130,35 @@ get_netGPI.character <- function(data,
     stop("cannot find file in the specified path",
          call. = FALSE)
   }
-  url <- "https://services.healthtech.dtu.dk/cgi-bin/webface2.fcgi"
-  cfg_file <- "/var/www/html/services/NetGPI-1.1/webface.cf"
+  
+  url <- "https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi"
+  cfg_file <- "/var/www/html/services/TMHMM-2.0/webface.cf"
   file_list <- ragp::split_fasta(path_in = file_name,
-                                 path_out = "tmp_netGPI_",
-                                 num_seq = splitter,
-                                 id = TRUE)
+                                 path_out = "tmp_tmhmm_",
+                                 num_seq = splitter)
+  
   if(grepl("temp_", file_name)){
     unlink(file_name)
   }
-
-  fasta_ids <- file_list$id
-  file_list <- file_list$file_list
-
-  for_pb <- length(file_list)
-  if(progress){
-    pb <- utils::txtProgressBar(min = 0,
-                                max = for_pb,
-                                style = 3)
-  }
   output <- vector("list", length(file_list))
+  
   for(k in seq_along(file_list)){
     x <- file_list[k]
     file_up <- httr::upload_file(x)
+    
     res <- httr::POST(configfile = cfg_file,
                       url = url,
                       encode = "multipart",
-                      body = list(configfile = cfg_file,
-                                  uploadfile = file_up,
-                                  format = "short"))
+                      body = list(seqfile = file_up,
+                                  configfile = cfg_file,
+                                  outform = "-short",
+                                  SEQ = NULL,
+                                  version = NULL))
+  
     if(!grepl("jobid=", res$url)){
       stop("something went wrong on server side")
     }
+
     res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
                "",
                res$url,
@@ -171,8 +168,12 @@ get_netGPI.character <- function(data,
                "",
                res,
                fixed = TRUE)
+    
     jobid <- res
-
+    
+    if(progress){
+      message(paste("batch", k, "jobid is:", jobid))
+    }
     
     time1 <- Sys.time()
     
@@ -193,7 +194,7 @@ get_netGPI.character <- function(data,
                           as = "parsed"),
             "//li")
         )
-        stop(paste0(prt, ". Problem in file: ", 
+        stop(paste0(prt, ". Problem in file: ", "temp_",
                     x, ".fa"),
              call. = FALSE)
       }
@@ -201,15 +202,14 @@ get_netGPI.character <- function(data,
         xml2::xml_find_all(
           httr::content(res2,
                         as = "parsed"),
-          xpath = "//div[@ng-controller='ResultsCtrl']")
+          ".//pre")
       )
-      res2_split <- unlist(
-        strsplit(res2,
-                 "\n")
-      )
+      
       Sys.sleep(1)
-      if (any(grepl("Prediction summary", res2_split))) {
+      if (length(res2) > 0) {
+        if (grepl("pre", res2)){
         break
+        }
       }
       
       time2 <- Sys.time()
@@ -218,31 +218,35 @@ get_netGPI.character <- function(data,
                               units = "secs")
       
       if ((time2 - time1) > max.time) {
-        res2_split <- NULL
+        res2 <- NULL
         if(progress) message(
           "file",
-          x,
+          x[i],
           "took longer then expected")
         break
       }
     }
-    if (is.null(res2_split)) {
+    if (is.null(res2)) {
       tms <- 0
-      while(tms < attempts && is.null(res2_split)){
+      while(tms < attempts && is.null(res2)){
         if(progress) message(
           "reattempting file",
           x)
-        file_up <-  httr::upload_file(x)
+        file_up <- httr::upload_file(x)
         
         res <- httr::POST(configfile = cfg_file,
                           url = url,
                           encode = "multipart",
-                          body = list(configfile = cfg_file,
-                                      uploadfile = file_up,
-                                      format = "short"))
+                          body = list(seqfile = file_up,
+                                      configfile = cfg_file,
+                                      outform = "-short",
+                                      SEQ = NULL,
+                                      version = NULL))
+        
         if(!grepl("jobid=", res$url)){
           stop("something went wrong on server side")
         }
+        
         res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
                    "",
                    res$url,
@@ -252,7 +256,12 @@ get_netGPI.character <- function(data,
                    "",
                    res,
                    fixed = TRUE)
+        
         jobid <- res
+        
+        if(progress){
+          message(paste("batch", k, "jobid is:", jobid))
+        }
         
         time1 <- Sys.time()
         
@@ -273,8 +282,7 @@ get_netGPI.character <- function(data,
                               as = "parsed"),
                 "//li")
             )
-            stop(paste0(prt,
-                        ". Problem in file: ",
+            stop(paste0(prt, ". Problem in file: ",
                         x),
                  call. = FALSE)
           }
@@ -282,15 +290,14 @@ get_netGPI.character <- function(data,
             xml2::xml_find_all(
               httr::content(res2,
                             as = "parsed"),
-              xpath = "//div[@ng-controller='ResultsCtrl']")
+              ".//pre")
           )
-          res2_split <- unlist(
-            strsplit(res2,
-                     "\n")
-          )
+          
           Sys.sleep(1)
-          if (any(grepl("Prediction summary", res2_split))) {
-            break
+          if (length(res2) > 0) {
+            if (grepl("pre", res2)){
+              break
+            }
           }
           
           time2 <- Sys.time()
@@ -299,21 +306,16 @@ get_netGPI.character <- function(data,
                                   units = "secs")
           
           if ((time2 - time1) > max.time) {
-            res2_split <- NULL
+            res2 <- NULL
             break
           }
         }
         tms <- tms + 1
       }
     }
-    if (is.null(res2_split)){
+    if(is.null(res2)){
       output <- do.call(rbind,
                         output)
-      if(progress){
-        utils::setTxtProgressBar(pb,
-                                 for_pb)
-        close(pb)
-      }
       warning(
         "maximum attempts reached at",
         x,
@@ -322,72 +324,54 @@ get_netGPI.character <- function(data,
       return(output)
     }
     unlink(x)
-    url_dll <- paste0("https://services.healthtech.dtu.dk/services/NetGPI-1.1/tmp/",
-                      jobid,
-                      "/output_protein_type.txt")
     
-    res2_split <- read.table(file = url_dll,
-                             header = FALSE,
-                             stringsAsFactors = FALSE,
-                             sep = "\t")
-    res2_split <- res2_split[,1:5]
+    res2 <- sub("^<pre>", "", res2)
+    res2 <- sub("</pre>.*$", "", res2)
     
-    colnames(res2_split) <- c("id",
-                              "length",
-                              "is.gpi",
-                              "omega_site",
-                              "likelihood")
+    res2 <- read.delim(text = res2,
+                       sep = "\t",
+                       header = FALSE,
+                       stringsAsFactors = FALSE)
     
-    res2_split[,3] <- !grepl("Not",
-                             res2_split[,3],
-                             fixed = TRUE)
-    res2_split[,2] <- as.integer(res2_split[,2])
+    colnames(res2) <- c("id",
+                        "len",
+                        "ExpAA",
+                        "First60",
+                        "PredHel",
+                        "Topology")
     
-    res2_split[grepl("-",
-                     res2_split[,4],
-                     fixed = TRUE),4] <- "0"
-    res2_split[,4] <- as.integer(res2_split[,4])
-    res2_split[res2_split[,4] == 0,4] <- NA_integer_
-    res2_split[,5] <- as.numeric(res2_split[,5])
-    
-    if(progress){
-      utils::setTxtProgressBar(pb,
-                               k)
+    for(i in 2:6){
+      res2[,i] <- sub(
+        paste(
+          colnames(res2)[i], "[.=]", sep = ""), "", res2[,i])
     }
-    output[[k]] <- res2_split
+    
+    colnames(res2)[c(2, 5, 6)] <- c("length",
+                                    "tm",
+                                    "prediction")
+    
+    for(i in c(2,5)){
+      res2[,i] <- as.integer(as.character(res2[,i]))
+    }
+    
+    for(i in 3:4){
+      res2[,i] <- as.numeric(as.character(res2[,i]))
+    }
+    output[[k]] <- res2
   }
-  if(progress){
-    utils::setTxtProgressBar(pb,
-                             for_pb)
-    close(pb)
-  }
-  
   output <- do.call(rbind,
                     output)
-  
-  if(all(fasta_ids %in% output$id)){
-    output <- merge(data.frame(id = fasta_ids,
-                               stringsAsFactors = FALSE),
-                    output,
-                    all.x = TRUE,
-                    all.y = TRUE,
-                    by = "id",
-                    sort = FALSE)
-    return(output)
-  } else {
-    warning("Server changed sequence id's because they contained special characters, returning servers output")
-    return(output)
-  }
+  return(output)
 }
 
-#' @rdname get_netGPI
-#' @method get_netGPI data.frame
+#' @rdname get_tmhmm
+#' @method get_tmhmm data.frame
 #' @export
 
-get_netGPI.data.frame <- function(data,
-                                  sequence,
-                                  id,
-                                  ...){
+get_tmhmm.data.frame <- function(data,
+                                 sequence,
+                                 id,
+                                 ...){
   if(missing(sequence)){
     stop("the column name with the sequences must be specified",
          call. = FALSE)
@@ -442,17 +426,17 @@ get_netGPI.data.frame <- function(data,
   seqinr::write.fasta(sequence = strsplit(sequence, ""),
                       name = id,
                       file = file_name)
-  res <- get_netGPI.character(data = file_name, ...)
+  res <- get_tmhmm.character(data = file_name, ...)
   return(res)
 }
 
-#' @rdname get_netGPI
-#' @method get_netGPI list
+#' @rdname get_tmhmm
+#' @method get_tmhmm list
 #' @export
 
 
-get_netGPI.list <- function(data,
-                            ...){
+get_tmhmm.list <- function(data,
+                           ...){
   if(class(data[[1]]) ==  "SeqFastaAA"){
     dat <- lapply(data,
                   paste0,
@@ -484,18 +468,18 @@ get_netGPI.list <- function(data,
   } else {
     stop("only lists containing objects of class SeqFastaAA are supported")
   }
-  res <- get_netGPI.character(data = file_name, ...)
+  res <- get_tmhmm.character(data = file_name, ...)
   return(res)
 }
 
-#' @rdname get_netGPI
-#' @method get_netGPI default
+#' @rdname get_tmhmm
+#' @method get_tmhmm default
 #' @export
 
-get_netGPI.default <- function(data = NULL,
-                               sequence,
-                               id,
-                               ...){
+get_tmhmm.default <- function(data = NULL,
+                              sequence,
+                              id,
+                              ...){
   if (missing(sequence)){
     stop("protein sequence must be provided to obtain predictions",
          call. = FALSE)
@@ -532,6 +516,25 @@ get_netGPI.default <- function(data = NULL,
   seqinr::write.fasta(sequence = strsplit(sequence, ""),
                       name = id,
                       file = file_name)
-  res <- get_netGPI.character(data = file_name, ...)
+  res <- get_tmhmm.character(data = file_name, ...)
   return(res)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,58 +1,74 @@
-#' Query NetGPI - 1.1 web server.
+#' Query SignalP 5.0 web server.
 #'
-#' NetGPI server offers GPI Anchor predictions
+#' The SignalP 5.0 server predicts the presence of signal peptides and the location of their cleavage sites in proteins from Archaea, Gram-positive Bacteria, Gram-negative Bacteria and Eukarya.
 #'
-#' @aliases get_netGPI get_netGPI.default get_netGPI.character get_netGPI.data.frame get_netGPI.list
+#' @aliases get_signalp5 get_signalp5.default get_signalp5.character get_signalp5.data.frame get_signalp5.list
 #' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
-#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 2500. Change only in case of a server side error. Accepted values are in range of 1 to 5000.
+#' @param org_type One of "euk", "gram-", "gram+" or "archea". Default is "euk". Are the protein sequences from Eukarya, Gram-negative Bacteria, Gram-positive Bacteria or Archaea.
+#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Default is 2500. Change only in case of a server side error. Accepted values are in range of 1 to 5000.
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
-#' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
+#' @param progress Boolean, whether to show messages of the job id for each batch. Default is FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #' 
-#' @return  A data frame with columns:
+#' @return  if org_type is "euk" a data frame with columns:
 #' \describe{
 #'   \item{id}{Character, as from input}
-#'   \item{length}{Integer, length of the protein sequence}
-#'   \item{is.gpi}{Logical, is the protein predicted to be GPI anchored.}
-#'   \item{omega_site}{Integer, indicating the sequence position of the omega-site.}
-#'   \item{likelihood}{Numeric, likelihood of the prediction.}}
+#'   \item{Prediction}{Integer, The type of signal peptide predicted: Sec/SPI, Tat/SPI, Sec/SPII or Other if no signal peptide predicted}
+#'   \item{SP.Sec.SPI}{Numeric, marginal probability that the protein contains a Sec  N-terminal signal peptide (Sec/SPI).}
+#'   \item{Other}{Numeric, the probability that the sequence does not have any kind of signal peptid.}
+#'   \item{CS_pos}{Character, cleavage site position.}
+#'   \item{Pr}{Numeric, probability of the predicted cleavage site position.}
+#'   \item{cleave.site}{Numeric,llocal amino acid sequence arround the predicted cleavage site.}
+#'   \item{is.signalp}{Logical, did SignalP5 predict the presence of a signal peptide.}
+#'   \item{sp.length}{Integer, length of the predicted signal peptide.}
+#'   }
+#'   
+#' if org_type is one of "gram-", "gram+" or "archea" the returned data frame will have two additional columns between `SP.Sec.SPI` and `Other`:
+#'  
+#' \describe{
+#'   \item{TAT.Tat.SPI}{Numeric, marginal probability that the protein contains a Tat N-terminal signal peptide (Tat/SPI).}
+#'   \item{LIPO.Sec.SPII}{Numeric, marginal probability that the protein contains a Lipoprotein N-terminal signal peptide (Sec/SPII).}
+#'   }   
+#'   
 #'
-#' @note This function creates temporary files in the working directory.
+#' @note This function creates temporary files in the working directory. If something goes wrong during communication with the server and progress was set to TRUE, predictions can be obtained using `file.path("http://www.cbs.dtu.dk/services/SignalP-5.0/tmp", jobid, "output_protein_type.txt")` eg `read.delim(file.path(...), header = TRUE, skip = 1)`.
 #'
-#' @source \url{https://services.healthtech.dtu.dk/service.php?NetGPI-1.1}
-#' @references Gislason MH. Nielsen H. Armenteros JA. AR Johansen AR. (2019) Prediction of GPI-Anchored proteins with pointer neural networks. bioRxiv. doi: https://doi.org/10.1101/838680
+#'
+#' @source \url{http://www.cbs.dtu.dk/services/SignalP/}
+#' @references Almagro Armenteros JJ, Tsirigos KD, Sønderby CK, Petersen TN, Winther O, Brunak S, von Heijne G, Nielsen H. (2019) SignalP 5.0 improves signal peptide predictions using deep neural networks. Nature Biotechnology, 37:420-423, doi:10.1038/s41587-019-0036-z
 # 
-#' @seealso \code{\link[ragp]{get_big_pi}} \code{\link[ragp]{get_pred_gpi}}
+#' @seealso \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_targetp}}
 #'
 #' @examples
 #' 
 #' library(ragp)
-#' netGPI_pred <- get_netGPI(data = at_nsp[1:10,],
-#'                           sequence,
-#'                           Transcript.id)
-#' netGPI_pred
+#' sp5_pred <- get_signalp5(data = at_nsp[1:10,],
+#'                          sequence,
+#'                          Transcript.id)
+#' sp5_pred
 #' 
 #' @import seqinr
 #' @import httr
 #' @import xml2
 #' @export
 
-get_netGPI <- function(data, ...){
-  if (missing(data) || is.null(data)) get_netGPI.default(...)
-  else UseMethod("get_netGPI")
+get_signalp5 <- function(data, ...){
+  if (missing(data) || is.null(data)) get_signalp5.default(...)
+  else UseMethod("get_signalp5")
 }
 
-#' @rdname get_netGPI
-#' @method get_netGPI character
+#' @rdname get_signalp5
+#' @method get_signalp5 character
 #' @export
 
-get_netGPI.character <- function(data,
-                                 splitter = 2500L,
-                                 attempts = 2,
-                                 progress = FALSE,
-                                 ...){
+get_signalp5.character <- function(data,
+                                   org_type = c("euk", "gram-", "gram+", "archea"),
+                                   splitter = 2500L,
+                                   attempts = 2,
+                                   progress = FALSE,
+                                   ...){
   if (missing(splitter)) {
     splitter <- 2500L
   }
@@ -120,6 +136,18 @@ get_netGPI.character <- function(data,
     warning("progress was set to NA, setting to default: progress = FALSE",
             call. = FALSE)
   }
+  
+  if (missing(org_type)) {
+    org_type <- "euk"
+  }
+  if (!org_type %in% c("euk", "gram-", "gram+", "archea")) {
+    stop("org_type should be one of: 'euk', 'gram-', 'gram+', 'archea'",
+         call. = FALSE)
+  }
+  if (length(org_type) > 1){
+    stop("org_type should be one of: 'euk', 'gram-', 'gram+', 'archea'",
+         call. = FALSE)
+  }
   if(length(data) > 1){
     stop("one fasta file per function call can be supplied",
          call. = FALSE)
@@ -130,39 +158,42 @@ get_netGPI.character <- function(data,
     stop("cannot find file in the specified path",
          call. = FALSE)
   }
-  url <- "https://services.healthtech.dtu.dk/cgi-bin/webface2.fcgi"
-  cfg_file <- "/var/www/html/services/NetGPI-1.1/webface.cf"
+  
+  organism <- c("Eukarya",
+                "Gram-negative bacteria",
+                "Gram-positive bacteria",
+                "Archaea")
+  names(organism) <- c("euk", "gram-", "gram+", "archea")
+  
+  organism <- organism[names(organism) == org_type]
+  
+  url <- "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi"
+  cfg_file <- "/usr/opt/www/pub/CBS/services/SignalP-5.0/signalp5.cf"
   file_list <- ragp::split_fasta(path_in = file_name,
-                                 path_out = "tmp_netGPI_",
-                                 num_seq = splitter,
-                                 id = TRUE)
+                                 path_out = "tmp_signalp5_",
+                                 num_seq = splitter)
   if(grepl("temp_", file_name)){
     unlink(file_name)
   }
 
-  fasta_ids <- file_list$id
-  file_list <- file_list$file_list
 
-  for_pb <- length(file_list)
-  if(progress){
-    pb <- utils::txtProgressBar(min = 0,
-                                max = for_pb,
-                                style = 3)
-  }
   output <- vector("list", length(file_list))
+  
   for(k in seq_along(file_list)){
     x <- file_list[k]
     file_up <- httr::upload_file(x)
-    res <- httr::POST(configfile = cfg_file,
-                      url = url,
-                      encode = "multipart",
-                      body = list(configfile = cfg_file,
-                                  uploadfile = file_up,
-                                  format = "short"))
+    res <-  httr::POST(url = url,
+                       encode = "multipart",
+                       body = list(configfile = cfg_file,
+                                   uploadfile = file_up,
+                                   organism = organism,
+                                   format = "short"))
     if(!grepl("jobid=", res$url)){
       stop("something went wrong on server side")
     }
-    res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
+    
+    
+    res <- sub("http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?jobid=",
                "",
                res$url,
                fixed = TRUE)
@@ -171,79 +202,63 @@ get_netGPI.character <- function(data,
                "",
                res,
                fixed = TRUE)
-    jobid <- res
-
     
+    jobid <- res
+    
+    if(progress){
+      message(paste("batch", k, "jobid is:", jobid))
+    }
+
     time1 <- Sys.time()
     
     repeat {
-      res2 <- httr::GET(url = url,
-                        query = list(jobid = jobid,
-                                     wait = "20"))
-      bad <- xml2::xml_text(
-        xml2::xml_find_all(
-          httr::content(res2,
-                        as = "parsed"),
-          "//head")
-      )
-      if (grepl("Illegal", bad)) {
-        prt <- xml2::xml_text(
-          xml2::xml_find_all(
-            httr::content(res2,
-                          as = "parsed"),
-            "//li")
-        )
-        stop(paste0(prt, ". Problem in file: ", 
-                    x, ".fa"),
-             call. = FALSE)
-      }
-      res2 <- as.character(
-        xml2::xml_find_all(
-          httr::content(res2,
-                        as = "parsed"),
-          xpath = "//div[@ng-controller='ResultsCtrl']")
-      )
-      res2_split <- unlist(
-        strsplit(res2,
-                 "\n")
-      )
-      Sys.sleep(1)
-      if (any(grepl("Prediction summary", res2_split))) {
+      res2 <- httr::GET(url = file.path("http://www.cbs.dtu.dk/services/SignalP-5.0/tmp",
+                                        jobid,
+                                        "output_protein_type.txt"))
+      code <- res2$status_code
+      
+      Sys.sleep(5)
+      if (code == 200L) {
+        res2 <- read.delim(
+          file.path("http://www.cbs.dtu.dk/services/SignalP-5.0/tmp",
+                    jobid,
+                    "output_protein_type.txt"),
+          header = TRUE,
+          skip = 1)
         break
       }
-      
+    
       time2 <- Sys.time()
       
       max.time <- as.difftime(pmax(50, splitter),
                               units = "secs")
       
       if ((time2 - time1) > max.time) {
-        res2_split <- NULL
-        if(progress) message(
-          "file",
-          x,
-          "took longer then expected")
+        code <- 404L
+        if(progress) message("file",
+                             x,
+                             "took longer then expected")
         break
       }
     }
-    if (is.null(res2_split)) {
+    if (code == 404L) {
       tms <- 0
-      while(tms < attempts && is.null(res2_split)){
+      while(tms < attempts && code == 404L){
         if(progress) message(
           "reattempting file",
           x)
         file_up <-  httr::upload_file(x)
-        
-        res <- httr::POST(configfile = cfg_file,
-                          url = url,
-                          encode = "multipart",
-                          body = list(configfile = cfg_file,
-                                      uploadfile = file_up,
-                                      format = "short"))
+        res <-  httr::POST(url = url,
+                           encode = "multipart",
+                           body = list(configfile = cfg_file,
+                                       uploadfile = file_up,
+                                       organism = organism,
+                                       format = "short"))
         if(!grepl("jobid=", res$url)){
           stop("something went wrong on server side")
         }
-        res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
+        
+        res <- sub("http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?jobid=",
                    "",
                    res$url,
                    fixed = TRUE)
@@ -254,137 +269,110 @@ get_netGPI.character <- function(data,
                    fixed = TRUE)
         jobid <- res
         
-        time1 <- Sys.time()
+        if(progress){
+          message(paste("batch", k, "reatempt jobid is:", jobid))
+        }
+
+        time1 <- Sys.time() 
         
         repeat {
-          res2 <- httr::GET(url = url,
-                            query = list(jobid = jobid,
-                                         wait = "20"))
-          bad <- xml2::xml_text(
-            xml2::xml_find_all(
-              httr::content(res2,
-                            as = "parsed"),
-              "//head")
-          )
-          if (grepl("Illegal", bad)) {
-            prt <- xml2::xml_text(
-              xml2::xml_find_all(
-                httr::content(res2,
-                              as = "parsed"),
-                "//li")
-            )
-            stop(paste0(prt,
-                        ". Problem in file: ",
-                        x),
-                 call. = FALSE)
-          }
-          res2 <- as.character(
-            xml2::xml_find_all(
-              httr::content(res2,
-                            as = "parsed"),
-              xpath = "//div[@ng-controller='ResultsCtrl']")
-          )
-          res2_split <- unlist(
-            strsplit(res2,
-                     "\n")
-          )
-          Sys.sleep(1)
-          if (any(grepl("Prediction summary", res2_split))) {
+          res2 <- httr::GET(url = file.path("http://www.cbs.dtu.dk/services/SignalP-5.0/tmp",
+                                            jobid,
+                                            "output_protein_type.txt"))
+          code <- res2$status_code
+          Sys.sleep(5)
+          if (code == 200L) {
+            res2 <- read.delim(
+              file.path("http://www.cbs.dtu.dk/services/SignalP-5.0/tmp",
+                        jobid,
+                        "output_protein_type.txt"),
+              header = TRUE,
+              skip = 1,
+              stringsAsFactors = FALSE)
             break
           }
-          
           time2 <- Sys.time()
           
-          max.time <- as.difftime(pmax(100, splitter * 1.5),
+          max.time <- as.difftime(pmax(100, splitter*1.5),
                                   units = "secs")
           
           if ((time2 - time1) > max.time) {
-            res2_split <- NULL
+            code <- 404L
+            if(progress) message(
+              "file",
+              x,
+              "took longer then expected")
             break
           }
         }
         tms <- tms + 1
       }
     }
-    if (is.null(res2_split)){
+    
+    if (code == 404L){
       output <- do.call(rbind,
                         output)
-      if(progress){
-        utils::setTxtProgressBar(pb,
-                                 for_pb)
-        close(pb)
-      }
+      output$is.signalp <- output$is.sp == "Y"
+
       warning(
         "maximum attempts reached at",
         x,
-        "returning finished queries",
+          "returning finished queries",
         call. = FALSE)
       return(output)
     }
     unlink(x)
-    url_dll <- paste0("https://services.healthtech.dtu.dk/services/NetGPI-1.1/tmp/",
-                      jobid,
-                      "/output_protein_type.txt")
     
-    res2_split <- read.table(file = url_dll,
-                             header = FALSE,
-                             stringsAsFactors = FALSE,
-                             sep = "\t")
-    res2_split <- res2_split[,1:5]
-    
-    colnames(res2_split) <- c("id",
-                              "length",
-                              "is.gpi",
-                              "omega_site",
-                              "likelihood")
-    
-    res2_split[,3] <- !grepl("Not",
-                             res2_split[,3],
-                             fixed = TRUE)
-    res2_split[,2] <- as.integer(res2_split[,2])
-    
-    res2_split[grepl("-",
-                     res2_split[,4],
-                     fixed = TRUE),4] <- "0"
-    res2_split[,4] <- as.integer(res2_split[,4])
-    res2_split[res2_split[,4] == 0,4] <- NA_integer_
-    res2_split[,5] <- as.numeric(res2_split[,5])
-    
-    if(progress){
-      utils::setTxtProgressBar(pb,
-                               k)
+    res2 <- data.frame(res2[,colnames(res2) != "CS.Position"],
+                       CS_pos = gsub("CS pos: (\\d+)-(\\d+)\\..*$", "\\1-\\2", res2[,"CS.Position"]),
+                       Pr = gsub(".*Pr: ", "",  res2[,"CS.Position"]),
+                       substr = gsub("^.*?([ARNDCEQGHILKMFPSTWYV]{3}-[ARNDCEQGHILKMFPSTWYV]{2}).*$" ,
+                                     "\\1", res2[,"CS.Position"]),
+                       stringsAsFactors = FALSE)
+    if(org_type == "euk"){
+      colnames(res2) <- c("id",
+                          "Prediction",
+                          "SP.Sec.SPI",
+                          "Other",
+                          "CS_pos",
+                          "Pr",
+                          "cleave.site")
+      res2$SP.Sec.SPI <- as.numeric(res2$SP.Sec.SPI)
+      
     }
-    output[[k]] <- res2_split
-  }
-  if(progress){
-    utils::setTxtProgressBar(pb,
-                             for_pb)
-    close(pb)
+    if(org_type != "euk"){
+      colnames(res2) <- c("id",
+                          "Prediction",
+                          "SP.Sec.SPI",
+                          "TAT.Tat.SPI",
+                          "LIPO.Sec.SPII",
+                          "Other",
+                          "CS_pos",
+                          "Pr",
+                          "cleave.site")
+      res2$SP.Sec.SPI <- as.numeric(res2$SP.Sec.SPI)
+      res2$TAT.Tat.SPI <- as.numeric(res2$TAT.Tat.SPI)
+      res2$LIPO.Sec.SPII <- as.numeric(res2$LIPO.Sec.SPII)
+    }
+    
+
+    res2$Other <- as.numeric(res2$Other)
+    res2$Pr <- as.numeric(res2$Pr)
+    output[[k]] <- res2
   }
   
   output <- do.call(rbind,
                     output)
-  
-  if(all(fasta_ids %in% output$id)){
-    output <- merge(data.frame(id = fasta_ids,
-                               stringsAsFactors = FALSE),
-                    output,
-                    all.x = TRUE,
-                    all.y = TRUE,
-                    by = "id",
-                    sort = FALSE)
-    return(output)
-  } else {
-    warning("Server changed sequence id's because they contained special characters, returning servers output")
-    return(output)
-  }
+  output$is.signalp <- !is.na(output$Pr)
+  output$sp.length <- as.integer(gsub("(\\d+)-\\d+", "\\1", output[,"CS_pos"]))
+  return(output)
 }
 
-#' @rdname get_netGPI
-#' @method get_netGPI data.frame
+#' @rdname get_signalp5
+#' @method get_signalp5 data.frame
 #' @export
-
-get_netGPI.data.frame <- function(data,
+          
+get_signalp5.data.frame <- function(data,
                                   sequence,
                                   id,
                                   ...){
@@ -442,16 +430,16 @@ get_netGPI.data.frame <- function(data,
   seqinr::write.fasta(sequence = strsplit(sequence, ""),
                       name = id,
                       file = file_name)
-  res <- get_netGPI.character(data = file_name, ...)
+  res <- get_signalp5.character(data = file_name, ...)
   return(res)
 }
 
-#' @rdname get_netGPI
-#' @method get_netGPI list
+#' @rdname get_signalp5
+#' @method get_signalp5 list
 #' @export
 
 
-get_netGPI.list <- function(data,
+get_signalp5.list <- function(data,
                             ...){
   if(class(data[[1]]) ==  "SeqFastaAA"){
     dat <- lapply(data,
@@ -484,15 +472,15 @@ get_netGPI.list <- function(data,
   } else {
     stop("only lists containing objects of class SeqFastaAA are supported")
   }
-  res <- get_netGPI.character(data = file_name, ...)
+  res <- get_signalp5.character(data = file_name, ...)
   return(res)
 }
 
-#' @rdname get_netGPI
-#' @method get_netGPI default
+#' @rdname get_signalp5
+#' @method get_signalp5 default
 #' @export
 
-get_netGPI.default <- function(data = NULL,
+get_signalp5.default <- function(data = NULL,
                                sequence,
                                id,
                                ...){
@@ -532,6 +520,6 @@ get_netGPI.default <- function(data = NULL,
   seqinr::write.fasta(sequence = strsplit(sequence, ""),
                       name = id,
                       file = file_name)
-  res <- get_netGPI.character(data = file_name, ...)
+  res <- get_signalp5.character(data = file_name, ...)
   return(res)
 }
