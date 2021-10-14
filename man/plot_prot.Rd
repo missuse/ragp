@@ -14,7 +14,7 @@ plot_prot(
   tm_col = "#EFC000FF",
   hyp = TRUE,
   gpi = c("bigpi", "predgpi", "netgpi", "none"),
-  nsp = c("signalp", "signal5", "none"),
+  nsp = c("signalp", "signalp5", "none"),
   ag = TRUE,
   tm = c("phobius", "tmhmm", "none"),
   domain = TRUE,
@@ -46,7 +46,7 @@ plot_prot(
 
 \item{gpi}{A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi"), \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") or \code{\link[ragp]{get_netGPI}} (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "netgpi". Alternatively the output data frame of the mentioned functions (called with simplify = TRUE) can be supplied.}
 
-\item{nsp}{A string indicating if \code{\link[ragp]{get_signalp5}} or \code{\link[ragp]{get_signalp}} should eb used to obtain N-sp predictions. Alternatively a data frame containing three columns: a character column "id" indicating the protein id as from input, a logical column "is.signalp" and an integer column "sp.length". See \code{\link[ragp]{get_signalp5}} or \code{\link[ragp]{get_signalp}} for details.}
+\item{nsp}{A string indicating if \code{\link[ragp]{get_signalp5}} (nsp = "signalp5") or \code{\link[ragp]{get_signalp}} (nsp = "signalp") should be used to obtain N-sp predictions. Alternatively a data frame containing three columns: a character column "id" indicating the protein id as from input, a logical column "is.signalp" and an integer column "sp.length". See \code{\link[ragp]{get_signalp5}} or \code{\link[ragp]{get_signalp}} for details.}
 
 \item{ag}{Boolean, should the AG glycomodul spans be plotted.}
 
@@ -66,7 +66,7 @@ plot_prot(
 
 \item{gpi_shape}{Integer, the shape of the gpi symbol. Appropriate values are 0 - 25}
 
-\item{...}{Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.}
+\item{...}{Appropriate arguments passed to \code{\link[ragp]{get_signalp5}}, \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.}
 }
 \value{
 A ggplot2 plot object
@@ -124,5 +124,5 @@ pred2 +
         
 }
 \seealso{
-\code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{get_espritz}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
+
 }

@@ -11,7 +11,7 @@
 #' @param tm_col Plotting color of the transmembrane regions. At default set to: '#EFC000FF'.
 #' @param hyp Boolean, should hydroxyprolines be plotted.
 #' @param gpi A string indicating if \code{\link[ragp]{get_big_pi}} (gpi = "bigpi"), \code{\link[ragp]{get_pred_gpi}} (gpi = "predgpi") or \code{\link[ragp]{get_netGPI}} (gpi = "netgpi") should be called when predicting omega sites. To turn off omega site prediction use gpi = "none". At default set to "netgpi". Alternatively the output data frame of the mentioned functions (called with simplify = TRUE) can be supplied.
-#' @param nsp A string indicating if \code{\link[ragp]{get_signalp5}} or \code{\link[ragp]{get_signalp}} should eb used to obtain N-sp predictions. Alternatively a data frame containing three columns: a character column "id" indicating the protein id as from input, a logical column "is.signalp" and an integer column "sp.length". See \code{\link[ragp]{get_signalp5}} or \code{\link[ragp]{get_signalp}} for details.
+#' @param nsp A string indicating if \code{\link[ragp]{get_signalp5}} (nsp = "signalp5") or \code{\link[ragp]{get_signalp}} (nsp = "signalp") should be used to obtain N-sp predictions. Alternatively a data frame containing three columns: a character column "id" indicating the protein id as from input, a logical column "is.signalp" and an integer column "sp.length". See \code{\link[ragp]{get_signalp5}} or \code{\link[ragp]{get_signalp}} for details.
 #' @param ag Boolean, should the AG glycomodul spans be plotted.
 #' @param tm A string indicating if \code{\link[ragp]{get_phobius}} (tm = "phobius") or \code{\link[ragp]{get_tmhmm}} (tm = "tmhmm") should be used to obtain transmembrane region predictions. Alternatively a data frame with two columns:  a character column "id" indicating the protein id as from input and a "prediction" column containing the topology of the transmembrane regions (example "42o81-101i108-126o"). To turn off tm prediction use tm = "none".
 #' @param domain Boolean, should the domain predictions obtained using \code{\link[ragp]{get_hmm}}  be plotted. Alternatively the output data frame from \code{\link[ragp]{get_hmm}} can be supplied.
@@ -21,12 +21,12 @@
 #' @param gpi_size Integer, the size of the gpi symbol. Appropriate values are 1 - 10.
 #' @param gpi_shape Integer, the shape of the gpi symbol. Appropriate values are 0 - 25
 #' @param hyp_scan Boolean, if ag = TRUE, should \code{\link[ragp]{scan_ag}} be performed on \code{\link[ragp]{predict_hyp}} output thus scanning only arabinogalactan motifs which contain predicted hydroxyprolines.
-#' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.
+#' @param ... Appropriate arguments passed to \code{\link[ragp]{get_signalp5}}, \code{\link[ragp]{get_signalp}}, \code{\link[ragp]{get_espritz}}, \code{\link[ragp]{predict_hyp}}, \code{\link[ragp]{get_hmm}} and \code{\link[ragp]{scan_ag}}.
 #'
 #'
 #' @return A ggplot2 plot object
 #' 
-#' @seealso \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{get_espritz}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
+#' @seealso \code{\link[ragp]{get_signalp5}} \link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \link[ragp]{get_tmhmm} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{get_espritz}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
 #'
 #' @examples
 #' library(ragp)
@@ -88,7 +88,7 @@ plot_prot <- function(sequence,
                       tm_col = "#EFC000FF",
                       hyp = TRUE,
                       gpi = c("bigpi", "predgpi", "netgpi", "none"),
-                      nsp = c("signalp", "signal5", "none"),
+                      nsp = c("signalp", "signalp5", "none"),
                       ag = TRUE,
                       tm = c('phobius', "tmhmm", "none"),
                       domain = TRUE,

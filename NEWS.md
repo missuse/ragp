@@ -6,7 +6,7 @@ New Features
 
 * added new function `get_signalp5()` which queries SignalP5 web server (http://www.cbs.dtu.dk/services/SignalP)  
 * added new function `get_tmhmm()` which queries TMHMM  v. 2.0 web server (http://www.cbs.dtu.dk/services/TMHMM/)  
-* `plot_prot()` `nsp` argument can now be `"signalp4"`, `"signalp5"` or `"none"`. Default is `"signalp5"`. This argument determines if `get_signalp()` or `get_signalp5()` are used for N-sp prediction. **BREAKING CHANGE**
+* `plot_prot()` `nsp` argument can now be `"signalp"`, `"signalp5"` or `"none"`. Default is `"signalp5"`. This argument determines if `get_signalp()` or `get_signalp5()` are used for N-sp prediction. **BREAKING CHANGE**
 * `plot_prot()` `tm` argument can now be `"phobius"`, `"tmhmm"` or `"none"`. Default is `"phobius"`. This argument determines if `get_phobius()` or `get_tmhmm()` are used for TM prediction.  **BREAKING CHANGE**
 
 Bug Fixes and Improvements
