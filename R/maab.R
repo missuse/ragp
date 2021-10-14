@@ -2,8 +2,8 @@
 #'
 #' Perform Motif and amino acid bias classification of hydroxyproline rich glycoproteins according to Johnson et al. (2017)
 #' 
-#' @aliases maab maab.default maab.character maab.data.frame maab.list
-#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
+#' @aliases maab maab.default maab.character maab.data.frame maab.list maab.AAStringSet
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param order Order of motif counting, the default is as in Johnson et al. (2017).
@@ -605,3 +605,22 @@ maab.default <- function(data = NULL,
   return(out)
 }
 
+#' @rdname maab
+#' @method maab AAStringSet
+#' @export
+
+maab.AAStringSet <-  function(data,
+                              ...){
+  sequence <- as.character(data)
+  id <- names(sequence)
+  sequence <- unname(sequence)
+  sequence <- toupper(sequence)
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  
+  res <- maab.default(sequence = sequence,
+                      id = id,
+                      ...)
+  return(res)
+}

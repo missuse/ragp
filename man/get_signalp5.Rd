@@ -6,6 +6,7 @@
 \alias{get_signalp5.character}
 \alias{get_signalp5.data.frame}
 \alias{get_signalp5.list}
+\alias{get_signalp5.AAStringSet}
 \title{Query SignalP 5.0 web server.}
 \source{
 \url{http://www.cbs.dtu.dk/services/SignalP/}
@@ -27,9 +28,11 @@ get_signalp5(data, ...)
 \method{get_signalp5}{list}(data, ...)
 
 \method{get_signalp5}{default}(data = NULL, sequence, id, ...)
+
+\method{get_signalp5}{AAStringSet}(data, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.}
 
 \item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 

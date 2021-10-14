@@ -6,6 +6,7 @@
 \alias{get_big_pi.character}
 \alias{get_big_pi.data.frame}
 \alias{get_big_pi.list}
+\alias{get_big_pi.AAStringSet}
 \title{Query big-PI Plant Predictor web server.}
 \source{
 \url{http://mendel.imp.ac.at/gpi/plant_server.html}
@@ -28,9 +29,11 @@ get_big_pi(data, ...)
   progress = FALSE,
   ...
 )
+
+\method{get_big_pi}{AAStringSet}(data, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.}
 
 \item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 

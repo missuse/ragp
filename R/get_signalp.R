@@ -2,8 +2,8 @@
 #'
 #' SignalP 4.1 server predicts the presence and location of signal peptide cleavage sites in amino acid sequences from different organisms: Gram-positive prokaryotes, Gram-negative prokaryotes, and eukaryotes. The method incorporates a prediction of cleavage sites and a signal peptide/non-signal peptide prediction based on a combination of several artificial neural networks.
 #'
-#' @aliases get_signalp get_signalp.default get_signalp.character get_signalp.data.frame get_signalp.list
-#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
+#' @aliases get_signalp get_signalp.default get_signalp.character get_signalp.data.frame get_signalp.list get_signalp.AAStringSet
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param org_type One of c("euk", "gram-", "gram+"), defaults to "euk". Which model should be used for prediction.
@@ -725,4 +725,22 @@ get_signalp.default <- function(data = NULL,
   return(res)
 }
 
+#' @rdname get_signalp
+#' @method get_signalp AAStringSet
+#' @export
 
+get_signalp.AAStringSet <-  function(data,
+                                     ...){
+  sequence <- as.character(data)
+  id <- names(sequence)
+  sequence <- unname(sequence)
+  sequence <- toupper(sequence)
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  
+  res <- get_signalp.default(sequence = sequence,
+                             id = id,
+                             ...)
+  return(res)
+}

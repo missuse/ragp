@@ -6,6 +6,7 @@
 \alias{get_hmm.character}
 \alias{get_hmm.data.frame}
 \alias{get_hmm.list}
+\alias{get_hmm.AAStringSet}
 \title{Query hmmer web server.}
 \source{
 \url{https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan}
@@ -32,9 +33,11 @@ get_hmm(data, ...)
   bitscore = NULL,
   ...
 )
+
+\method{get_hmm}{AAStringSet}(data, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.}
 
 \item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 

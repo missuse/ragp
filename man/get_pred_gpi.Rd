@@ -6,6 +6,7 @@
 \alias{get_pred_gpi.character}
 \alias{get_pred_gpi.data.frame}
 \alias{get_pred_gpi.list}
+\alias{get_pred_gpi.AAStringSet}
 \title{Query PredGPI web server.}
 \source{
 \url{http://gpcr.biocomp.unibo.it/predgpi/pred.htm}
@@ -20,9 +21,11 @@ get_pred_gpi(data, ...)
 \method{get_pred_gpi}{list}(data, ...)
 
 \method{get_pred_gpi}{default}(data = NULL, sequence, id, ...)
+
+\method{get_pred_gpi}{AAStringSet}(data, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.}
 
 \item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 

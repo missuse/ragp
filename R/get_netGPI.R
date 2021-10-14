@@ -2,8 +2,8 @@
 #'
 #' NetGPI server offers GPI Anchor predictions
 #'
-#' @aliases get_netGPI get_netGPI.default get_netGPI.character get_netGPI.data.frame get_netGPI.list
-#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
+#' @aliases get_netGPI get_netGPI.default get_netGPI.character get_netGPI.data.frame get_netGPI.list get_netGPI.AAStringSet
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 2500. Change only in case of a server side error. Accepted values are in range of 1 to 5000.
@@ -533,5 +533,25 @@ get_netGPI.default <- function(data = NULL,
                       name = id,
                       file = file_name)
   res <- get_netGPI.character(data = file_name, ...)
+  return(res)
+}
+
+#' @rdname get_netGPI 
+#' @method get_netGPI AAStringSet
+#' @export
+
+get_netGPI.AAStringSet <-  function(data,
+                                    ...){
+  sequence <- as.character(data)
+  id <- names(sequence)
+  sequence <- unname(sequence)
+  sequence <- toupper(sequence)
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  
+  res <- get_netGPI.default(sequence = sequence,
+                            id = id,
+                            ...)
   return(res)
 }

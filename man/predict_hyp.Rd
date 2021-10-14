@@ -6,6 +6,7 @@
 \alias{predict_hyp.character}
 \alias{predict_hyp.data.frame}
 \alias{predict_hyp.list}
+\alias{predict_hyp.AAStringSet}
 \title{Predict hydroxyproline positions in plant proteins based on primary structure}
 \usage{
 predict_hyp(data, ...)
@@ -25,9 +26,11 @@ predict_hyp(data, ...)
   split = 1,
   ...
 )
+
+\method{predict_hyp}{AAStringSet}(data, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.}
 
 \item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 

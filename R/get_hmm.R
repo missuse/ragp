@@ -3,8 +3,8 @@
 #' hmmer web server offers biosequence analysis using profile hidden Markov Models. This function allows searching
 #' of a protein sequence vs a profile-HMM database (Pfam-A).
 #'
-#' @aliases get_hmm get_hmm.default get_hmm.character get_hmm.data.frame get_hmm.list
-#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
+#' @aliases get_hmm get_hmm.default get_hmm.character get_hmm.data.frame get_hmm.list get_hmm.AAStringSet
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param verbose Boolean, whether to print out the output for each sequence, defaults to FALSE.
@@ -555,4 +555,24 @@ get_hmm.default <- function(data = NULL,
   }
   rownames(pfam) <- NULL
   return(pfam)
+}
+
+#' @rdname get_hmm 
+#' @method get_hmm AAStringSet
+#' @export
+
+get_hmm.AAStringSet <-  function(data,
+                                 ...){
+  sequence <- as.character(data)
+  id <- names(sequence)
+  sequence <- unname(sequence)
+  sequence <- toupper(sequence)
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  
+  res <- get_hmm.default(sequence = sequence,
+                         id = id,
+                         ...)
+  return(res)
 }

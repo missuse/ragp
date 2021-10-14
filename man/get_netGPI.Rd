@@ -6,6 +6,7 @@
 \alias{get_netGPI.character}
 \alias{get_netGPI.data.frame}
 \alias{get_netGPI.list}
+\alias{get_netGPI.AAStringSet}
 \title{Query NetGPI - 1.1 web server.}
 \source{
 \url{https://services.healthtech.dtu.dk/service.php?NetGPI-1.1}
@@ -20,9 +21,11 @@ get_netGPI(data, ...)
 \method{get_netGPI}{list}(data, ...)
 
 \method{get_netGPI}{default}(data = NULL, sequence, id, ...)
+
+\method{get_netGPI}{AAStringSet}(data, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.}
 
 \item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 

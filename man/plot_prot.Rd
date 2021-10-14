@@ -124,5 +124,5 @@ pred2 +
         
 }
 \seealso{
-
+\code{\link[ragp]{get_signalp5}} \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_tmhmm}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{get_espritz}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
 }

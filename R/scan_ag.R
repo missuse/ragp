@@ -3,8 +3,8 @@
 #' AG glycomodules are amino acid dipeptides: OA, OS, OT, AO, SO and TO (and probably OG, OV, GO and VO) which are in close proximity to each other (Tan et al., 2003).
 #' Where: O - hydroxyproline, A - alanine, S - serine, T - threonine, G - glycine and V - valine. This function attempts to find the mentioned dipeptides according to user specified rules. Since the positions of hydroxyprolines are usually unknown, all prolines are considered instead. If any sequence from the supplied contains "O" the function will consider only true AG glycomodules.
 #'
-#' @aliases scan_ag scan_ag.default scan_ag.character scan_ag.data.frame scan_ag.list
-#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
+#' @aliases scan_ag scan_ag.default scan_ag.character scan_ag.data.frame scan_ag.list scan_ag.AAStringSet
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param dim An integer defining the minimum number of close dipeptides to be considered, at default set to 3.
@@ -493,3 +493,22 @@ scan_ag.default <- function(data = NULL,
   }
 }
 
+#' @rdname scan_ag
+#' @method scan_ag AAStringSet
+#' @export
+
+scan_ag.AAStringSet <-  function(data,
+                                 ...){
+  sequence <- as.character(data)
+  id <- names(sequence)
+  sequence <- unname(sequence)
+  sequence <- toupper(sequence)
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  
+  res <- scan_ag.default(sequence = sequence,
+                         id = id,
+                         ...)
+  return(res)
+}

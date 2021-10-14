@@ -6,6 +6,7 @@
 \alias{get_espritz.character}
 \alias{get_espritz.data.frame}
 \alias{get_espritz.list}
+\alias{get_espritz.AAStringSet}
 \title{Query Espritz web server.}
 \source{
 \url{http://old.protein.bio.unipd.it/espritz/}
@@ -29,9 +30,11 @@ get_espritz(data, ...)
   progress = FALSE,
   ...
 )
+
+\method{get_espritz}{AAStringSet}(data, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.}
 
 \item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 

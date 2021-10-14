@@ -6,6 +6,7 @@
 \alias{scan_ag.character}
 \alias{scan_ag.data.frame}
 \alias{scan_ag.list}
+\alias{scan_ag.AAStringSet}
 \title{Find AG glycomodules in protein sequences}
 \usage{
 scan_ag(data, ...)
@@ -28,9 +29,11 @@ scan_ag(data, ...)
   tidy = FALSE,
   ...
 )
+
+\method{scan_ag}{AAStringSet}(data, ...)
 }
 \arguments{
-\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.}
+\item{data}{A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.}
 
 \item{...}{currently no additional arguments are accepted apart the ones documented bellow.}
 

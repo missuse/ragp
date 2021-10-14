@@ -2,8 +2,8 @@
 #'
 #' Phobius web server is a combined transmembrane topology and signal peptide (N-sp) predictor. Currently only "normal prediction" of signal peptides is supported by the function.
 #'
-#' @aliases get_phobius get_phobius.default get_phobius.character get_phobius.data.frame get_phobius.list
-#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
+#' @aliases get_phobius get_phobius.default get_phobius.character get_phobius.data.frame get_phobius.list get_phobius.AAStringSet
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
@@ -303,5 +303,25 @@ get_phobius.default <- function(data = NULL,
                       file = file_name)
   res <- get_phobius.character(file_name,
                                ...)
+  return(res)
+}
+
+#' @rdname get_phobius
+#' @method get_phobius AAStringSet
+#' @export
+
+get_phobius.AAStringSet <-  function(data,
+                                     ...){
+  sequence <- as.character(data)
+  id <- names(sequence)
+  sequence <- unname(sequence)
+  sequence <- toupper(sequence)
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  
+  res <- get_phobius.default(sequence = sequence,
+                             id = id,
+                             ...)
   return(res)
 }

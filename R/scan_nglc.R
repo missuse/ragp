@@ -2,8 +2,8 @@
 #'
 #' Detection is based on PROSITE pattern PS00001. Mean local hydrophilicity (Hopp and Woods, 1981) is used to assess if the asparagines are buried.
 #' 
-#' @aliases scan_nglc scan_nglc.default scan_nglc.character scan_nglc.data.frame scan_nglc.list
-#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Should be left blank if vectors are provided to sequence and id arguments.
+#' @aliases scan_nglc scan_nglc.default scan_nglc.character scan_nglc.data.frame scan_nglc.list scan_nglc.AAStringSet
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param span An integer specifying how many amino acids around the target asparagine residues is used to calculate hydrophilicity. At default set to 5: asparagine position - 5 to asparagine position +5 residues. Range to consider: 3 - 10. Acceptable values are 0 - 20.
@@ -313,4 +313,24 @@ scan_nglc.default <- function(data = NULL,
   }
   nglc2$is.nglc[nglc2$align_start < nsp] <- FALSE
   return(nglc2)
+}
+
+#' @rdname scan_nglc
+#' @method scan_nglc AAStringSet
+#' @export
+
+scan_nglc.AAStringSet <-  function(data,
+                                   ...){
+  sequence <- as.character(data)
+  id <- names(sequence)
+  sequence <- unname(sequence)
+  sequence <- toupper(sequence)
+  sequence <- sub("\\*$",
+                  "",
+                  sequence)
+  
+  res <- scan_nglc.default(sequence = sequence,
+                           id = id,
+                           ...)
+  return(res)
 }
