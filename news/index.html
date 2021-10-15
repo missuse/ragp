@@ -145,15 +145,18 @@
 <h2 class="hasAnchor">
 <a href="#new-features" class="anchor"></a>New Features</h2>
 <ul>
+<li>added new function <code><a href="../reference/get_cdd.html">get_cdd()</a></code> which queries the the Conserved Domain Database (<a href="https://www.ncbi.nlm.nih.gov/Structure/bwrpsb/bwrpsb.cgi" class="uri">https://www.ncbi.nlm.nih.gov/Structure/bwrpsb/bwrpsb.cgi</a>)<br>
+</li>
 <li>added new function <code><a href="../reference/get_signalp5.html">get_signalp5()</a></code> which queries SignalP5 web server (<a href="http://www.cbs.dtu.dk/services/SignalP" class="uri">http://www.cbs.dtu.dk/services/SignalP</a>)<br>
 </li>
 <li>added new function <code><a href="../reference/get_tmhmm.html">get_tmhmm()</a></code> which queries TMHMM v. 2.0 web server (<a href="http://www.cbs.dtu.dk/services/TMHMM/" class="uri">http://www.cbs.dtu.dk/services/TMHMM/</a>)<br>
 </li>
 <li>
-<code><a href="../reference/plot_prot.html">plot_prot()</a></code> <code>nsp</code> argument can now be <code>"signalp"</code>, <code>"signalp5"</code> or <code>"none"</code>. Default is <code>"signalp5"</code>. This argument determines if <code><a href="../reference/get_signalp.html">get_signalp()</a></code> or <code><a href="../reference/get_signalp5.html">get_signalp5()</a></code> are used for N-sp prediction.</li>
+<code><a href="../reference/plot_prot.html">plot_prot()</a></code> <code>nsp</code> argument can now be <code>"signalp"</code>, <code>"signalp5"</code> or <code>"none"</code>. Default is <code>"signalp5"</code>. This argument determines if <code><a href="../reference/get_signalp.html">get_signalp()</a></code> or <code><a href="../reference/get_signalp5.html">get_signalp5()</a></code> are used for N-sp prediction. Data.frame input is accepted as well.</li>
 <li>
-<code><a href="../reference/plot_prot.html">plot_prot()</a></code> <code>tm</code> argument can now be <code>"phobius"</code>, <code>"tmhmm"</code> or <code>"none"</code>. Default is <code>"phobius"</code>. This argument determines if <code><a href="../reference/get_phobius.html">get_phobius()</a></code> or <code><a href="../reference/get_tmhmm.html">get_tmhmm()</a></code> are used for TM prediction.<br>
-</li>
+<code><a href="../reference/plot_prot.html">plot_prot()</a></code> <code>tm</code> argument can now be <code>"phobius"</code>, <code>"tmhmm"</code> or <code>"none"</code>. Default is <code>"phobius"</code>. This argument determines if <code><a href="../reference/get_phobius.html">get_phobius()</a></code> or <code><a href="../reference/get_tmhmm.html">get_tmhmm()</a></code> are used for TM prediction. Data.frame input is accepted as well.</li>
+<li>
+<code><a href="../reference/plot_prot.html">plot_prot()</a></code> <code>domain</code> argument can now be <code>"cdd"</code>, <code>"hmm"</code> or <code>"none"</code>. Default is <code>"cdd"</code>. This argument determines if <code><a href="../reference/get_hmm.html">get_hmm()</a></code> or <code><a href="../reference/get_cdd.html">get_cdd()</a></code> are used for domain annotation. Data.frame input is accepted as well.</li>
 <li>all <code>get_*</code> and <code>scan_*</code> functions, as well as <code><a href="../reference/maab.html">maab()</a></code> now work with <code>AAStringSet</code> class objects. <a href='https://github.com/missuse/ragp/issues/5'>#5</a></li>
 </ul>
 </div>
