@@ -17,7 +17,7 @@ plot_prot(
   nsp = c("signalp", "signalp5", "none"),
   ag = TRUE,
   tm = c("phobius", "tmhmm", "none"),
-  domain = TRUE,
+  domain = c("cdd", "hmm", "none"),
   disorder = FALSE,
   hyp_scan = if (ag == TRUE && hyp == TRUE) TRUE else FALSE,
   dom_sort = c("ievalue", "abc", "cba"),
@@ -52,7 +52,7 @@ plot_prot(
 
 \item{tm}{A string indicating if \code{\link[ragp]{get_phobius}} (tm = "phobius") or \code{\link[ragp]{get_tmhmm}} (tm = "tmhmm") should be used to obtain transmembrane region predictions. Alternatively a data frame with two columns:  a character column "id" indicating the protein id as from input and a "prediction" column containing the topology of the transmembrane regions (example "42o81-101i108-126o"). To turn off tm prediction use tm = "none".}
 
-\item{domain}{Boolean, should the domain predictions obtained using \code{\link[ragp]{get_hmm}}  be plotted. Alternatively the output data frame from \code{\link[ragp]{get_hmm}} can be supplied.}
+\item{domain}{A string indicating if \code{\link[ragp]{get_cdd}} (domain = "cdd") or \code{\link[ragp]{get_hmm}} (domain = "hmm") should be used to obtain domain annotation. Alternatively a data frame with five columns: a character column "id" indicating the protein id as from input, a character column "acc" indicating the accession of the domain hit, a character column "desc" indicating the description of the domain hit, a numeric column "align_start" indicating the start of the domain hit, a numeric column "align_end" indicating the end the domain hit.}
 
 \item{disorder}{Boolean, should disordered region predictions obtained using \code{\link[ragp]{get_espritz}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_espritz}} (called with simplify = TRUE) can be supplied.}
 

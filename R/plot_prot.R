@@ -14,7 +14,7 @@
 #' @param nsp A string indicating if \code{\link[ragp]{get_signalp5}} (nsp = "signalp5") or \code{\link[ragp]{get_signalp}} (nsp = "signalp") should be used to obtain N-sp predictions. Alternatively a data frame containing three columns: a character column "id" indicating the protein id as from input, a logical column "is.signalp" and an integer column "sp.length". See \code{\link[ragp]{get_signalp5}} or \code{\link[ragp]{get_signalp}} for details.
 #' @param ag Boolean, should the AG glycomodul spans be plotted.
 #' @param tm A string indicating if \code{\link[ragp]{get_phobius}} (tm = "phobius") or \code{\link[ragp]{get_tmhmm}} (tm = "tmhmm") should be used to obtain transmembrane region predictions. Alternatively a data frame with two columns:  a character column "id" indicating the protein id as from input and a "prediction" column containing the topology of the transmembrane regions (example "42o81-101i108-126o"). To turn off tm prediction use tm = "none".
-#' @param domain Boolean, should the domain predictions obtained using \code{\link[ragp]{get_hmm}}  be plotted. Alternatively the output data frame from \code{\link[ragp]{get_hmm}} can be supplied.
+#' @param domain A string indicating if \code{\link[ragp]{get_cdd}} (domain = "cdd") or \code{\link[ragp]{get_hmm}} (domain = "hmm") should be used to obtain domain annotation. Alternatively a data frame with five columns: a character column "id" indicating the protein id as from input, a character column "acc" indicating the accession of the domain hit, a character column "desc" indicating the description of the domain hit, a numeric column "align_start" indicating the start of the domain hit, a numeric column "align_end" indicating the end the domain hit. 
 #' @param disorder Boolean, should disordered region predictions obtained using \code{\link[ragp]{get_espritz}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_espritz}} (called with simplify = TRUE) can be supplied.
 #' @param dom_sort One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.
 #' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
@@ -91,7 +91,7 @@ plot_prot <- function(sequence,
                       nsp = c("signalp", "signalp5", "none"),
                       ag = TRUE,
                       tm = c('phobius', "tmhmm", "none"),
-                      domain = TRUE,
+                      domain = c("cdd", "hmm", "none"),
                       disorder = FALSE,
                       hyp_scan = if(ag == TRUE && hyp == TRUE) TRUE else FALSE,
                       dom_sort = c("ievalue", "abc", "cba"),
@@ -331,14 +331,20 @@ plot_prot <- function(sequence,
     warning("hyp_scan = TRUE and ag = FALSE, arabinogalactan motif scan will not be performed")
   }
   
-  if (missing(domain)){
-    domain <- TRUE
+  if(missing(domain)){
+    domain <-  "cdd"
   }
-  
-  if (is.logical(domain)){
-    if (length(domain) > 1){
-      domain <- TRUE
-      warning("domain should be of length 1, setting to default: domain = TRUE",
+  if(is.character(domain)){
+    if(!domain %in% c("cdd", "hmm", "none")){
+      domain <-  "cdd"
+      warning(paste("domain should be one of",
+                    "'cdd'", "hmm'", "'none';",
+                    "setting to default: domain = 'cdd'"),
+              call. = FALSE)
+    }
+    if (length(domain ) > 1){
+      domain  <-  "cdd"
+      warning("domain should be of length 1, setting to default: domain = 'cdd'",
               call. = FALSE)
     }
   }
@@ -388,6 +394,7 @@ plot_prot <- function(sequence,
   args_scanag <- names(formals(scan_ag.default))[4:7]
   args_espritz <- names(formals(get_espritz.default))[4:5]
   args_hmm <- names(formals(get_hmm.default))[9:10]
+  args_cdd <- names(formals(get_cdd.character))[c(2, 5:6)]
   dots <- list(...)
   
   dat <- data.frame(sequence = sequence,
@@ -401,81 +408,112 @@ plot_prot <- function(sequence,
   dat$id_num <- as.numeric(dat$id)
   
   seq_hmm <- NULL
-  if (isTRUE(domain)) {
-    if(progress){
-      message("querying hmmscan")
+  if (is.character(domain)){
+    if (domain == "hmm"){
+      if(progress){
+        message("querying hmmscan")
+      }
+      seq_hmm <- do.call(ragp::get_hmm,
+                         c(list(data = dat,
+                                sequence = "sequence",
+                                id = "id",
+                                progress = progress),
+                           dots[names(dots) %in% args_hmm]))
+      seq_hmm <- seq_hmm[seq_hmm$reported,]
+      if(nrow(seq_hmm) != 0){
+        seq_hmm <- seq_hmm[!is.na(seq_hmm$align_start),]
+        
+        seq_hmm$id <- factor(seq_hmm$id,
+                             levels = unique(dat$id))
+        
+        seq_hmm$id_num <- as.numeric(seq_hmm$id)
+        
+        seq_hmm$domain <- with(seq_hmm,
+                               paste(desc,
+                                     " (",
+                                     acc,
+                                     ") ",
+                                     sep = ""))
+        if (dom_sort == "ievalue"){
+          seq_hmm <- seq_hmm[with(seq_hmm, order(id_num,
+                                                 as.numeric(ievalue),
+                                                 decreasing = c(FALSE, TRUE),
+                                                 method = "radix")),]
+        }
+        
+        if (dom_sort == "abc"){
+          seq_hmm <- seq_hmm[with(seq_hmm, order(id_num, domain)),]
+        }
+        if (dom_sort == "cba"){
+          seq_hmm <- seq_hmm[with(seq_hmm, order(id_num,
+                                                 domain,
+                                                 decreasing = c(FALSE, TRUE),
+                                                 method = "radix")),]
+        }
+      } else {
+        seq_hmm <- NULL
+      }
     }
-    seq_hmm <- do.call(ragp::get_hmm,
-                       c(list(data = dat,
-                              sequence = "sequence",
-                              id = "id",
-                              progress = progress),
-                         dots[names(dots) %in% args_hmm]))
     
-    seq_hmm <- seq_hmm[seq_hmm$reported,]
-    
-    if(nrow(seq_hmm) != 0){
-      seq_hmm <- seq_hmm[!is.na(seq_hmm$align_start),]
-      
-      seq_hmm$id <- factor(seq_hmm$id,
-                           levels = unique(dat$id))
-      
-      seq_hmm$id_num <- as.numeric(seq_hmm$id)
-      
-      seq_hmm$domain <- with(seq_hmm,
-                             paste(desc,
-                                   " (",
-                                   acc,
-                                   ") ",
-                                   sep = ""))
-      if (dom_sort == "ievalue"){
-        seq_hmm <- seq_hmm[with(seq_hmm, order(id_num,
-                                               as.numeric(ievalue),
-                                               decreasing = c(FALSE, TRUE),
-                                               method = "radix")),]
+    if (domain == "cdd"){
+      if(progress){
+        message("querying cdd")
       }
-      
-      if (dom_sort == "abc"){
-        seq_hmm <- seq_hmm[with(seq_hmm, order(id_num, name)),]
+      seq_hmm <- do.call(ragp::get_cdd,
+                         c(list(data = dat,
+                                sequence = "sequence",
+                                id = "id",
+                                progress = progress),
+                           dots[names(dots) %in% args_cdd]))
+      if(nrow(seq_hmm) != 0){
+        seq_hmm <- seq_hmm[!is.na(seq_hmm$align_start),]
+        
+        seq_hmm$id <- factor(seq_hmm$id,
+                             levels = unique(dat$id))
+        
+        seq_hmm$id_num <- as.numeric(seq_hmm$id)
+        
+        seq_hmm$domain <- with(seq_hmm,
+                               paste(desc,
+                                     " (",
+                                     acc,
+                                     ") ",
+                                     sep = ""))
+        if (dom_sort == "ievalue"){
+          seq_hmm <- seq_hmm[with(seq_hmm, order(id_num,
+                                                 as.numeric(evalue),
+                                                 decreasing = c(FALSE, TRUE),
+                                                 method = "radix")),]
+        }
+        
+        if (dom_sort == "abc"){
+          seq_hmm <- seq_hmm[with(seq_hmm, order(id_num, domain)),]
+        }
+        if (dom_sort == "cba"){
+          seq_hmm <- seq_hmm[with(seq_hmm, order(id_num,
+                                                 domain,
+                                                 decreasing = c(FALSE, TRUE),
+                                                 method = "radix")),]
+        }
       }
-      if (dom_sort == "cba"){
-        seq_hmm <- seq_hmm[with(seq_hmm, order(id_num,
-                                               name,
-                                               decreasing = c(FALSE, TRUE),
-                                               method = "radix")),]
-      }
-    } else {
-      seq_hmm <- NULL
-    }
-  } else {
-    seq_hmm <- NULL
+    } 
   }
   
   
   if(is.data.frame(domain)){
     seq_hmm <- domain
     if(any(!c("id",
-              "name",
               "acc",
               "desc",
               "align_start",
-              "align_end",
-              "ievalue",
-              "bitscore") %in% colnames(seq_hmm))){
-      stop("domain is not the output from get_hmm function")
+              "align_end") %in% colnames(seq_hmm))){
+      stop(paste("domain data frame should have columns 'id', 'acc', 'desc'",
+                 "'align_start', 'align_end'"))
     }
     seq_hmm$id <- make.names(seq_hmm$id)
     if(!all(seq_hmm$id %in% id)){
       stop("protein ids from domain do not match with id argument")
     }
-    seq_hmm <- seq_hmm[seq_hmm$reported,]
-    if(any(names(dots) == "ievalue")){
-      seq_hmm <- seq_hmm[seq_hmm$ievalue <= dots[names(dots) == "ievalue"],]
-    }
-    if(any(names(dots) == "bitscore")){
-      seq_hmm <- seq_hmm[seq_hmm$bitscore >= dots[names(dots) == "bitscore"],]
-    }
-    
     if(nrow(seq_hmm) != 0){
       seq_hmm <- seq_hmm[!is.na(seq_hmm$align_start),]
       
@@ -490,13 +528,7 @@ plot_prot <- function(sequence,
                                    acc,
                                    ") ",
                                    sep = ""))
-      if (dom_sort == "ievalue"){
-        seq_hmm <- seq_hmm[with(seq_hmm, order(id_num,
-                                               as.numeric(ievalue),
-                                               decreasing = c(FALSE, TRUE),
-                                               method = "radix")),]
-      }
-      
+
       if (dom_sort == "abc"){
         seq_hmm <- seq_hmm[with(seq_hmm, order(id_num, name)),]
       }

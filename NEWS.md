@@ -4,10 +4,12 @@ ragp 0.3.5
 New Features
 ------------
 
+* added new function `get_cdd()` which queries the the Conserved Domain Database (https://www.ncbi.nlm.nih.gov/Structure/bwrpsb/bwrpsb.cgi)  
 * added new function `get_signalp5()` which queries SignalP5 web server (http://www.cbs.dtu.dk/services/SignalP)  
 * added new function `get_tmhmm()` which queries TMHMM  v. 2.0 web server (http://www.cbs.dtu.dk/services/TMHMM/)  
-* `plot_prot()` `nsp` argument can now be `"signalp"`, `"signalp5"` or `"none"`. Default is `"signalp5"`. This argument determines if `get_signalp()` or `get_signalp5()` are used for N-sp prediction. 
-* `plot_prot()` `tm` argument can now be `"phobius"`, `"tmhmm"` or `"none"`. Default is `"phobius"`. This argument determines if `get_phobius()` or `get_tmhmm()` are used for TM prediction.  
+* `plot_prot()` `nsp` argument can now be `"signalp"`, `"signalp5"` or `"none"`. Default is `"signalp5"`. This argument determines if `get_signalp()` or `get_signalp5()` are used for N-sp prediction. Data.frame input is accepted as well. 
+* `plot_prot()` `tm` argument can now be `"phobius"`, `"tmhmm"` or `"none"`. Default is `"phobius"`. This argument determines if `get_phobius()` or `get_tmhmm()` are used for TM prediction.  Data.frame input is accepted as well. 
+* `plot_prot()` `domain` argument can now be `"cdd"`,  `"hmm"` or `"none"`. Default is `"cdd"`. This argument determines if `get_hmm()` or `get_cdd()` are used for domain annotation. Data.frame input is accepted as well. 
 * all `get_*` and `scan_*` functions, as well as `maab()` now work with `AAStringSet` class objects. #5
 
 Bug Fixes and Improvements

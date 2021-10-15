@@ -12,7 +12,7 @@
 #' @param progress Boolean, whether to show messages of the job id for each batch. Default is FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
 #' 
-#' @return  if org_type is "euk" a data frame with columns:
+#' @return if org_type is "euk" a data frame with columns:
 #' \describe{
 #'   \item{id}{Character, as from input}
 #'   \item{Prediction}{Integer, The type of signal peptide predicted: Sec/SPI, Tat/SPI, Sec/SPII or Other if no signal peptide predicted}
