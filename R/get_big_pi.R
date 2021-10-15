@@ -3,7 +3,7 @@
 #' big-PI Plant Predictor is a web server utilizing a scoring algorithm for prediction of GPI modification sites in plants.
 #'
 #' @aliases get_big_pi get_big_pi.default get_big_pi.character get_big_pi.data.frame get_big_pi.list get_big_pi.AAStringSet
-#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class "SeqFastaAA" resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an `AAStringSet` object. Should be left blank if vectors are provided to sequence and id arguments.
+#' @param data A data frame with protein amino acid sequences as strings in one column and corresponding id's in another. Alternatively a path to a .fasta file with protein sequences. Alternatively a list with elements of class \code{\link[seqinr]{SeqFastaAA}} resulting from \code{\link[seqinr]{read.fasta}} call. Alternatively an \code{\link[Biostrings]{AAStringSet}} object. Should be left blank if vectors are provided to sequence and id arguments.
 #' @param sequence An appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param id An appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.
 #' @param simplify A boolean indicating the type of returned object, defaults to TRUE.
