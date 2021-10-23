@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Detection of motifs for N-glycosylation on asparagine residues. — scan_nglc • ragp</title>
+<title>Query TMHMM-2.0 web server. — get_tmhmm • ragp</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Detection of motifs for N-glycosylation on asparagine residues. — scan_nglc" />
-<meta property="og:description" content="Detection is based on PROSITE pattern PS00001. Mean local hydrophilicity (Hopp and Woods, 1981) is used to assess if the asparagines are buried." />
+<meta property="og:title" content="Query TMHMM-2.0 web server. — get_tmhmm" />
+<meta property="og:description" content="TMHMM server offers prediction of transmembrane helices in proteins" />
 
 
 
@@ -135,31 +135,31 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Detection of motifs for N-glycosylation on asparagine residues.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/missuse/ragp/blob/master/R/scan_nglc.R'><code>R/scan_nglc.R</code></a></small>
-    <div class="hidden name"><code>scan_nglc.Rd</code></div>
+    <h1>Query TMHMM-2.0 web server.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/missuse/ragp/blob/master/R/get_tmhmm.R'><code>R/get_tmhmm.R</code></a></small>
+    <div class="hidden name"><code>get_tmhmm.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Detection is based on PROSITE pattern PS00001. Mean local hydrophilicity (Hopp and Woods, 1981) is used to assess if the asparagines are buried.</p>
+    <p>TMHMM server offers prediction of transmembrane helices in proteins</p>
     </div>
 
-    <pre class="usage"><span class='fu'>scan_nglc</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>get_tmhmm</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>scan_nglc</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>get_tmhmm</span><span class='op'>(</span><span class='va'>data</span>, splitter <span class='op'>=</span> <span class='fl'>2500L</span>, attempts <span class='op'>=</span> <span class='fl'>2</span>, progress <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>scan_nglc</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>get_tmhmm</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>scan_nglc</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>get_tmhmm</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>scan_nglc</span><span class='op'>(</span>data <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, span <span class='op'>=</span> <span class='fl'>5L</span>, cutoff <span class='op'>=</span> <span class='fl'>0</span>, nsp <span class='op'>=</span> <span class='fl'>15L</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>get_tmhmm</span><span class='op'>(</span>data <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for AAStringSet</span>
-<span class='fu'>scan_nglc</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'>get_tmhmm</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,59 +173,68 @@
       <td><p>currently no additional arguments are accepted apart the ones documented bellow.</p></td>
     </tr>
     <tr>
+      <th>splitter</th>
+      <td><p>An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Default is 2500. Change only in case of a server side error. Accepted values are in range of 1 to 10000.</p></td>
+    </tr>
+    <tr>
+      <th>attempts</th>
+      <td><p>Integer, number of attempts if server unresponsive, at default set to 2.</p></td>
+    </tr>
+    <tr>
+      <th>progress</th>
+      <td><p>Boolean, whether to show messages of the job id for each batch. Default is FALSE</p></td>
+    </tr>
+    <tr>
       <th>sequence</th>
-      <td><p>A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path or list with elements of class "SeqFastaAA" provided to data, this should be left blank.</p></td>
+      <td><p>A vector of strings representing protein amino acid sequences, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.</p></td>
     </tr>
     <tr>
       <th>id</th>
-      <td><p>A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path or list with elements of class "SeqFastaAA" provided to data, this should be left blank.</p></td>
-    </tr>
-    <tr>
-      <th>span</th>
-      <td><p>An integer specifying how many amino acids around the target asparagine residues is used to calculate hydrophilicity. At default set to 5: asparagine position - 5 to asparagine position +5 residues. Range to consider: 3 - 10. Acceptable values are 0 - 20.</p></td>
-    </tr>
-    <tr>
-      <th>cutoff</th>
-      <td><p>An integer specifying the cutoff value for hydrophilicity. Range to consider: -1 - 1. Values lower then -3.4 exclude hydrophilicity as a parameter, while values higher than 3 result in no motifs being found.</p></td>
-    </tr>
-    <tr>
-      <th>nsp</th>
-      <td><p>An integer, either of length 1 or length equal the number of sequences, specifying the number of N-terminal amino acids to exclude.</p></td>
+      <td><p>A vector of strings representing protein identifiers, or the appropriate column name if a data.frame is supplied to data argument. If .fasta file path, or list with elements of class "SeqFastaAA" provided to data, this should be left blank.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='https://prosite.expasy.org/PDOC00001'>https://prosite.expasy.org/PDOC00001</a></p>
+    <p><a href='https://services.healthtech.dtu.dk/service.php?TMHMM-2.0'>https://services.healthtech.dtu.dk/service.php?TMHMM-2.0</a></p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data frame with columns:</p><dl>
-  <dt>id</dt><dd><p>Character, as supplied in the function call.</p></dd>
-  <dt>align_start</dt><dd><p>Integer, start of motif match.</p></dd>
-  <dt>motif</dt><dd><p>Character, the motif matched.</p></dd>
-  <dt>hydrophilicity</dt><dd><p>the average hydrophilicity.</p></dd>
-  <dt>is.nglc</dt><dd><p>Boolean, is the N-glycosylation likely based on hydrophilicity.</p></dd>
-  <dt>nsp</dt><dd><p>Optional integer column provided when nsp argument is of equal length to the number of input sequences</p></dd>
-
+  <dt>id</dt><dd><p>Character, name of the submitted sequence.</p></dd>
+  <dt>length</dt><dd><p>Integer, length of the protein sequence</p></dd>
+  <dt>ExpAA</dt><dd><p>Numeric, the expected number of amino acids in transmembrane helices.</p></dd>
+  <dt>First60</dt><dd><p>Numeric, the expected number of amino acids in transmembrane helices in the first 60 amino acids of the protein.</p></dd>
+  <dt>tm</dt><dd><p>Integer, the number of predicted transmembrane segments.</p></dd>
+  <dt>prediction</dt><dd><p>Character string, predicted topology of the protein.</p></dd>
 </dl>
 
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>For N-glycosylation to happen the protein must enter the endoplasmic reticulum. Please check if the proteins are likely to contain a N-terminal signal peptide. The motif Asp-Xaa-Ser/Thr (where Xaa is not Pro) on which N-glycosylation occurs is relatively common, however for N-glycosylation to occur the motif needs to be located on the protein surface. Mean local hydrophilicity (Hopp and Woods, 1981) is used here to evaluate if the asparagines are located in a hydrophilic surrounding which is more likely on the protein surface.</p>
+    <p>This function creates temporary files in the working directory. If something goes wrong during communication with the server and progress was set to TRUE, predictions can be obtained using the web address `paste("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=", jobid, "&amp;wait=20", sep = "")`.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Hopp TP. Woods KR. (1981) Prediction of protein antigenic determinants from amino acid sequences. Proceedings of the National Academy of Sciences of the United States of America, 78(6): 3824-8</p>
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+    <p>Krogh A, Larsson B, von Heijne G, Sonnhammer EL (2001) Predicting transmembrane protein topology with a hidden Markov model: application to complete genomes. J Mol Biol 305(3):567-80.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>original R code by Thomas Shafee, modified by Milan Dragićević</p>
+    <div class='dont-index'><p><code><a href='get_phobius.html'>get_phobius</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/missuse/ragp'>ragp</a></span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>at_nsp</span><span class='op'>)</span>
-
-<span class='va'>nglc_pred</span> <span class='op'>&lt;-</span> <span class='fu'>scan_nglc</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>at_nsp</span>,
-                       sequence <span class='op'>=</span> <span class='va'>sequence</span>,
-                       id <span class='op'>=</span> <span class='va'>Transcript.id</span><span class='op'>)</span>
+<span class='va'>tmhmm_pred</span> <span class='op'>&lt;-</span> <span class='fu'>get_tmhmm</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>,<span class='op'>]</span>,
+                        <span class='va'>sequence</span>,
+                        <span class='va'>Transcript.id</span><span class='op'>)</span>
+<span class='va'>tmhmm_pred</span>
+</div><div class='output co'>#&gt;             id length ExpAA First60 tm                 prediction
+#&gt; 1  ATCG00660.1    117 12.93    0.59  0                          i
+#&gt; 2  AT2G43600.1    273  6.17    6.13  0                          o
+#&gt; 3  AT2G28410.1    115 12.94    9.53  0                          o
+#&gt; 4  AT2G22960.1    184  0.01    0.01  0                          o
+#&gt; 5  AT2G19580.1    270 90.00   41.19  4 i9-31o41-63i70-92o231-253i
+#&gt; 6  AT2G19690.2    148 21.89   19.81  1                     i7-26o
+#&gt; 7  AT2G19690.1    147 20.76   19.79  1                     i7-26o
+#&gt; 8  AT2G33130.1    103 20.43   20.43  1                     i7-26o
+#&gt; 9  AT2G05520.1    145 20.20   20.20  1                     i7-29o
+#&gt; 10 AT2G05520.2    138 20.28   20.27  1                     i7-29o</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

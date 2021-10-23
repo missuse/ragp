@@ -3,10 +3,10 @@ reference:
     desc: >
       Functions for obtaining N-sp predictions based on protein sequence.
     contents:
+      - get_signalp5
       - get_signalp
       - get_targetp
       - get_phobius
-      - plot_signalp
   - title: "Query GPI predictions"
     desc: >
       Functions for obtaining GPI predictions based on protein sequence.
@@ -16,11 +16,14 @@ reference:
       - get_netGPI
   - title: "Annotate protein sequences"
     desc: >
-      Functions for domain and disorder prediction based on protein sequence.
+      Functions for domain, transmembrane region and disorder prediction based on protein sequence.
     contents:
       - get_hmm      
+      - get_cdd
       - get_espritz
       - pfam2go
+      - get_phobius
+      - get_tmhmm
   - title: "Proline hydroxylation prediction"
     desc: ~
     contents:

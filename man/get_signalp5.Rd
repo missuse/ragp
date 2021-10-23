@@ -9,7 +9,7 @@
 \alias{get_signalp5.AAStringSet}
 \title{Query SignalP 5.0 web server.}
 \source{
-\url{http://www.cbs.dtu.dk/services/SignalP/}
+\url{https://services.healthtech.dtu.dk/service.php?SignalP-5.0}
 }
 \usage{
 get_signalp5(data, ...)

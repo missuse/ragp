@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5.9000</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -77,7 +77,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/missuse/ragp/">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -91,7 +91,7 @@
 
       
 
-      </header><script src="filter_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
+      </header><script src="filter_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Filtering hydroxyproline rich glycoproteins</h1>
@@ -123,80 +123,48 @@ code.r{ /* Code block */
 <p>The following section explains how to perform these tasks on a set of 2700 Arabidopsis protein sequences included in <code>ragp</code> as <code>at_nsp</code> data frame.</p>
 <p>Required packages:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/missuse/ragp">ragp</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jolars/eulerr">eulerr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/missuse/ragp">ragp</a></span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div id="predicting-n-terminal-secretory-signal-sequences-n-sp" class="section level2">
 <h2 class="hasAnchor">
 <a href="#predicting-n-terminal-secretory-signal-sequences-n-sp" class="anchor"></a>Predicting N-terminal secretory signal sequences (N-sp)</h2>
-<p>Hydroxyproline rich glycoproteins (HRGPs) are secreted proteins, therefore they are expected to contain a secretory signal sequence on the N-terminus (N-sp). <code>ragp</code> incorporates N-sp prediction by querying <a href="https://services.healthtech.dtu.dk/service.php?SignalP-4.1">SignalP 4.1</a>, <a href="https://services.healthtech.dtu.dk/service.php?TargetP-1.1">TargetP 1.1</a> <span class="citation">(Emanuelsson et al. 2000)</span> and <a href="http://phobius.sbc.su.se/">Phobius</a> <span class="citation">(Käll, Krogh, and Sonnhammer 2007)</span> in an efficient manner via the functions: <code><a href="../../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../../reference/get_targetp.html">get_targetp()</a></code> and <code><a href="../../reference/get_phobius.html">get_phobius()</a></code>.</p>
-<p>To query <a href="https://services.healthtech.dtu.dk/service.php?SignalP-4.1">SignalP</a> predictions:</p>
+<p>Hydroxyproline rich glycoproteins (HRGPs) are secreted proteins, therefore they are expected to contain a secretory signal sequence on the N-terminus (N-sp). <code>ragp</code> incorporates N-sp prediction by querying <a href="https://services.healthtech.dtu.dk/service.php?SignalP-5.0">SignalP 5</a> <span class="citation">(<strong>armenteros_signalp5?</strong>)</span>, <a href="https://services.healthtech.dtu.dk/service.php?SignalP-4.1">SignalP 4.1</a>, <a href="https://services.healthtech.dtu.dk/service.php?TargetP-1.1">TargetP 1.1</a> <span class="citation">(Emanuelsson et al. 2000)</span> and <a href="http://phobius.sbc.su.se/">Phobius</a> <span class="citation">(Käll, Krogh, and Sonnhammer 2007)</span> via the functions: <code><a href="../../reference/get_signalp5.html">get_signalp5()</a></code>, <code><a href="../../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../../reference/get_targetp.html">get_targetp()</a></code> and <code><a href="../../reference/get_phobius.html">get_phobius()</a></code>.</p>
+<p>In the <code>ragp</code> versions prior <code>0.3.5</code> we advised a majority vote between <a href="https://services.healthtech.dtu.dk/service.php?SignalP-4.1">SignalP 4.1</a>, <a href="https://services.healthtech.dtu.dk/service.php?TargetP-1.1">TargetP 1.1</a> and <a href="http://phobius.sbc.su.se/">Phobius</a> should be used to determine which sequences should be flagged as secreted. Since the newest SignalP (version 5) utilizes a more sophisticated prediction method and a larger training set compared to the older methods we trust it provides a more accurate prediction of secreted protein sequences compared to the before mentioned majority vote.</p>
+<p>To query <a href="https://services.healthtech.dtu.dk/service.php?SignalP-5.0">SignalP 5</a> predictions:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nsp_signalp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_signalp.html">get_signalp</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">at_nsp</span>, <span class="co">#data frame name</span>
-                           sequence <span class="op">=</span> <span class="va">sequence</span>, <span class="co">#column containing the sequences</span>
-                           id <span class="op">=</span> <span class="va">Transcript.id</span><span class="op">)</span> <span class="co">#column containing protein identifiers</span></code></pre></div>
-<p>The predictions for the 2700 sequences contained in <code>at_nsp</code> data frame should be available in around 1 minute. The returned object <code>nsp_signalp</code> is a data frame resembling the web servers output:</p>
+<code class="sourceCode R"><span class="va">nsp_signalp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_signalp5.html">get_signalp5</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">at_nsp</span>, <span class="co">#data frame name</span>
+                            sequence <span class="op">=</span> <span class="va">sequence</span>, <span class="co">#column containing the sequences</span>
+                            id <span class="op">=</span> <span class="va">Transcript.id</span><span class="op">)</span> <span class="co">#column containing protein identifiers</span></code></pre></div>
+<p>The predictions for the 2700 sequences contained in <code>at_nsp</code> data frame should be available after several minutes. The returned object <code>nsp_signalp</code> is a data frame resembling the web servers output:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">nsp_signalp</span><span class="op">)</span>
-<span class="co">#&gt;            id  Cmax Cmax.pos  Ymax Ymax.pos  Smax Smax.pos Smean Dmean is.sp</span>
-<span class="co">#&gt; 1 ATCG00660.1 0.210       30 0.162       30 0.260        2 0.146 0.154     N</span>
-<span class="co">#&gt; 2 AT2G43600.1 0.860       23 0.894       23 0.984       13 0.930 0.913     Y</span>
-<span class="co">#&gt; 3 AT2G28410.1 0.779       23 0.826       23 0.940       15 0.877 0.853     Y</span>
-<span class="co">#&gt; 4 AT2G22960.1 0.701       23 0.790       23 0.948       15 0.891 0.844     Y</span>
-<span class="co">#&gt; 5 AT2G19580.1 0.422       26 0.586       26 0.885       17 0.798 0.671     Y</span>
-<span class="co">#&gt; 6 AT2G19690.2 0.797       29 0.870       29 0.987       18 0.952 0.914     Y</span>
-<span class="co">#&gt;   Dmaxcut Networks.used is.signalp</span>
-<span class="co">#&gt; 1   0.450  SignalP-noTM      FALSE</span>
-<span class="co">#&gt; 2   0.450  SignalP-noTM       TRUE</span>
-<span class="co">#&gt; 3   0.450  SignalP-noTM       TRUE</span>
-<span class="co">#&gt; 4   0.450  SignalP-noTM       TRUE</span>
-<span class="co">#&gt; 5   0.500    SignalP-TM       TRUE</span>
-<span class="co">#&gt; 6   0.450  SignalP-noTM       TRUE</span></code></pre></div>
-<p>similarly <a href="https://services.healthtech.dtu.dk/service.php?TargetP-1.1">TargetP</a> and <a href="http://phobius.sbc.su.se/">Phobius</a> can be queried by:</p>
+<span class="co">#&gt;            id  Prediction SP.Sec.SPI  Other CS_pos   Pr cleave.site is.signalp sp.length</span>
+<span class="co">#&gt; 1 ATCG00660.1       OTHER    0.00038 0.9996          NA                  FALSE        NA</span>
+<span class="co">#&gt; 2 AT2G43600.1 SP(Sec/SPI)    0.99980 0.0002  22-23 0.96      VFS-QN       TRUE        22</span>
+<span class="co">#&gt; 3 AT2G28410.1 SP(Sec/SPI)    0.99042 0.0096  22-23 0.89      ALA-QD       TRUE        22</span>
+<span class="co">#&gt; 4 AT2G22960.1 SP(Sec/SPI)    0.99814 0.0019  22-23 0.94      AES-GS       TRUE        22</span>
+<span class="co">#&gt; 5 AT2G19580.1       OTHER    0.26479 0.7352          NA                  FALSE        NA</span>
+<span class="co">#&gt; 6 AT2G19690.2 SP(Sec/SPI)    0.98954 0.0105  28-29 0.90      ARS-EE       TRUE        28</span></code></pre></div>
+<p>To filter the sequences predicted to contain an N-sp:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nsp_targetp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_targetp.html">get_targetp</a></span><span class="op">(</span><span class="va">at_nsp</span>,
-                           <span class="va">sequence</span>,
-                           <span class="va">Transcript.id</span><span class="op">)</span>
-
-<span class="va">nsp_phobius</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_phobius.html">get_phobius</a></span><span class="op">(</span><span class="va">at_nsp</span>,
-                           <span class="va">sequence</span>,
-                           <span class="va">Transcript.id</span><span class="op">)</span></code></pre></div>
-<p>The concordance of the predictions will be checked with Euler diagrams:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span><span class="op">(</span><span class="va">nsp_signalp</span>, <span class="va">nsp_targetp</span>, <span class="va">nsp_phobius</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">is.phobius</span>, <span class="va">is.targetp</span>, <span class="va">is.signalp</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://jolars.github.io/eulerr/reference/euler.html">euler</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="st">"ellipse"</span>, input <span class="op">=</span> <span class="st">"disjoint"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span>quantities <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>  </code></pre></div>
-<center>
-<p><img src="https://missuse.github.io/ragp/articles/eulerr.svg" width="240"></p>
-</center>
-<p>The three servers do not agree completely. The disagreement is even higher when all Arabidopsis protein sequences are checked:</p>
-<center>
-<p><img src="https://missuse.github.io/ragp/articles/eulerr_all.svg" width="240"></p>
-</center>
-<p>Therefore we recommend using the majority vote as the first filtering step:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_cols</a></span><span class="op">(</span><span class="va">nsp_signalp</span>, <span class="va">nsp_targetp</span>, <span class="va">nsp_phobius</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">#bind the prediction data frames </span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">is.phobius</span>, <span class="va">is.targetp</span>, <span class="va">is.signalp</span>, <span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">#select the logical columns from each, as well as the id</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>vote <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">.</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">#calculate the majority vote</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">vote</span> <span class="op">&gt;=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">#filter by majority vote</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">id_nsp</span> <span class="co">#pull the filtered ids</span>
+<code class="sourceCode R"><span class="va">nsp_signalp</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">is.signalp</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">#filter rows where is.signalp column is TRUE</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">id_nsp</span> <span class="co">#pull the id column into a vector</span>
 
 <span class="va">at_nsp_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">at_nsp</span>,
                           <span class="va">Transcript.id</span> <span class="op">%in%</span> <span class="va">id_nsp</span><span class="op">)</span> <span class="co">#filter at_nsp by pulled ids</span></code></pre></div>
-<p>This will create <code>at_nsp_filtered</code> data frame with 2126 sequences.</p>
+<p>This will create <code>at_nsp_filtered</code> data frame with 1890 sequences.</p>
 </div>
 <div id="predicting-proline-hydroxylation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#predicting-proline-hydroxylation" class="anchor"></a>Predicting proline hydroxylation</h2>
 <p>The key feature of HRGPs is the presence of hydroxyprolines (Hyp, O) which represent glycosylation sites <span class="citation">(Showalter et al. 2010)</span>. While many HRGPs can be found based on biased amino acid composition, or the presence of certain amino acid motifs, there exists an abundance of chimeric proteins comprised from specific domains and HRGP motifs which are much harder to identify based on the mentioned features. In an attempt to identify these types of sequences <code>ragp</code> incorporates a model specifically built to predict the probability of proline hydroxylation in plant proteins. This model is incorporated in the <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> function and can be utilized to filter potential HRGPs.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">at_hyp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/predict_hyp.html">predict_hyp</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">at_nsp_filtered</span>,
                       sequence <span class="op">=</span> <span class="va">sequence</span>,
                       id <span class="op">=</span> <span class="va">Transcript.id</span><span class="op">)</span></code></pre></div>
 <p>The object returned by <code>predict_hyp</code> is a list with two elements <code>prediction</code> and <code>sequence</code>. The <code>prediction</code> element is a data frame containing the probability of hydroxylation for each P in each sequence along with the amino acid span used for prediction. First few rows of this element:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">at_hyp</span><span class="op">$</span><span class="va">prediction</span><span class="op">)</span> </code></pre></div>
 <pre><code>#&gt;            id                substr P_pos  prob HYP
 #&gt; 1 AT2G43600.1 FSQNCMDTSCPGLKECCSRWG    31 0.015  No
@@ -207,13 +175,13 @@ code.r{ /* Code block */
 #&gt; 6 AT2G43600.1 YYGAGKHLGLPLLKDPDLVSR   194 0.015  No</code></pre>
 <p>The <code>sequence</code> (<code>at_hyp$sequence</code>) element is a data frame with the same sequences as provided in the function call in which prolines (P) are replaced by hydroxyprolines (O) at positions predicted to be hydroxylated. This element can be useful as input to <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> as explained in <a href="https://missuse.github.io/ragp/articles/pkgdown/analyse">HRGP analysis</a> tutorial.</p>
 <p>The predictions are based on a probability threshold of 0.224 which offers the best trade-off between specificity and sensitivity. To increase specificity at the cost of sensitivity the threshold can be increased using the <code>tprob</code> argument:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">at_hyp2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/predict_hyp.html">predict_hyp</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">at_nsp_filtered</span>,
                        sequence <span class="op">=</span> <span class="va">sequence</span>,
                        id <span class="op">=</span> <span class="va">Transcript.id</span>,
                        tprob <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span></code></pre></div>
 <p>The <code>at_hyp</code> object can be used to filter the sequences that contain more than a certain number of hydroxyprolines. The default threshold will be used. To filter sequences with three or more O:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">at_hyp</span><span class="op">$</span><span class="va">prediction</span> <span class="op">%&gt;%</span> <span class="co">#the prediction element</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">#group by id</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">HYP</span> <span class="op">==</span> <span class="st">"Yes"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">#calculate the number of hydroxyprolines per sequence</span>
@@ -222,7 +190,7 @@ code.r{ /* Code block */
 
 <span class="va">at_nsp_filtered</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Transcript.id</span> <span class="op">%in%</span> <span class="va">at_3hyp</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">at_nsp_3hyp</span> <span class="co">#filter sequences from `at_nsp_filtered`</span></code></pre></div>
-<p>There are 398 sequences that satisfy this condition.</p>
+<p>There are 365 sequences that satisfy this condition.</p>
 <p>After the filtering step the sequences can be analyzed by <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> to identify arabinogalactan motifs, by <code><a href="../../reference/maab.html">maab()</a></code> to classify prototypical HRGPs, by <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code> and <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> to predict GPI anchor sites in sequences and by <code><a href="../../reference/get_hmm.html">get_hmm()</a></code> and <code><a href="../../reference/get_espritz.html">get_espritz()</a></code> to identify domains and disordered regions. This is explained in <a href="https://missuse.github.io/ragp/articles/pkgdown/analyse">HRGP analysis</a> tutorial.</p>
 </div>
 <div id="references" class="section level2 unnumbered">

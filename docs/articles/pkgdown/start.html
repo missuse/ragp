@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5.9000</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -77,7 +77,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/missuse/ragp/">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -91,7 +91,7 @@
 
       
 
-      </header><script src="start_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
+      </header><script src="start_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Getting started</h1>
@@ -125,7 +125,7 @@
 <div id="inputs" class="section level2">
 <h2 class="hasAnchor">
 <a href="#inputs" class="anchor"></a>Inputs</h2>
-<p>Most <code>ragp</code> functions require single letter protein sequences and the corresponding identifiers as input. These can be provided in the form of basic <code>R</code> data types such as vectors or data frames. Additionally <code>ragp</code> imports the <a href="https://cran.r-project.org/web/packages/seqinr/index.html"><code>seqinr</code></a> package for the manipulation of <code>.FASTA</code> files, so the input objects can be a list of <code>SeqFastaAA</code> objects returned by the <code><a href="https://rdrr.io/pkg/seqinr/man/read.fasta.html">seqinr::read.fasta()</a></code>. The location of a <code>.FASTA</code> file is also possible as a type of input.</p>
+<p>Most <code>ragp</code> functions require single letter protein sequences and the corresponding identifiers as input. These can be provided in the form of basic <code>R</code> data types such as vectors or data frames. Additionally <code>ragp</code> imports the <a href="https://cran.r-project.org/web/packages/seqinr/index.html"><code>seqinr</code></a> package for the manipulation of <code>.FASTA</code> files, so the input objects can be a list of <a href="https://search.r-project.org/CRAN/refmans/seqinr/html/SeqFastaAA.html"><code>SeqFastaAA</code></a> objects returned by the <code><a href="https://rdrr.io/pkg/seqinr/man/read.fasta.html">seqinr::read.fasta()</a></code>. The location of a <code>.FASTA</code> file is also possible as a type of input. As of ragp version 0.3.5 objects of class <a href="https://web.mit.edu/~r/current/arch/i386_linux26/lib/R/library/Biostrings/html/XStringSet-class.html"><code>AAStringSet</code></a> are also supported.</p>
 <p>Input options will be illustrated using <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> function:</p>
 <ul>
 <li>provide a <code>character</code> vector of protein sequences to the <code>sequence</code> argument and a <code>character</code> vector of protein identifiers to the <code>id</code> argument:</li>
@@ -168,8 +168,14 @@
 </ul>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">input5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/scan_ag.html">scan_ag</a></span><span class="op">(</span>data <span class="op">=</span> <span class="st">"at_nsp.fasta"</span><span class="op">)</span> <span class="co">#file at_nsp.fasta is in the working directory</span></code></pre></div>
-<p>All of the outputs are equal:</p>
+<ul>
+<li>provide an <a href="https://web.mit.edu/~r/current/arch/i386_linux26/lib/R/library/Biostrings/html/XStringSet-class.html"><code>AAStringSet</code></a> object:</li>
+</ul>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">Biostrings</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Biostrings/man/XStringSet-io.html">readAAStringSet</a></span><span class="op">(</span><span class="st">"at_nsp.fasta"</span><span class="op">)</span> <span class="co">#file at_nsp.fasta is in the working directory</span>
+<span class="va">input6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/scan_ag.html">scan_ag</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span> </code></pre></div>
+<p>All of the outputs are equal:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span><span class="op">(</span><span class="va">input1</span>,
           <span class="va">input2</span><span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span>
@@ -184,8 +190,12 @@
 
 <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span><span class="op">(</span><span class="va">input1</span>,
           <span class="va">input5</span><span class="op">)</span>
+<span class="co">#&gt; [1] TRUE</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span><span class="op">(</span><span class="va">input1</span>,
+          <span class="va">input6</span><span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
-<p>The only exceptions to this design are plotting functions <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> and <code><a href="../../reference/plot_signalp.html">plot_signalp()</a></code> which require protein sequences to be supplied in the form of string vectors (input1 in the above example) and <code><a href="../../reference/pfam2go.html">pfam2go()</a></code> which does not take sequences as input.</p>
+<p>The only exceptions to this design are the plotting function <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> which requires protein sequences to be supplied in the form of string vectors (input1 in the above example) and <code><a href="../../reference/pfam2go.html">pfam2go()</a></code> which does not take sequences as input.</p>
 </div>
 <div id="outputs" class="section level2">
 <h2 class="hasAnchor">

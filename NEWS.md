@@ -1,3 +1,31 @@
+
+ragp 0.3.5.9000
+===============
+
+Bug Fixes and Improvements
+--------------------------
+
+* `plot_signalp()` has been deprecated and removed. 
+
+* `get_signalp5()` now works with https://services.healthtech.dtu.dk/service.php?SignalP-5.0 site since the old link http://www.cbs.dtu.dk/services/SignalP/ does not function any longer.
+
+* `get_signalp()` now works with https://services.healthtech.dtu.dk/service.php?SignalP-4.1 since the old link http://www.cbs.dtu.dk/services/SignalP-4.1/ does not function any longer.
+
+* `get_signalp()` now now runs one job at a time. 
+
+* `get_signalp()` splitter argument default value has been changed to 1000.
+
+* `get_signalp()` sleep argument has been removed. 
+
+* `get_targetp()` now works with https://services.healthtech.dtu.dk/service.php?TargetP-1.1 since the old link http://www.cbs.dtu.dk/services/TargetP-1.1/ does not function any longer.
+
+* `get_targetp()` now now runs one job at a time. 
+
+* `get_targetp()` splitter argument default value has been changed to 1000.
+
+* `get_targetp()` sleep argument has been removed. .
+
+
 ragp 0.3.5
 ===============
 

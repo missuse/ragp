@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5.9000</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -77,7 +77,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/missuse/ragp/">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -91,7 +91,7 @@
 
       
 
-      </header><script src="PSV_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
+      </header><script src="PSV_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Protein Sequence Visualization</h1>
@@ -144,31 +144,26 @@ code.r{ /* Code block */
 <p><img src="https://missuse.github.io/ragp/articles/PSV_p1.svg"></p>
 <p>By default the plot contains the following information:</p>
 <ul>
-<li>Transmembrane regions (TM) are shown in yellow. Extracellular regions are indicated by the dashed line above the sequences while intracellular regions are indicated by the dashed line bellow the sequence (prediction obtained by <code><a href="../../reference/get_phobius.html">get_phobius()</a></code>).<br>
-</li>
-<li>Signal peptides (prediction obtained by <code><a href="../../reference/get_signalp.html">get_signalp()</a></code>) are indicated by the thick red line on the N-terminal side.<br>
-</li>
-<li>GPI attachment sites (as predicted by <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> or <code><a href="../../reference/get_netGPI.html">get_netGPI()</a></code> depending on the <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> argument <code>gpi</code>) are indicated by blue rhomboids.<br>
-</li>
-<li>Hydroxyprolines (as predicted by <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code>) are indicated by vertical dark gray lines.<br>
-</li>
-<li>Arabinogalactan glycomodule spans are indicated by the light grey background (motifs are found using <code><a href="../../reference/scan_ag.html">scan_ag()</a></code>).<br>
-</li>
-<li>Domains (prediction obtained by <code><a href="../../reference/get_hmm.html">get_hmm()</a></code>) are indicated by rectangles with an appropriate fill as indicated in the legend.</li>
+<li><p>Transmembrane regions (TM) are shown in yellow. Extracellular regions are indicated by the dashed line above the sequences while intracellular regions are indicated by the dashed line bellow the sequence. For TM prediction ragp can query <a href="http://phobius.sbc.su.se/">Phobius</a> or <a href="https://services.healthtech.dtu.dk/service.php?TMHMM-2.0">TMHMM</a> via the functions <code><a href="../../reference/get_phobius.html">get_phobius()</a></code> and <code><a href="../../reference/get_tmhmm.html">get_tmhmm()</a></code>. The <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> argument <code>tm</code> (can be: “phobius”, “tmhmm” or “none”) instructs which method should be used. Default is “phobius”.</p></li>
+<li><p>Signal peptides are indicated by the thick red line on the N-terminal side. <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> offers options for N-sp prediction, <a href="https://services.healthtech.dtu.dk/service.php?SignalP-4.1">SignalP 4.1</a> and <a href="https://services.healthtech.dtu.dk/service.php?SignalP-5.0">SignalP-5.0</a>. The <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> argument <code>nsp</code> (can be: “signalp”, “signalp5” or “none”) instructs which method should be used. Default is “signalp5”.</p></li>
+<li><p>GPI attachment sites (as predicted by <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> or <code><a href="../../reference/get_netGPI.html">get_netGPI()</a></code> depending on the <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> argument <code>gpi</code>) are indicated by blue rhomboids. Default is to query <a href="https://services.healthtech.dtu.dk/service.php?NetGPI-1.1">NetGPI</a></p></li>
+<li><p>Hydroxyprolines (as predicted by <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code>) are indicated by vertical dark gray lines.</p></li>
+<li><p>Arabinogalactan glycomodule spans are indicated by the light grey background (motifs are found using <code><a href="../../reference/scan_ag.html">scan_ag()</a></code>).</p></li>
+<li><p>Domains are indicated by rectangles with an appropriate fill as indicated in the legend. Domain annotation for the plot can be obtained using <code><a href="../../reference/get_hmm.html">get_hmm()</a></code> or <code><a href="../../reference/get_cdd.html">get_cdd()</a></code> depending on the <code>domain</code> argument (can be: “cdd”, “hmm” or “none”). Default is to use <code><a href="../../reference/get_cdd.html">get_cdd()</a></code>.</p></li>
 </ul>
-<p>Plotting can take a while since <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> first obtains the appropriate predictions using <code><a href="../../reference/get_hmm.html">get_hmm()</a></code>, <code><a href="../../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../../reference/get_phobius.html">get_phobius()</a></code>, <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> and <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> and then generates the plot. To check what actions the function is performing set the argument <code>progress</code> to <code>TRUE</code>.</p>
-<p>Alternatively the outputs of <code><a href="../../reference/get_hmm.html">get_hmm()</a></code>, <code><a href="../../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../../reference/get_phobius.html">get_phobius()</a></code>, <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> or <code><a href="../../reference/get_netGPI.html">get_netGPI()</a></code> can be supplied as <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> arguments <code>domain</code>, <code>nsp</code>, <code>tm</code> and <code>gpi</code>:</p>
+<p>Plotting can take a while since <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> first obtains the appropriate predictions using and then generates the plot. To check what actions the function is performing set the argument <code>progress</code> to <code>TRUE</code>.</p>
+<p>Alternatively the outputs of <code><a href="../../reference/get_hmm.html">get_hmm()</a></code>, <code><a href="../../reference/get_cdd.html">get_cdd()</a></code>, <code><a href="../../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../../reference/get_signalp5.html">get_signalp5()</a></code>, <code><a href="../../reference/get_phobius.html">get_phobius()</a></code>, <code><a href="../../reference/get_tmhmm.html">get_tmhmm()</a></code>, <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> or <code><a href="../../reference/get_netGPI.html">get_netGPI()</a></code> can be supplied as <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> arguments <code>domain</code>, <code>nsp</code>, <code>tm</code> and <code>gpi</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">domains</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_hmm.html">get_hmm</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
+<code class="sourceCode R"><span class="va">domains</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_cdd.html">get_cdd</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
                    id <span class="op">=</span> <span class="va">ids</span><span class="op">)</span>
 
 <span class="va">tm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_phobius.html">get_phobius</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
                   id <span class="op">=</span> <span class="va">ids</span><span class="op">)</span>
 
-<span class="va">nsp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_signalp.html">get_signalp</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
+<span class="va">nsp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_signalp5.html">get_signalp5</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
                    id <span class="op">=</span> <span class="va">ids</span><span class="op">)</span>
 
-<span class="va">gpi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_big_pi.html">get_big_pi</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
+<span class="va">gpi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/get_netGPI.html">get_netGPI</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
                   id <span class="op">=</span> <span class="va">ids</span><span class="op">)</span>
 
 <span class="va">p1_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/plot_prot.html">plot_prot</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
@@ -179,7 +174,30 @@ code.r{ /* Code block */
                    gpi <span class="op">=</span> <span class="va">gpi</span><span class="op">)</span>
 
 <span class="va">p1_df</span></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_p1.svg"></p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p1.svg"> Mixing the two types of input is also a possibility. In the below call the data frames <code>nsp</code> and <code>gpi</code> are used to tell <code>prot_plot()</code> the length of the N-sp and the positions of omega sites while <code>domain = "hmm"</code> and <code>tm = "tmhmm"</code> instruct it to use <code><a href="../../reference/get_hmm.html">get_hmm()</a></code> to obtain domain predictions and <code><a href="../../reference/get_tmhmm.html">get_tmhmm()</a></code> to obtain TM predictions:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/plot_prot.html">plot_prot</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
+                id <span class="op">=</span> <span class="va">ids</span>,
+                domain <span class="op">=</span> <span class="st">"hmm"</span>,
+                tm <span class="op">=</span> <span class="st">"tmhmm"</span>,
+                nsp <span class="op">=</span> <span class="va">nsp</span>,
+                gpi <span class="op">=</span> <span class="va">gpi</span><span class="op">)</span>
+<span class="va">p2</span></code></pre></div>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p2.svg"></p>
+<p>From the above plot it can be observed TMHMM tends to predict TM regions where there are N-sp’s and that <code><a href="../../reference/get_cdd.html">get_cdd()</a></code> and <code><a href="../../reference/get_hmm.html">get_hmm()</a></code> differ in the type of detected domains. For instance the <a href="https://www.uniprot.org/uniprot/Q9C7T7">Q9C7T7</a> is a leucine-rich repeat (LRR) receptor-like protein kinase - the Conserved domain database has an entry for exactly the mentioned class <a href="https://www.ncbi.nlm.nih.gov/Structure/cdd/PLN00113">PLN00113</a> while the <a href="http://pfam.xfam.org/">Pfam database</a> has more general domain models so it predicts a protein kinase domain and several LRR domains.</p>
+<p>To plod disordered regions as predicted by <a href="http://old.protein.bio.unipd.it/espritz/">Espritz</a> vie the function <code><a href="../../reference/get_espritz.html">get_espritz()</a></code>:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/plot_prot.html">plot_prot</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
+                id <span class="op">=</span> <span class="va">ids</span>,
+                domain <span class="op">=</span> <span class="va">domain</span>,
+                tm <span class="op">=</span> <span class="va">tm</span>,
+                nsp <span class="op">=</span> <span class="va">nsp</span>,
+                gpi <span class="op">=</span> <span class="va">gpi</span>,
+                disorder <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+                
+<span class="va">p2</span></code></pre></div>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p13.svg"></p>
+<p>The longest predicted disordered region overlaps with the AG motif span in <a href="https://www.uniprot.org/uniprot/Q9ZQ23">Q9ZQ23</a></p>
 </div>
 <div id="plot_prot-options" class="section level2">
 <h2 class="hasAnchor">
@@ -188,32 +206,35 @@ code.r{ /* Code block */
 <li>
 <strong>determining what features to plot</strong>: to turn off some elements from being plotted use the appropriate argument, for instance <code>hyp = FALSE</code> will result in hydroxyproline predictions to not be plotted (check full list of options: <code><a href="../../reference/plot_prot.html">?plot_prot</a></code>):</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/plot_prot.html">plot_prot</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
                 id <span class="op">=</span> <span class="va">ids</span>,
                 hyp <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co">#do not plot hydroxyprolines</span>
                 ag <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co">#do not plot arabinogalactan motifs</span>
-                gpi <span class="op">=</span> <span class="st">"predgpi"</span><span class="op">)</span>  <span class="co">#use `get_pred_gpi()` to obtain GPI predictions</span>
+                gpi <span class="op">=</span> <span class="st">"predgpi"</span>, <span class="co">#use `get_pred_gpi()` to obtain GPI predictions</span>
+                domain <span class="op">=</span> <span class="st">"hmm"</span><span class="op">)</span>  <span class="co">#use `get_hmm()` to obtain domain predictions</span>
 <span class="va">p1</span></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_p2.svg"></p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p3.svg"></p>
 <ul>
 <li>
 <strong>feature specific options</strong>: passing appropriate function arguments to functions called by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> such as <code>dim</code> and <code>div</code> for <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> or <code>tprob</code> for <code><a href="../../reference/predict_hyp.html">predict_hyp()</a></code> to change the rules of arabinogalactan motif scan and the threshold for decision if the proline is hydroxylated is supported:</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/plot_prot.html">plot_prot</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
                 id <span class="op">=</span> <span class="va">ids</span>,
                 dim <span class="op">=</span> <span class="fl">5</span>, <span class="co">#`scan_ag()` argument, minimum number of dipeptides for a motif</span>
                 div <span class="op">=</span> <span class="fl">5</span>, <span class="co">#`scan_ag()` argument, maximum number of amino acids between dipeptides </span>
-                tprob <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span> <span class="co">#`predict_hyp()` argument, threshold probability for prediction</span>
+                tprob <span class="op">=</span> <span class="fl">0.9</span>,
+                domain <span class="op">=</span> <span class="st">"hmm"</span>,
+                ievalue <span class="op">=</span> <span class="fl">1e-10</span><span class="op">)</span> <span class="co">#`get_hmm()` argument, remove domains with independent E-value higher than this value</span>
                 
 <span class="va">p2</span></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_p3.svg"></p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p4.svg"></p>
 <ul>
 <li>
 <strong>change feature colors</strong>:</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/plot_prot.html">plot_prot</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
                 id <span class="op">=</span> <span class="va">ids</span>,
                 hyp_col <span class="op">=</span> <span class="st">"chocolate2"</span>,
@@ -222,37 +243,38 @@ code.r{ /* Code block */
                 ag_col <span class="op">=</span> <span class="st">"bisque2"</span>,
                 tm_col <span class="op">=</span> <span class="st">"aquamarine"</span><span class="op">)</span> 
 <span class="va">p3</span></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_p4.svg"></p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p5.svg"></p>
 <ul>
 <li>
-<strong>change the order of domain plotting</strong>: in the above images it can be observed there are more entries in the legend then can be seen in the plot. Some domains cover other domains. By default the domains with the lowest I-evalue (independent e-value) are plotted on top. To change this the argument <code>dom_sort</code> can be used. This argument can take the following values: <code>"ievalue"</code> (default), <code>"abc"</code> (alphabetically sorted by domain names), <code>"cba"</code> (reverse of <code>"abc"</code>).</li>
+<strong>change the order of domain plotting</strong>: in the above figures where <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> was called with <code>domain = "hmm"</code> it can be observed there are more entries in the legend then can be seen in the plot. Some domains cover other domains. By default the domains with the lowest I-evalue (independent e-value) are plotted on top. To change this the argument <code>dom_sort</code> can be used. This argument can take the following values: <code>"ievalue"</code> (default), <code>"abc"</code> (alphabetically sorted by domain names), <code>"cba"</code> (reverse of <code>"abc"</code>).</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/plot_prot.html">plot_prot</a></span><span class="op">(</span>sequence <span class="op">=</span> <span class="va">seqs</span>,
                 id <span class="op">=</span> <span class="va">ids</span>,
-                dom_sort <span class="op">=</span> <span class="st">"cba"</span><span class="op">)</span>
+                dom_sort <span class="op">=</span> <span class="st">"cba"</span>,
+                domain <span class="op">=</span> <span class="st">"hmm"</span><span class="op">)</span>
 <span class="va">p4</span></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_dom_sort.svg"></p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p6.svg"></p>
 <p>Ureide permease domain overlaps with TMEM144 transmembrane transporter domain and also protein kinase and protein tyrosine kinase domains overlap.</p>
 </div>
-<div id="customising-the-plot-using-ggplot-layers" class="section level2">
+<div id="customizing-the-plot-using-ggplot-layers" class="section level2">
 <h2 class="hasAnchor">
-<a href="#customising-the-plot-using-ggplot-layers" class="anchor"></a>Customising the plot using ggplot layers</h2>
+<a href="#customizing-the-plot-using-ggplot-layers" class="anchor"></a>Customizing the plot using ggplot layers</h2>
 <p><code><a href="../../reference/plot_prot.html">plot_prot()</a></code> returns a <code>ggplot</code> object which can be further customized:</p>
 <ul>
 <li>
 <strong>change theme elements</strong>:</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p1</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>,
         legend.direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_p5.svg"></p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p7.svg"></p>
 <ul>
 <li>
 <strong>add annotations</strong>:</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p1</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>,
         legend.direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span> <span class="op">+</span>
@@ -260,9 +282,9 @@ code.r{ /* Code block */
            y <span class="op">=</span> <span class="fl">3</span>,
            x <span class="op">=</span> <span class="fl">90</span>,
            label <span class="op">=</span> <span class="st">"FAS domain"</span><span class="op">)</span></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_p6.svg"></p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p8.svg"></p>
 <p>The <code>y</code> axis is continuous - <code>1</code> on the plot corresponds to Q9C7T7, <code>2</code> corresponds to Q9ZPR7 and 3 to Q9ZQ23. The <code>x</code> axis represents amino acids in the sequence. This enables adding annotations anywhere on the plot.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p1</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>,
         legend.direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span> <span class="op">+</span>
@@ -270,30 +292,30 @@ code.r{ /* Code block */
            y <span class="op">=</span> <span class="fl">1.6</span>,
            x <span class="op">=</span> <span class="fl">530</span>,
            label <span class="op">=</span> <span class="st">"annotation 1"</span><span class="op">)</span></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_p7.svg"></p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p9.svg"></p>
 <ul>
 <li>
 <strong>change plot ratio</strong>: the ratio of the axes is determined automatically by <code><a href="../../reference/plot_prot.html">plot_prot()</a></code> and scales with the longest sequence plotted. To change this use the <code>ratio</code> argument to <code><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_equal()</a></code>:</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p1</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>,
         legend.direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_equal</a></span><span class="op">(</span>ratio <span class="op">=</span> <span class="fl">80</span>,
               expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_p8.svg"></p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p10.svg"></p>
 <ul>
 <li>
 <strong>change domain colors</strong>: use another fill palette:</li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p1</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>,
         legend.direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"div"</span><span class="op">)</span></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_p9.svg"></p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p11.svg"></p>
 <p>or create a manual palette:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p1</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span>,
         legend.direction <span class="op">=</span> <span class="st">"vertical"</span><span class="op">)</span> <span class="op">+</span>
@@ -305,7 +327,7 @@ code.r{ /* Code block */
                                <span class="st">"blue"</span>,
                                <span class="st">"purple"</span>,
                                <span class="st">"grey30"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="https://missuse.github.io/ragp/articles/PSV_p10.svg"></p>
+<p><img src="https://missuse.github.io/ragp/articles/PSV_p12.svg"></p>
 </div>
   </div>
 

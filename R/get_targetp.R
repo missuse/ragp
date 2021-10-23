@@ -12,8 +12,7 @@
 #' @param pcut A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). cTP user specified cutoff.
 #' @param scut A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). SP user specified cutoff.
 #' @param ocut A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). User specified cutoff for "other" (not with mTP, cTP, SP).
-#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 200. Change only in case of a server side error. Accepted values are in range of 1 to 2000.
-#' @param sleep A numeric indicating the pause in seconds between server calls, at default set to 1
+#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 1000. Change only in case of a server side error. Accepted values are in range of 1 to 2000.
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
 #' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
@@ -37,7 +36,7 @@
 #' @source \url{https://services.healthtech.dtu.dk/service.php?TargetP-1.1}
 #' @references Emanuelsson O, Nielsen H, Brunak S,von Heijne G. (2000) Predicting subcellular localization of proteins based on their N-terminal amino acid sequence. J. Mol. Biol.300: 1005-1016
 #'
-#' @seealso \code{\link[ragp]{get_signalp}}
+#' @seealso \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_signalp5}}
 #'
 #' @examples
 #' library(ragp)
@@ -68,8 +67,7 @@ get_targetp.character <-   function(data,
                                     pcut = NULL,
                                     scut = NULL,
                                     ocut = NULL,
-                                    splitter = 200,
-                                    sleep = 3,
+                                    splitter = 1000,
                                     attempts = 2,
                                     progress = FALSE,
                                     ...){
@@ -96,34 +94,12 @@ get_targetp.character <-   function(data,
   if (missing(ocut)){
     ocut <- 0
   }
-  if (missing(sleep)){
-    sleep <- 3
-  }
-  if (length(sleep) > 1){
-    sleep <- 3
-    warning("sleep should be of length 1, setting to default: sleep = 3",
-            call. = FALSE)
-  }
-  if (!is.numeric(sleep)){
-    sleep <- as.numeric(sleep)
-    warning("sleep is not numeric, converting using 'as.numeric'",
-            call. = FALSE)
-  }
-  if (is.na(sleep)){
-    sleep <- 3
-    warning("sleep was set to NA, setting to default: sleep = 3",
-            call. = FALSE)
-  }
-  if (sleep < 2){
-    warning("setting sleep to less than 2s can cause problems when fetching results from the server",
-            call. = FALSE)
-  }
   if (missing(splitter)){
-    splitter <- 200
+    splitter <- 1000
   }
   if (length(splitter) > 1){
-    splitter <- 200
-    warning("splitter should be of length 1, setting to default: splitter = 200",
+    splitter <- 1000
+    warning("splitter should be of length 1, setting to default: splitter = 1000",
             call. = FALSE)
   }
   if (!is.numeric(splitter)){
@@ -132,16 +108,16 @@ get_targetp.character <-   function(data,
             call. = FALSE)
   }
   if (is.na(splitter)){
-    splitter <- 200
-    warning("splitter was set to NA, setting to default: splitter = 200",
+    splitter <- 1000
+    warning("splitter was set to NA, setting to default: splitter = 1000",
             call. = FALSE)
   }
   if (is.numeric(splitter)) {
     splitter <- floor(splitter)
   }
   if (!(splitter %in% 1:2000)){
-    splitter <- 200
-    warning("Illegal splitter input, splitter will be set to 200",
+    splitter <- 1000
+    warning("Illegal splitter input, splitter will be set to 1000",
             call. = FALSE)
   }
   if (length(attempts) > 1){
@@ -384,82 +360,69 @@ get_targetp.character <-   function(data,
                                 max = for_pb,
                                 style = 3)
   }
-  splt <- (seq_along(file_list) - 1) %/% 10
-  file_list <- split(file_list,
-                     splt)
-  output <- vector("list", length(file_list)*10)
+
+  output <- vector("list", length(file_list))
+  url <- "https://services.healthtech.dtu.dk/cgi-bin/webface2.fcgi"
+  cfg <- "/var/www/html/services/TargetP-1.1/webface.cf"
   for(k in seq_along(file_list)){
     x <- file_list[[k]]
-    jobid <- vector("character", 10)
-    for (i in seq_along(x)){
-      file_up <-  httr::upload_file(x[i])
-      res <- httr::POST(
-        url = "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?",
-        encode = "multipart",
-        body = list(
-          `configfile` = "/usr/opt/www/pub/CBS/services/TargetP-1.1/TargetP.cf",
-          `SEQSUB` =  file_up,
-          `orgtype` = org_type,
-          `cleavsite` = "on",
-          `spec` = spec,
-          `tcut` = tcut,
-          `pcut` = pcut,
-          `scut` = scut,
-          `ocut` = ocut
+    file_up <-  httr::upload_file(x)
+    
+    res <- httr::POST(
+      url = url,
+      encode = "multipart",
+      body = list(
+        `configfile` = cfg,
+        `SEQSUB` =  file_up,
+        `orgtype` = org_type,
+        `cleavsite` = "on",
+        `spec` = spec,
+        `tcut` = tcut,
+        `pcut` = pcut,
+        `scut` = scut,
+        `ocut` = ocut
+      ))
+    
+    if(!grepl("jobid=", res$url)){
+      stop("something went wrong on server side")
+    }
+    
+    res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
+               "",
+               res$url,
+               fixed = TRUE)
+    
+    res <- sub("&wait=20",
+               "",
+               res,
+               fixed = TRUE)
+    
+    jobid <- res
+
+    if(progress){
+      utils::setTxtProgressBar(pb,
+                               k)
+    }
+      
+    Sys.sleep(2)
+
+    time1 <- Sys.time()
+    
+    repeat {
+      res2 <- httr::GET(
+        url = url,
+        query = list(
+          jobid = jobid,
+          wait = "20"
         ))
       
-      if(!grepl("jobid=", res$url)){
-        stop("something went wrong on server side")
-      }
-      res <- sub("http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?jobid=",
-                 "",
-                 res$url,
-                 fixed = TRUE)
+      code <- res2$status_code
       
-      res <- sub("&wait=20",
-                 "",
-                 res,
-                 fixed = TRUE)
-      jobid[i] <- res
-      
-      if(progress){
-        utils::setTxtProgressBar(pb,
-                                 floor(i/2) + (10 * (k - 1)))
-      }
-      Sys.sleep(sleep)
-    }
-    collected_res <- vector("list",
-                            length(jobid))
-    
-    for (i in seq_along(x)){
-      time1 <- Sys.time()
-      repeat {
-        res2 <- httr::GET(
-          url = "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?",
-          query = list(
-            jobid = jobid[i],
-            wait = "20"
-          ))
-        bad <- xml2::xml_text(
-          xml2::xml_find_all(
-            httr::content(res2,
-                          as = "parsed"),
-            "//head")
-        )
-        if (grepl("Illegal", bad)){
-          prt <- xml2::xml_text(
-            xml2::xml_find_all(
-              httr::content(res2,
-                            as = "parsed"),
-              "//li")
-          )
-          stop(paste0(prt,
-                      ". Problem in file: ",
-                      "temp_",
-                      i,
-                      ".fa"),
-               call. = FALSE)
-        }
+      if(code != 200){
+        res2_split <- NULL
+        warning(paste0( ". Problem in file: ",
+                        x))
+      } else {
         res2 <- as.character(
           xml2::xml_find_all(
             httr::content(res2,
@@ -470,89 +433,85 @@ get_targetp.character <-   function(data,
           strsplit(res2,
                    "\n")
         )
-        Sys.sleep(1)
-        if (any(grepl("mTP", res2_split))){
-          break
-        }
-        
-        time2 <- Sys.time()
-        
-        max.time <- as.difftime(pmax(50, splitter),
-                                units = "secs")
-        
-        if ((time2 - time1) > max.time) {
-          res2_split <- NULL
-          if(progress) message(
-            "file",
-            x[i],
-            "took longer then expected")
-          break
-        }
       }
+    
+      Sys.sleep(1)
       
-      if (is.null(res2_split)) {
-        tms <- 0
-        while(tms < attempts && is.null(res2_split)){
-          if(progress) message(
-            "reattempting file",
-            x[i])
-          file_up <-  httr::upload_file(x[i])
-          res <- httr::POST(
-            url = "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?",
-            encode = "multipart",
-            body = list(
-              `configfile` = "/usr/opt/www/pub/CBS/services/TargetP-1.1/TargetP.cf",
-              `SEQSUB` =  file_up,
-              `orgtype` = org_type,
-              `cleavsite` = "on",
-              `spec` = spec,        
-              `tcut` = tcut,
-              `pcut` = pcut,
-              `scut` = scut,
-              `ocut` = ocut
+      if (any(grepl("mTP", res2_split))){
+        
+        break
+      }
+
+      time2 <- Sys.time()
+      
+      max.time <- as.difftime(pmax(50, splitter),
+                              units = "secs")
+      
+      
+      if ((time2 - time1) > max.time) {
+        res2_split <- NULL
+        if(progress) message(
+          "file",
+          x,
+          "took longer then expected")
+        break
+      }
+    }
+    if (is.null(res2_split)) {
+      tms <- 0
+      while(tms < attempts && is.null(res2_split)){
+        if(progress) message(
+          "reattempting file",
+          x)
+        file_up <-  httr::upload_file(x)
+        res <- httr::POST(
+          url = url,
+          encode = "multipart",
+          body = list(
+            `configfile` = cfg,
+            `SEQSUB` =  file_up,
+            `orgtype` = org_type,
+            `cleavsite` = "on",
+            `spec` = spec,        
+            `tcut` = tcut,
+            `pcut` = pcut,
+            `scut` = scut,
+            `ocut` = ocut
+          ))
+        
+        if(!grepl("jobid=", res$url)){
+          stop("something went wrong on server side")
+        }
+        
+        res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
+                   "",
+                   res$url,
+                   fixed = TRUE)
+        
+        res <- sub("&wait=20",
+                   "",
+                   res,
+                   fixed = TRUE)
+        
+        jobid <- res
+        
+        time1 <- Sys.time()
+        
+        repeat {
+          res2 <- httr::GET(
+            url = url,
+            query = list(
+              jobid = jobid,
+              wait = "20"
             ))
-          if(!grepl("jobid=", res$url)){
-            stop("something went wrong on server side")
-          }
-          res <- sub("http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?jobid=",
-                     "",
-                     res$url,
-                     fixed = TRUE)
           
-          res <- sub("&wait=20",
-                     "",
-                     res,
-                     fixed = TRUE)
-          jobidi <- res
+          code <- res2$status_code
           
-          time1 <- Sys.time()
-          repeat {
-            res2 <- httr::GET(
-              url <- "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?",
-              query = list(
-                jobid = jobidi,
-                wait = "20"
-              ))
-            bad <- xml2::xml_text(
-              xml2::xml_find_all(
-                httr::content(res2,
-                              as = "parsed"),
-                "//head")
-            )
-            if (grepl("Illegal", bad)){
-              prt <- xml2::xml_text(
-                xml2::xml_find_all(
-                  httr::content(res2,
-                                as = "parsed"),
-                  "//li")
-              )
-              stop(paste0(prt,
-                          ". Problem in file: ",
-                          "temp_",
-                          i,
-                          ".fa"),
-                   call. = FALSE)
-            }
+          if(code != 200){
+            res2_split <- NULL
+            warning(paste0( ". Problem in file: ",
+                            x))
+          } else {
             res2 <- as.character(
               xml2::xml_find_all(
                 httr::content(res2,
@@ -563,54 +522,57 @@ get_targetp.character <-   function(data,
               strsplit(res2,
                        "\n")
             )
-            Sys.sleep(1)
-            if (any(grepl("mTP", res2_split))){
-              break
-            }
-            
-            time2 <- Sys.time()
-            
-            max.time <- as.difftime(pmax(100, splitter * 1.5),
-                                    units = "secs")
-            
-            if ((time2 - time1) > max.time) {
-              res2_split <- NULL
-              break
-            }
           }
-          tms <- tms + 1
+          Sys.sleep(1)
+          if (any(grepl("mTP", res2_split))){
+            break
+          }
+          
+          time2 <- Sys.time()
+          
+          max.time <- as.difftime(pmax(100, splitter * 1.5),
+                                  units = "secs")
+          
+          if ((time2 - time1) > max.time) {
+            res2_split <- NULL
+            break
+          }
         }
+        
+        tms <- tms + 1
       }
-      if (is.null(res2_split)){
-        output <- do.call(rbind,
-                          output)
-        output$is.targetp <- output$Loc == "S"
-        if(progress){
-          utils::setTxtProgressBar(pb,
-                                   for_pb)
-          close(pb)
-        }
-        warning(
-          "maximum attempts reached at",
-          x[i],
-          "returning finished queries",
-          call. = FALSE)
-        return(output)
+    }
+    
+    if (is.null(res2_split)){
+      output <- do.call(rbind,
+                        output)
+      output$is.targetp <- output$Loc == "S"
+      if(progress){
+        utils::setTxtProgressBar(pb,
+                                 for_pb)
+        close(pb)
       }
-      unlink(x[i])
-      res2_split <- res2_split[(which(grepl("mTP",
-                                            res2_split))[1]+2):(which(grepl("cutoff",
-                                                                            res2_split))[1] - 2)]
-      res2_split <- strsplit(res2_split,
-                             " +")
-      
-      res2_split <- do.call(rbind,
-                            res2_split)
-      
-      res2_split <- as.data.frame(res2_split,
-                                  stringsAsFactors = FALSE)
-      
-      if(org_type == "plant"){
+      warning(
+        "maximum attempts reached at",
+        x,
+        "returning finished queries",
+        call. = FALSE)
+      return(output)
+    }
+    unlink(x)
+    res2_split <- res2_split[(which(grepl("mTP",
+                                          res2_split))[1]+2):(which(grepl("cutoff",
+                                                                          res2_split))[1] - 2)]
+    res2_split <- strsplit(res2_split,
+                           " +")
+    
+    res2_split <- do.call(rbind,
+                          res2_split)
+    
+    res2_split <- as.data.frame(res2_split,
+                                stringsAsFactors = FALSE)
+    
+    if(org_type == "plant"){
       colnames(res2_split) <- c("Name",
                                 "Len",
                                 "cTP",
@@ -620,8 +582,8 @@ get_targetp.character <-   function(data,
                                 "Loc",
                                 "RC",
                                 "TPlen")
-      }
-      
+    }
+    
     if(org_type == "non_plant"){
       colnames(res2_split) <- c("Name",
                                 "Len",
@@ -632,13 +594,11 @@ get_targetp.character <-   function(data,
                                 "RC",
                                 "TPlen")
     }
-      
-      if(progress){
-        utils::setTxtProgressBar(pb,
-                                 floor(i/2) + 5 + (10 * (k - 1)))
-      }
-      output[[((k*10)-10)+i]] <- res2_split
+    if(progress){
+      utils::setTxtProgressBar(pb,
+                               k)
     }
+    output[[k]] <- res2_split
   }
   
   if(progress){

@@ -13,8 +13,7 @@
 #' @param method One of c("best", "notm"), defaults to "best". Signalp 4.1 contains two types of neural networks. SignalP-TM has been trained with sequences containing transmembrane segments in the data set, while SignalP-noTM has been trained without those sequences. Per default, SignalP 4.1 uses SignalP-TM as a preprocessor to determine whether to use SignalP-TM or SignalP-noTM in the final prediction (if 4 or more positions are predicted to be in a transmembrane state, SignalP-TM is used, otherwise SignalP-noTM). An exception is Gram-positive bacteria, where SignalP-TM is used always. If you are confident that there are no transmembrane segments in your data, you can get a slightly better performance by choosing "Input sequences do not include TM regions", which will tell SignalP 4.1 to use SignalP-noTM always.
 #' @param minlen An integer value corresponding to the minimal predicted signal peptide length, at default set to 10. SignalP 4.0 could, in rare cases, erroneously predict signal peptides shorter than 10 residues. These errors have in SignalP 4.1 been eliminated by imposing a lower limit on the cleavage site position (signal peptide length). The minimum length is by default 10, but you can adjust it. Signal peptides shorter than 15 residues are very rare. If you want to disable this length restriction completely, enter 0 (zero).
 #' @param trunc An integer value corresponding to the N-terminal truncation of input sequence, at default set to 70. By default, the predictor truncates each sequence to max. 70 residues before submitting it to the neural networks. If you want to predict extremely long signal peptides, you can try a higher value, or disable truncation completely by entering 0 (zero).
-#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.
-#' @param sleep A numeric indicating the pause in seconds between POST and GET server calls, at default set to 1s. Decreasing is not recommended.
+#' @param splitter An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Default is 1000. Change only in case of a server side error. Accepted values are in range of 1 to 2000.
 #' @param attempts Integer, number of attempts if server unresponsive, at default set to 2.
 #' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
 #' @param ... currently no additional arguments are accepted apart the ones documented bellow.
@@ -42,7 +41,7 @@
 #' @source \url{https://services.healthtech.dtu.dk/service.php?SignalP-4.1}
 #' @references Petersen TN. Brunak S. Heijne G. Nielsen H. (2011) SignalP 4.0: discriminating signal peptides from transmembrane regions. Nature Methods 8: 785-786
 #'
-#' @seealso \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_targetp}}
+#' @seealso \code{\link[ragp]{get_signalp5}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_targetp}}
 #'
 #' @examples
 #' library(ragp)
@@ -73,17 +72,16 @@ get_signalp.character <- function(data,
                                   method = c("best", "notm"),
                                   minlen = NULL,
                                   trunc = 70L,
-                                  splitter = 500L,
-                                  sleep = 3,
+                                  splitter = 1000L,
                                   attempts = 2,
                                   progress = FALSE,
                                   ...){
   if (missing(splitter)) {
-    splitter <- 500L
+    splitter <- 1000L
   }
   if (length(splitter) > 1){
-    splitter <- 500L
-    warning("splitter should be of length 1, setting to default: splitter = 500",
+    splitter <- 1000L
+    warning("splitter should be of length 1, setting to default: splitter = 1000",
             call. = FALSE)
   }
   if (!is.numeric(splitter)){
@@ -92,16 +90,16 @@ get_signalp.character <- function(data,
             call. = FALSE)
   }
   if (is.na(splitter)){
-    splitter <- 500L
-    warning("splitter was set to NA, setting to default: splitter = 500",
+    splitter <- 1000L
+    warning("splitter was set to NA, setting to default: splitter = 1000",
             call. = FALSE)
   }
   if (is.numeric(splitter)) {
     splitter <- floor(splitter)
   }
   if (!(splitter %in% 1:2000)) {
-    splitter <- 500L
-    warning("Illegal splitter input, splitter will be set to 500",
+    splitter <- 1000L
+    warning("Illegal splitter input, splitter will be set to 1000",
             call. = FALSE)
   }
   if (!missing(trunc)){
@@ -167,28 +165,6 @@ get_signalp.character <- function(data,
   if (is.na(progress)){
     progress <- FALSE
     warning("progress was set to NA, setting to default: progress = FALSE",
-            call. = FALSE)
-  }
-  if (missing(sleep)) {
-    sleep <- 3
-  }
-  if (length(sleep) > 1){
-    sleep <- 3
-    warning("sleep should be of length 1, setting to default: sleep = 3",
-            call. = FALSE)
-  }
-  if (!is.numeric(sleep)){
-    sleep <- as.numeric(sleep)
-    warning("sleep is not numeric, converting using 'as.numeric'",
-            call. = FALSE)
-  }
-  if (is.na(sleep)){
-    sleep <- 3
-    warning("sleep was set to NA, setting to default: sleep = 3",
-            call. = FALSE)
-  }
-  if (sleep < 2){
-    warning("setting sleep to less than 2s can cause problems when fetching results from the server",
             call. = FALSE)
   }
   if (missing(org_type)) {
@@ -293,8 +269,8 @@ get_signalp.character <- function(data,
     stop("cannot find file in the specified path",
          call. = FALSE)
   }
-  url <- "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi"
-  cfg_file <- "/usr/opt/www/pub/CBS/services/SignalP-4.1/SignalP.cf"
+  url <- "https://services.healthtech.dtu.dk/cgi-bin/webface2.fcgi"
+  cfg_file <- "/var/www/html/services/SignalP-4.1/webface.cf"
   file_list <- ragp::split_fasta(path_in = file_name,
                                  path_out = "tmp_signalp_",
                                  num_seq = splitter,
@@ -308,75 +284,57 @@ get_signalp.character <- function(data,
                                 max = for_pb,
                                 style = 3)
   }
-  splt <- (seq_along(file_list) - 1) %/% 10
-  file_list <- split(file_list,
-                     splt)
-  output <- vector("list", length(file_list)*10)
+  output <- vector("list", length(file_list))
   for(k in seq_along(file_list)){
     x <- file_list[[k]]
-    jobid <- vector("character", 10)
-    for (i in seq_along(x)) {
-      file_up <- httr::upload_file(x[i])
-      if (trunc == 1000000L){
-        trunc <- ""
-      }
-      res <- httr::POST(url = url,
-                        encode = "multipart",
-                        body = list(configfile = cfg_file,
-                                    SEQSUB = file_up,
-                                    orgtype = org_type,
-                                    `Dcut-type` = Dcut_type,
-                                    `Dcut-noTM` = Dcut_noTM,
-                                    `Dcut-TM` = Dcut_TM,
-                                    graphmode = NULL,
-                                    format = "short",
-                                    minlen = minlen,
-                                    method = method,
-                                    trunc = as.character(trunc)))
-      if(!grepl("jobid=", res$url)){
-        stop("something went wrong on server side")
-      }
-      res <- sub("http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?jobid=",
-                 "",
-                 res$url,
-                 fixed = TRUE)
-      
-      res <- sub("&wait=20",
-                 "",
-                 res,
-                 fixed = TRUE)
-      jobid[i] <- res
-      if(progress){
-        utils::setTxtProgressBar(pb,
-                                 floor(i/2) + (10 * (k - 1)))
-      }
-      #Sys.sleep(sleep)
+    
+    file_up <- httr::upload_file(x)
+    if (trunc == 1000000L){
+      trunc <- ""
     }
     
-    collected_res <- vector("list", length(x))
-    for (i in seq_along(x)) {
-      time1 <- Sys.time()
-      repeat {
-        res2 <- httr::GET(url = url,
-                          query = list(jobid = jobid[i],
-                                       wait = "20"))
-        bad <- xml2::xml_text(
-          xml2::xml_find_all(
-            httr::content(res2,
-                          as = "parsed"),
-            "//head")
-        )
-        if (grepl("Illegal", bad)) {
-          prt <- xml2::xml_text(
-            xml2::xml_find_all(
-              httr::content(res2,
-                            as = "parsed"),
-              "//li")
-          )
-          stop(paste0(prt, ". Problem in file: ", "temp_",
-                      i, ".fa"),
-               call. = FALSE)
-        }
+    res <- httr::POST(url = url,
+                      encode = "multipart",
+                      body = list(configfile = cfg_file,
+                                  SEQSUB = file_up,
+                                  orgtype = org_type,
+                                  `Dcut-type` = Dcut_type,
+                                  `Dcut-noTM` = Dcut_noTM,
+                                  `Dcut-TM` = Dcut_TM,
+                                  graphmode = NULL,
+                                  format = "short",
+                                  minlen = minlen,
+                                  method = method,
+                                  trunc = as.character(trunc)))
+    if(!grepl("jobid=", res$url)){
+      stop("something went wrong on server side")
+    }
+    
+    res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
+               "",
+               res$url,
+               fixed = TRUE)
+    
+    res <- sub("&wait=20",
+               "",
+               res,
+               fixed = TRUE)
+    
+    jobid <- res
+    
+    time1 <- Sys.time()
+    
+    repeat {
+      res2 <- httr::GET(url = url,
+                        query = list(jobid = jobid,
+                                     wait = "20"))
+      code <- res2$status_code
+      
+      if(code != 200){
+        res2_split <- NULL
+        warning(paste0(". Problem in file: ",
+                       x))
+      } else {
         res2 <- as.character(
           xml2::xml_find_all(
             httr::content(res2,
@@ -387,85 +345,77 @@ get_signalp.character <- function(data,
           strsplit(res2,
                    "\n")
         )
-        Sys.sleep(1)
-        if (any(grepl("Cmax", res2_split))) {
-          break
-        }
-        
-        time2 <- Sys.time()
-        
-        max.time <- as.difftime(pmax(50, splitter),
-                                units = "secs")
-        
-        if ((time2 - time1) > max.time) {
-          res2_split <- NULL
-          if(progress) message(
-            "file",
-            x[i],
-            "took longer then expected")
-          break
-        }
       }
-      if (is.null(res2_split)) {
-        tms <- 0
-        while(tms < attempts && is.null(res2_split)){
-          if(progress) message(
-            "reattempting file",
-            x[i])
-          file_up <-  httr::upload_file(x[i])
-          res <- httr::POST(url = url,
-                            encode = "multipart",
-                            body = list(configfile = cfg_file,
-                                        SEQSUB = file_up,
-                                        orgtype = org_type,
-                                        `Dcut-type` = Dcut_type,
-                                        `Dcut-noTM` = Dcut_noTM,
-                                        `Dcut-TM` = Dcut_TM,
-                                        graphmode = NULL,
-                                        format = "short",
-                                        minlen = minlen,
-                                        method = method,
-                                        trunc = as.character(trunc)))
-          if(!grepl("jobid=", res$url)){
-            stop("something went wrong on server side")
-          }
-          res <- sub("http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?jobid=",
-                     "",
-                     res$url,
-                     fixed = TRUE)
+      Sys.sleep(2)
+      
+      if (any(grepl("Cmax", res2_split))) {
+        break
+      }
+      
+      time2 <- Sys.time()
+      
+      max.time <- as.difftime(pmax(100, splitter * 1.5),
+                              units = "secs")
+      
+      if ((time2 - time1) > max.time) {
+        res2_split <- NULL
+        if(progress) message(
+          "file",
+          x,
+          "took longer then expected")
+        break
+      }
+    }
+    if (is.null(res2_split)) {
+      tms <- 0
+      
+      while(tms < attempts && is.null(res2_split)){
+        if(progress) message(
+          "reattempting file",
+          x)
+        
+        file_up <-  httr::upload_file(x)
+        
+        res <- httr::POST(url = url,
+                          encode = "multipart",
+                          body = list(configfile = cfg_file,
+                                      SEQSUB = file_up,
+                                      orgtype = org_type,
+                                      `Dcut-type` = Dcut_type,
+                                      `Dcut-noTM` = Dcut_noTM,
+                                      `Dcut-TM` = Dcut_TM,
+                                      graphmode = NULL,
+                                      format = "short",
+                                      minlen = minlen,
+                                      method = method,
+                                      trunc = as.character(trunc)))
+        if(!grepl("jobid=", res$url)){
+          stop("something went wrong on server side")
+        }
+        res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
+                   "",
+                   res$url,
+                   fixed = TRUE)
+        
+        res <- sub("&wait=20",
+                   "",
+                   res,
+                   fixed = TRUE)
+        jobid <- res
+        
+        time1 <- Sys.time()
+        
+        repeat {
+          res2 <- httr::GET(url = url,
+                            query = list(jobid = jobid,
+                                         wait = "20"))
+          code <- res2$status_code
           
-          res <- sub("&wait=20",
-                     "",
-                     res,
-                     fixed = TRUE)
-          jobidi <- res
-          
-          time1 <- Sys.time()
-          
-          repeat {
-            res2 <- httr::GET(url = url,
-                              query = list(jobid = jobidi,
-                                           wait = "20"))
-            bad <- xml2::xml_text(
-              xml2::xml_find_all(
-                httr::content(res2,
-                              as = "parsed"),
-                "//head")
-            )
-            if (grepl("Illegal", bad)) {
-              prt <- xml2::xml_text(
-                xml2::xml_find_all(
-                  httr::content(res2,
-                                as = "parsed"),
-                  "//li")
-              )
-              stop(paste0(prt,
-                          ". Problem in file: ",
-                          "temp_",
-                          i,
-                          ".fa"),
-                   call. = FALSE)
-            }
+          if(code != 200){
+            res2_split <- NULL
+            warning(paste0( ". Problem in file: ",
+                            x))
+          } else {
             res2 <- as.character(
               xml2::xml_find_all(
                 httr::content(res2,
@@ -476,85 +426,87 @@ get_signalp.character <- function(data,
               strsplit(res2,
                        "\n")
             )
-            Sys.sleep(1)
-            if (any(grepl("Cmax", res2_split))) {
-              break
-            }
-            
-            time2 <- Sys.time()
-            
-            max.time <- as.difftime(pmax(100, splitter * 1.5),
-                                    units = "secs")
-            
-            if ((time2 - time1) > max.time) {
-              res2_split <- NULL
-              break
-            }
           }
-          tms <- tms + 1
+          Sys.sleep(1)
+          if (any(grepl("Cmax", res2_split))) {
+            break
+          }
+          
+          time2 <- Sys.time()
+          
+          max.time <- as.difftime(pmax(100, splitter * 1.5),
+                                  units = "secs")
+          
+          if ((time2 - time1) > max.time) {
+            res2_split <- NULL
+            break
+          }
         }
+        tms <- tms + 1
       }
-      if (is.null(res2_split)){
-        output <- do.call(rbind,
-                          output)
-        output$is.signalp <- output$is.sp == "Y"
-        if(progress){
-          utils::setTxtProgressBar(pb,
-                                   for_pb)
-          close(pb)
-        }
-        warning(
-          "maximum attempts reached at",
-          x[i],
-          "returning finished queries",
-          call. = FALSE)
-        return(output)
-      }
-      unlink(x[i])
-      
-      res2_split <- res2_split[(which(grepl("name",
-                                            res2_split))[1] +
-                                  1):(which(grepl("/pre",
-                                                  res2_split ))[1] - 1)]
-      
-      if(any(grepl("hr", res2_split))){
-        res2_split <- res2_split[1:(which(grepl("<hr>",
-                                                res2_split))[1] - 1)]
-      }
-      res2_split <- strsplit(res2_split,
-                             " +")
-      res2_split <- do.call(rbind,
-                            res2_split)
-      res2_split <- as.data.frame(res2_split,
-                                  stringsAsFactors = F)
-      colnames(res2_split) <- c("id",
-                                "Cmax",
-                                "Cmax.pos",
-                                "Ymax",
-                                "Ymax.pos",
-                                "Smax",
-                                "Smax.pos",
-                                "Smean",
-                                "Dmean",
-                                "is.sp",
-                                "Dmaxcut",
-                                "Networks.used")
-      res2_split$Ymax.pos <- as.integer(as.character(res2_split$Ymax.pos))
-      res2_split$Cmax.pos <- as.integer(as.character(res2_split$Cmax.pos)) 
-      res2_split$Smax.pos <- as.integer(as.character(res2_split$Smax.pos)) 
-      res2_split$Cmax <- as.numeric(as.character(res2_split$Cmax))
-      res2_split$Ymax <- as.numeric(as.character(res2_split$Ymax)) 
-      res2_split$Smax <- as.numeric(as.character(res2_split$Smax)) 
-      res2_split$Smean <- as.numeric(as.character(res2_split$Smean)) 
-      res2_split$Dmean <- as.numeric(as.character(res2_split$Dmean)) 
-      
+    }
+
+    if (is.null(res2_split)){
+      output <- do.call(rbind,
+                        output)
+      output$is.signalp <- output$is.sp == "Y"
       if(progress){
         utils::setTxtProgressBar(pb,
-                                 floor(i/2) + 5 + (10 * (k - 1)))
+                                 for_pb)
+        close(pb)
       }
-      output[[((k*10)-10)+i]] <- res2_split
+      warning(
+        "maximum attempts reached at",
+        x,
+        "returning finished queries",
+        call. = FALSE)
+      return(output)
     }
+    unlink(x)
+    
+    res2_split <- res2_split[(which(grepl("name",
+                                          res2_split))[1] +
+                                1):(which(grepl("/pre",
+                                                res2_split ))[1] - 1)]
+    
+    if(any(grepl("hr", res2_split))){
+      res2_split <- res2_split[1:(which(grepl("<hr>",
+                                              res2_split))[1] - 1)]
+    }
+    res2_split <- strsplit(res2_split,
+                           " +")
+    res2_split <- do.call(rbind,
+                          res2_split)
+    res2_split <- as.data.frame(res2_split,
+                                stringsAsFactors = F)
+    colnames(res2_split) <- c("id",
+                              "Cmax",
+                              "Cmax.pos",
+                              "Ymax",
+                              "Ymax.pos",
+                              "Smax",
+                              "Smax.pos",
+                              "Smean",
+                              "Dmean",
+                              "is.sp",
+                              "Dmaxcut",
+                              "Networks.used")
+    res2_split$Ymax.pos <- as.integer(as.character(res2_split$Ymax.pos))
+    res2_split$Cmax.pos <- as.integer(as.character(res2_split$Cmax.pos)) 
+    res2_split$Smax.pos <- as.integer(as.character(res2_split$Smax.pos)) 
+    res2_split$Cmax <- as.numeric(as.character(res2_split$Cmax))
+    res2_split$Ymax <- as.numeric(as.character(res2_split$Ymax)) 
+    res2_split$Smax <- as.numeric(as.character(res2_split$Smax)) 
+    res2_split$Smean <- as.numeric(as.character(res2_split$Smean)) 
+    res2_split$Dmean <- as.numeric(as.character(res2_split$Dmean))
+    
+    if(progress){
+      utils::setTxtProgressBar(pb,
+                               k)
+    }
+    output[[k]] <- res2_split
   }
+  
   if(progress){
     utils::setTxtProgressBar(pb,
                              for_pb)

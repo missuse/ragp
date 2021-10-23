@@ -79,8 +79,7 @@ library(ragp)
 library(ggplot2)
 ind <- c(23, 5, 80, 81, 345)
 pred <- plot_prot(sequence = at_nsp$sequence[ind],
-                  id = at_nsp$Transcript.id[ind],
-                  bitscore = 30) #passed to get_hmm
+                  id = at_nsp$Transcript.id[ind])
 pred +
   theme(legend.position = "bottom",
         legend.direction = "vertical")
@@ -90,9 +89,9 @@ nsp <- get_signalp(data = at_nsp[ind,],
                    id = Transcript.id,
                    sequence = sequence)
                     
-hmm <- get_hmm(data = at_nsp[ind,],
+hmm <- get_hmm(data = at_nsp[ind,], #default is to use get_cdd()
                id = Transcript.id,
-               sequence = sequence)
+               sequence = sequence) 
                
 gpi <- get_netGPI(data = at_nsp[ind,],
                  id = Transcript.id,
@@ -112,8 +111,7 @@ pred2 <- plot_prot(sequence = at_nsp$sequence[ind],
                    nsp = nsp,
                    gpi = gpi,
                    domain = hmm,
-                   disorder = disorder,
-                   bitscore = 30)
+                   disorder = disorder)
                    
                    
 pred2 +
@@ -124,5 +122,5 @@ pred2 +
         
 }
 \seealso{
-\code{\link[ragp]{get_signalp5}} \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_tmhmm}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{get_espritz}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
+\code{\link[ragp]{get_signalp5}} \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_tmhmm}} \code{\link[ragp]{get_hmm}} \code{\link[ragp]{get_cdd}} \code{\link[ragp]{get_espritz}} \code{\link[ragp]{predict_hyp}} \code{\link[ragp]{scan_ag}}
 }

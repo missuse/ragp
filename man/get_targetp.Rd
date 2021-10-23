@@ -22,8 +22,7 @@ get_targetp(data, ...)
   pcut = NULL,
   scut = NULL,
   ocut = NULL,
-  splitter = 200,
-  sleep = 3,
+  splitter = 1000,
   attempts = 2,
   progress = FALSE,
   ...
@@ -54,9 +53,7 @@ get_targetp(data, ...)
 
 \item{ocut}{A numeric value, with range 0 - 1, defaults to 0 (cutoff = "winner_takes_all"). User specified cutoff for "other" (not with mTP, cTP, SP).}
 
-\item{splitter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 200. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
-
-\item{sleep}{A numeric indicating the pause in seconds between server calls, at default set to 1}
+\item{splitter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 1000. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
 
 \item{attempts}{Integer, number of attempts if server unresponsive, at default set to 2.}
 
@@ -100,5 +97,5 @@ targetp_pred
 Emanuelsson O, Nielsen H, Brunak S,von Heijne G. (2000) Predicting subcellular localization of proteins based on their N-terminal amino acid sequence. J. Mol. Biol.300: 1005-1016
 }
 \seealso{
-\code{\link[ragp]{get_signalp}}
+\code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_signalp5}}
 }

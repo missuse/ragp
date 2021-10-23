@@ -36,7 +36,7 @@
 #' @note This function creates temporary files in the working directory. If something goes wrong during communication with the server and progress was set to TRUE, predictions can be obtained using `file.path("http://www.cbs.dtu.dk/services/SignalP-5.0/tmp", jobid, "output_protein_type.txt")` eg `read.delim(file.path(...), header = TRUE, skip = 1)`.
 #'
 #'
-#' @source \url{http://www.cbs.dtu.dk/services/SignalP/}
+#' @source \url{https://services.healthtech.dtu.dk/service.php?SignalP-5.0}
 #' @references Almagro Armenteros JJ, Tsirigos KD, Sønderby CK, Petersen TN, Winther O, Brunak S, von Heijne G, Nielsen H. (2019) SignalP 5.0 improves signal peptide predictions using deep neural networks. Nature Biotechnology, 37:420-423, doi:10.1038/s41587-019-0036-z
 # 
 #' @seealso \code{\link[ragp]{get_signalp}} \code{\link[ragp]{get_targetp}}
@@ -167,8 +167,8 @@ get_signalp5.character <- function(data,
   
   organism <- organism[names(organism) == org_type]
   
-  url <- "http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi"
-  cfg_file <- "/usr/opt/www/pub/CBS/services/SignalP-5.0/signalp5.cf"
+  url <- "https://services.healthtech.dtu.dk/cgi-bin/webface2.fcgi"
+  cfg_file <- "/var/www/html/services/SignalP-5.0/webface.cf"
   file_list <- ragp::split_fasta(path_in = file_name,
                                  path_out = "tmp_signalp5_",
                                  num_seq = splitter)
@@ -193,7 +193,7 @@ get_signalp5.character <- function(data,
     }
     
     
-    res <- sub("http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?jobid=",
+    res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
                "",
                res$url,
                fixed = TRUE)
@@ -212,7 +212,7 @@ get_signalp5.character <- function(data,
     time1 <- Sys.time()
     
     repeat {
-      res2 <- httr::GET(url = file.path("http://www.cbs.dtu.dk/services/SignalP-5.0/tmp",
+      res2 <- httr::GET(url = file.path("https://services.healthtech.dtu.dk/services/SignalP-5.0/tmp",
                                         jobid,
                                         "output_protein_type.txt"))
       code <- res2$status_code
@@ -220,7 +220,7 @@ get_signalp5.character <- function(data,
       Sys.sleep(5)
       if (code == 200L) {
         res2 <- read.delim(
-          file.path("http://www.cbs.dtu.dk/services/SignalP-5.0/tmp",
+          file.path("https://services.healthtech.dtu.dk/services/SignalP-5.0/tmp",
                     jobid,
                     "output_protein_type.txt"),
           header = TRUE,
@@ -258,7 +258,7 @@ get_signalp5.character <- function(data,
           stop("something went wrong on server side")
         }
         
-        res <- sub("http://www.cbs.dtu.dk/cgi-bin/webface2.fcgi?jobid=",
+        res <- sub("https://services.healthtech.dtu.dk/cgi-bin/webface2.cgi?jobid=",
                    "",
                    res$url,
                    fixed = TRUE)
@@ -276,14 +276,14 @@ get_signalp5.character <- function(data,
         time1 <- Sys.time() 
         
         repeat {
-          res2 <- httr::GET(url = file.path("http://www.cbs.dtu.dk/services/SignalP-5.0/tmp",
+          res2 <- httr::GET(url = file.path("https://services.healthtech.dtu.dk/services/SignalP-5.0/tmp",
                                             jobid,
                                             "output_protein_type.txt"))
           code <- res2$status_code
           Sys.sleep(5)
           if (code == 200L) {
             res2 <- read.delim(
-              file.path("http://www.cbs.dtu.dk/services/SignalP-5.0/tmp",
+              file.path("https://services.healthtech.dtu.dk/services/SignalP-5.0/tmp",
                         jobid,
                         "output_protein_type.txt"),
               header = TRUE,

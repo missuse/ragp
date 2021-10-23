@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5.9000</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -117,7 +117,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/missuse/ragp/">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,28 +138,89 @@
       <small>Source: <a href='https://github.com/missuse/ragp/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="ragp-0359000" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.5.9000">
+<a href="#ragp-0359000" class="anchor"></a>ragp 0.3.5.9000</h1>
+<div id="bug-fixes-and-improvements" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-and-improvements" class="anchor"></a>Bug Fixes and Improvements</h2>
+<ul>
+<li><p><code>plot_signalp()</code> has been deprecated and removed.</p></li>
+<li><p><code><a href="../reference/get_signalp5.html">get_signalp5()</a></code> now works with <a href="https://services.healthtech.dtu.dk/service.php?SignalP-5.0" class="uri">https://services.healthtech.dtu.dk/service.php?SignalP-5.0</a> site since the old link <a href="http://www.cbs.dtu.dk/services/SignalP/" class="uri">http://www.cbs.dtu.dk/services/SignalP/</a> does not function any longer.</p></li>
+<li><p><code><a href="../reference/get_signalp.html">get_signalp()</a></code> now works with <a href="https://services.healthtech.dtu.dk/service.php?SignalP-4.1" class="uri">https://services.healthtech.dtu.dk/service.php?SignalP-4.1</a> since the old link <a href="http://www.cbs.dtu.dk/services/SignalP-4.1/" class="uri">http://www.cbs.dtu.dk/services/SignalP-4.1/</a> does not function any longer.</p></li>
+<li><p><code><a href="../reference/get_signalp.html">get_signalp()</a></code> now now runs one job at a time.</p></li>
+<li><p><code><a href="../reference/get_signalp.html">get_signalp()</a></code> splitter argument default value has been changed to 1000.</p></li>
+<li><p><code><a href="../reference/get_signalp.html">get_signalp()</a></code> sleep argument has been removed.</p></li>
+<li><p><code><a href="../reference/get_targetp.html">get_targetp()</a></code> now works with <a href="https://services.healthtech.dtu.dk/service.php?TargetP-1.1" class="uri">https://services.healthtech.dtu.dk/service.php?TargetP-1.1</a> since the old link <a href="http://www.cbs.dtu.dk/services/TargetP-1.1/" class="uri">http://www.cbs.dtu.dk/services/TargetP-1.1/</a> does not function any longer.</p></li>
+<li><p><code><a href="../reference/get_targetp.html">get_targetp()</a></code> now now runs one job at a time.</p></li>
+<li><p><code><a href="../reference/get_targetp.html">get_targetp()</a></code> splitter argument default value has been changed to 1000.</p></li>
+<li><p><code><a href="../reference/get_targetp.html">get_targetp()</a></code> sleep argument has been removed. .</p></li>
+</ul>
+</div>
+</div>
+    <div id="ragp-035" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.5">
+<a href="#ragp-035" class="anchor"></a>ragp 0.3.5</h1>
+<div id="new-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>New Features</h2>
+<ul>
+<li>added new function <code><a href="../reference/get_cdd.html">get_cdd()</a></code> which queries the the Conserved Domain Database (<a href="https://www.ncbi.nlm.nih.gov/Structure/bwrpsb/bwrpsb.cgi" class="uri">https://www.ncbi.nlm.nih.gov/Structure/bwrpsb/bwrpsb.cgi</a>)<br>
+</li>
+<li>added new function <code><a href="../reference/get_signalp5.html">get_signalp5()</a></code> which queries SignalP5 web server (<a href="http://www.cbs.dtu.dk/services/SignalP" class="uri">http://www.cbs.dtu.dk/services/SignalP</a>)<br>
+</li>
+<li>added new function <code><a href="../reference/get_tmhmm.html">get_tmhmm()</a></code> which queries TMHMM v. 2.0 web server (<a href="http://www.cbs.dtu.dk/services/TMHMM/" class="uri">http://www.cbs.dtu.dk/services/TMHMM/</a>)<br>
+</li>
+<li>
+<code><a href="../reference/plot_prot.html">plot_prot()</a></code> <code>nsp</code> argument can now be <code>"signalp"</code>, <code>"signalp5"</code> or <code>"none"</code>. Default is <code>"signalp5"</code>. This argument determines if <code><a href="../reference/get_signalp.html">get_signalp()</a></code> or <code><a href="../reference/get_signalp5.html">get_signalp5()</a></code> are used for N-sp prediction. Data.frame input is accepted as well.</li>
+<li>
+<code><a href="../reference/plot_prot.html">plot_prot()</a></code> <code>tm</code> argument can now be <code>"phobius"</code>, <code>"tmhmm"</code> or <code>"none"</code>. Default is <code>"phobius"</code>. This argument determines if <code><a href="../reference/get_phobius.html">get_phobius()</a></code> or <code><a href="../reference/get_tmhmm.html">get_tmhmm()</a></code> are used for TM prediction. Data.frame input is accepted as well.</li>
+<li>
+<code><a href="../reference/plot_prot.html">plot_prot()</a></code> <code>domain</code> argument can now be <code>"cdd"</code>, <code>"hmm"</code> or <code>"none"</code>. Default is <code>"cdd"</code>. This argument determines if <code><a href="../reference/get_hmm.html">get_hmm()</a></code> or <code><a href="../reference/get_cdd.html">get_cdd()</a></code> are used for domain annotation. Data.frame input is accepted as well.</li>
+<li>all <code>get_*</code> and <code>scan_*</code> functions, as well as <code><a href="../reference/maab.html">maab()</a></code> now work with <code>AAStringSet</code> class objects. <a href='https://github.com/missuse/ragp/issues/5'>#5</a></li>
+</ul>
+</div>
+<div id="bug-fixes-and-improvements-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-and-improvements-1" class="anchor"></a>Bug Fixes and Improvements</h2>
+<ul>
+<li>
+<code><a href="../reference/get_signalp.html">get_signalp()</a></code> output contains an additional column <code>sp.length</code> - integer, length of the predicted signal peptide. This column is a copy of <code>Ymax.pos</code>. <strong>Potentially BREAKING CHANGE</strong><br>
+</li>
+<li>
+<code><a href="../reference/get_phobius.html">get_phobius()</a></code> output contains an additional column <code>sp.length</code> - integer, length of the predicted signal peptide. <strong>Potentially BREAKING CHANGE</strong>
+</li>
+<li>
+<code><a href="../reference/get_phobius.html">get_phobius()</a></code> the name of the output column “<code>Name</code>” has been changed to “<code>id</code>”. <strong>BREAKING CHANGE</strong>
+</li>
+<li>
+<code><a href="../reference/plot_prot.html">plot_prot()</a></code> default value for <code>gpi</code> argument has been changed to “<code>netgpi</code>”.</li>
+</ul>
+</div>
+</div>
     <div id="ragp-0320002" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.2.0002">
 <a href="#ragp-0320002" class="anchor"></a>ragp 0.3.2.0002</h1>
+<div id="bug-fixes-and-improvements-2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-and-improvements-2" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
-<li>
-<code><a href="../reference/get_espritz.html">get_espritz()</a></code> has been restored since Espritz server is again available at <a href="http://old.protein.bio.unipd.it/espritz/" class="uri">http://old.protein.bio.unipd.it/espritz/</a>.<br>
-</li>
-<li>
-<code><a href="../reference/plot_prot.html">plot_prot()</a></code> has new arguments <code>gpi_size</code> - controls the size of the gpi symbol and <code>gpi_shape</code>- controls the shape of the gpi symbol.<br>
-</li>
-<li>
-<code><a href="../reference/plot_prot.html">plot_prot()</a></code> has new argument <code>hyp_scan</code> - which is a logical and determines if <code><a href="../reference/scan_ag.html">scan_ag()</a></code> (when <code>ag = TRUE</code>) should scan for arabinogalactan motifs containing only predicted hydroxyprolines. This argument changes the previous default behavior of <code><a href="../reference/plot_prot.html">plot_prot()</a></code> which was equivalent to <code>hyp_scan = FALSE</code>.</li>
-<li>
-<code><a href="../reference/get_phobius.html">get_phobius()</a></code> and <code><a href="../reference/get_big_pi.html">get_big_pi()</a></code> now use https web server addresses. <a href='https://github.com/missuse/ragp/issues/6'>#6</a></li>
+<li><p><code><a href="../reference/get_netGPI.html">get_netGPI()</a></code> now now runs one job at a time.</p></li>
+<li><p><code><a href="../reference/get_netGPI.html">get_netGPI()</a></code> splitter argument default value has been changed to 2500.</p></li>
+<li><p><code><a href="../reference/get_targetp.html">get_targetp()</a></code> has been fixed to work with <code>org_type = "non_plant"</code>.</p></li>
+<li><p><code><a href="../reference/get_espritz.html">get_espritz()</a></code> has been restored since Espritz server is again available at <a href="http://old.protein.bio.unipd.it/espritz/" class="uri">http://old.protein.bio.unipd.it/espritz/</a>.</p></li>
+<li><p><code><a href="../reference/plot_prot.html">plot_prot()</a></code> has new arguments <code>gpi_size</code> - controls the size of the gpi symbol and <code>gpi_shape</code>- controls the shape of the gpi symbol.</p></li>
+<li><p><code><a href="../reference/plot_prot.html">plot_prot()</a></code> has new argument <code>hyp_scan</code> - which is a logical and determines if <code><a href="../reference/scan_ag.html">scan_ag()</a></code> (when <code>ag = TRUE</code>) should scan for arabinogalactan motifs containing only predicted hydroxyprolines. This argument changes the previous default behavior of <code><a href="../reference/plot_prot.html">plot_prot()</a></code> which was equivalent to <code>hyp_scan = FALSE</code>.</p></li>
+<li><p><code><a href="../reference/get_phobius.html">get_phobius()</a></code> and <code><a href="../reference/get_big_pi.html">get_big_pi()</a></code> now use https web server addresses. <a href='https://github.com/missuse/ragp/issues/6'>#6</a></p></li>
 </ul>
+</div>
 </div>
     <div id="ragp-0320001" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.2.0001">
 <a href="#ragp-0320001" class="anchor"></a>ragp 0.3.2.0001</h1>
-<div id="bug-fixes-and-improvements" class="section level2">
+<div id="bug-fixes-and-improvements-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-3" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li>
 <code><a href="../reference/get_espritz.html">get_espritz()</a></code> has been removed since Espritz server is no longer available for obtaining predictions. <strong>BREAKING CHANGE</strong>.</li>
@@ -171,17 +232,17 @@
     <div id="ragp-0320000" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.2.0000">
 <a href="#ragp-0320000" class="anchor"></a>ragp 0.3.2.0000</h1>
-<div id="new-features" class="section level2">
+<div id="new-features-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features" class="anchor"></a>New Features</h2>
+<a href="#new-features-1" class="anchor"></a>New Features</h2>
 <ul>
 <li>
 <code><a href="../reference/plot_prot.html">plot_prot()</a></code> arguments <code>nsp</code>, <code>domain</code>, <code>tm</code>, <code>gpi</code> and <code>disorder</code> can also be user supplied data frames obtained by calling <code><a href="../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../reference/get_hmm.html">get_hmm()</a></code>, <code><a href="../reference/get_phobius.html">get_phobius()</a></code>, <code><a href="../reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="../reference/get_pred_gpi.html">get_pred_gpi()</a></code>, <code><a href="../reference/get_netGPI.html">get_netGPI()</a></code> and <code><a href="../reference/get_espritz.html">get_espritz()</a></code> on the same sequences supplied to <code><a href="../reference/plot_prot.html">plot_prot()</a></code>.</li>
 </ul>
 </div>
-<div id="bug-fixes-and-improvements-1" class="section level2">
+<div id="bug-fixes-and-improvements-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-1" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-4" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li>
 <code><a href="../reference/get_big_pi.html">get_big_pi()</a></code> output column <code>is.bigpi</code> has been renamed to <code>is.gpi</code> to bring the output in line with other gpi predicting functions. <strong>BREAKING CHANGE</strong>.<br>
@@ -194,9 +255,9 @@
     <div id="ragp-0310000" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.1.0000">
 <a href="#ragp-0310000" class="anchor"></a>ragp 0.3.1.0000</h1>
-<div id="new-features-1" class="section level2">
+<div id="new-features-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-1" class="anchor"></a>New Features</h2>
+<a href="#new-features-2" class="anchor"></a>New Features</h2>
 <ul>
 <li><p>New <code><a href="../reference/get_netGPI.html">get_netGPI()</a></code> queries NetGPI web server (<a href="https://services.healthtech.dtu.dk/service.php?NetGPI-1.0" class="uri">https://services.healthtech.dtu.dk/service.php?NetGPI-1.0</a>) for predictions of GPI-anchored proteins.</p></li>
 <li><p><code><a href="../reference/maab.html">maab()</a></code> argument <code>get_gpi</code> has an additional option <code>"netgpi"</code>. When set, the function will query NetGPI web server to resolve ambiguities in maab classes depending on GPI-anchoring predictions.</p></li>
@@ -207,9 +268,9 @@
     <div id="ragp-0300002" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.0.0002">
 <a href="#ragp-0300002" class="anchor"></a>ragp 0.3.0.0002</h1>
-<div id="bug-fixes-and-improvements-2" class="section level2">
+<div id="bug-fixes-and-improvements-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-2" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-5" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li><p><code><a href="../reference/maab.html">maab()</a></code> now correctly performs when only a single protein sequence is provided as an argument.</p></li>
 <li><p><code><a href="../reference/get_hmm.html">get_hmm()</a></code> receives additional numeric arguments: <code>ievalue</code> and <code>bitscore</code>. These arguments are used to filter sequences with lower or equal <code>ievalue</code> and higher or equal <code>bitscore</code> in the output. This is useful when used from <code><a href="../reference/plot_prot.html">plot_prot()</a></code> to avoid plotting weakly identified domains.</p></li>
@@ -219,9 +280,9 @@
     <div id="ragp-0300001" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.0.0001">
 <a href="#ragp-0300001" class="anchor"></a>ragp 0.3.0.0001</h1>
-<div id="bug-fixes-and-improvements-3" class="section level2">
+<div id="bug-fixes-and-improvements-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-3" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-6" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li><p><code><a href="../reference/get_big_pi.html">get_big_pi()</a></code> and <code><a href="../reference/get_pred_gpi.html">get_pred_gpi()</a></code> now return <code>NA</code> in respective <code>is.bigpi</code> and <code>is.gpi</code> columns when the servers are unable to make a prediction due to non-amino acid letters or length of the sequence.</p></li>
 <li><p><code><a href="../reference/maab.html">maab()</a></code> now correctly does not resolve class ambiguities when the logical vector provided as <code>gpi</code> argument contains <code>NA</code> values. Previously it returned <code>NA</code> as <code>maab_class</code>. This is useful when <code><a href="../reference/maab.html">maab()</a></code> is called with <code>get_gpi = 'predgpi'</code> or <code>get_gpi = 'bigpi'</code> arguments, and the corresponding servers are unable to make a prediction for a sequence due to non-amino acid letters or length of the sequence.</p></li>
@@ -231,17 +292,17 @@
     <div id="ragp-0300000" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.0.0000">
 <a href="#ragp-0300000" class="anchor"></a>ragp 0.3.0.0000</h1>
-<div id="new-features-2" class="section level2">
+<div id="new-features-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-2" class="anchor"></a>New Features</h2>
+<a href="#new-features-3" class="anchor"></a>New Features</h2>
 <ul>
 <li>
 <code><a href="../reference/predict_hyp.html">predict_hyp()</a></code> internal model is updated to 2nd version (‘V2’). Predictions are around 25% faster compared to the first version. The performance in terms of accuracy is similar based on the test set used. ‘V2’ was created using a more streamlined manner and is the default model. The old model (‘V1’) is still available using the <code>version</code> argument to <code><a href="../reference/predict_hyp.html">predict_hyp()</a></code>.</li>
 </ul>
 </div>
-<div id="bug-fixes-and-improvements-4" class="section level2">
+<div id="bug-fixes-and-improvements-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-4" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-7" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li><p><code><a href="../reference/predict_hyp.html">predict_hyp()</a></code> now checks if all provided ids are unique. Previously non unique ids caused an error at the end of computation.</p></li>
 <li><p><code><a href="../reference/predict_hyp.html">predict_hyp()</a></code> <code>sequence</code> output has changed for sequences containing non amino acid letters. Previously NA was returned for such sequences. At present all “P”" for which the probability is higher then the defined threshold (<code>tprob</code> argument) are changed to “O”" and all others are left as “P”.</p></li>
@@ -251,9 +312,9 @@
     <div id="ragp-0219100" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.1.9100">
 <a href="#ragp-0219100" class="anchor"></a>ragp 0.2.1.9100</h1>
-<div id="bug-fixes-and-improvements-5" class="section level2">
+<div id="bug-fixes-and-improvements-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-5" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-8" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li><p><code><a href="../reference/maab.html">maab()</a></code> now correctly outputs when there are no MAAB classes found and <code>get_gpi</code> argument is set to <code>"predgpi"</code> or <code>"bigpi"</code>. Previously this caused an error due to <code>stringr::write.fasta()</code> attempting to write a file with no sequences.</p></li>
 <li><p><code><a href="../reference/pfam2go.html">pfam2go()</a></code> now takes Pfam &gt; GO mappings from <a href="ftp://ftp.geneontology.org/pub/go/external2go/pfam2go" class="uri">ftp://ftp.geneontology.org/pub/go/external2go/pfam2go</a> instead of <a href="http://geneontology.org/external2go/pfam2go" class="uri">http://geneontology.org/external2go/pfam2go</a>.</p></li>
@@ -263,9 +324,9 @@
     <div id="ragp-0219000" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.1.9000">
 <a href="#ragp-0219000" class="anchor"></a>ragp 0.2.1.9000</h1>
-<div id="bug-fixes-and-improvements-6" class="section level2">
+<div id="bug-fixes-and-improvements-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-6" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-9" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li><p><code><a href="../reference/get_phobius.html">get_phobius()</a></code>, <code><a href="../reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="../reference/get_pred_gpi.html">get_pred_gpi()</a></code>, <code><a href="../reference/maab.html">maab()</a></code> and <code><a href="../reference/plot_prot.html">plot_prot()</a></code>, gain an additional argument <code>progress</code>. <code>progress</code> is a logical value determining whether to show the progress bar, (default <code>FALSE</code>).</p></li>
 <li><p><code><a href="../reference/get_targetp.html">get_targetp()</a></code>, <code><a href="../reference/get_signalp.html">get_signalp()</a></code> and <code><a href="../reference/get_hmm.html">get_hmm()</a></code> argument <code>progress</code> is now set to <code>FALSE</code> at default.</p></li>
@@ -277,9 +338,9 @@
     <div id="ragp-0210000" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.1.0000">
 <a href="#ragp-0210000" class="anchor"></a>ragp 0.2.1.0000</h1>
-<div id="bug-fixes-and-improvements-7" class="section level2">
+<div id="bug-fixes-and-improvements-10" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-7" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-10" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li>
 <code><a href="../reference/get_targetp.html">get_targetp()</a></code> and <code><a href="../reference/get_signalp.html">get_signalp()</a></code> gain additional arguments <code>progress</code> and <code>attempts</code>. <code>progress</code> is a logical value determining whether to show the progress bar, (default <code>TRUE</code>). <code>attempts</code> is an integer value determining the number of repeated attempts if server unresponsive (default 2). These functions now return finished queues if server becomes unresponsive.</li>
@@ -289,17 +350,17 @@
     <div id="ragp-0200000" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.0.0000">
 <a href="#ragp-0200000" class="anchor"></a>ragp 0.2.0.0000</h1>
-<div id="new-features-3" class="section level2">
+<div id="new-features-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-3" class="anchor"></a>New Features</h2>
+<a href="#new-features-4" class="anchor"></a>New Features</h2>
 <ul>
 <li>
 <code><a href="../reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="../reference/get_espritz.html">get_espritz()</a></code>,<code><a href="../reference/get_hmm.html">get_hmm()</a></code>, <code><a href="../reference/get_phobius.html">get_phobius()</a></code>, <code><a href="../reference/get_pred_gpi.html">get_pred_gpi()</a></code>, <code><a href="../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../reference/get_targetp.html">get_targetp()</a></code>, <code><a href="../reference/maab.html">maab()</a></code>, <code><a href="../reference/predict_hyp.html">predict_hyp()</a></code>, <code><a href="../reference/scan_ag.html">scan_ag()</a></code> and <code><a href="../reference/scan_nglc.html">scan_nglc()</a></code> now use the S3 object system which will make further extensions of accepted inputs straightforward.</li>
 </ul>
 </div>
-<div id="bug-fixes-and-improvements-8" class="section level2">
+<div id="bug-fixes-and-improvements-11" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-8" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-11" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li><p>Completely rewrote the code for <code><a href="../reference/scan_ag.html">scan_ag()</a></code> which is now simplified and easier to read. The function is now about 20% slower.</p></li>
 <li><p>fixed a bug in <code><a href="../reference/scan_ag.html">scan_ag()</a></code> when argument <code>exclude_ext = "all"</code> which resulted in detection of unwanted amino acids in certain sequence arrangements. The bug occurred only if AG glycomoduls were detected, it did not introduce any. If you used this function with <code>exclude_ext = "all"</code> it is advisable to rerun these analyses again.</p></li>
@@ -310,17 +371,17 @@
     <div id="ragp-0100004" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0.0004">
 <a href="#ragp-0100004" class="anchor"></a>ragp 0.1.0.0004</h1>
-<div id="new-features-4" class="section level2">
+<div id="new-features-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-4" class="anchor"></a>New Features</h2>
+<a href="#new-features-5" class="anchor"></a>New Features</h2>
 <ul>
 <li><p>New <code><a href="../reference/get_espritz.html">get_espritz()</a></code> queries ESpritz web server for predictions on protein disordered regions.</p></li>
 <li><p><code><a href="../reference/plot_prot.html">plot_prot()</a></code> gains an additional argument <code>disorder</code>, logical indicating should the predicted disordered regions be plotted. Defaults to <code>FALSE</code>.</p></li>
 </ul>
 </div>
-<div id="bug-fixes-and-improvements-9" class="section level2">
+<div id="bug-fixes-and-improvements-12" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-9" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-12" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li>fixed a bug in function <code><a href="../reference/plot_prot.html">plot_prot()</a></code> introduced in 0.1.0.0003 which prevented GPIs to be plotted when <code>gpi = "bigpi"</code>.</li>
 </ul>
@@ -329,16 +390,16 @@
     <div id="ragp-0100003" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0.0003">
 <a href="#ragp-0100003" class="anchor"></a>ragp 0.1.0.0003</h1>
-<div id="new-features-5" class="section level2">
+<div id="new-features-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-5" class="anchor"></a>New Features</h2>
+<a href="#new-features-6" class="anchor"></a>New Features</h2>
 <ul>
 <li>New <code><a href="../reference/get_pred_gpi.html">get_pred_gpi()</a></code> queries PredGPI web server for predictions on GPI presence and omega site location.</li>
 </ul>
 </div>
-<div id="bug-fixes-and-improvements-10" class="section level2">
+<div id="bug-fixes-and-improvements-13" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-10" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-13" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li><p><code><a href="../reference/maab.html">maab()</a></code> argument <code>get_gpi</code> has been changed and now accepts strings as input: <code>get_gpi = c("bigpi", "predgpi", "none")</code> which indicate whether to query Big Pi or PredGPI server or not to resolve class ambiguities.</p></li>
 <li><p><code><a href="../reference/plot_prot.html">plot_prot()</a></code> argument <code>gpi</code> has been changed and now accepts strings as input <code>gpi = c("bigpi", "predgpi", "none")</code> which indicate whether to query Big Pi or PredGPI server or not to plot GPI positions.</p></li>
@@ -350,9 +411,9 @@
     <div id="ragp-0100002" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0.0002">
 <a href="#ragp-0100002" class="anchor"></a>ragp 0.1.0.0002</h1>
-<div id="bug-fixes-and-improvements-11" class="section level2">
+<div id="bug-fixes-and-improvements-14" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-11" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-14" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li>Removed rvest dependency</li>
 </ul>
@@ -361,16 +422,16 @@
     <div id="ragp-0100001" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0.0001">
 <a href="#ragp-0100001" class="anchor"></a>ragp 0.1.0.0001</h1>
-<div id="new-features-6" class="section level2">
+<div id="new-features-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-6" class="anchor"></a>New Features</h2>
+<a href="#new-features-7" class="anchor"></a>New Features</h2>
 <ul>
 <li>Added vignette.</li>
 </ul>
 </div>
-<div id="bug-fixes-and-improvements-12" class="section level2">
+<div id="bug-fixes-and-improvements-15" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-12" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-15" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li><p>When using <code><a href="../reference/plot_prot.html">plot_prot()</a></code> with argument <code>dom_sort = "ievalue"</code> the domains with the lowest independent e-value will now be correctly plotted on top.</p></li>
 <li><p>The ratio of x and y axes in <code><a href="../reference/plot_prot.html">plot_prot()</a></code> output is now calculated based on sequence length and should provide more consistent diagrams.</p></li>
@@ -381,21 +442,21 @@
     <div id="ragp-0100000" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0.0000">
 <a href="#ragp-0100000" class="anchor"></a>ragp 0.1.0.0000</h1>
-<div id="new-features-7" class="section level2">
+<div id="new-features-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-7" class="anchor"></a>New Features</h2>
+<a href="#new-features-8" class="anchor"></a>New Features</h2>
 <ul>
 <li><p>New <code><a href="../reference/plot_prot.html">plot_prot()</a></code> returns a <code>ggplot2</code> diagram of protein structure based on <code>hmmscan</code> domain annotation and several types of predictions.</p></li>
 <li><p>New <code><a href="../reference/get_signalp.html">get_signalp()</a></code>, <code><a href="../reference/get_targetp.html">get_targetp()</a></code> and <code><a href="../reference/get_phobius.html">get_phobius()</a></code> replace deprecated <code>get_signalp_file()</code>, <code>get_targetp_file()</code> and <code>get_phobius_file()</code>. These functions accept R objects as well as FASTA files as input (<a href='https://github.com/missuse/ragp/issues/5'>#5</a>).</p></li>
-<li><p>New <code><a href="../reference/plot_signalp.html">plot_signalp()</a></code> takes one single letter protein sequence and returns a detailed SignalP prediction along with a plot.</p></li>
+<li><p>New <code>plot_signalp()</code> takes one single letter protein sequence and returns a detailed SignalP prediction along with a plot.</p></li>
 <li><p>New <code><a href="../reference/scan_nglc.html">scan_nglc()</a></code> detects motifs for N-glycosylation on asparagine residues.</p></li>
 <li><p><code><a href="../reference/maab.html">maab()</a></code> gain an additional logical argument <code>get_gpi</code> (default <code>FALSE</code>); if <code>TRUE</code> <code>get_big_pi</code> will be called on all sequences belonging to one of the HRGP classes thus resolving class ambiguities that depend on GPI knowledge.</p></li>
 <li><p>Added a <code>NEWS.md</code> file to track changes to the package.</p></li>
 </ul>
 </div>
-<div id="bug-fixes-and-improvements-13" class="section level2">
+<div id="bug-fixes-and-improvements-16" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-and-improvements-13" class="anchor"></a>Bug Fixes and Improvements</h2>
+<a href="#bug-fixes-and-improvements-16" class="anchor"></a>Bug Fixes and Improvements</h2>
 <ul>
 <li><p>Significantly improved the speed of <code><a href="../reference/get_big_pi.html">get_big_pi()</a></code>. Removed the verbose argument. Added a progress bar (<a href='https://github.com/missuse/ragp/issues/3'>#3</a>).</p></li>
 <li><p><code><a href="../reference/get_hmm.html">get_hmm()</a></code> gains new arguments: <code>timeout</code> - time in seconds to wait for the server response (default is 10s). <code>attempts</code> - number of attempts if server unresponsive (default is 2 times) (<a href='https://github.com/missuse/ragp/issues/3'>#3</a>).</p></li>

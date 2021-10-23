@@ -23,8 +23,7 @@ get_signalp(data, ...)
   method = c("best", "notm"),
   minlen = NULL,
   trunc = 70L,
-  splitter = 500L,
-  sleep = 3,
+  splitter = 1000L,
   attempts = 2,
   progress = FALSE,
   ...
@@ -57,9 +56,7 @@ get_signalp(data, ...)
 
 \item{trunc}{An integer value corresponding to the N-terminal truncation of input sequence, at default set to 70. By default, the predictor truncates each sequence to max. 70 residues before submitting it to the neural networks. If you want to predict extremely long signal peptides, you can try a higher value, or disable truncation completely by entering 0 (zero).}
 
-\item{splitter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Defaults to 500. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
-
-\item{sleep}{A numeric indicating the pause in seconds between POST and GET server calls, at default set to 1s. Decreasing is not recommended.}
+\item{splitter}{An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Default is 1000. Change only in case of a server side error. Accepted values are in range of 1 to 2000.}
 
 \item{attempts}{Integer, number of attempts if server unresponsive, at default set to 2.}
 
@@ -106,5 +103,5 @@ signalp_pred
 Petersen TN. Brunak S. Heijne G. Nielsen H. (2011) SignalP 4.0: discriminating signal peptides from transmembrane regions. Nature Methods 8: 785-786
 }
 \seealso{
-\code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_targetp}}
+\code{\link[ragp]{get_signalp5}} \code{\link[ragp]{get_phobius}} \code{\link[ragp]{get_targetp}}
 }

@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.0002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5.9000</span>
       </span>
     </div>
 
@@ -42,7 +42,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -80,7 +80,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/missuse/ragp/">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -101,24 +101,25 @@
 <a href="#ragp---hydroxyproline-aware-filtering-of-hydroxyproline-rich-glycoprotein-sequences" class="anchor"></a>ragp - hydroxyproline aware filtering of hydroxyproline rich glycoprotein sequences</h1></div>
 
 <p>Hydroxyproline rich glycoproteins (HRGPs) are one of the most complex families of macromolecules found in plants, due to the diversity of glycans decorating the protein backbone, as well as the heterogeneity of the protein backbones. While this diversity is responsible for the wide array of physiological functions associated with HRGPs, it hinders attempts for homology based identification. Current approaches, based on identifying sequences with characteristic motifs and biased amino acid composition, are limited to prototypical sequences.</p>
-<p><code>ragp</code> is an R package for mining and analyses of HRGPs, with emphasis on arabinogalactan protein sequences (AGPs). The <code>ragp</code> filtering pipeline exploits one of the HRGPs key features, the presence of hydroxyprolines which represent glycosylation sites. Main package features include prediction of proline hydroxylation sites, amino acid motif and bias analyses, efficient communication with web servers for prediction of N-terminal signal peptides and glycosylphosphatidylinositol modification sites, as well as the ability to annotate sequences through <a href="https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan">hmmscan</a> and subsequent <a href="http://www.geneontology.org/">GO</a> enrichment, based on predicted <a href="https://pfam.xfam.org/">Pfam</a> domains.</p>
+<p><code>ragp</code> is an R package for mining and analyses of HRGPs, with emphasis on arabinogalactan protein sequences (AGPs). The <code>ragp</code> filtering pipeline exploits one of the HRGPs key features, the presence of hydroxyprolines which represent glycosylation sites. Main package features include prediction of proline hydroxylation sites, amino acid motif and bias analyses, efficient communication with web servers for prediction of N-terminal signal peptides and glycosylphosphatidylinositol modification sites, as well as the ability to annotate sequences through <a href="https://www.ncbi.nlm.nih.gov/Structure/bwrpsb/bwrpsb.cgi">CDD</a> or <a href="https://www.ebi.ac.uk/Tools/hmmer/search/hmmscan">hmmscan</a> and subsequent <a href="http://www.geneontology.org/">GO</a> enrichment, based on predicted <a href="https://pfam.xfam.org/">Pfam</a> domains.</p>
 <p>The workflow in <code>ragp</code> is illustrated with the following diagram (<code>ragp</code> functions to be used for each of the tasks are boxed grey):</p>
 <p><img src="https://missuse.github.io/ragp/reference/figures/ragp_flow_chart.svg" style="display: block; margin-left: auto; margin-right: auto;"></p>
 <p>The filtering layer:</p>
 <ul>
-<li>predict the presence of secretory signals (N-sp) and filter sequences containing them. Since several prediction algorithms are utilized (<code><a href="reference/get_signalp.html">get_signalp()</a></code>, <code><a href="reference/get_targetp.html">get_targetp()</a></code> and <code><a href="reference/get_phobius.html">get_phobius()</a></code>) this decision is reached by a majority vote.<br>
+<li>predict the presence of secretory signals (N-sp) and filter sequences containing them. Several prediction algorithms are available. Currently recommended is to use <code><a href="reference/get_signalp5.html">get_signalp5()</a></code> which queries <a href="https://services.healthtech.dtu.dk/service.php?SignalP-5.0">SignalP5</a> (Almagro Armenteros et al. 2019).<br>
 </li>
-<li>predict proline hydroxylation (<code><a href="reference/predict_hyp.html">predict_hyp()</a></code>) and filter sequences containing at least three potential hydroxyprolines.</li>
+<li>predict proline hydroxylation (<code><a href="reference/predict_hyp.html">predict_hyp()</a></code>) and filter sequences containing several (for example three or more) potential hydroxyprolines.</li>
 </ul>
 <p>The analysis layer:</p>
 <ul>
 <li>find localized clusters of characteristic arabinogalactan motifs (AG glycomodules) to identify potential AGPs (<code><a href="reference/scan_ag.html">scan_ag()</a></code>) among the hydroxyproline containing sequences.</li>
 <li>perform motif and amino acid bias (MAAB, (Johnson et al. 2017)) classification scheme (<code><a href="reference/maab.html">maab()</a></code>) to classify hydroxyproline containing sequences.</li>
-<li>annotate domains using <a href="https://pfam.xfam.org/">Pfam</a> (<code><a href="reference/get_hmm.html">get_hmm()</a></code>) and enrich with gene ontology (GO) terms (<code><a href="reference/pfam2go.html">pfam2go()</a></code>).<br>
+<li>annotate domains using <a href="https://pfam.xfam.org/">Pfam</a> (<code><a href="reference/get_hmm.html">get_hmm()</a></code>) and enrich with gene ontology (GO) terms (<code><a href="reference/pfam2go.html">pfam2go()</a></code>). Alternatively annotate domains using <a href="https://www.ncbi.nlm.nih.gov/Structure/bwrpsb/bwrpsb.cgi">CDD</a>.<br>
 </li>
 <li>predict the presence of potential glycosylphosphatidylinositol attachment sites (<code><a href="reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="reference/get_pred_gpi.html">get_pred_gpi()</a></code> and <code><a href="reference/get_netGPI.html">get_netGPI()</a></code>).<br>
 </li>
 <li>predict disordered regions in proteins (<code><a href="reference/get_espritz.html">get_espritz()</a></code>).</li>
+<li>predict transmembrane regions in proteins (<code><a href="reference/get_phobius.html">get_phobius()</a></code> and <code><a href="reference/get_tmhmm.html">get_tmhmm()</a></code>)</li>
 </ul>
 <p>Additionally <code>ragp</code> provides tools for visualization of the mentioned attributes via <code><a href="reference/plot_prot.html">plot_prot()</a></code>.</p>
 <div id="installation" class="section level2">
@@ -179,6 +180,9 @@
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-armenteros_signalp5_2019" class="csl-entry">
+Almagro Armenteros, José Juan, Konstantinos D. Tsirigos, Casper Kaae Sønderby, Thomas Nordahl Petersen, Ole Winther, Søren Brunak, Gunnar von Heijne, and Henrik Nielsen. 2019. “SignalP 5.0 Improves Signal Peptide Predictions Using Deep Neural Networks.” <em>Nature Biotechnology</em> 37: 420–23. <a href="https://doi.org/0.1038/s41587-019-0036-z" class="uri">https://doi.org/0.1038/s41587-019-0036-z</a>.
+</div>
 <div id="ref-johnson_pipeline_2017" class="csl-entry">
 Johnson, Kim L., Andrew M. Cassin, Andrew Lonsdale, Antony Bacic, Monika S. Doblin, and Carolyn J. Schultz. 2017. “Pipeline to Identify Hydroxyproline-Rich Glycoproteins.” <em>Plant Physiology</em> 174 (2): 886–903. <a href="https://doi.org/10.1104/pp.17.00294" class="uri">https://doi.org/10.1104/pp.17.00294</a>.
 </div>
@@ -213,7 +217,7 @@ Johnson, Kim L., Andrew M. Cassin, Andrew Lonsdale, Antony Bacic, Monika S. Dobl
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Milan Dragicevic <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Milan Dragicevic <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-9422-2952" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Danijela Paunovic <br><small class="roles"> Author </small>  </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>

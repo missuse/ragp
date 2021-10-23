@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Query Phobius web server. — get_phobius • ragp</title>
+<title>Query SignalP 5.0 web server. — get_signalp5 • ragp</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Query Phobius web server. — get_phobius" />
-<meta property="og:description" content="Phobius web server is a combined transmembrane topology and signal peptide (N-sp) predictor. Currently only &quot;normal prediction&quot; of signal peptides is supported by the function." />
+<meta property="og:title" content="Query SignalP 5.0 web server. — get_signalp5" />
+<meta property="og:description" content="The SignalP 5.0 server predicts the presence of signal peptides and the location of their cleavage sites in proteins from Archaea, Gram-positive Bacteria, Gram-negative Bacteria and Eukarya." />
 
 
 
@@ -135,31 +135,38 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Query Phobius web server.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/missuse/ragp/blob/master/R/get_phobius.R'><code>R/get_phobius.R</code></a></small>
-    <div class="hidden name"><code>get_phobius.Rd</code></div>
+    <h1>Query SignalP 5.0 web server.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/missuse/ragp/blob/master/R/get_signalp5.R'><code>R/get_signalp5.R</code></a></small>
+    <div class="hidden name"><code>get_signalp5.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Phobius web server is a combined transmembrane topology and signal peptide (N-sp) predictor. Currently only "normal prediction" of signal peptides is supported by the function.</p>
+    <p>The SignalP 5.0 server predicts the presence of signal peptides and the location of their cleavage sites in proteins from Archaea, Gram-positive Bacteria, Gram-negative Bacteria and Eukarya.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_phobius</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>get_signalp5</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>get_phobius</span><span class='op'>(</span><span class='va'>data</span>, progress <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>get_signalp5</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  org_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"euk"</span>, <span class='st'>"gram-"</span>, <span class='st'>"gram+"</span>, <span class='st'>"archea"</span><span class='op'>)</span>,
+  splitter <span class='op'>=</span> <span class='fl'>2500L</span>,
+  attempts <span class='op'>=</span> <span class='fl'>2</span>,
+  progress <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>get_phobius</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>get_signalp5</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>get_phobius</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>get_signalp5</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>get_phobius</span><span class='op'>(</span>data <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>get_signalp5</span><span class='op'>(</span>data <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>sequence</span>, <span class='va'>id</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for AAStringSet</span>
-<span class='fu'>get_phobius</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'>get_signalp5</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,8 +180,20 @@
       <td><p>currently no additional arguments are accepted apart the ones documented bellow.</p></td>
     </tr>
     <tr>
+      <th>org_type</th>
+      <td><p>One of "euk", "gram-", "gram+" or "archea". Default is "euk". Are the protein sequences from Eukarya, Gram-negative Bacteria, Gram-positive Bacteria or Archaea.</p></td>
+    </tr>
+    <tr>
+      <th>splitter</th>
+      <td><p>An integer indicating the number of sequences to be in each .fasta file that is to be sent to the server. Default is 2500. Change only in case of a server side error. Accepted values are in range of 1 to 5000.</p></td>
+    </tr>
+    <tr>
+      <th>attempts</th>
+      <td><p>Integer, number of attempts if server unresponsive, at default set to 2.</p></td>
+    </tr>
+    <tr>
       <th>progress</th>
-      <td><p>Boolean, whether to show the progress bar, at default set to FALSE.</p></td>
+      <td><p>Boolean, whether to show messages of the job id for each batch. Default is FALSE.</p></td>
     </tr>
     <tr>
       <th>sequence</th>
@@ -188,83 +207,68 @@
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='http://phobius.sbc.su.se/'>http://phobius.sbc.su.se/</a></p>
+    <p><a href='https://services.healthtech.dtu.dk/service.php?SignalP-5.0'>https://services.healthtech.dtu.dk/service.php?SignalP-5.0</a></p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame with columns:</p><dl>
-<dt>id</dt><dd><p>Character, name of the submitted sequence.</p></dd>
-<dt>tm</dt><dd><p>Integer, the number of predicted transmembrane segments.</p></dd>
-<dt>sp</dt><dd><p>Character, Y/0 indicator if a signal peptide was predicted or not.</p></dd>
-<dt>prediction</dt><dd><p>Character string, predicted topology of the protein.</p></dd>
-<dt>cut_site</dt><dd><p>Integer, first amino acid after removal of the signal peptide</p></dd>
-<dt>is.phobius</dt><dd><p>Logical, did Phobius predict the presence of a signal peptide</p></dd>
-<dt>sp.length</dt><dd><p>Integer, length of the predicted signal peptide.</p></dd>
-
+    <p>if org_type is "euk" a data frame with columns:</p><dl>
+  <dt>id</dt><dd><p>Character, as from input</p></dd>
+  <dt>Prediction</dt><dd><p>Integer, The type of signal peptide predicted: Sec/SPI, Tat/SPI, Sec/SPII or Other if no signal peptide predicted</p></dd>
+  <dt>SP.Sec.SPI</dt><dd><p>Numeric, marginal probability that the protein contains a Sec  N-terminal signal peptide (Sec/SPI).</p></dd>
+  <dt>Other</dt><dd><p>Numeric, the probability that the sequence does not have any kind of signal peptid.</p></dd>
+  <dt>CS_pos</dt><dd><p>Character, cleavage site position.</p></dd>
+  <dt>Pr</dt><dd><p>Numeric, probability of the predicted cleavage site position.</p></dd>
+  <dt>cleave.site</dt><dd><p>Numeric,llocal amino acid sequence arround the predicted cleavage site.</p></dd>
+  <dt>is.signalp</dt><dd><p>Logical, did SignalP5 predict the presence of a signal peptide.</p></dd>
+  <dt>sp.length</dt><dd><p>Integer, length of the predicted signal peptide.</p></dd>
+  
+</dl>
+  
+<p>if org_type is one of "gram-", "gram+" or "archea" the returned data frame will have two additional columns between `SP.Sec.SPI` and `Other`:</p> 
+<dl>
+  <dt>TAT.Tat.SPI</dt><dd><p>Numeric, marginal probability that the protein contains a Tat N-terminal signal peptide (Tat/SPI).</p></dd>
+  <dt>LIPO.Sec.SPII</dt><dd><p>Numeric, marginal probability that the protein contains a Lipoprotein N-terminal signal peptide (Sec/SPII).</p></dd>
+  
 </dl>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The topology (prediction column of the result) is given as the position of the transmembrane helices separated by 'i' if the loop is on the cytoplasmic or 'o' if it is on the non-cytoplasmic side. A signal peptide is given by the position of its h-region separated by a n and a c, and the position of the last amino acid in the signal peptide and the first of the mature protein separated by a /.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>This function creates temporary files in the working directory.</p>
+    <p>This function creates temporary files in the working directory. If something goes wrong during communication with the server and progress was set to TRUE, predictions can be obtained using `file.path("http://www.cbs.dtu.dk/services/SignalP-5.0/tmp", jobid, "output_protein_type.txt")` eg `read.delim(file.path(...), header = TRUE, skip = 1)`.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Kall O. Krogh A. Sonnhammer E. L. L. (2004) A Combined Transmembrane Topology and Signal Peptide Prediction Method. Journal of Molecular Biology 338(5): 1027-1036</p>
+    <p>Almagro Armenteros JJ, Tsirigos KD, Sønderby CK, Petersen TN, Winther O, Brunak S, von Heijne G, Nielsen H. (2019) SignalP 5.0 improves signal peptide predictions using deep neural networks. Nature Biotechnology, 37:420-423, doi:10.1038/s41587-019-0036-z</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_signalp.html'>get_signalp</a></code></p></div>
+    <div class='dont-index'><p><code><a href='get_signalp.html'>get_signalp</a></code> <code><a href='get_targetp.html'>get_targetp</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/missuse/ragp'>ragp</a></span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>at_nsp</span><span class='op'>)</span>
-
-<span class='va'>phobius_pred</span> <span class='op'>&lt;-</span> <span class='fu'>get_phobius</span><span class='op'>(</span><span class='va'>at_nsp</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>20</span>,<span class='op'>]</span>,
-                            <span class='va'>sequence</span>,
-                            <span class='va'>Transcript.id</span><span class='op'>)</span>
-<span class='va'>phobius_pred</span>
-</div><div class='output co'>#&gt;             id tm sp                       prediction cut_site is.phobius
-#&gt; 1  ATCG00660.1  0  Y                    n17-24c29/30o       30       TRUE
-#&gt; 2  AT2G43600.1  0  Y                     n6-17c22/23o       23       TRUE
-#&gt; 3  AT2G28410.1  0  Y                     n6-17c22/23o       23       TRUE
-#&gt; 4  AT2G22960.1  0  Y                     n8-16c20/21o       21       TRUE
-#&gt; 5  AT2G19580.1  3  Y n7-18c26/27o42-64i71-95o233-253i       27       TRUE
-#&gt; 6  AT2G19690.2  0  Y                    n10-23c28/29o       29       TRUE
-#&gt; 7  AT2G19690.1  0  Y                    n10-23c28/29o       29       TRUE
-#&gt; 8  AT2G33130.1  0  Y                     n7-20c26/27o       27       TRUE
-#&gt; 9  AT2G05520.1  0  Y                     n5-18c23/24o       24       TRUE
-#&gt; 10 AT2G05520.2  0  Y                     n5-18c23/24o       24       TRUE
-#&gt; 11 AT2G05520.3  0  Y                     n5-18c23/24o       24       TRUE
-#&gt; 12 AT2G05520.4  0  Y                     n5-18c23/24o       24       TRUE
-#&gt; 13 AT2G05520.6  0  Y                     n5-18c23/24o       24       TRUE
-#&gt; 14 AT2G05520.5  0  Y                     n5-18c23/24o       24       TRUE
-#&gt; 15 AT2G04031.1  0  Y                     n8-16c24/25o       25       TRUE
-#&gt; 16 AT2G43620.1  0  Y                    n11-21c28/29o       29       TRUE
-#&gt; 17 AT2G37390.1  0  Y                     n6-16c24/25o       25       TRUE
-#&gt; 18 AT2G37390.2  0  Y                     n6-16c24/25o       25       TRUE
-#&gt; 19 AT2G35250.1  0  Y                     n5-16c21/22o       22       TRUE
-#&gt; 20 AT2G38390.1  0  Y                     n7-22c29/30o       30       TRUE
-#&gt;    sp.length
-#&gt; 1         29
-#&gt; 2         22
-#&gt; 3         22
-#&gt; 4         20
-#&gt; 5         26
-#&gt; 6         28
-#&gt; 7         28
-#&gt; 8         26
-#&gt; 9         23
-#&gt; 10        23
-#&gt; 11        23
-#&gt; 12        23
-#&gt; 13        23
-#&gt; 14        23
-#&gt; 15        24
-#&gt; 16        28
-#&gt; 17        24
-#&gt; 18        24
-#&gt; 19        21
-#&gt; 20        29</div><div class='input'>
+    <pre class="examples"><div class='input'>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/missuse/ragp'>ragp</a></span><span class='op'>)</span>
+<span class='va'>sp5_pred</span> <span class='op'>&lt;-</span> <span class='fu'>get_signalp5</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>at_nsp</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>,<span class='op'>]</span>,
+                         <span class='va'>sequence</span>,
+                         <span class='va'>Transcript.id</span><span class='op'>)</span>
+<span class='va'>sp5_pred</span>
+</div><div class='output co'>#&gt;             id  Prediction SP.Sec.SPI    Other CS_pos     Pr cleave.site
+#&gt; 1  ATCG00660.1       OTHER   0.000375 0.999625            NA            
+#&gt; 2  AT2G43600.1 SP(Sec/SPI)   0.999802 0.000198  22-23 0.9639      VFS-QN
+#&gt; 3  AT2G28410.1 SP(Sec/SPI)   0.990424 0.009576  22-23 0.8897      ALA-QD
+#&gt; 4  AT2G22960.1 SP(Sec/SPI)   0.998142 0.001858  22-23 0.9424      AES-GS
+#&gt; 5  AT2G19580.1       OTHER   0.264792 0.735208            NA            
+#&gt; 6  AT2G19690.2 SP(Sec/SPI)   0.989540 0.010460  28-29 0.9030      ARS-EE
+#&gt; 7  AT2G19690.1 SP(Sec/SPI)   0.989540 0.010460  28-29 0.9030      ARS-EE
+#&gt; 8  AT2G33130.1 SP(Sec/SPI)   0.959278 0.040722  26-27 0.5119      VVG-SR
+#&gt; 9  AT2G05520.1 SP(Sec/SPI)   0.999493 0.000507  23-24 0.5666      VAA-AS
+#&gt; 10 AT2G05520.2 SP(Sec/SPI)   0.999493 0.000507  23-24 0.5666      VAA-AS
+#&gt;    is.signalp sp.length
+#&gt; 1       FALSE        NA
+#&gt; 2        TRUE        22
+#&gt; 3        TRUE        22
+#&gt; 4        TRUE        22
+#&gt; 5       FALSE        NA
+#&gt; 6        TRUE        28
+#&gt; 7        TRUE        28
+#&gt; 8        TRUE        26
+#&gt; 9        TRUE        23
+#&gt; 10       TRUE        23</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
