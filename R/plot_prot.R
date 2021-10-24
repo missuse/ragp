@@ -1,6 +1,6 @@
 #' Protein structure diagram.
 #' 
-#' Plots a diagram of protein structure based on hmmscan domain annotation and several types of predictions.
+#' Plots a diagram of protein structure based on several types of annotations and predictions.
 #' 
 #' @param sequence String representing a protein amino acid sequence.
 #' @param id String representing a protein identifier. Will be converted using \code{\link[base]{make.names}}.
@@ -16,7 +16,7 @@
 #' @param tm A string indicating if \code{\link[ragp]{get_phobius}} (tm = "phobius") or \code{\link[ragp]{get_tmhmm}} (tm = "tmhmm") should be used to obtain transmembrane region predictions. Alternatively a data frame with two columns:  a character column "id" indicating the protein id as from input and a "prediction" column containing the topology of the transmembrane regions (example "42o81-101i108-126o"). To turn off tm prediction use tm = "none".
 #' @param domain A string indicating if \code{\link[ragp]{get_cdd}} (domain = "cdd") or \code{\link[ragp]{get_hmm}} (domain = "hmm") should be used to obtain domain annotation. Alternatively a data frame with five columns: a character column "id" indicating the protein id as from input, a character column "acc" indicating the accession of the domain hit, a character column "desc" indicating the description of the domain hit, a numeric column "align_start" indicating the start of the domain hit, a numeric column "align_end" indicating the end the domain hit. 
 #' @param disorder Boolean, should disordered region predictions obtained using \code{\link[ragp]{get_espritz}} be plotted. Alternatively the output data frame from \code{\link[ragp]{get_espritz}} (called with simplify = TRUE) can be supplied.
-#' @param dom_sort One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.
+#' @param dom_sort One of c("ievalue", "abc", "cba"), defaults to "ievalue". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.
 #' @param progress Boolean, whether to show the progress bar, at default set to FALSE.
 #' @param gpi_size Integer, the size of the gpi symbol. Appropriate values are 1 - 10.
 #' @param gpi_shape Integer, the shape of the gpi symbol. Appropriate values are 0 - 25
@@ -145,7 +145,7 @@ plot_prot <- function(sequence,
   }
   
   if (missing(dom_sort)){
-    dom_sort <- "abc"
+    dom_sort <- "ievalue"
   }
   if (!dom_sort %in% c("ievalue", "abc", "cba")) {
     stop("dom_sort should be one of: 'ievalue', 'abc', 'cba",

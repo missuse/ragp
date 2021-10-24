@@ -12,6 +12,7 @@ state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![R-CMD-check](https://github.com/missuse/ragp/workflows/R-CMD-check/badge.svg)](https://github.com/missuse/ragp/actions)
 <!-- badges: end -->
 
 `ragp` is an R package primarily designed for mining and analysis of
@@ -41,7 +42,8 @@ seqs <- unlist(protr::getUniProt(ids)) #download sequences
 p1 <- plot_prot(seqs, #plot sequence features
                 ids,
                 hyp = FALSE, #do not plot hydroxyprolines
-                ag = FALSE) #do not plot ag spans
+                ag = FALSE, #do not plot ag spans
+                domain = "hmm") #annotate domains according to Pfam
 p1
 ```
 
