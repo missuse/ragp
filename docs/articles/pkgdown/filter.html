@@ -120,7 +120,7 @@ code.r{ /* Code block */
 </li>
 <li>predict proline hydroxylation and filter sequences containing at least several potential hydroxyprolines.</li>
 </ul>
-<p>The following section explains how to perform these tasks on a set of 2700 Arabidopsis protein sequences included in <code>ragp</code> as <code>at_nsp</code> data frame.</p>
+<p>The following section explains how to perform these tasks on a set of 2700 Arabidopsis protein sequences included in <code>ragp</code> as `<code><a href="../../reference/at_nsp.html">at_nsp()</a></code> data frame.</p>
 <p>Required packages:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/missuse/ragp">ragp</a></span><span class="op">)</span><span class="op">)</span>
@@ -191,7 +191,7 @@ code.r{ /* Code block */
 <span class="va">at_nsp_filtered</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Transcript.id</span> <span class="op">%in%</span> <span class="va">at_3hyp</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">at_nsp_3hyp</span> <span class="co">#filter sequences from `at_nsp_filtered`</span></code></pre></div>
 <p>There are 365 sequences that satisfy this condition.</p>
-<p>After the filtering step the sequences can be analyzed by <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> to identify arabinogalactan motifs, by <code><a href="../../reference/maab.html">maab()</a></code> to classify prototypical HRGPs, by <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code> and <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> to predict GPI anchor sites in sequences and by <code><a href="../../reference/get_hmm.html">get_hmm()</a></code> and <code><a href="../../reference/get_espritz.html">get_espritz()</a></code> to identify domains and disordered regions. This is explained in <a href="https://missuse.github.io/ragp/articles/pkgdown/analyse">HRGP analysis</a> tutorial.</p>
+<p>After the filtering step the sequences can be analyzed by <code><a href="../../reference/scan_ag.html">scan_ag()</a></code> to identify arabinogalactan motifs, by <code><a href="../../reference/maab.html">maab()</a></code> to classify prototypical HRGPs, by <code><a href="../../reference/get_big_pi.html">get_big_pi()</a></code>, <code><a href="../../reference/get_pred_gpi.html">get_pred_gpi()</a></code> or <code><a href="../../reference/get_netGPI.html">get_netGPI()</a></code> to predict GPI anchor sites in sequences and by <code><a href="../../reference/get_hmm.html">get_hmm()</a></code>, <code><a href="../../reference/get_cdd.html">get_cdd()</a></code> and <code><a href="../../reference/get_espritz.html">get_espritz()</a></code> to identify domains and disordered regions. This is explained in <a href="https://missuse.github.io/ragp/articles/pkgdown/analyse">HRGP analysis</a> tutorial.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">

@@ -58,7 +58,7 @@ plot_prot(
 
 \item{hyp_scan}{Boolean, if ag = TRUE, should \code{\link[ragp]{scan_ag}} be performed on \code{\link[ragp]{predict_hyp}} output thus scanning only arabinogalactan motifs which contain predicted hydroxyprolines.}
 
-\item{dom_sort}{One of c("ievalue", "abc", "cba"), defaults to "abc". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.}
+\item{dom_sort}{One of c("ievalue", "abc", "cba"), defaults to "ievalue". Domain plotting order. If 'ievalue' domains with the lowest ievalue as determined by hmmscan will be plotted above. If 'abc' or 'cba' the order is determined by domain Names.}
 
 \item{progress}{Boolean, whether to show the progress bar, at default set to FALSE.}
 
@@ -72,7 +72,7 @@ plot_prot(
 A ggplot2 plot object
 }
 \description{
-Plots a diagram of protein structure based on hmmscan domain annotation and several types of predictions.
+Plots a diagram of protein structure based on several types of annotations and predictions.
 }
 \examples{
 library(ragp)
