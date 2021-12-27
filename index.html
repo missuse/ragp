@@ -22,6 +22,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
@@ -34,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ragp</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.5.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.5.9000</span>
       </span>
     </div>
 
@@ -74,12 +76,12 @@
   <a href="news/index.html">News</a>
 </li>
 <li>
-  <a href="https://ragp.shinyapps.io/Rapp/">ragp shiny</a>
+  <a href="https://ragp.shinyapps.io/Rapp/" class="external-link">ragp shiny</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/missuse/ragp/">
+  <a href="https://github.com/missuse/ragp/" class="external-link">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -97,22 +99,22 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<div id="ragp---hydroxyproline-aware-filtering-of-hydroxyproline-rich-glycoprotein-sequences" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#ragp---hydroxyproline-aware-filtering-of-hydroxyproline-rich-glycoprotein-sequences" class="anchor"></a>ragp - hydroxyproline aware filtering of hydroxyproline rich glycoprotein sequences</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="ragp---hydroxyproline-aware-filtering-of-hydroxyproline-rich-glycoprotein-sequences">ragp - hydroxyproline aware filtering of hydroxyproline rich glycoprotein sequences<a class="anchor" aria-label="anchor" href="#ragp---hydroxyproline-aware-filtering-of-hydroxyproline-rich-glycoprotein-sequences"></a>
+</h1></div>
 <!-- badges: start -->
 
 <p><code>ragp</code> is an R package primarily designed for mining and analysis of plant hydroxyproline rich glycoproteins. It incorporates a novel concept with an additional analysis layer where the probability of proline hydroxylation is estimated by a machine learning model. Only proteins predicted to contain hydroxyprolines are further analysed for HRGP characteristic motifs and features. <code>ragp</code> can also be used for protein annotation by obtaining predictions for several protein features based on sequence (secretory signals, transmembrane regions, domains, glycosylphosphatidylinositol attachment sites and disordered regions). Additionally ragp provides tools for visualization of the mentioned attributes.</p>
 <p>Short example:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/missuse/ragp">ragp</a></span><span class="op">)</span>
-<span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Q9FLL2"</span>, <span class="co">#several uniprot accessions</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/missuse/ragp" class="external-link">ragp</a></span><span class="op">)</span>
+<span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Q9FLL2"</span>, <span class="co">#several uniprot accessions</span>
          <span class="st">"Q9LS14"</span>,
          <span class="st">"Q9S7I8"</span>,
          <span class="st">"Q9M2Z2"</span>,
          <span class="st">"Q9FIN5"</span><span class="op">)</span>
 
-<span class="va">seqs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu">protr</span><span class="fu">::</span><span class="fu"><a href="https://nanx.me/protr/reference/getUniProt.html">getUniProt</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span><span class="op">)</span> <span class="co">#download sequences </span>
+<span class="va">seqs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu">protr</span><span class="fu">::</span><span class="fu"><a href="https://nanx.me/protr/reference/getUniProt.html" class="external-link">getUniProt</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span><span class="op">)</span> <span class="co">#download sequences </span>
 
 <span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/plot_prot.html">plot_prot</a></span><span class="op">(</span><span class="va">seqs</span>, <span class="co">#plot sequence features</span>
                 <span class="va">ids</span>,
@@ -122,40 +124,42 @@
 <span class="va">p1</span></code></pre></div>
 <p><img src="https://missuse.github.io/ragp/reference/figures/README-plot_prot-2.svg"></p>
 </div>
-<div id="installation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h1>
+<div class="section level1">
+<h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h1>
 <p>You can install ragp from github with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"missuse/ragp"</span><span class="op">)</span></code></pre></div>
-<p>Or alternatively</p>
+<code class="sourceCode R"><span class="co"># install.packages("remotes") #if not present</span>
+<span class="co"># install.packages("git2r") #if not present</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"missuse/ragp"</span><span class="op">)</span></code></pre></div>
+<p>Or alternatively to build vignettes use:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"missuse/ragp"</span>,
-                         build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p>to build vignettes which can be viewed by:</p>
+<code class="sourceCode R"><span class="co"># install.packages("remotes") </span>
+<span class="co"># install.packages("git2r") </span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_git</span><span class="op">(</span><span class="st">"https://github.com/missuse/ragp"</span>,
+                     build_vignettes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<p>Vignettes can be viewed by:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span><span class="op">(</span><span class="st">"ragp"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html" class="external-link">browseVignettes</a></span><span class="op">(</span><span class="st">"ragp"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="tutorials" class="section level1">
-<h1 class="hasAnchor">
-<a href="#tutorials" class="anchor"></a>Tutorials</h1>
-<p>Tutorials on usage of <code>ragp</code> functions with examples on how to combine them into meaningful HRGP filtering and analysis pipelines are available at: <a href="https://missuse.github.io/ragp/" class="uri">https://missuse.github.io/ragp/</a></p>
+<div class="section level1">
+<h1 id="tutorials">Tutorials<a class="anchor" aria-label="anchor" href="#tutorials"></a>
+</h1>
+<p>Tutorials on usage of <code>ragp</code> functions with examples on how to combine them into meaningful HRGP filtering and analysis pipelines are available at: <a href="https://missuse.github.io/ragp/" class="external-link uri">https://missuse.github.io/ragp/</a></p>
 </div>
-<div id="bug-reports" class="section level1">
-<h1 class="hasAnchor">
-<a href="#bug-reports" class="anchor"></a>Bug reports</h1>
-<p>If you encounter undesired behavior in <code>ragp</code> functions or you have ideas how to improve them please open an issue at: <a href="https://github.com/missuse/ragp/issues" class="uri">https://github.com/missuse/ragp/issues</a></p>
+<div class="section level1">
+<h1 id="bug-reports">Bug reports<a class="anchor" aria-label="anchor" href="#bug-reports"></a>
+</h1>
+<p>If you encounter undesired behavior in <code>ragp</code> functions or you have ideas how to improve them please open an issue at: <a href="https://github.com/missuse/ragp/issues" class="external-link uri">https://github.com/missuse/ragp/issues</a></p>
 </div>
-<div id="citation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#citation" class="anchor"></a>Citation</h1>
-<p>If you find <code>ragp</code> useful in your own research please cite our Glycobiology <a href="https://doi.org/10.1093/glycob/cwz072">paper</a>.</p>
+<div class="section level1">
+<h1 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h1>
+<p>If you find <code>ragp</code> useful in your own research please cite our Glycobiology <a href="https://doi.org/10.1093/glycob/cwz072" class="external-link">paper</a>.</p>
 <blockquote>
-<p>Milan B Dragićević, Danijela M Paunović, Milica D Bogdanović, Slađana I Todorović, Ana D Simonović (2020) ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R, Glycobiology 30(1) 19–35, <a href="https://doi.org/10.1093/glycob/cwz072" class="uri">https://doi.org/10.1093/glycob/cwz072</a></p>
+<p>Milan B Dragićević, Danijela M Paunović, Milica D Bogdanović, Slađana I Todorović, Ana D Simonović (2020) ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R, Glycobiology 30(1) 19–35, <a href="https://doi.org/10.1093/glycob/cwz072" class="external-link uri">https://doi.org/10.1093/glycob/cwz072</a></p>
 </blockquote>
-<p>You can get citation info via <code><a href="https://rdrr.io/r/utils/citation.html">citation("ragp")</a></code> or by copying the following BibTex entry:</p>
+<p>You can get citation info via <code>citation("ragp")</code> or by copying the following BibTex entry:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb5-1"><a href="#cb5-1"></a><span class="va">@article</span>{<span class="ot">10</span>.<span class="ot">1093</span>/<span class="ot">glycob</span>/<span class="ot">cwz072</span>,</span>
 <span id="cb5-2"><a href="#cb5-2"></a>    <span class="dt">author</span> = {Dragićević, Milan B and Paunović, Danijela M and Bogdanović, Milica D and Todorović, Slađana I and Simonović, Ana D},</span>
 <span id="cb5-3"><a href="#cb5-3"></a>    <span class="dt">title</span> = "<span class="st">{ragp: Pipeline for mining of plant hydroxyproline-rich glycoproteins with implementation in R}</span>",</span>
@@ -171,9 +175,9 @@
 <span id="cb5-13"><a href="#cb5-13"></a>    <span class="dt">eprint</span> = "<span class="st">{https://academic.oup.com/glycob/article-pdf/30/1/19/5567434/cwz072.pdf}</span>"</span>
 <span id="cb5-14"><a href="#cb5-14"></a>}</span></code></pre></div>
 </div>
-<div id="acknowledgments" class="section level1">
-<h1 class="hasAnchor">
-<a href="#acknowledgments" class="anchor"></a>Acknowledgments</h1>
+<div class="section level1">
+<h1 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>
+</h1>
 <p>This software was developed with funding from the Ministry of Education, Science and Technological Development of the Republic of Serbia (Projects TR31019 and OI173024).</p>
 </div>
 
@@ -181,55 +185,60 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/missuse/ragp/">https://​github.com/​missuse/​ragp/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/missuse/ragp/issues">https://​github.com/​missuse/​ragp/​issues</a>
-</li>
+<li><a href="https://github.com/missuse/ragp/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/missuse/ragp/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>file <a href="LICENSE-text.html">LICENSE</a>
 </li>
 </ul>
 </div>
+
+
 <div class="citation">
-<h2>Citation</h2>
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html">Citing ragp</a></li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>Milan Dragicevic <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-9422-2952" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Danijela Paunovic <br><small class="roles"> Author </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html#citation">Citing ragp</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/missuse/ragp/actions"><img src="https://github.com/missuse/ragp/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="http://www.repostatus.org/#active"><img src="http://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed."></a></li>
-<li><a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a></li>
-<li><a href="https://github.com/missuse/ragp/actions"><img src="https://github.com/missuse/ragp/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li>Milan Dragicevic <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-9422-2952" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Danijela Paunovic <br><small class="roles"> Author </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/missuse/ragp/actions" class="external-link"><img src="https://github.com/missuse/ragp/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="http://www.repostatus.org/#active" class="external-link"><img src="http://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed."></a></li>
+<li><a href="https://opensource.org/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a></li>
+<li><a href="https://github.com/missuse/ragp/actions" class="external-link"><img src="https://github.com/missuse/ragp/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Milan Dragicevic, Danijela Paunovic.</p>
+  <p></p>
+<p>Developed by Milan Dragicevic, Danijela Paunovic.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -237,6 +246,8 @@
 
   
 
+
+  
 
   </body>
 </html>
