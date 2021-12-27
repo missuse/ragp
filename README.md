@@ -54,19 +54,21 @@ p1
 You can install ragp from github with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("missuse/ragp")
+# install.packages("remotes") #if not present
+# install.packages("git2r") #if not present
+remotes::install_github("missuse/ragp")
 ```
 
-Or alternatively
+Or alternatively to build vignettes use:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("missuse/ragp",
-                         build_vignettes = TRUE)
+# install.packages("remotes") 
+# install.packages("git2r") 
+remotes::install_git("https://github.com/missuse/ragp",
+                     build_vignettes = FALSE)
 ```
 
-to build vignettes which can be viewed by:
+Vignettes can be viewed by:
 
 ``` r
 browseVignettes("ragp")

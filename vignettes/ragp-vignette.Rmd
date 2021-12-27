@@ -97,6 +97,7 @@ Most `ragp` functions require single letter protein sequences and the correspond
 Input options will be illustrated using `scan_ag()` function:  
 
 * provide a `character` vector of protein sequences to the `sequence` argument and a `character` vector of protein identifiers to the `id` argument:  
+  
 ```{r input 1}
 library(ragp)
 data(at_nsp) #a data frame of 2700 Arabidopsis sequences
@@ -105,7 +106,7 @@ input1 <- scan_ag(sequence = at_nsp$sequence,
 ```  
 
 * provide a `data.frame` to `data` argument, and names of columns containing the protein sequences and corresponding identifiers to `sequence` and `id` arguments:   
-
+  
 ```{r input 2}
 input2 <- scan_ag(data = at_nsp,
                   sequence = "sequence",
@@ -113,7 +114,7 @@ input2 <- scan_ag(data = at_nsp,
 ```   
 
 quoting column names is not necessary:   
-
+  
 ```{r input 3}
 input3 <- scan_ag(data = at_nsp,
                   sequence = sequence,
@@ -121,7 +122,7 @@ input3 <- scan_ag(data = at_nsp,
 ```   
 
 * provide a list of `SeqFastaAA` objects to `data` argument: 
-
+  
 ```{r input 4}
 library(seqinr) #to create a fasta file with protein sequences
 

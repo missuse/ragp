@@ -108,16 +108,18 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>There are several ways to install R packages hosted on git-hub, however the simplest is to use <code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github()</a></code> which will perform all the required steps automatically.</p>
+<p>There are several ways to install R packages hosted on git-hub, however the simplest is to use <code><a href="https://devtools.r-lib.org/reference/remote-reexports.html">devtools::install_github()</a></code> which will perform all the required steps automatically.</p>
 <p>To install <code>ragp</code> run:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#install.packages("devtools") #if it is not installed on your system</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"missuse/ragp"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="co"># install.packages("remotes") #if not present</span>
+<span class="co"># install.packages("git2r") #if not present</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"missuse/ragp"</span><span class="op">)</span></code></pre></div>
 <p>alternatively run:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"missuse/ragp"</span>,
-                         build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="co"># install.packages("remotes") </span>
+<span class="co"># install.packages("git2r") </span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_git.html">install_git</a></span><span class="op">(</span><span class="st">"https://github.com/missuse/ragp"</span>,
+                     build_vignettes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p>to build vignettes which can be viewed by:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span><span class="op">(</span><span class="st">"ragp"</span><span class="op">)</span></code></pre></div>
