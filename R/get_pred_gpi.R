@@ -26,6 +26,8 @@
 #' @seealso \code{\link[ragp]{get_big_pi}}
 #'
 #' @examples
+#' 
+#' \dontrun{
 #' library(ragp)
 #' data(at_nsp)
 #'
@@ -33,7 +35,8 @@
 #'                          sequence,
 #'                          Transcript.id)
 #' gpi_pred
-#'
+#' }
+#' 
 #' @import seqinr
 #' @import httr
 #' @import xml2

@@ -53,6 +53,8 @@ PredGPI web server is a predictor of GPI modification sites.
 This function creates temporary files in the working directory. If the server is unable to make a prediction due to non-amino acid letters or length of the sequence, the returned prediction is NA (is.gpi column). Protein ids should be shorter then 30 characters.
 }
 \examples{
+
+\dontrun{
 library(ragp)
 data(at_nsp)
 
@@ -60,6 +62,7 @@ gpi_pred <- get_pred_gpi(at_nsp[1:20,],
                          sequence,
                          Transcript.id)
 gpi_pred
+}
 
 }
 \references{
